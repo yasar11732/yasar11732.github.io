@@ -10,7 +10,7 @@ Merhabalar,
 Uzun süredir blogumu güncelleyemiyordum, neredeyse iki yıl oldu. Bir arkadaşımın
 sorduğu bir soruya verdiğim cevapla, uzun süren sessizliği bozmak istedim.
 
-Soru: Ben elektrik-elektronik mühendisliği öğrencisiyim. Yazılıma merakım çok. Yazılım konusunda kendimi geliştirmek istiyorum.Ancak, kafamda çok soru var.Sistem programlama,oyun programlama istiyorum.Orta seviyede c dilini biliyorum.Hangi dilleri öğrenmeliyim. Yardımcı olursanız sevinirim.
+Soru: Ben elektrik-elektronik mühendisliği öğrencisiyim. Yazılıma merakım çok. Yazılım konusunda kendimi geliştirmek istiyorum.Ancak, kafamda çok soru var.Sistem programlama,oyun programlama istiyorum.Orta seviyede c dilini biliyorum.Hangi dilleri öğrenmeliyim. Yardımcı olursanız sevinirim. <!-- TEASER_END -->
 
 Cevap:
 
