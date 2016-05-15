@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
+<head>
+<meta charset="utf-8">
+<base href="http://ysar.net/algoritma/benzer-yazi-analizi.html">
+<meta name="description" content="Blog yazılımlarında ilgili makale bulmak için çeşitli yöntemler var. Bu yazıda, dökümanlar arasında benzerlik skoru oluşturan bir algoritma denemesi yapılıyor.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Benzer yazı analizi 1 | Python, Yazılım, ve Programlama</title>
+<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/algoritma/benzer-yazi-analizi.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Blog yazılımlarında ilgili makale bulmak için çeşitli yöntemler var. Bu yazıda, dökümanlar arasında benzerlik skoru oluşturan bir algoritma denemesi yapılıyor.">
+<meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="../python/djangoda-paket-yoneticisi.html" title="Django Modelleriyle Paket Yöneticisi" type="text/html">
+<link rel="next" href="benzer-yazi-analizi-2.html" title="Benzer Yazı Analizi 2" type="text/html">
+<meta property="og:site_name" content="Python, Yazılım, ve Programlama">
+<meta property="og:title" content="Benzer yazı analizi 1">
+<meta property="og:url" content="http://ysar.net/algoritma/benzer-yazi-analizi.html">
+<meta property="og:description" content="Blog yazılımlarında ilgili makale bulmak için çeşitli yöntemler var. Bu yazıda, dökümanlar arasında benzerlik skoru oluşturan bir algoritma denemesi yapılıyor.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2011-08-19T11:13:00+03:00">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ana içeriğe geç</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://ysar.net/">
+
+                <span id="blog-title">Python, Yazılım, ve Programlama</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../yasar-arabaci.html">Hakkımda</a>
+                </li>
+<li>
+<a href="../soru-cevap.html">Soru-Cevap</a>
+                </li>
+<li>
+<a href="../archive.html">Arşiv</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS kaynağı</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search with google--><form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+<input type="hidden" name="q" value="site:http://ysar.net/"><input type="text" name="q" maxlength="255" results="0" placeholder="Search">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="benzer-yazi-analizi.md" id="sourcelink">Kaynak</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Benzer yazı analizi 1</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                    Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2011-08-19T11:13:00+03:00" itemprop="datePublished" title="2011-08-19 11:13">2011-08-19 11:13</time></a></p>
+            
+        <p class="sourceline"><a href="benzer-yazi-analizi.md" id="sourcelink">Kaynak</a></p>
+
+                <meta name="description" itemprop="description" content="Blog yazılımlarında ilgili makale bulmak için çeşitli yöntemler var. Bu yazıda, dökümanlar arasında benzerlik skoru oluşturan bir algoritma denemesi yapılıyor.">
+</div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Benzer yazıları bulup, ziyaretçiye öneri göstermek zannettiğimden çok
+daha zor gibi görünüyor. Bir yandan düzgün bir algoritma oluşturmaya
+çalışırken, bir yandan da şu anda katettiğim yolu (her ne kadar çok
+olmasa da) aktarayım istedim.</p>
+<p>Yazıların benzerliklerini hesaplamak için, <a href="http://bioinformatics.oxfordjournals.org/content/22/18/2298.long">Text similarity: an
+alternative way to search MEDLINE</a> adlı makalede kosinüs katsayısı
+(Cosine Coefficient) formülünü gördüm (daha önce de başka bir yerde
+görmüştüm bu formülü, ama çıkartamıyorum şimdi :) ) ve denemeye karar
+verdim. Şimdilik, kelime ağırlıklarını formüle eklemeden bir deneme
+yaptım. Şu şekilde bir python dosyası ortaya çıktı: <!-- TEASER_END --></p>
+<pre class="code literal-block"><span></span><span class="c1"># -*- coding:utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">django.utils.html</span> <span class="kn">import</span> <span class="n">strip_tags</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+<span class="n">PROJE_DIZINI</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">))</span>
+<span class="n">UST_DIZIN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">PROJE_DIZINI</span> <span class="o">+</span> <span class="s2">"/../"</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"DJANGO_SETTINGS_MODULE"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"similarity.settings"</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">UST_DIZIN</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">Post</span>
+
+<span class="c1"># Son makaleden geriye sarıcaz!</span>
+
+<span class="n">sonMakale</span> <span class="o">=</span> <span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">latest</span><span class="p">(</span><span class="s2">"pub_date"</span><span class="p">)</span>
+
+<span class="n">i</span> <span class="o">=</span> <span class="n">sonMakale</span><span class="o">.</span><span class="n">id</span>
+<span class="n">imla</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"."</span><span class="p">,</span><span class="s2">","</span><span class="p">,</span><span class="s2">"?"</span><span class="p">,</span><span class="s2">"!"</span><span class="p">,</span><span class="s2">"</span><span class="se">\"</span><span class="s2">"</span><span class="p">,</span><span class="s2">"</span><span class="se">\'</span><span class="s2">"</span><span class="p">,</span><span class="s2">":"</span><span class="p">,</span><span class="s2">";"</span><span class="p">]</span>
+<span class="k">def</span> <span class="nf">kelimeleriAl</span><span class="p">(</span><span class="n">post_objesi</span><span class="p">):</span>
+    <span class="n">tumu</span> <span class="o">=</span> <span class="nb">unicode</span><span class="p">(</span><span class="n">post_objesi</span><span class="o">.</span><span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="nb">unicode</span><span class="p">(</span><span class="n">post_objesi</span><span class="o">.</span><span class="n">abstract</span><span class="p">)</span> <span class="o">+</span> <span class="nb">unicode</span><span class="p">(</span><span class="n">post_objesi</span><span class="o">.</span><span class="n">post</span><span class="p">)</span>
+    <span class="n">tumu</span> <span class="o">=</span> <span class="n">strip_tags</span><span class="p">(</span><span class="n">tumu</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">karakter</span> <span class="ow">in</span> <span class="n">imla</span><span class="p">:</span>
+        <span class="n">tumu</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">karakter</span><span class="p">,</span><span class="s2">""</span><span class="p">)</span>
+    <span class="n">kelimeler</span> <span class="o">=</span> <span class="n">tumu</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">)</span>
+    <span class="n">tekil</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">kelime</span> <span class="ow">in</span> <span class="n">kelimeler</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">kelime</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tekil</span><span class="p">:</span>
+            <span class="n">tekil</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kelime</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tekil</span>
+
+<span class="n">benzerlikler</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">while</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span>
+    <span class="n">birisi</span> <span class="o">=</span> <span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">birisi</span> <span class="o">=</span> <span class="n">kelimeleriAl</span><span class="p">(</span><span class="n">birisi</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">tumKelimeler</span> <span class="o">=</span> <span class="n">birisi</span>
+
+        <span class="n">oburu</span> <span class="o">=</span> <span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">j</span><span class="p">)</span>
+        <span class="n">oburu</span> <span class="o">=</span> <span class="n">kelimeleriAl</span><span class="p">(</span><span class="n">oburu</span><span class="p">)</span>
+
+
+
+        <span class="k">for</span> <span class="n">kelime</span> <span class="ow">in</span> <span class="n">oburu</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">kelime</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tumKelimeler</span><span class="p">:</span>
+                <span class="n">tumKelimeler</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kelime</span><span class="p">)</span>
+
+        <span class="c1"># vektör oluştur!</span>
+        <span class="n">birisi_vektor</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">oburu_vektor</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">kelime</span> <span class="ow">in</span> <span class="n">tumKelimeler</span><span class="p">:</span>
+            <span class="n">birisi_vektor</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kelime</span> <span class="ow">in</span> <span class="n">birisi</span> <span class="ow">and</span> <span class="mi">1</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">oburu_vektor</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kelime</span> <span class="ow">in</span> <span class="n">oburu</span> <span class="ow">and</span> <span class="mi">1</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">toplam</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># Formül karelerini almamızı istiyor</span>
+        <span class="c1"># ancak, 0 ve 1 sayılarının kareleri almak çok mantıklı gelmedi</span>
+
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">tumKelimeler</span><span class="p">)):</span>
+            <span class="n">toplam</span> <span class="o">+=</span> <span class="n">birisi_vektor</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">oburu_vektor</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+
+        <span class="n">birisi_toplami</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">sayi</span> <span class="ow">in</span> <span class="n">birisi_vektor</span><span class="p">:</span>
+            <span class="n">birisi_toplami</span> <span class="o">+=</span> <span class="n">sayi</span>
+
+        <span class="n">oburu_toplami</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">sayi</span> <span class="ow">in</span> <span class="n">oburu_vektor</span><span class="p">:</span>
+            <span class="n">oburu_toplami</span> <span class="o">+=</span> <span class="n">sayi</span>
+
+        <span class="n">bolen</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">birisi_toplami</span> <span class="o">*</span> <span class="n">oburu_toplami</span><span class="p">)</span>
+        <span class="n">benzerlikler</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">i</span><span class="p">),</span> <span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">j</span><span class="p">),</span> <span class="n">toplam</span><span class="o">/</span><span class="n">bolen</span><span class="p">))</span>
+        <span class="n">j</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="n">i</span> <span class="o">-=</span> <span class="mi">1</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">([</span> <span class="s2">"</span><span class="si">%s</span><span class="s2"> ve </span><span class="si">%s</span><span class="s2"> =&gt; </span><span class="si">%2f</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">benzerlikler</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">])]))</span>
+</pre>
+
+
+<p>Bahsettiğim yazıda geçen formülü birebir uygulamaya çalıştım.
+<em>kelimeleriAl</em> fonksiyonunda, bir makelede geçen tüm tekil kelimeleri
+döndürüyorum. Sonra döngünün içerisinde karşılaştırılan her iki makale
+için bir vektör (vektör denir değil mi ona?) oluşturuyorum.</p>
+<p>Vektör oluşturma işleminde, tumKelimeler (içinde tüm tekil kelimeleri
+barındıran liste) içerisinde her kelime için, eğer o kelime makaleye
+dahilse, o makalenin vektörüne 1, değilse 0 ekliyorum. Daha sonra da,
+bahsettiğim linkde gösterilen formülü uyguluyorum. Birkaç sonuç örneği
+verirsek:</p>
+<pre>
+Django şablonlarında php ve 0'dan blog'a Django(1) =&gt; 0.951225
+Django South göçünde "unique" alan hatası ve 5 Django İpucu =&gt; 0.923972
+Django'da Abstract Modeller ve 0'dan Bloga Django(3) =&gt; 0.917118
+Django'da Url Taşıma ve 0'dan Bloga Django(4) =&gt; 0.851807
+.
+.
+.
+Django ve Url Düzeltme ve Python range ve xrange =&gt; 0.161989
+If..Else yada Try..Except, hangisi ne zaman kullanılmalı? ve Python range ve xrange =&gt; 0.158546
+Django Modelleriyle Paket Yöneticisi ve Python range ve xrange =&gt; 0.155110
+</pre>
+
+<p>Doğrusunu söylemek gerekirse, bu algoritmadan aldığım sonuçlar çok
+tatmin edici olmadı. Bunun nedeninin de kelime ağırlıklarını algoritmaya
+dahil etmememe bağlıyorum.</p>
+<p>Bu algoritmanın şu anda bir diğer büyük eksikliği ise, gereksiz
+kelimeleri (bağlaçlar gibi) de hesaplamaya dahil etmesi. Bir gereksiz
+kelimeler listesi oluşturup, bir de onları çıkararak denemek gerek diye
+düşünüyorum. Eğer bu konuda bir yol katedersem, yeni yazılarda
+bahsedeceğim.</p>
+<p>İyi geliştirmeler.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="../python/djangoda-paket-yoneticisi.html" rel="prev" title="Django Modelleriyle Paket Yöneticisi">Önceki yazı</a>
+            </li>
+            <li class="next">
+                <a href="benzer-yazi-analizi-2.html" rel="next" title="Benzer Yazı Analizi 2">Sonraki yazı</a>
+            </li>
+        </ul></nav></aside></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/jquery.min.js"></script><script src="../assets/js/bootstrap.min.js"></script><script src="../assets/js/moment-with-locales.min.js"></script><script src="../assets/js/fancydates.js"></script><script src="../assets/js/jquery.colorbox-min.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-tr.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("tr");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function() {
+    var cx = '013136674562336859018:ouohwab0yku';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44774134-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

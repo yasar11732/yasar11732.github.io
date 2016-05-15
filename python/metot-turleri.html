@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
+<head>
+<meta charset="utf-8">
+<base href="http://ysar.net/python/metot-turleri.html">
+<meta name="description" content="Özellikle @classmethod a yönelik, Python'daki metot çeşitleri hakkında bir yazı.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python Metot Türleri | Python, Yazılım, ve Programlama</title>
+<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/python/metot-turleri.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Özellikle @classmethod a yönelik, Python'daki metot çeşitleri hakkında bir yazı.">
+<meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="../diger/devlet-siteleri.html" title="Devlet Siteleri" type="text/html">
+<link rel="next" href="threading-vs-multiprocessing.html" title="Threading mi, yoksa multiprocessing mi kullanmalıyım" type="text/html">
+<meta property="og:site_name" content="Python, Yazılım, ve Programlama">
+<meta property="og:title" content="Python Metot Türleri">
+<meta property="og:url" content="http://ysar.net/python/metot-turleri.html">
+<meta property="og:description" content="Özellikle @classmethod a yönelik, Python'daki metot çeşitleri hakkında bir yazı.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2013-11-15T18:17:06+02:00">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ana içeriğe geç</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://ysar.net/">
+
+                <span id="blog-title">Python, Yazılım, ve Programlama</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../yasar-arabaci.html">Hakkımda</a>
+                </li>
+<li>
+<a href="../soru-cevap.html">Soru-Cevap</a>
+                </li>
+<li>
+<a href="../archive.html">Arşiv</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS kaynağı</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search with google--><form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+<input type="hidden" name="q" value="site:http://ysar.net/"><input type="text" name="q" maxlength="255" results="0" placeholder="Search">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="metot-turleri.md" id="sourcelink">Kaynak</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Python Metot Türleri</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                    Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2013-11-15T18:17:06+02:00" itemprop="datePublished" title="2013-11-15 18:17">2013-11-15 18:17</time></a></p>
+            
+        <p class="sourceline"><a href="metot-turleri.md" id="sourcelink">Kaynak</a></p>
+
+                <meta name="description" itemprop="description" content="Özellikle @classmethod a yönelik, Python'daki metot çeşitleri hakkında bir yazı.">
+</div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Python sınıflarında, temel olarak 3 farklı şekilde metot tanımı yapılabilir.</p>
+<ul>
+<li>Örnek (Instance) metotları</li>
+<li>Statik (<code>@staticmethod</code>) metotlar</li>
+<li>Sınıf (<code>@classmethod</code>) metotları</li>
+</ul>
+<p>Bunların arasındaki başlıca fark, aldıkları argümanlardır. Örnek metotlarına, ilk argüman olarak, objenin kendisine bir referans gönderilir. Bu argümana,
+geleneksel olarak <code>self</code> adı verilir. Statik metotlar, kendisini çağıran sınıf veya örnek hakkında herhangi bir bilgiye
+sahip değildir. Bunlar, işlevini kaybetmeden, sınıf dışında da aynı şekilde tanımlanabilir. Sınıf metotları ise, otomatik
+olarak, kendisini çağıran sınıfa veya örneğin sınıfına bir referans alır. Bu argümana da geleneksel olarak <code>cls</code> adı verilir. <!-- TEASER_END --></p>
+<h3>Örnek (Instance) Metotları</h3>
+<p>Python'da yeni bir sınıf tanımlandığınız, yazdığınız metotlar öntanımlı olarak, örnek (instance) metotlarıdır. Örnek metotları,
+ilk argüman olarak, kendisini çağıran örneğe bir referans alır. Böylece, geçerli örneğin niteliklerine erişim ve müdahale
+imkanı bulurlar. Aşağıdaki kodları inceleyelim;</p>
+<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">ikisayi</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span>
+
+    <span class="k">def</span> <span class="nf">toplam</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span>
+
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">ikisayi</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">toplam</span><span class="p">)</span> <span class="c1"># 1</span>
+<span class="k">print</span><span class="p">(</span><span class="n">ikisayi</span><span class="o">.</span><span class="n">toplam</span><span class="p">)</span> <span class="c1"># 2</span>
+<span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">toplam</span><span class="p">())</span> <span class="c1"># 3</span>
+<span class="k">print</span><span class="p">(</span><span class="n">ikisayi</span><span class="o">.</span><span class="n">toplam</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="c1"># 4</span>
+</pre>
+
+
+<p>Programın çıktısı:</p>
+<pre>
+#1: &lt;bound method ikisayi.toplam of &lt;__main__.ikisayi object at 0x021F0390&gt;&gt;
+#2: &lt;unbound method ikisayi.toplam&gt;
+#3: 8
+#4: 8
+</pre>
+
+<p>Yukarıda, görmeye alışık olduğunuz türden bir sınıf tanımımız var. Bu sınıf, iki tane sayı hakkında veri tutmak için kullanılıyor.
+Yine, bolca karşınıza çıkacağı gibi <code>__init__</code> başlangıç metodu var. <code>toplam</code> metodu ise, normal şekilde tanımlanmış, yani bir
+örnek (instance) metodu. <code>toplam</code> metodumuz, her örnek metodunda olduğu gibi, zorunlu bir ilk argüman alıyor. Bu argümana, çalışma
+anında oluşturulmuş bir ikisayı objesi geçirilecek. Böylece, toplam metodu, hangi objenin <code>a</code> niteliğiyle <code>b</code> niteliğini toplaması gerektiğini bilebilecek.</p>
+<p>Program çıktısına dikkat edersek, <code>x.toplam</code> metodunun <code>bound method</code> olduğunu görüyoruz.Yani, <code>ikisayi.toplam</code> metodu belirtilen adresdeki <code>ikisayi</code> objesine
+bağlanmış. Yani, <code>x.toplam</code> metodu çağırıldığında, <code>ikisayi.toplam</code> metodu, ilk argüman olarak, o adresdeki objeyi alacak.</p>
+<p>Diğer yandan, aynı metoda, sınıf üzerinde eriştiğimizde, bir <code>unbound method</code> buluyoruz.Yani, bu method, herhangi bir örneğe bağlanmamış. Dolayısıyla,
+otomatik bir ilk argüman almayacak. Eğer <code>ikisayi.toplam()</code> şeklinde çağırırsanız, aşağıdaki hatayı alırsınız:</p>
+<p><code>TypeError: unbound method toplam() must be called with ikisayi instance as first argument</code></p>
+<p>#3 ve #4 numaralı ifadeler aynı çıktıyı veriyor, çünkü, teknik olarak aynı şeyler. Siz, <code>x.toplam()</code> çağırdığınızda, Python bunu kendi içinde <code>ikisayi.toplam(x)</code> şekline dönüştürüyor. </p>
+<h3>Statik Metotlar</h3>
+<p>Statik Metotlar, kendisini hangi sınıf veya örneğin çağırdığını bilmez. Sadece kendine
+verilen argümanları bilir, örnek veya sınıf metotları gibi, gizli bir ilk argüman almazlar.
+Bu yönden bakıldığında, bu fonksiyonun sınıf içinde yazılmasıyla, sınıf dışında yazılması
+arasında, hiçbir fark yoktur. Ancak, aynı modül içerisindeki birçok fonksiyonu anlamsal
+bütünler içinde toplamak gerektiğinde kullanılabilir. Bunları tanımlamak için, metot tanımından
+önce <code>@staticmethod</code> <a href="decorator.html">dekoratörü</a> kullanılır.</p>
+<h3>Sınıf Metotları</h3>
+<p>Diğer yandan, sınıf metotları, ilk argüman olarak, kendisini çağıran sınıfa veya kendisini çağıran örneğin
+sınıfına mecburi/otomatik bir referans alır. Bunu o sınıfın bir örneğini oluşturmak istediğiniz durumlarda (bkz: <a href="http://en.wikipedia.org/wiki/Factory_(software_concept)">Factory</a>) kullanabilirsiniz.
+Kendisini çağıran sınıfa bir referans aldığı için, alt sınıflarda da istenildiği gibi çalışacaktır. Örneğin, diyelim ki, bir telefon numarasını temsil eden bir sınıfınız var:</p>
+<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">TelNo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ulkekodu</span><span class="p">,</span> <span class="n">alankodu</span><span class="p">,</span> <span class="n">numara</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ulkekodu</span> <span class="o">=</span> <span class="n">ulkekodu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alankodu</span> <span class="o">=</span> <span class="n">alankodu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numara</span> <span class="o">=</span> <span class="n">numara</span>
+</pre>
+
+
+<p>Burada, bir telefon numarasının, ülke kodu, alan kodu ve numrasını ayrı değişkenlerde tutan bir sınıf tanımladık. Muhtelemen, elimizdeki
+telefon numaraları, bir dosya veya veritabanında "+90 507 7997272" gibi karakter dizileri içerisinde tutuluyordur. Dolayısıyla, böyle karakter dizilerinden
+TelNo objesi üreten bir fonksiyona ihtiyacımız olacak.</p>
+<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">str_to_telno</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">TelNo</span><span class="p">(</span><span class="o">*</span><span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">))</span>
+
+<span class="n">mytel</span> <span class="o">=</span> <span class="n">str_to_telno</span><span class="p">(</span><span class="s2">"+90 507 7997272"</span><span class="p">)</span>
+</pre>
+
+
+<p><code>str_to_telno</code> fonksiyonu, verilen karakter dizisini boşluklarından bölüp, bunlardan yeni bir TelNo objesi oluşturuyor. Telefon numarası tutabilmek
+güzel ama, bu numarayı arayabilmemiz daha da güzel olurdu. Bunun için, TelNo'nun aranabilen bir alt sınıfını oluşturalım. </p>
+<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">AranabilenTelNo</span><span class="p">(</span><span class="n">TelNo</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">ara</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">"bu numaraya VOIP üzerinden bağlantı kur"</span>
+        <span class="k">pass</span> <span class="c1"># gerçekten bu fonksiyonu kodlamamı beklemiyordunuz umarım :)</span>
+
+<span class="k">def</span> <span class="nf">str_to_aranabilentelno</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">AranabilenTelNo</span><span class="p">(</span><span class="o">*</span><span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">))</span>
+</pre>
+
+
+<p>Aynı TelNo'da yaptığımız gibi, bir karakter dizisinden AranabilenTelNo oluşturan bir fonksiyon da tanımladık.</p>
+<p>Bu yöntemin şöyle bir sıkıntısı var. Diyelim ki, ileride, mesaj atılabilen telno, mms gönderilebilen tel no vs. gibi bir çok alt sınıf
+tanımlayacaksınız. Her seferinde tek tek bu dönüşüm işlemini yapmak hem yorucu olacak, hem de kodlar çorba olacak.</p>
+<p>Buna alternatif olarak, <code>TelNo</code> objesinde, <code>from_string</code> isminde bir <code>@classmethod</code> tanımladığımızda, ne olduğuna bakalım;</p>
+<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">TelNo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ulkekodu</span><span class="p">,</span> <span class="n">alankodu</span><span class="p">,</span> <span class="n">numara</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ulkekodu</span> <span class="o">=</span> <span class="n">ulkekodu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alankodu</span> <span class="o">=</span> <span class="n">alankodu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numara</span> <span class="o">=</span> <span class="n">numara</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="p">(</span><span class="o">*</span><span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">))</span>
+
+<span class="k">class</span> <span class="nc">AranabilenTelNo</span><span class="p">(</span><span class="n">TelNo</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">ara</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+<span class="n">mytel</span> <span class="o">=</span> <span class="n">TelNo</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="s2">"+90 507 7997272"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">mytel</span><span class="p">))</span> <span class="c1"># 1</span>
+<span class="n">myaranabilentel</span> <span class="o">=</span> <span class="n">AranabilenTelNo</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="s2">"+90 507 7997272"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">myaranabilentel</span><span class="p">))</span> <span class="c1"># 2</span>
+</pre>
+
+
+<p>Program Çıktısı:</p>
+<pre>
+#1: &lt;class '__main__.TelNo'&gt;
+#2: &lt;class '__main__.AranabilenTelNo'&gt;
+</pre>
+
+<p>Program çıktısından görebileceğiniz gibi, iki sınıfın <code>from_string</code> metotları, doğru sınıfa ait objeler oluşturuyor. Böylece,
+hem alt sınıf için tekrar ayrı fonksiyon yazmak zorunda kalmadık, hem de, doğru sınıfa ait bir örnek oluşturabildik.</p>
+<p>Dikkat ettiyseniz, <code>@classmethod</code> ile tanımladığımız metotları, doğrudan sınıf üzerinden çağırdık. Halbuki, Örnek (Instance) metotlarını, sınıfın bir örneği
+üzerinden çağırıyorduk. Özetle, sınıfın kendisi ile ilgili işlem yapılacak durumlarda, <code>@classmethod</code> kullanabiliriz.s</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="../diger/devlet-siteleri.html" rel="prev" title="Devlet Siteleri">Önceki yazı</a>
+            </li>
+            <li class="next">
+                <a href="threading-vs-multiprocessing.html" rel="next" title="Threading mi, yoksa multiprocessing mi kullanmalıyım">Sonraki yazı</a>
+            </li>
+        </ul></nav></aside></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/jquery.min.js"></script><script src="../assets/js/bootstrap.min.js"></script><script src="../assets/js/moment-with-locales.min.js"></script><script src="../assets/js/fancydates.js"></script><script src="../assets/js/jquery.colorbox-min.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-tr.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("tr");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function() {
+    var cx = '013136674562336859018:ouohwab0yku';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44774134-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

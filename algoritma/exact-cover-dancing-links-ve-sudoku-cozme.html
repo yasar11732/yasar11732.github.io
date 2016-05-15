@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
+<head>
+<meta charset="utf-8">
+<base href="http://ysar.net/algoritma/exact-cover-dancing-links-ve-sudoku-cozme.html">
+<meta name="description" content="Sudoku çözmek için kullanılan algoritmalardan, dancing link algoritmasının tanıtımı ve Python ile sudoku çözme programı.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exact Cover, Dancing Links ve Sudoku Çözme | Python, Yazılım, ve Programlama</title>
+<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/algoritma/exact-cover-dancing-links-ve-sudoku-cozme.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Sudoku çözmek için kullanılan algoritmalardan, dancing link algoritmasının tanıtımı ve Python ile sudoku çözme programı.">
+<meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="../python/bir-optimizasyon-hikayesi.html" title="Bir optimizasyon hikayesi" type="text/html">
+<link rel="next" href="evrimsel-algoritmalar.html" title="Evrimsel Algoritmalar" type="text/html">
+<meta property="og:site_name" content="Python, Yazılım, ve Programlama">
+<meta property="og:title" content="Exact Cover, Dancing Links ve Sudoku Çözme">
+<meta property="og:url" content="http://ysar.net/algoritma/exact-cover-dancing-links-ve-sudoku-cozme.html">
+<meta property="og:description" content="Sudoku çözmek için kullanılan algoritmalardan, dancing link algoritmasının tanıtımı ve Python ile sudoku çözme programı.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2013-11-03T06:32:00+02:00">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ana içeriğe geç</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://ysar.net/">
+
+                <span id="blog-title">Python, Yazılım, ve Programlama</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../yasar-arabaci.html">Hakkımda</a>
+                </li>
+<li>
+<a href="../soru-cevap.html">Soru-Cevap</a>
+                </li>
+<li>
+<a href="../archive.html">Arşiv</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS kaynağı</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search with google--><form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+<input type="hidden" name="q" value="site:http://ysar.net/"><input type="text" name="q" maxlength="255" results="0" placeholder="Search">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="exact-cover-dancing-links-ve-sudoku-cozme.md" id="sourcelink">Kaynak</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Exact Cover, Dancing Links ve Sudoku Çözme</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                    Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2013-11-03T06:32:00+02:00" itemprop="datePublished" title="2013-11-03 06:32">2013-11-03 06:32</time></a></p>
+            
+        <p class="sourceline"><a href="exact-cover-dancing-links-ve-sudoku-cozme.md" id="sourcelink">Kaynak</a></p>
+
+                <meta name="description" itemprop="description" content="Sudoku çözmek için kullanılan algoritmalardan, dancing link algoritmasının tanıtımı ve Python ile sudoku çözme programı.">
+</div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Donald Knuth tarafından geliştirilmiş olan "Dancing Links" algoritması, "exact cover" problemi
+ve bu probleme çevirilebilen sudoku gibi problemlerin çözümü için bir hayli etkin bir yöntem sunuyor.
+Bu yazıda, "exact cover" problemi, "dancing links" algoritması, sudoku probleminin exact cover
+problemine dönüştürülmesi konularından bahsedeceğim. Ayrıca, Ali Assaf tarafından "Algorithm X in 30 lines!"
+yazısında bahsedilen yönteme kısaca değineceğim. <!-- TEASER_END --></p>
+<h3>Exact Cover (Birebir Örtme) Problemi</h3>
+<p>Matematikte, <strong>exact cover</strong>, bir X kümesinin, alt kümelerinden oluşan bir S koleksiyonun, öyle bir
+S* alt koleksiyonudur ki, X'in içindeki her eleman, S*'nin içindeki bir ve en fazla bir kümenin içinde
+bulunur.</p>
+<p>Örneğin;</p>
+<pre>
+    X = {1,2,3,4,5}
+    S = {{1,3},{1,4},{2,4,5}}
+</pre>
+
+<p>Kümelerinde, <strong>exact cover</strong> <code>S* = {{1,3},{2,4,5}}</code> olarak bulunur.</p>
+<p>Exact cover problemi, <a href="http://en.wikipedia.org/wiki/NP-complete">NP-Complete</a> bir problemdir.
+Donald Knuth tarafından geliştirilen "Algorithm X" algoritması, bu problemi çözmeye yarıyor. Ayrıca,
+Donald Knuth, dancing links dediği bir teknikle, bu algoritmanın nasıl çok verimli bir şekilde kodlanabileceğini
+göstermiş.</p>
+<p>Dancing Links algoritmasına geçmeden önce, bu problemi bir matrix ile nasıl gösterebileceğimize bakalım;</p>
+<pre>
+    1 0 1 0 0 
+    1 0 0 1 0
+    0 1 0 1 1
+</pre>
+
+<p>Bu matrix'de sütunlar X'deki elemanları, satırlar ise, S koleksiyonundaki elemanları temsil ediyor. Bu durumda problem,
+buradaki satırlardan, her sütunda bir ve yalnızca bir 1 olacak şekilde bir grup seçmek halini alıyor. Dancing Link algoritmasında,
+bu matrix'i sparse matrix'e dönüştürüp, bu satırların seçimi yapılıyor.</p>
+<h3>Dancing Links Algoritması</h3>
+<p>Dancing Links, yukarıda bahsedilen problemin matrix'ini çifte linkli listelerden (C'deki double-linked list) oluşturmak fikrine dayanıyor.
+Bu tekniğin şöyle güzel bir yanı var ki, listeye eleman ekleyip çıkarmak çok kolay. Örneğin, diyelim ki, x, matrix'in
+içinde bir node, bunu matrix'den kaldırmak için bunun solundaki'nin sağını, bunun sağına eşitleyebilirsiniz.</p>
+<pre class="code literal-block"><span></span><span class="n">x</span><span class="o">-&gt;</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="n">x</span><span class="o">-&gt;</span><span class="n">right</span>
+<span class="n">x</span><span class="o">-&gt;</span><span class="n">right</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="n">x</span><span class="o">-&gt;</span><span class="n">left</span>
+</pre>
+
+
+<p>Dikkat ederseniz, burada x üzerinde bir değişiklik yapılmıyor. Yani, x'in pointer'ları hala aynı yerde. Dolayısıyla, x'i matrix'deki
+eski yerine koymak da bu kadar basit:</p>
+<pre class="code literal-block"><span></span><span class="n">x</span><span class="o">-&gt;</span><span class="n">right</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="n">x</span>
+<span class="n">x</span><span class="o">-&gt;</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="n">x</span>
+</pre>
+
+
+<p>Bu tekniğe dancing links denmesi, algoritmanın bu linkleri oynamak üzerine kurulu olmasından kaynaklanıyor.</p>
+<p>Yukarıda verdiğimiz matrix'i, çifte linkli listeye dönüştürürken, her sütun için, <code>ColumnNode</code> adında özel bir node
+ekleniyor. Bu nodda, o sütunun adı ve o sütundaki node sayısı gibi bilgiler tutuluyor. İlk sütunun solunda ise, h adında
+özel bir nod var. Bu nod, algoritmanın başlangıç noktası. Bu nodların birbirine bağlanış şekli böyle:</p>
+<p><img alt="Knuth Dancing Links Exact Cover Matrix" src="http://www.ocf.berkeley.edu/~jchu/publicportal/sudoku/Knuth-figure-3.png"><br><small>Kaynak: http://www.ocf.berkeley.edu/~jchu/publicportal/sudoku/sudoku.paper.html</small></p>
+<p>Algoritma şu şekilde işliyor:</p>
+<pre>
+fonksiyon çöz(matrix, çözümler):
+
+  eğer bütün sütunlar matrix'den çıkarılmışsa, çözümleri döndür
+
+  sütun := sıradakisütun()
+  seç(sütun)
+  sütun altındaki her node için:
+      çözümler.ekle(node)
+      bu nodun sağındaki nodların bulunduğu sütunları seç
+      çöz(matrix, çözümler) # recursive bir şekilde matrix'in geri kalanı çözülüyor
+      çözümler.çıkar(node)
+      sağdaki seçilmiş sütunları seçimini iptal et.
+
+  sütun seçimini iptal et.
+</pre>
+
+<p>Yukarıdaki çöz metodu, recursive, backtracking, depth-first bir algoritma. Backtrack, çıkarılmış node'ları geri ekleme
+ile sağlanıyor. Yukarıda da bahsettiğimiz gibi, bu ekleme çıkarma çok kolay bir işlem, bu yüzden algoritma bu kadar verimli.</p>
+<p>Yukarıdaki pseudo-kod yeterince açıklayıcı olamamış olabilir. O yüzden bir de sözlü olarak açıklayayım. Hatırlarsanız, matrix
+içindeki sütunlar, karşılamamız gereken gereksinimleri, satırlar ise, bu gereksinimlerin biri veya birkaçını sağlayan seçenekleri
+gösteriyordu. Algoritma önce bir gereksinim seçiyor, ve bunu matrix'den kaldırıyor. Bunun matrix'den kaldırılması, bu gereksinimin
+sağlanmış olduğunu anlamına geliyor diye düşünebiliriz. Algoritma ardından, bu sütun altındaki nodları sırasıyla ilerliyor. Bu sütun
+altındaki her bir node, sütunda temsil edilen gereksinimin karşılanabileceği farklı bir seçenek. Bu seçeneklerden biri çözümler
+listesine eklendiğinden, o seçeneğin sağladığı diğer gereksinimler de matrix içerisinden kaldırılıyor. Sonra, recursive bir şekilde
+matrix tekrar işleme sokuluyor. Recursion tamamlandıktan sonra, yapılan şeyler geri alınıyor, bir sonraki nod çözümlere eklenip,
+böylece devam ediliyor.</p>
+<p>Bir de örnek yapalım;</p>
+<pre>
+   A B C D E
+1| 1 0 1 0 0
+2| 1 0 0 1 0
+3| 0 1 0 1 1
+</pre>
+
+<p>Algoritma, önce A sütununu kaldırarak başlayacak. İçinde 1 bulunan satırları sırasıyla çözümlere ekleyecek. Önce 1. satırı
+ekledi diyelim. Böylece, C sütununu da seçmiş oldu. Şimdi, geriye kalan matrix üzerinde arama yapacak</p>
+<pre>
+   B D E
+3| 1 1 1
+</pre>
+
+<p>Geriye sadece 3. satır kaldı. İkinci satır da silindi, çünkü, A seçeneğini sağlayan birden fazla satırı
+aynı anda seçemeyiz. Bu adımda, 3. satırı seçmek bütün gereksinimleri sağlıyor. Dolayısıyla, (1 ve 3) ilk sonuç olarak döndü.
+Algoritma bu noktada, backtrack edip, A sütununu seçtiğimiz noktaya dönüyor.</p>
+<pre>
+   A B C D E
+1| 1 0 1 0 0
+2| 1 0 0 1 0
+3| 0 1 0 1 1
+</pre>
+
+<p>Şimdi sırada satır ikiyi seçip devam etmek var.</p>
+<pre>
+   B C E
+3| 1 0 1
+</pre>
+
+<p>Geriye sadece tek bir satır kaldı, ancak bu satır geriye kalan gereksinimlerimizi karşılamadı. Dolayısıyla bir sonuç döndüremedik. Algoritma
+bu noktada, başa dönüp, diğer sütunları seçerek aynı şeyleri deneyecek.</p>
+<h3>Sudoku</h3>
+<p>Gelelim, bütün bunların sudoku ile bağlantısına. Eğer sudoku'yu bir exact cover problemine dönüştürürsek, bu algoritmayı
+kullanarak istediğimiz sudokuyu çözebiliriz. Hatırlarsanız, kullandığımız matrix'de gereksinimler ve seçenekler vardı.
+Peki sudoku için gereksinimlerimiz nedir?</p>
+<ul>
+<li>Her hücre'de, birden dokuza kadar bir sayı, ve sadece bir sayı olmalı. (81 hücre olduğundan 81 gereksinim)</li>
+<li>Her satırda, birden dokuza kadar her sayıdan birer tane olmalı. (9 hücre x 9 sayı = 81 gereksinim)</li>
+<li>Her sütunda, birden dokuza kadar her sayıdan birer tane olmalı. (9 hücre x 9 sayı = 81 gereksinim)</li>
+<li>Her 3x3 lük bölgede, birden dokuza kadar her sayıdan birer tane olmalı. (9 hücre x 9 sayı = 81 gereksinim.)</li>
+</ul>
+<p>Toplamda, bir sudoku oyununda, sağlanması gerekn 324 gereksinim var. Peki elimizdeki seçenekler neler?</p>
+<p>Örneğin, 1.satır 1.sütunda 1 sayısının olması bir seçenek. Aynı hücrede 2 olması ayrı bir seçenek. Dolayısıyla,
+her hücre için, 9 seçeneğimiz var. 9x9'luk bir sudoku tahtasında, 81 hücre olduğu için, 9x81=729 farklı seçeneğimiz var.</p>
+<p>Her bir seçenek, 4 gereksinimi karşılayacak. Örneğin, 1. satır, 1. sütunda 1 olması seçeneği:</p>
+<ul>
+<li>O hücrede bir sayı bulunması gereksinimini</li>
+<li>O satırda 1 bulunması gereksinimini</li>
+<li>O sütunda 1 bulunması gereksinimini</li>
+<li>0 3x3lük bölgede 1 bulunması gereksinimini</li>
+</ul>
+<p>Evet, sudoku çözmek için, önce bu matrix'i oluşturmak gerekiyor. Ancak, bu matrix'i oluşturmaya başlamadan önce, bunu
+Python'da nasıl kodlayabileceğimizi bir düşünelim. Bildiğiniz üzere, Python daha üst seviye bir programlama dili ve
+bu dildeki veri yapıları, C'ye göre farklı. İnternette, algorithm X'in, Python ile 30 satırda yazılmış şöyle bir versiyonunu
+buldum:</p>
+<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">solution</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">X</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="nb">list</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">c</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">c</span><span class="p">]):</span>
+            <span class="n">solution</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="n">select</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">solve</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">solution</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">s</span>
+            <span class="n">deselect</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">cols</span><span class="p">)</span>
+            <span class="n">solution</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">Y</span><span class="p">[</span><span class="n">r</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">X</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+                    <span class="n">X</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">cols</span>
+
+<span class="k">def</span> <span class="nf">deselect</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">cols</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">Y</span><span class="p">[</span><span class="n">r</span><span class="p">]):</span>
+        <span class="n">X</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">cols</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">X</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+                    <span class="n">X</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre>
+
+
+<p>Burada, satır ve sütunlar, bir çift-link liste yerine, Python sözlüklerinde tutulmuş. Örneğin, en başta verdiğim şu örneği düşünelim:</p>
+<pre>
+X = {1,2,3,4,5}
+S = {{1,3},{1,4},{2,4,5}}
+</pre>
+
+<p>Bunu, yukarıdaki yöntem, bunu şu hale getiriyor;</p>
+<pre>
+X = {1:{'A','B'},
+     2:{'C'},
+     3:{'A'},
+     4:{'B','C'}
+     5:{'C'}}
+
+Y = {
+    'A':[1,3],
+    'B':[1,4],
+    'C':[2,4,5]
+</pre>
+
+<p>Satırlar ve sütunlar ayrı ayrı Python sözlükleri içerisindeler. Satırlardan sütunlara hızlıca erişmek için Y, sütunlardan
+satırlara erişmek için X sözlüğünü kullanıyor. Algoritmanın geri kalanı algorithm X ile aynı.</p>
+<p><a href="https://gist.github.com/yasar11732/7286692">Python ile yazılmış sudoku çözücüye</a>, her zamanki gibi gist üzerinden ulaşabilirsiniz.</p>
+<p>Yukarıdaki linkteki Python kodlarını da açıklayacaktım ama, bugünlük yoruldum yazmaktan. Belki ileriki bir zamanda, benchmarklarla
+birlite açıklarım o kodları da.</p>
+<h3>Referanslar</h3>
+<ul>
+<li><a href="http://www.cs.mcgill.ca/%7Eaassaf9/python/algorithm_x.html">Assaf, A., 2010, Algorithm X in 30 lines!</a></li>
+<li><a href="http://www.ocf.berkeley.edu/~jchu/publicportal/sudoku/sudoku.paper.html">Jonathan, C., 2006, A Sudoku Solver in Java implementing Knuth’s Dancing Links Algorithm</a></li>
+<li><a href="http://www.norvig.com/sudoku.html">Norvig, P., 2011, Solving Every Sudoku Puzzle</a></li>
+<li><a href="http://en.wikipedia.org/w/index.php?title=Exact_cover&amp;oldid=578641526">Wikipedia, 2013, Exact Cover</a></li>
+</ul>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="../python/bir-optimizasyon-hikayesi.html" rel="prev" title="Bir optimizasyon hikayesi">Önceki yazı</a>
+            </li>
+            <li class="next">
+                <a href="evrimsel-algoritmalar.html" rel="next" title="Evrimsel Algoritmalar">Sonraki yazı</a>
+            </li>
+        </ul></nav></aside></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/jquery.min.js"></script><script src="../assets/js/bootstrap.min.js"></script><script src="../assets/js/moment-with-locales.min.js"></script><script src="../assets/js/fancydates.js"></script><script src="../assets/js/jquery.colorbox-min.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-tr.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("tr");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function() {
+    var cx = '013136674562336859018:ouohwab0yku';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44774134-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

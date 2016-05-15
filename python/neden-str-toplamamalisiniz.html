@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
+<head>
+<meta charset="utf-8">
+<base href="http://ysar.net/python/neden-str-toplamamalisiniz.html">
+<meta name="description" content="Döngü içerisinde str objelerini toplamak çok uzun sürüyor. En hızlı şekilde string birleştirmek için map ve join kullanın.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neden str toplamamalısınız | Python, Yazılım, ve Programlama</title>
+<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/python/neden-str-toplamamalisiniz.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Döngü içerisinde str objelerini toplamak çok uzun sürüyor. En hızlı şekilde string birleştirmek için map ve join kullanın.">
+<meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="debugging-decorator.html" title="Debugging Decorator" type="text/html">
+<link rel="next" href="../algoritma/pixel-siralama-videolari.html" title="Pixel Sıralama Videoları" type="text/html">
+<meta property="og:site_name" content="Python, Yazılım, ve Programlama">
+<meta property="og:title" content="Neden str toplamamalısınız">
+<meta property="og:url" content="http://ysar.net/python/neden-str-toplamamalisiniz.html">
+<meta property="og:description" content="Döngü içerisinde str objelerini toplamak çok uzun sürüyor. En hızlı şekilde string birleştirmek için map ve join kullanın.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2013-10-27T15:27:00+02:00">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ana içeriğe geç</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://ysar.net/">
+
+                <span id="blog-title">Python, Yazılım, ve Programlama</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../yasar-arabaci.html">Hakkımda</a>
+                </li>
+<li>
+<a href="../soru-cevap.html">Soru-Cevap</a>
+                </li>
+<li>
+<a href="../archive.html">Arşiv</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS kaynağı</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search with google--><form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+<input type="hidden" name="q" value="site:http://ysar.net/"><input type="text" name="q" maxlength="255" results="0" placeholder="Search">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="neden-str-toplamamalisiniz.md" id="sourcelink">Kaynak</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Neden str toplamamalısınız</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                    Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2013-10-27T15:27:00+02:00" itemprop="datePublished" title="2013-10-27 15:27">2013-10-27 15:27</time></a></p>
+            
+        <p class="sourceline"><a href="neden-str-toplamamalisiniz.md" id="sourcelink">Kaynak</a></p>
+
+                <meta name="description" itemprop="description" content="Döngü içerisinde str objelerini toplamak çok uzun sürüyor. En hızlı şekilde string birleştirmek için map ve join kullanın.">
+</div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Günlerden pazar, bir yandan çay içip bir yandan Python kurcalarken, aklıma döngü optimizasyon
+yöntemlerini denemek geldi. Daha önce bir yerde gördüğümü hatırladığım için, bir liste içindeki
+int'leri karaktere dönüştürüp, bir str içinde birleştirmeyi deniyorum. Bu yöntem bu kadar hızlı,
+şu yöntem bu kadar yavaş derken, acaba str objelerini + ile toplamak
+ne kadar kötü olabilir ki diye merak ettim. 1 milyon karakter ile şunu denedim: <!-- TEASER_END --></p>
+<pre class="code literal-block"><span></span><span class="n">string</span> <span class="o">=</span> <span class="s2">""</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bytelist</span><span class="p">:</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre>
+
+
+<p>Bekledim, bekledim, bekledim... Bir türlü bitmek bilmedi. Ben de daha küçük liste üzerinde
+deneyeyim dedim. Önce 10 bin, sonra 20 bin derken bir döngü içerisinde 420 bin uzunluklu
+listeye kadar denedim. Sonuçlar şöyle oldu:</p>
+<p><img alt="scatter plot time versus number of chars" src="../images/scatter.png"></p>
+<p>Grafikten de görüleceği üzere, çalışma süresinin artışı biraz exponansiyel gibi görünüyor.
+İlk bakışta şaşırdım, lineer bir artış bekliyordum. Sonra kafama dank etti! Döngünün
+her etabında, bir önceki str'nin başka bir yere kopyalanması ve yeni karakterin eklenmesi
+gerekiyor. Döngü büyüdükçe, kopyalanması gereken string sayısı ile birlikte
+kopyalanan stringlerin uzunluğu da artıyor. Dolayısıyla, <code>n * (n - 1) / 2</code> karakter taşıma
+işlemi yapılıyor. Yani gerçekten döngünün büyüklüğü ve harcanan zaman arasında <del>exponansiyonel</del> <ins>kuadratik</ins>
+bir ilişki var. Kabataslak bir hesap yaptım, eğer işlemin bitmesini bekleseydim, 13-14 saat
+beklemem gerekecekmiş. Aynı hesapla, eğer 10 milyon karakterle işlem yapsam, 57 gün beklemem
+gerekecekti. İşte bu yüzden, özellikle döngü içerisinde str toplamak çok hoş sonuçlar doğurmuyor.</p>
+<p>Bunlar da 10 milyon karakterle denediğim diğer algoritmalar:</p>
+<pre class="code literal-block"><span></span><span class="c1"># for loop 1</span>
+<span class="n">chars</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bytelist</span><span class="p">:</span>
+    <span class="n">chars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+<span class="n">string</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">looper</span><span class="p">():</span>
+    <span class="n">chars</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">_chr</span> <span class="o">=</span> <span class="nb">chr</span>
+    <span class="n">_append</span> <span class="o">=</span> <span class="n">chars</span><span class="o">.</span><span class="n">append</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bytelist</span><span class="p">:</span>
+        <span class="n">_append</span><span class="p">(</span><span class="n">_chr</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span>
+
+<span class="c1"># for loop 2</span>
+<span class="n">looper</span><span class="p">()</span>
+
+<span class="c1"># map</span>
+<span class="n">string</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">chr</span><span class="p">,</span> <span class="n">bytelist</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">looper2</span><span class="p">():</span>
+    <span class="n">_chr</span> <span class="o">=</span> <span class="nb">chr</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">chr</span><span class="p">,</span> <span class="n">bytelist</span><span class="p">))</span>
+
+<span class="c1"># local map</span>
+<span class="n">looper2</span><span class="p">()</span>
+</pre>
+
+
+<p>Sonuçlar:</p>
+<pre>
+for loop 1 took 4.05400013924 seconds
+for loop 2 took 2.70499992371 seconds
+map took 2.22099995613 seconds
+map local took 2.24699997902 seconds
+</pre>
+
+<p>Evet, şampiyonumuz:</p>
+<pre class="code literal-block"><span></span><span class="n">string</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">chr</span><span class="p">,</span> <span class="n">bytelist</span><span class="p">))</span>
+</pre>
+
+
+<p><a href="https://gist.github.com/yasar11732/7181985">Bu ölçümleri yapmak için kullandığım dosyaya</a> gist üzerinden erişebilirsiniz.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="debugging-decorator.html" rel="prev" title="Debugging Decorator">Önceki yazı</a>
+            </li>
+            <li class="next">
+                <a href="../algoritma/pixel-siralama-videolari.html" rel="next" title="Pixel Sıralama Videoları">Sonraki yazı</a>
+            </li>
+        </ul></nav></aside></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/jquery.min.js"></script><script src="../assets/js/bootstrap.min.js"></script><script src="../assets/js/moment-with-locales.min.js"></script><script src="../assets/js/fancydates.js"></script><script src="../assets/js/jquery.colorbox-min.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-tr.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("tr");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function() {
+    var cx = '013136674562336859018:ouohwab0yku';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44774134-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

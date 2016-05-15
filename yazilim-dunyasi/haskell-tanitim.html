@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
+<head>
+<meta charset="utf-8">
+<base href="http://ysar.net/yazilim-dunyasi/haskell-tanitim.html">
+<meta name="description" content="Haskell, tamamen fonksiyonel, zarif ve ifade gücü yüksek bir dil. Örnek kodlar ve kullanım alanlarını anlattım.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Haskell Öğreniyorum | Python, Yazılım, ve Programlama</title>
+<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/yazilim-dunyasi/haskell-tanitim.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Haskell, tamamen fonksiyonel, zarif ve ifade gücü yüksek bir dil. Örnek kodlar ve kullanım alanlarını anlattım.">
+<meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="../python/windows-exe-yapma-alternatifi.html" title="cx_freeze ve py2exe alternatifi" type="text/html">
+<link rel="next" href="../python/lexical-analiz.html" title="Lexical Analiz" type="text/html">
+<meta property="og:site_name" content="Python, Yazılım, ve Programlama">
+<meta property="og:title" content="Haskell Öğreniyorum">
+<meta property="og:url" content="http://ysar.net/yazilim-dunyasi/haskell-tanitim.html">
+<meta property="og:description" content="Haskell, tamamen fonksiyonel, zarif ve ifade gücü yüksek bir dil. Örnek kodlar ve kullanım alanlarını anlattım.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2013-10-13T12:51:18+03:00">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ana içeriğe geç</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://ysar.net/">
+
+                <span id="blog-title">Python, Yazılım, ve Programlama</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../yasar-arabaci.html">Hakkımda</a>
+                </li>
+<li>
+<a href="../soru-cevap.html">Soru-Cevap</a>
+                </li>
+<li>
+<a href="../archive.html">Arşiv</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS kaynağı</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search with google--><form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+<input type="hidden" name="q" value="site:http://ysar.net/"><input type="text" name="q" maxlength="255" results="0" placeholder="Search">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="haskell-tanitim.md" id="sourcelink">Kaynak</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Haskell Öğreniyorum</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                    Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2013-10-13T12:51:18+03:00" itemprop="datePublished" title="2013-10-13 12:51">2013-10-13 12:51</time></a></p>
+            
+        <p class="sourceline"><a href="haskell-tanitim.md" id="sourcelink">Kaynak</a></p>
+
+                <meta name="description" itemprop="description" content="Haskell, tamamen fonksiyonel, zarif ve ifade gücü yüksek bir dil. Örnek kodlar ve kullanım alanlarını anlattım.">
+</div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Hazır tatil, boş vaktim varken Haskell öğrenmeye bir şans daha vereyim dedim. Bir yandan
+öğrenirken, bir yandan da ufak bir <a href="http://learnyouahaskell.com/introduction">Haskell tanıtımı</a> yapayım (bkz: araklamak).</p>
+<p>Haskell <strong>tamamen fonksiyonel</strong> bir dil. İmperatif dillerde, programa hangi adımları izleyeceğini
+adım adım anlatıp, neyin nasıl yapılacağını anlatıyoruz. Fonksiyonel dillerde ise, neyin ne olduğunu
+belirtiyoruz, nasıl yapılacağına program kendi karar veriyor.</p>
+<p>Haskell <strong>tembel</strong> bir dil. Haskell size bir sonuç göstermek zorunda kalmadıkça, fonksiyon çalıştırmaz.
+Örneğin, bir liste döndüren bir fonksiyonu çalıştırıp, ilk iki elemanını ekrana basmak istediğinizde,
+Haskell ilk iki elemanı bulacak kadar fonksiyonu çalıştırıp, orada bırakıyor.</p>
+<p>Haskell, <strong>statik tipleme</strong> kullanıyor. Yani, derleme sırasında bir takım hataları yakalayabiliyorsunuz. Ayrıca,
+C'nin aksine, çıkarım yapma yoluyla veri tiplerini bulabiliyor. Örneğin, <code>a = 5</code> derseniz, <code>a</code>'nın bir int
+olduğunu belirtmenize gerek yok, Haskell kendi anlıyor.</p>
+<p>Haskell <strong>zarif ve ifade gücü yüksek</strong> bir dil. Python'dan hatırlayacağınız, <em>list comprehension</em> yapısı Haskell
+kaynaklı. Ne kadar az kod, o kadar kolay bakım gereksinimi ve o kadar az bug demek. <!-- TEASER_END --></p>
+<h3>Haskell Örnek Kodlar</h3>
+<pre class="code literal-block"><span></span><span class="nf">primesTo</span> <span class="n">m</span> <span class="ow">=</span> <span class="n">eratos</span> <span class="p">[</span><span class="mi">2</span><span class="o">..</span><span class="n">m</span><span class="p">]</span>  <span class="kr">where</span>
+   <span class="n">eratos</span> <span class="kt">[]</span>     <span class="ow">=</span> <span class="kt">[]</span>
+   <span class="n">eratos</span> <span class="p">(</span><span class="n">p</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="n">p</span> <span class="kt">:</span> <span class="n">eratos</span> <span class="p">(</span><span class="n">xs</span> <span class="p">`</span><span class="n">minus</span><span class="p">`</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="o">+</span><span class="n">p</span><span class="o">..</span><span class="n">m</span><span class="p">])</span>
+</pre>
+
+
+<p>Yukarıda, <em>sieve of eratosthenes</em> yöntemiyle asal sayıları bulan bir fonksiyon görüyoruz. <code>primesTo</code> fonksiyonu tek bir
+argüman alıyor, ve <code>eratos</code> isminde bir başka fonksiyonu 2'den başlayıp o sayıya kadar olan sayılaradan oluşan bir liste
+ile çağırıyor.</p>
+<p><code>eratos</code> fonksiyonu iki farklı şekilde çağırılabilecek şekilde yazılmış. Eğer boş listeyle çağırılırsa, boş liste döndürüyor.
+Eğer, bir liste ile çağırılırsa, p bu listenin ilk elemanı, ve xs geriye kalan elemanlarından oluşan bir liste değerini alıyor.</p>
+<p>Çıktı olarak da, ilk elemanı p, geriye kalan elemanları ise başka bir eratos fonksiyonundan gelen liste olan bir liste döndürüyoruz.
+İkinci fonksiyona verdiğimiz argüman, xs listesinden p ve katları çıkarılmış hali. <code>minus</code> fonksiyonu'nun ayrıca tanımlanması gerekiyor.</p>
+<h3>Kullanım alanları</h3>
+<p>Haskell ile geçirdiğim süre içerisinde, Haskell kullanıcılarının genelde matematikçi olduğun gördüm. Haskell ile
+yazılmış uygulamalara baktığımda ise, denklemlerin doğruluğunu kanıtlayan programlar, parser ve derleyiciler, ayrıca
+tam olarak ne işe yaradığını bilemediğim ama çok zeki birşeymiş gibi duran bazı programlar var.</p>
+<p>Ayrıca, wiki klonu, çeşitli oyunlar, web server vs. de yazılmış. Yani, normal insanlara göre şeyler de
+yazılabiliyor demek ki Haskell ile.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="../python/windows-exe-yapma-alternatifi.html" rel="prev" title="cx_freeze ve py2exe alternatifi">Önceki yazı</a>
+            </li>
+            <li class="next">
+                <a href="../python/lexical-analiz.html" rel="next" title="Lexical Analiz">Sonraki yazı</a>
+            </li>
+        </ul></nav></aside></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/jquery.min.js"></script><script src="../assets/js/bootstrap.min.js"></script><script src="../assets/js/moment-with-locales.min.js"></script><script src="../assets/js/fancydates.js"></script><script src="../assets/js/jquery.colorbox-min.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-tr.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("tr");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function() {
+    var cx = '013136674562336859018:ouohwab0yku';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44774134-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

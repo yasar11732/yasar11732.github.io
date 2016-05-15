@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
+<head>
+<meta charset="utf-8">
+<base href="http://ysar.net/soru-cevap.html">
+<meta name="description" content="Zaman içinde Python ve programlama hakkında bana sorulan sorulara verdiğim cevapların bir derlemesi">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Soru &amp; Cevap | Python, Yazılım, ve Programlama</title>
+<link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="assets/css/theme.css" rel="stylesheet" type="text/css">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
+<link rel="canonical" href="http://ysar.net/soru-cevap.html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Zaman içinde Python ve programlama hakkında bana sorulan sorulara verdiğim cevapların bir derlemesi">
+<meta name="author" content="Yaşar Arabacı">
+<meta property="og:site_name" content="Python, Yazılım, ve Programlama">
+<meta property="og:title" content="Soru &amp; Cevap">
+<meta property="og:url" content="http://ysar.net/soru-cevap.html">
+<meta property="og:description" content="Zaman içinde Python ve programlama hakkında bana sorulan sorulara verdiğim cevapların bir derlemesi">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2013-10-06T10:15:05+03:00">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ana içeriğe geç</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://ysar.net/">
+
+                <span id="blog-title">Python, Yazılım, ve Programlama</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="yasar-arabaci.html">Hakkımda</a>
+                </li>
+<li class="active">
+<a href="#">Soru-Cevap <span class="sr-only">(etkin)</span></a>
+                </li>
+<li>
+<a href="archive.html">Arşiv</a>
+                </li>
+<li>
+<a href="rss.xml">RSS kaynağı</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search with google--><form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+<input type="hidden" name="q" value="site:http://ysar.net/"><input type="text" name="q" maxlength="255" results="0" placeholder="Search">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="soru-cevap.md" id="sourcelink">Kaynak</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="storypage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Soru &amp; Cevap</a></h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Siz de bana soru sormak istiyorsanız, sorularınızı yasar11732@gmail.com adresine mail olarak gönderebilirsiniz.</p>
+<h3>
+<a href="soru-cevap.html#asal">Asal Sayılar</a> {#asal}</h3>
+<blockquote>
+<p>Hocam, ben Süha Türköz. Asal sayıların bulunmasında hangi
+algoritmayı kullandığınızı öğrenebilir miyim?</p>
+</blockquote>
+<p>En çok tercih ettiğim algoritma <a href="http://tr.wikipedia.org/wiki/Eratosten_kalburu">Eratosten kalburu</a>. Ayrıca, <a href="python/asal-yolculuk.html">Asal sayı algorimaları</a> yazımı
+da okuyabilirsin.</p>
+<h3>
+<a href="soru-cevap.html#asm-ve-decorator">__asm yönergesi ve Python decorator</a> {#asm-ve-decorator}</h3>
+<blockquote>
+<p>Hocam merhabalar. Benim python üzerinde merak ettiğim bir kaç
+konu var. Öncelikle c++ dilindeki gibi <code>__asm</code> tarzı bir fonksiyon
+kullanabilir miyiz? Mümkünse ingilizce kaynak dahi olabilir. Son olarak
+ise pythonda sınıfların üstlerine @blabla tarzında girdiler var
+isimlerinide bilmiyorum, bunlar ne işe yarar? Teşekkür ederim..</p>
+</blockquote>
+<p>Python derlenebilen bir dil olmadığı ve yorumlanan (interpreted) bir dil
+olduğu için, Python kodların içerisinde assembly kullanamazsın. Eğer
+assembly kodları kullanmak mecburiyetinde isen, bunları C fonksiyonu
+olarak derleyip, <a href="http://docs.python.org/library/ctypes.html">ctypes</a> ile çağırabilirsin. İkinci sorun için ise,
+<a href="python/decorator.html">decoratörlerle ilgili yazı</a>yı okuyabilirsin.</p>
+<p>Kolay Gelsin.</p>
+<h3>
+<a href="soru-cevap.html#siniflar">Python'da sınıflar</a> {#siniflar}</h3>
+<blockquote>
+<p>Sınıflar hakkında detaylı bilgi verirmisiniz?</p>
+</blockquote>
+<p>Çok uzun bir konu olduğu ve birçok yerlerde uzunca anlatıldığı için,
+link vermekle yetineceğim. Özellikle takıldığın bir yer varsa tekrar
+sorabilirsin;</p>
+<ul>
+<li><a href="http://www.belgeler.org/uygulamalar/python-tutorial_siniflar.html">belgeler.org</a></li>
+<li><a href="http://www.istihza.com/py2/nesne.html">istihza.com</a></li>
+</ul>
+<h3>
+<a href="soru-cevap.html#oyuncpp">Oyun programcılığı için C++</a> {#oyuncpp}</h3>
+<p><a href="http://takipdelisi.tumblr.com/">takipdelisi</a>{: rel="nofollow"}:</p>
+<blockquote>
+<p>Oyun programcılığına dair pek
+bilgisi olmayan biri olarak C++ programlama dilini örenmelimiyim sence?</p>
+</blockquote>
+<p>Tam olarak ne yapmak istediğinle alakalı bence, ama boş vaktin varsa C++
+öğren derim. Oyun programlama amaçlı düşünüyorsan, <a href="http://www.lazyfoo.net/SDL_tutorials">lazyfoo sdl dersleri</a> c++ ve sdl
+kullanarak oyun programlamayı bir güzel anlatmış. Ancak şunu da
+belirteyim ki, sdl ve openGl ve directX için gereken eklentiler
+Python’da mevcut. Yani bunları kullanmak için C++ öğrenmene gerek yok.</p>
+<p>(Ekleme)</p>
+<p>Bu arada, SDL eklentisinden kastım PyGame idi. PyGame ile ilgili bolca
+kaynak internette mevcut. <del>Türkçe kaynak için <a href="http://www.metehan.us/tag/pygame-2">metehan.us</a> adresinde
+güzel anlatımlar vardı diye hatırlıyorum.</del></p>
+<h3>
+<a href="soru-cevap.html#uzaktan">Uzaktan eğitim</a> {#uzaktan}</h3>
+<blockquote>
+<p>hocam selam django ve python konusunda uzaktan eğitim almak
+istiyoruz bize nasıl yardımcıolabilirsiniz</p>
+</blockquote>
+<p>Uzaktan eğitim konusunda daha önce bir tecrübem olmadı, bu yüzden pek
+bir bilgim yok açıkcası. Google'da arayınca bir iki yer çıkıyor, ama ne
+kadar güvenilir olurlar bilemiyorum.
+İstersen <a href="http://www.istihza.com/forum/index.php">istihza forum</a>da sormayı
+deneyebilirsin, belki oradaki arkadaşlar biliyorlardır. Bir de <a href="http://liste.linux.org.tr/listeler.php">linux
+programlama mail listesi</a> var, oradan da yardım
+almayı deneyebilirsin. Kusura bakma daha fazla yardımcı
+olamayacağım.</p>
+<h3>
+<a href="soru-cevap.html#BeaufitulTag">BeautifulSoup ile tag içindeki tanımlamaları alma</a> {#BeautifulTag}</h3>
+<p><a href="http://eraygezer.tumblr.com/">eraygezer</a>{: rel="nofollow"}:</p>
+<blockquote>
+<p>Merhabalar. Blogunuzda BeautifulSoup
+kullanımını göstermişsiniz ve çok güzel de bir ders olmuş. Benim sormak
+istediğim <code>&lt;img src="kaynak"&gt;&lt;/img&gt;</code> kodundaki kaynağı nasıl alabileceğim olacaktı.
+Şimdiden teşekkürler. :)</p>
+</blockquote>
+<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">BeautifulSoup</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="n">basit_html</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">&lt;html&gt;&lt;head&gt;&lt;title&gt;Başlık buraya&gt;/title&gt;&lt;/head&gt;</span>
+<span class="s2">&lt;body&gt;&lt;p&gt;Paragraf 1&lt;img src="http://www.blogcdn.com/wow.joystiq.com/media/2008/01/maiev.jpg"&gt;&lt;/p&gt;&lt;p class="hebele"&gt;Paragraf 2&lt;/p&gt;&lt;/body&gt;</span>
+<span class="s2">&lt;/html&gt;"""</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">basit_html</span><span class="p">)</span>
+<span class="n">imgs</span> <span class="o">=</span> <span class="n">soup</span><span class="p">(</span><span class="s2">"img"</span><span class="p">)</span> <span class="c1"># img taglarının listesini al</span>
+<span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">imgs</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">img</span><span class="p">[</span><span class="s2">"src"</span><span class="p">]</span>
+</pre>
+
+
+<h3>
+<a href="soru-cevap.html#django-model">Django modelleri</a> {#django-model}</h3>
+<blockquote>
+<p>hocam selam , üç modeli öncelikle formlar aracılı ile view ve
+oradan da temp e taşıyorum sıkıntım şu .... örneğin dersler modelimde
+ForeignKey ile bağlantılı hocalar var , öğrenciler modelim de de yine
+ForeignKey ile bağlı hoca ve dersler var , ben öğrenci kaydederken hoca
+seçtiğimde hocaya atanmış olan derslerin gelmesini istiyorum ama dersler
+tablomdaki tüm kayıtlar geliyor. bilmem anlatabildimmi bunu yapmamın
+imkanı varmı yoksa boşunamı kasıyorum</p>
+</blockquote>
+<p>Sorunu bu şekilde anlamak biraz zor. İstersen örnek kodlarla birlikte
+www.istihza.com/forum adresine sorabilirsin. Yarın okul başlıyor ama
+vakit bulabilirsem ben de cevap vermeye çalışırım.</p>
+<h3>
+<a href="soru-cevap.html#dosya-neden-kapatmak">Dosyaları neden kapatıyoruz?</a> {#dosya-neden-kapatmak}</h3>
+<p><a href="http://eraygezer.tumblr.com/">eraygezer</a>{: rel="nofollow"}:</p>
+<blockquote>
+<p>Merhaba hocam, iyi günler. Aslında
+sorumu bir örnekle açıklayacaktım ama soru sorma bölümünde alt satıra
+geçemediğim ve kodları yazınca link uyarısı aldığım için anlatarak
+açıklayacağım. Python'da bir dosyayı açarken open'i kullanıyoruz, daha
+sonra dosyayla işimiz bittiğinde close ile kapatıyoruz. Peki kapatmanın
+önemi nedir? a değişkeninin içeriğini mi sıfırlar, yoksa a'yı hafızadan
+tamamen kaldırır mı? Şimdiden teşekkürler.</p>
+</blockquote>
+<p>Dosyayı kapatmanın amacı, işletim sistemine o dosyayla işinin bittiğini
+bildirmek. İşletim sistemleri her işlemin (yazdığın program çalıştığı
+anda bir işlemdir, aynı anda iki kopyası çalışırsa iki işlem olur vs.)
+kullandığı kaynakların (ram, dosya, port vs.) kaydını tutar. İşletim
+sistemi bu kaynakların nasıl kullanıldığını denetler.</p>
+<p>Şu an tam olarak sayılarını bilmiyorum, ama işletim sistemlerinde her
+işlemin aynı anda açık tutabileceği dosya sayısı için limitleri var.
+Eğer açtığın dosyaları kapatmazsan, bu limite takılabilirsin.</p>
+<p>İşletim sistemleri, iki farklı işlemin aynı dosyayı aynı anda yazma
+modunda açmasına izin vermeyecektir. Dolayısıyla, yazma modunda açtığın
+bir dosyayı sen kapatana kadar, diğer programlar o dosyaya yazamaz (ya
+da o dosyayı silemez).</p>
+<p>Programlama dillerinde kullandığın dosyalar genellikle yazılım
+arabelleğine sahiptir. Bunların da çeşitli modları var. Mesela, eğer
+kullandığın dosya yeni satıra geçildiğinde arabelleği boşaltan bir
+moddaysa, sen dosyaya yeni satır yazana kadar işletim sisteminin senin o
+dosyaya birşey yazmak istediğinden haberi yoktur. Python veya
+kullandığın diğer dillerin kütüphaneleri yazdığın şeyleri biriktirip
+bunları işletim sistemine tek seferde bildirir. Böylece performans
+artışı sağlanır. Bir dosyayı kapatmak aynı zamanda ara bellekte kalan
+her şeyin işletim sistemine gönderilmesine neden olur. Buna <em>flush</em> da
+denir. Bunu Python’da dosya objelerinin <code>flush()</code> metoduyla da
+yapabilirsin. Ancak işletim sistemi gönderdiğin şeyi hemen dosyaya
+yazacak diye birşey de yok. Ne zaman uygun görürse o zaman yazar. Eğer
+işletim sistemini hemen yazmaya zorlamak istiyorsan, <a href="http://docs.python.org/2/library/os.html#os.fsync" title="os.fsync">fsync fonksiyonu</a> işini görebilir.</p>
+<p>Son olarak da, Python kullanırken dosyalarını <code>close()</code> ile kapatma.
+Python 2.5’den beri olan <code>with</code> yapısını kullan. Örneğin;</p>
+<pre class="code literal-block"><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"a"</span><span class="p">,</span><span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya1</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"b"</span><span class="p">,</span><span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya2</span><span class="p">:</span>
+    <span class="n">dosya1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">dosya2</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+</pre>
+
+
+<p>Eğer dosyayı açtığın yer ile, <code>close()</code> metodunu çağırdığın yer arasında
+bir hata olursa, <code>close()</code> satırına ulaşamayabilir. Bu yüzden dosya açık
+kalır. <code>with</code> yapısı yer zaman dosyanın kapandığından emin oluyor.</p>
+<p>Bu arada, modern işletim sistemleri bir işlem sonlandığında onun açık
+kalan dosyalarını otomatik olarak kapatır. Galiba eski işletim
+sistemleri bunu yapmayabiliyormuş.</p>
+<p><code>a</code> değişkeniyle ilgili pek bir değişiklik olmaz. Sadece artık o dosya
+objesi üzerinde daha fazla işlem yapamazsın. Eğer dosya objesini tamamen
+hafızan silmek istiyorsan, <code>a</code> değişkenine başka bir değer
+atayabilirsin. <em>Garbage collection</em> denen şey, o dosyaya hiç bir
+referans kalmadığı için onu hafızadan silecektir. Ya da <code>del a</code> diyerek
+de o değişkeni silebilirsin.</p>
+<p><strong>ekleme:</strong></p>
+<p>Bu arada, <code>open()</code> fonksiyonuna tekrar bir göz attım. <code>open()</code>fonksiyonu
+arabellek modunu belirlemene izin veriyor. Bunun için üçüncü argümanı
+kullanıyorsun.</p>
+<pre>
+open("a.txt","w",0) # arabellek kullanma (sadece işlemin kendi arabelleğini etkiler, işletim sisteminin arabelleğini etkilemez)
+open("a.txt","w",1) # yeni satır arabellek modu
+open("a.txt","w",4096) # boyutu belirtilen değer kadar olan bir arabellek kullan. Her 4096 bayt yazıldığında işletim sistemine yazım için istek gidecek
+</pre>
+
+<h3>
+<a href="soru-cevap.html#lisans-versiyon">GNU Lisansı ve versiyonlama</a> {#lisans-versiyon}</h3>
+<p><a href="http://eraygezer.tumblr.com/">eraygezer</a>{: rel="nofollow"}</p>
+<blockquote>
+<p>Merhabalar hocam. Benim sorum sürümler
+ve GNU GPL lisansı olacaktı. İlk önce sürümlerden başlayacağım. Sürüm
+dediğimiz şey, programlarda nasıl belirlenir? İkinci olarak da GNU GPL
+ile ilgili bir şeyler soracağım. Benim gördüğüm kadarıyla GNU GPL v2 ve
+v3 var, bunların arasındaki fark nedir? Başka bir şey ise şu ki bir
+forumda GNU'nun sitesindeki bir ifadeyi programın başına eklersek onu
+lisanslamış olduğumuz söyleniyor, bu ne kadar doğrudur? Şimdiden çok
+teşekkürler.</p>
+</blockquote>
+<p>Sürümleme aslında programı yazanın keyfine kalmış ama genel olarak kabul
+edilen standartlar da var. Sürümler genelde major.minor.relase.build
+şeklinde olur. Aynı major'a sahip sürümlerin kendi arasında uyumlu
+olması beklenir. Örneğin, Python 2.x için yazdığın programlar 2.7, 2.6,
+2.5 gibi aynı major'a sahip Python sürümlerinde pek fazla değişime
+ihtiyaç bırakmadan çalışabilir. Major numarası çok belirgin
+değişiklikler yapılacağında artırılır. Ticari programlarda, aynı major'a
+yapılan güncellemeleri ücretsiz olarak alabilmen gerekir. Minor numarsı
+ise, eski özellikleri bozmayan yeni bir özellik eklendiğinde ve hata
+düzeltmeleri yapıldığında artırılır. Örneğin, 2.5 sürümünde Python'a
+eklenen özellikler eklendi. Ancak, Python 2.4 için yazılan kodlar halen
+Python 2.5'de çalıştırılabilir. Release ise ufak bir hata düzeltmesi,
+minik değişikler yapıldığında artırılır. Minor artırıldığında, release
+sıfırlanır. Build numarası ise yazılım her derlendiğinde artırılır ve
+hiç sıfırlanmaz. Hata raporu yazarken belirtilmesi iş görür.</p>
+<p>GPL versiyonları arasında çok fazla bir fark yok. Birkaç birşey eklendi,
+bazı konular netleştirildi vs.</p>
+<p>Evet, o ifadeyi ekleyerek programı lisanslamış oluyoruz, ancak bunun
+Türkiye'de hukuki bir geçerliliği var mı bilmiyorum.</p>
+<h3>
+<a href="soru-cevap.html#hangi-surum">Hangi sürümle başlamalı?</a> {#hangi-surum}</h3>
+<blockquote>
+<p>Bakıyorum da hep tartışılmış ve konuşulmuş. Sizin fikrinizi
+merak ettim. Bu gün itibarıyla sizce Python 2.X mi Python 3.X'mi
+öğrenilmelidir. Tkinker, pyqt, django gibi yapılar hangisini
+destekliyor. Teşekkürler</p>
+</blockquote>
+<p>Kısa cevap: 2.x</p>
+<p>Uzun cevap;</p>
+<p><a href="https://python3wos.appspot.com/">Python 3 Wall of Superpowers</a> en çok kullanılan paketlerden Python 3
+destekli olanları yeşil ile gösteriyor. Durumlar eskiye nazaran biraz
+daha iyi görünüyor. 200 paketten 128 tanesi Python 3'e taşınmış
+vaziyette. Saydığın paketlerin hepsi de Python 3'de çalışıyor. Ancak ben
+yine de Python 2'nin öğrenilmesini tavsiye ederim.</p>
+<p>Python 3 öğrendiğinde, kullanmak istediğin paketin Python 2 versiyonu
+olmaması ihtimali var, diğer yandan, sadece Python 3 destekleyip, Python
+2 versiyonu olmayan paket hatırlamıyorum.</p>
+<p>Eğer yazdığın kodu bir server'da çalıştıracaksan, o server'in sadece
+Python 2'yi çalıştırması bir hayli olası. Örneğin, bildiğim kadarıyla
+google app engine Python 2.7 versiyonunu kullanıyor.</p>
+<p>Bildiğim kadarıyla çoğu linux dağıtımında kurulu gelen Python versiyonu
+2. Ekstra birşey yapmadan direk kullanmaya başlayabilirsin. Python 3
+kullanmak istediğin zaman ise, hem Python 2 hem de Python 3 kurulu
+olacaktır bilgisayarında, çünkü bazı programlar Python 2'yi bağımlılık
+olarak yükler diye tahmin ediyorum. Böyle olduğu zaman iki farklı sürüm
+yüklü olduğu için, sinek küçüktür ama mide bulandırır tarzında
+problemler çıkıyor. Yazdığın kodu yanlış Python ile çalıştırıyorsun vs.</p>
+<p>İnternette bir süredir Python 3 için yazılan çizilen şeyler var, ancak
+Python 2 için yazılan şeyler yılların birikimi. Bir problemin olduğunda,
+bulduğun sonuç büyük ihtimalle Python 2'ye yönelik olacaktır. Ders
+anlatımlarının, örneklerin, makalelerin çoğu hala Python 2'ye yönelik.</p>
+<p>Vakti geldiğinde, Python 3'e geçmen hiçbir zorluk teşkil etmiyor. Bir
+iki yeni özelliğini öğrenirsin, eski kodlarından taşımak istediklerini
+2to3 aracıyla Python 3'e taşırsın, bitti gitti zaten.</p>
+<p>Python 2 öğrenin derim, sadece unicode'larınıza biraz dikkat edin :)</p>
+<p><strong>Not:</strong> Vakit darlığından dolayı hızlıca yazdım, okuyup düzeltme yapma
+şansım olmadı. Eğer dil veya bilgi hataları varsa mazur görün lütfen.</p>
+</div>
+    </div>
+    
+
+</article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="assets/js/jquery.min.js"></script><script src="assets/js/bootstrap.min.js"></script><script src="assets/js/moment-with-locales.min.js"></script><script src="assets/js/fancydates.js"></script><script src="assets/js/jquery.colorbox-min.js"></script><script src="assets/js/colorbox-i18n/jquery.colorbox-tr.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("tr");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function() {
+    var cx = '013136674562336859018:ouohwab0yku';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44774134-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

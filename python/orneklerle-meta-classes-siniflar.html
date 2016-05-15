@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
+<head>
+<meta charset="utf-8">
+<base href="http://ysar.net/python/orneklerle-meta-classes-siniflar.html">
+<meta name="description" content="Python meta sınıflar sizin de kafanızı karıştırıyorsa bu yazıyı okuyun. Eli Bendersky anlatmış, ben de çevirdim.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Örneklerle Python Metasınıflar | Python, Yazılım, ve Programlama</title>
+<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/python/orneklerle-meta-classes-siniflar.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Python meta sınıflar sizin de kafanızı karıştırıyorsa bu yazıyı okuyun. Eli Bendersky anlatmış, ben de çevirdim.">
+<meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="beautiful-soup-ve-basitce-kullanimi.html" title="Python Beautiful Soup Kütüphanesi ve Basitçe Kullanımı" type="text/html">
+<link rel="next" href="toplu-halde-http-durum-kodu-alma.html" title="Toplu halde http durum kodu alma" type="text/html">
+<meta property="og:site_name" content="Python, Yazılım, ve Programlama">
+<meta property="og:title" content="Örneklerle Python Metasınıflar">
+<meta property="og:url" content="http://ysar.net/python/orneklerle-meta-classes-siniflar.html">
+<meta property="og:description" content="Python meta sınıflar sizin de kafanızı karıştırıyorsa bu yazıyı okuyun. Eli Bendersky anlatmış, ben de çevirdim.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2011-12-23T08:54:00+02:00">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ana içeriğe geç</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://ysar.net/">
+
+                <span id="blog-title">Python, Yazılım, ve Programlama</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../yasar-arabaci.html">Hakkımda</a>
+                </li>
+<li>
+<a href="../soru-cevap.html">Soru-Cevap</a>
+                </li>
+<li>
+<a href="../archive.html">Arşiv</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS kaynağı</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search with google--><form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+<input type="hidden" name="q" value="site:http://ysar.net/"><input type="text" name="q" maxlength="255" results="0" placeholder="Search">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="orneklerle-meta-classes-siniflar.md" id="sourcelink">Kaynak</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Örneklerle Python Metasınıflar</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                    Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2011-12-23T08:54:00+02:00" itemprop="datePublished" title="2011-12-23 08:54">2011-12-23 08:54</time></a></p>
+            
+        <p class="sourceline"><a href="orneklerle-meta-classes-siniflar.md" id="sourcelink">Kaynak</a></p>
+
+                <meta name="description" itemprop="description" content="Python meta sınıflar sizin de kafanızı karıştırıyorsa bu yazıyı okuyun. Eli Bendersky anlatmış, ben de çevirdim.">
+</div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Bugün <a href="http://eli.thegreenplace.net/" title="Eli Bendersky's website  ">Eli Bendersky</a>'ye ait <a href="http://eli.thegreenplace.net/2011/08/14/python-metaclasses-by-example/">Python metaclasses by example</a>
+makalesini okudum. Metasınıflar benim için hep üç aşağı beş yukarı
+havada kalan kavramlar olmuşlardır. Bahsettiğim makaleyi okuduktan
+sonra, kafamda bir nebze daha iyi oturtabildim bunları. Bunun üzerine bu
+makaleyi Türkçe'ye çevirip paylaşmaya karar verdim. Tabi ki, Eli
+Bendersky'nin izni ile. Aşağıda makalenin tam metninin çevirisini
+bulabilirsiniz:</p>
+<p>Python, çalışma yapısını ve özelliklerini gizleyen birçok "sihir"
+olmayışından ve diğerlerinden daha açık bir dil olduğundan haklı olarak
+gurur duyar. Diğer yandan, bazen, ilgi çekici soyutlamalara imkan
+sağlamak için olağandandan daha sihirli dil yapıları bulunan Python’un
+daha kirli ve anlaşılması güç kısımları deşilebilir. <em>Metasınıflar</em>
+böyle özelliklerdir. <!-- TEASER_END --></p>
+<p>Malesef, metasınıfların namı, "sorun arayan çözümler" olarak bilinir. Bu
+makalenin amacı, sıkça kullanılan Python kodlarının içerisinde,
+metasınıfların gerçek kullanımından birkaç örnek göstermektir.</p>
+<p>İnternette Python metasınıflarıyla ilgili birçok materyal var (ÇN:
+Türkçe yok malesef), yani bu sadece metasınıflar üzerine başka bir ders
+değil (<em>Referanslar</em> bölümünde faydalı bulduğum linklere
+bakabilirsiniz.). Metasınıfların ne olduğu konusuna biraz değineceğim
+fakat, benim amacım örnekler. Bunu söylemişken, bu makale kendi yağında
+kavrulmayı hedefler – metasınıfların ne olduğunu bilmiyorsanız bile
+okumaya başlayabilirsiniz.</p>
+<p>Başlamadan önce bir diğer hatırlatma – bu makale Python 2.6 &amp; 2.7’e göre
+yazılmıştır, çünkü internette bulacağınız birçok kod hala bu sürümler
+içindir. Python 3.x’de metasınıflar benzer şekilde çalışsa da bunları
+belirtmenin söz dizimi birazcık farklıdır. Sonuç olarak, bu makalenin
+büyük bir kısmı 3.x’e de uygundur.</p>
+<h4>Sınıflar da objedir</h4>
+<p><em>metasınıflar</em>’ı anlamak için <em>sınıflar</em> hakkındaki bazı şeyleri
+açıklığa kavuşturmalıyız. Python’da <em>herşey bir objedir</em>. Sınıflar da
+dahil. Aslına bakarsanız, Python’da sınıflar <a href="http://en.wikipedia.org/wiki/First-class_object">birinci-sınıf
+objeler</a>dir – çalışma anında yaratılabilir, parametre olarak
+gönderilebilir ve fonksiyonlardan döndürülebilir ve değişkenlere
+atanabilir. Sınıfların bu özelliklerini gösteren interaktif komut
+satırından bir örnek:</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">make_myklass</span><span class="p">(</span><span class="o">**</span><span class="n">kwattrs</span><span class="p">):</span>
+<span class="o">...</span>   <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="s1">'MyKlass'</span><span class="p">,</span> <span class="p">(</span><span class="nb">object</span><span class="p">,),</span> <span class="nb">dict</span><span class="p">(</span><span class="o">**</span><span class="n">kwattrs</span><span class="p">))</span>
+<span class="o">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">myklass_foo_bar</span> <span class="o">=</span> <span class="n">make_myklass</span><span class="p">(</span><span class="n">foo</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">bar</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">myklass_foo_bar</span>
+<span class="o">&lt;</span><span class="k">class</span> <span class="nc">__main__</span><span class="o">.</span><span class="n">MyKlass</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">myklass_foo_bar</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span>
+<span class="o">&lt;</span><span class="n">__main__</span><span class="o">.</span><span class="n">MyKlass</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x01F6B050</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="o">.</span><span class="n">foo</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">bar</span>
+<span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</pre>
+
+
+<p>Burada <code>type</code> yerleşik fonksiyonunun 3 argümanlı şeklini <code>MyKlass</code>
+isimli, <code>object</code>’den miras alan, bazı özellikleri argüman olarak
+sağlanmış bir sınıfı dinamik olarak oluşturmak için kullanıyoruz. Daha
+sonra böyle bir sınıf yaratabiliriz. Görebileceğiniz gibi,
+<code>myklass_foo_bar</code> şuna eşittir:</p>
+<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">MyKlass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="n">foo</span> <span class="o">=</span> <span class="mi">2</span>
+  <span class="n">bar</span> <span class="o">=</span> <span class="mi">4</span>
+</pre>
+
+
+<p>Ancak çalışma anında oluşturulmuş, fonksiyondan döndürülmüş ve bir
+değişkene atanmıştır.</p>
+<h4>Sınıf’ın sınıf’ı</h4>
+<p>Python’daki her obje (yerleşikler de dahil) bir sınıfa sahiptir. Biraz
+önce sınıfların da obje olduklarını gördük, yani sınıfların da bir
+sınıfı olmak zorunda, değil mi? Kesinlikle. Python <code>__class__</code>
+özelliği ile bir objenin sınıfını incelememize izin verir. Bunu
+çalışırken görelim:</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">SomeKlass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span> <span class="k">pass</span>
+<span class="o">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">someobject</span> <span class="o">=</span> <span class="n">SomeKlass</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">someobject</span><span class="o">.</span><span class="n">__class__</span>
+<span class="o">&lt;</span><span class="k">class</span> <span class="nc">__main__</span><span class="o">.</span><span class="n">SomeKlass</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">SomeKlass</span><span class="o">.</span><span class="n">__class__</span>
+<span class="o">&lt;</span><span class="nb">type</span> <span class="s1">'type'</span><span class="o">&gt;</span>
+</pre>
+
+
+<p>Bir sınıf ve bu sınıfın bir objesini yarattık. <code>someobject</code> objesinin
+<code>__class__</code> özelliğini inceleyerek, bunun SomeKlass olduğunu gördük.
+İlginç kısım şimdi geliyor. <code>SomeKlass</code>’ın sınıfı ne? <code>__class__</code> ile
+bunu tekrar inceleyebiliriz ve bunun <code>type</code> olduğunu görüyoruz.</p>
+<p>Yani <code>type</code>, Python sınıflarının sınıfıdır. Diğer bir deyişle,
+yukarıdaki örnekteki <code>someobject</code> bir <em>SomeKlass</em> objesiyken,
+<code>SomeKlass</code>’ın kendisi de bir <code>type</code> objesidir.</p>
+<p>Sizi bilmem ama ben bunu güven tazeleyici buluyorum. Madem sınıfların
+Python’da obje olduklarını öğrendik, bunların da bir sınıflarının olması
+mantıklı ve bir yerleşik sınıfın (type) sınıfların sınıfı rolünü
+oynaması güzel.</p>
+<h4>Metasınıf</h4>
+<p>Metasınıf "sınıfın sınıfı" olarak tanımlanır. Kendi örnekleri de bir
+sınıf olan her sınıfa metasınıf denir. Öyleyse, yukarıda gördüklerimize
+göre bu <code>type</code>’ı bir metasınıf yapar – aslında, sınıfların öntanımlı
+metasınıfı olduğu için en çok kullanılan metasınıftır.</p>
+<p>Metasınıf bir sınıfın sınıfı olduğu için, sınıf oluşturmakta kullanılır
+(sınıfların obje oluşturmakta kullanıldığı gibi). Bir dakika, biz
+sınıfları standart <code>class</code> tanımıyla oluşturmuyor muyuz? Kesinlikle, ama
+Python merdiven altında şunları yapıyor:</p>
+<ul>
+<li>
+<code>class</code> tanımı gördüğünde Python bunu çalıştırarak özellikleri
+    (metotlar da dahil) bir sözlüğe toplar.</li>
+<li>
+<code>class</code> tanımı bittiğinde Python sınıfın metasınıfını belirler.
+    Şimdilik buna <code>Meta</code> diyelim.</li>
+<li>
+<p>Daha sonra Python <code>Meta(name, bases, dct)</code> deyimini çalıştırır ki
+    burada: </p>
+<ul>
+<li>
+<code>Meta</code> metasınıftır ki bunu çağırmak bir örneğini
+    oluşturmaktır.</li>
+<li>
+<code>name</code> yeni oluşturulan sınıfın ismidir.</li>
+<li>
+<code>bases</code> sınıfın temel sınıflarının bir demetidir.</li>
+<li>
+<code>dct</code> Sınıf’ın tüm özelliklerini listeleyerek özellik
+    isimlerini objelerle eşletirir.</li>
+</ul>
+</li>
+</ul>
+<p>Bir sınıfın metasınıfını nasıl belirleriz? Basitçe eğer sınıf veya
+temelleri <code>__metaclass__</code> özelliği tanımlıyorsa, bu metasınıf olarak
+alınır. Aksi takdirde metasınıf <code>type</code>dır.</p>
+<p>O halde şunu tanımladığımızda olan nedir:</p>
+<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">MyKlass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">foo</span> <span class="o">=</span> <span class="mi">2</span>
+</pre>
+
+
+<p>Şudur: <code>MyKlass</code>’ın <code>__metaclass__</code> özelliği yok, yani bunun yerine
+<code>type</code> kullanılıyor, ve sınıf oluşumu şu şekilde yapılıyor:</p>
+<pre class="code literal-block"><span></span><span class="n">MyKlass</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">)</span>
+</pre>
+
+
+<p>Ki bu, makalenin başında gördüğümüzle tutarlı. Ancak diğer yandan eğer
+<code>MyKlass</code> bir metasınıf <em>tanımlasaydı</em>:</p>
+<pre class="code literal-block"><span></span> <span class="k">class</span> <span class="nc">MyKlass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">MyMeta</span>
+  <span class="n">foo</span> <span class="o">=</span> <span class="mi">2</span>
+</pre>
+
+
+<p>O zaman sınıf oluşumu şöyle olurdu:</p>
+<pre class="code literal-block"><span></span><span class="n">MyKlass</span> <span class="o">=</span> <span class="n">MyMeta</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">)</span>
+</pre>
+
+
+<p>O halde, <code>MyMeta</code> bu şekilde çağırılmayı destekleyecek ve bir sınıf
+döndürecek şekilde uygulanmalı. Aslına bakarsanız bu, önceden
+tanımlanmış yapıcı imzası olan normal bir sınıf yazmaya benzer.</p>
+<h4>Metasınıf’da <code>__new__</code> ve <code>__init__</code>
+</h4>
+<p>Sınıfın metasınıf içinde oluşturulmasını ve ilklenmesini (ÇN:
+initialization) kontrol etmek için, metasınıf’da <code>__new__</code> metodunu
+ve/veya <code>__init__</code> yapıcısını uygulayabilirsiniz (ÇN: implement). Çoğu
+gerçek-hayat metasınıfları muhtelemen sadece bir tanesinin üstüne
+yazar.<code>__new__</code> yeni obje yaratılmasını kontrol etmek istediğinizde
+(bizim durumumuzda bu bir sınıf) ve <code>__init__</code> yeni obje yaratıldıktan
+sonra, ilklenmesini istediğinizde uygulanmalıdır.</p>
+<p>Yani, <code>MyMeta</code> çağırıldığında, merdiven altında yapılan şey:</p>
+<pre class="code literal-block"><span></span><span class="n">MyKlass</span> <span class="o">=</span> <span class="n">MyMeta</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">MyMeta</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">)</span>
+<span class="n">MyMeta</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">MyClass</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">)</span>
+</pre>
+
+
+<p>Burada olup biteni göstermek için daha sağlam bir örnek var. Haydi bir
+metasınıf için şu tanımı yazalım:</p>
+<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">MyMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s1">'-----------------------------------'</span>
+        <span class="k">print</span> <span class="s2">"Sınıf için hafıza ayırılıyor"</span><span class="p">,</span> <span class="n">name</span>
+        <span class="k">print</span> <span class="n">meta</span>
+        <span class="k">print</span> <span class="n">bases</span>
+        <span class="k">print</span> <span class="n">dct</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">MyMeta</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s1">'-----------------------------------'</span>
+        <span class="k">print</span> <span class="s2">"Sınıf başlatılıyor"</span><span class="p">,</span> <span class="n">name</span>
+        <span class="k">print</span> <span class="n">cls</span>
+        <span class="k">print</span> <span class="n">bases</span>
+        <span class="k">print</span> <span class="n">dct</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MyMeta</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">)</span>
+</pre>
+
+
+<p>Python aşağıdaki class tanımını çalıştırdığında:</p>
+<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">MyKlass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">MyMeta</span>
+
+    <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="n">barattr</span> <span class="o">=</span> <span class="mi">2</span>
+</pre>
+
+
+<p>Ekrana basılan şudur (güzel görünmesi için biraz düzenlenmiştir):</p>
+<pre>
+-----------------------------------
+Sınıf için hafıza ayırılıyor MyKlass
+
+(,)
+{'barattr': 2, '__module__': '__main__',
+ 'foo': ,
+ '__metaclass__': }
+-----------------------------------
+Sınıf başlatılıyor MyKlass
+
+(,)
+{'barattr': 2, '__module__': '__main__',
+ 'foo': ,
+ '__metaclass__': }
+</pre>
+
+<p>Bu örneği iyice anlayın ve metasınıf yazmakla ilgili bilinmesi
+gerekenlerin çoğunu kavrayacaksınız.</p>
+<p>Bu ekrana yazdırmaların <em>sınıf oluşturma anında</em> yapıldığını hatırlatmak
+burada önem arz ediyor, yani, bu sınıfı içeren modülün içe aktarıldığı
+zamanda. Bunu aklınızın bir köşesine yazın.</p>
+<h4>Metaclass’da <code>__call__</code>
+</h4>
+<p>Bazen üzerine yazılması faydalı olabilecek bir diğer metasınıf metodu
+<code>__call__</code>’dur. Bunu <code>__new__</code> ve <code>__init__</code> metotlarında ayrı ele
+almamın nedeni, <code>__call__</code> metodunun, bu ikilinin sınıf oluşturulması
+anınında çalışmasının aksine, zaten oluşturulmuş sınıfın, yeni bir obje
+örneklenmesi (ÇN:instantiate) için "çağırıldığında" çalıştırılması. İşte
+bunu açıklığa kavuşturmak için biraz kod:</p>
+<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">MyMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s1">'__call__ of '</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
+        <span class="k">print</span> <span class="s1">'__call__ *args='</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="n">__call__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MyKlass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">MyMeta</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s1">'MyKlass object with a=</span><span class="si">%s</span><span class="s1">, b=</span><span class="si">%s</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="s1">'Şimdi foo oluşturacağım'</span>
+<span class="n">foo</span> <span class="o">=</span> <span class="n">MyKlass</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</pre>
+
+
+<p>Bu şunu yazdırır:</p>
+<pre>
+Şimdi foo oluşturacağım
+__call__ of  
+__call__ *args= (1, 2)
+MyKlass object with a=1, b=2
+</pre>
+
+<p>Burada <code>MyMeta.__call__</code> sadece bizi argümanlardan haberdar edip, işi
+<code>type.__call__</code> metoduna devrediyor. Ama aynı zamanda işleme müdahale
+edip, sınıflardan nasıl obje yaratıldığını etkileyebilir. Bir bakıma,
+sınıfın kendisindeki <code>__new__</code> metodunu yazmaya benzer, ancak yinede
+birkaç farkı vardır.</p>
+<h4>Örnekler</h4>
+<p>Şimdiye kadar metasınıflar nedir ve nasıl yazılır konularını anlamak
+için yeteri kadar teori işledik. Bu noktada, konuyu açacak örneklerin
+zamanı geldi. Yukarıda bahsettiğim gibi, sentetik örnekler yazmaktansa,
+<em>gerçek</em> Python kodu içerisindeki metasınıf kullanımını incelemeyi
+tercih ederim.</p>
+<h4>string.Template</h4>
+<p>İlk metasınıf örneği Python standart kütüphanesinden alınmıştır. Python
+ile birlikte gelen çok az sayıdaki metasınıf örneklerinin bir tanesidir.</p>
+<p><code>string.Template</code> kullanımı kolay, yazı doldurma (ÇN: string
+substitution) özelliği sağlar ve çok basit bir şablonlama sistemi görevi
+yapar. Eğer bu sınıfla aşina değilseniz, şimdi belgeleri okumak için
+güzel bir zaman. Ben sadece metasınıfları nasıl kullandığını
+açıklayacağım.</p>
+<p>İşte <code>class Template</code> içerisinden ilk birkaç satır:</p>
+<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">Template</span><span class="p">:</span>
+    <span class="sd">"""A string class for supporting $-substitutions."""</span>
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">_TemplateMetaclass</span>
+
+    <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">'$'</span>
+    <span class="n">idpattern</span> <span class="o">=</span> <span class="s1">r'[_a-z][_a-z0-9]*'</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="n">template</span>
+</pre>
+
+
+<p>Ve bu da <code>_TemplateMetaclass</code> :</p>
+<pre class="code literal-block"><span></span>  <span class="k">class</span> <span class="nc">_TemplateMetaclass</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="s2">r"""</span>
+<span class="s2">    </span><span class="si">%(delim)s</span><span class="s2">(?:</span>
+<span class="s2">      (?P</span><span class="si">%(delim)s</span><span class="s2">) |   # Escape sequence of two delimiters</span>
+<span class="s2">      (?P</span><span class="si">%(id)s</span><span class="s2">)      |   # delimiter and a Python identifier</span>
+<span class="s2">      {(?P</span><span class="si">%(id)s</span><span class="s2">)}   |   # delimiter and a braced identifier</span>
+<span class="s2">      (?P)              # Other ill-formed delimiter exprs</span>
+<span class="s2">    )</span>
+<span class="s2">    """</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">_TemplateMetaclass</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">'pattern'</span> <span class="ow">in</span> <span class="n">dct</span><span class="p">:</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">pattern</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="n">_TemplateMetaclass</span><span class="o">.</span><span class="n">pattern</span> <span class="o">%</span> <span class="p">{</span>
+                <span class="s1">'delim'</span> <span class="p">:</span> <span class="n">_re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">delimiter</span><span class="p">),</span>
+                <span class="s1">'id'</span>    <span class="p">:</span> <span class="n">cls</span><span class="o">.</span><span class="n">idpattern</span><span class="p">,</span>
+                <span class="p">}</span>
+        <span class="n">cls</span><span class="o">.</span><span class="n">pattern</span> <span class="o">=</span> <span class="n">_re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">_re</span><span class="o">.</span><span class="n">IGNORECASE</span> <span class="o">|</span> <span class="n">_re</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">)</span>
+</pre>
+
+
+<p>Bu makalenin ilk kısmında sağlanan açıklama <code>_TemplateMetaclass</code>’ın
+nasıl çalıştığını anlamaya yeterli olmalı. Bunun <code>__init__</code> metodu bazı
+sınıf özelliklerine bakar (özellikle <code>pattern</code>, <code>delimeter</code> ve
+<code>idpattern</code>) ve bunu kullanarak (veya kendi sağladığı öntanımlıları)
+derlenmiş bir düzenli ifade oluşturur ki, bu daha sonra sınıf’ın kendi
+<code>pattern</code> özelliğine depolanır.</p>
+<p>Belgelerine göre, <code>Template</code> miras alınarak, özel delimeter ve ID
+yapısı, veya tam bir düzenli ifade sağlanabilir. Metasınıf <em>sınıf
+oluşturma anında</em> bunları derlenmiş düzenli ifadelere dönüştürür, yani
+bu bir nevi optimizasyondur.</p>
+<p>Demek istediğim, aynı özelleştirme metasınıf kullanmadan, basitçe,
+derlenmiş düzenli ifadeyi __init__ içerisinde oluşturarak
+yapılabilir. Ancak, bunun anlamı, derlenme işleminin her <code>Template</code>
+objesi örneklendiğinde yapılacak olmasıdır.</p>
+<p>Şu kullanımı düşünün, ki bu kendi dürüst fikrime göre <code>string.Template</code>
+için sıkça görülür:</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">Template</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Template</span><span class="p">(</span><span class="s2">"$name is $value"</span><span class="p">)</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'me'</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s1">'2'</span><span class="p">)</span>
+<span class="s1">'me is 2'</span>
+</pre>
+
+
+<p>Düzenli ifade derlenmesini <code>Template</code> oluşturma zamanına bırakmak, böyle
+bir kod her çalıştığında bunun oluşturulması ve derlenmesi demektir. Bu
+bir ayıp, çünkü düzenli ifade şablondaki yazıya bağlı değil, sadece
+<em>sınıfın özelliklerine</em> bağlı.</p>
+<p>Bir metasınıf ile sınıfın <code>pattern</code> özelliği modül yüklenip
+<code>class Template</code> (veya bir alt sınıfı) tanımı çalıştırıldığında
+oluşturuluyor. Bu <code>Template</code> objesi yaratıldığında zaman kazandırır, ve
+anlamlıdır çünkü sınıf oluşturma zamanında düzenli ifadeyi derlemek için
+gerekli tüm bilgilere sahibiz – öyleyse neden bekleyelim?</p>
+<p>Bunun henüz olgunlaşmamış bir optimizasyon olduğu iddia edilebilir, ve
+bu doğru olabilir. Metasınıfın bu (veya herhangi bir) kullanımını
+savunmayı düşünmüyorum. Buradaki niyetim çeşitli görevler için
+metasınıfların gerçek kodlarda nasıl kullanıldığını sergilemek. Yani,
+eğitsel amaçlar için iyi bir örnek, çünkü ilginç bir kullanımı
+gösteriyor. Olgunlaşmamış bir optimizasyon veya değil, metasınıf bir
+hesaplamayı kod çalıştırma sürecinde bir adım önceye alarak kodu daha
+etkin hale getiriyor.</p>
+<h4>twisted.python.reflect.AccessorType</h4>
+<p>Aşağıdaki örnek metasınıfları gösterirken/anlatırken sıkça kullanılır.
+Bunun belgelerinden bir alıntı:</p>
+<blockquote>
+<p>Kendiliğinden sınıf özellikleri üreten bir metasınıf. Bu metasınıfı
+kullanmak, sınıfınıza açık erişici metotları (ÇN: explicit accessor
+methods) sağlar; set_foo isimli bir metot, kendi kendine, set_foo
+metodunu setter olarak kullanan ‘foo’ özelliğini oluşturacak. get_foo
+ve del_foo için de aynı şekilde. (ÇN: <a href="http://docs.python.org/library/functions.html#property">bakınız</a>)</p>
+</blockquote>
+<p>İşte metasınıf, önemli kısımlara vurgu yapmak için biraz kısaltılmış
+olarak:</p>
+<pre class="code literal-block"><span></span>  <span class="k">class</span> <span class="nc">AccessorType</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="nb">type</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+        <span class="n">accessors</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">prefixs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"get_"</span><span class="p">,</span> <span class="s2">"set_"</span><span class="p">,</span> <span class="s2">"del_"</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefixs</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+                    <span class="n">accessors</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">k</span><span class="p">[</span><span class="mi">4</span><span class="p">:],</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">])[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">getter</span><span class="p">,</span> <span class="n">setter</span><span class="p">,</span> <span class="n">deler</span><span class="p">)</span> <span class="ow">in</span> <span class="n">accessors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># create default behaviours for the property - if we leave</span>
+            <span class="c1"># the getter as None we won't be able to getattr, etc..</span>
+
+            <span class="c1"># [...] some code that implements the above comment</span>
+
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">property</span><span class="p">(</span><span class="n">getter</span><span class="p">,</span> <span class="n">setter</span><span class="p">,</span> <span class="n">deler</span><span class="p">,</span> <span class="s2">""</span><span class="p">))</span>
+</pre>
+
+
+<p>Bunun yaptığı dümdüz bir işlem:</p>
+<ol>
+<li>Sınıfın <code>get_</code> , <code>set_</code> veya <code>del_</code> ile başlayan tüm
+    özelliklerini bul.</li>
+<li>Kontrol etmeyi hedefledikleri özelliklere göre sınıflandır
+    (altçizgiden sonra gelen kısım)</li>
+<li>Böylelikle bulunan her getter, setter, deleter üçlüsü için<ol>
+<li>Üçünün hepsinin var olduğundan emin ol, veya uygun öntanımlılar
+    oluştur.</li>
+<li>Bunları sınıf içinde bir <code>property</code> olarak ayarla</li>
+</ol>
+</li>
+</ol>
+<p>Böyle bir metasınıf ne kadar faydalıdır? Söylemesi zor aslında.
+Twisted’ın kendisi bunu kullanmıyor ama bunu public API olarak sağlıyor.
+Eğer birçok property ile birkaç sınıf yazacaksanız, bu metasınıf sizi
+birçok kodlamadan kurtarabilir.</p>
+<h4>pygments Lexer ve RegexLexer</h4>
+<p><a href="http://pygments.org/">pygments</a> kütüphanesi metasınıf kullanımının ilginç bir deyimini
+sunar. Bir temel sınıf özel bir metasınıf ile oluşturulmuş. Kullanıcı
+sınıfları bu temel sınıfdan miras alıp, metasınıf’ı yanında bir bonus
+olarak alırlar. Öncelikle <code>LexerMeta</code> metasınıfına bir bakalım. Bu
+<code>Lexer</code> için bir metasınıf olarak kullanılır – pygments içindeki
+lexerlar için temel sınıf:</p>
+<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">LexerMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    This metaclass automagically converts `analyse_text` methods into</span>
+<span class="sd">    static methods which always return float values.</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">'analyse_text'</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="s1">'analyse_text'</span><span class="p">]</span> <span class="o">=</span> <span class="n">make_analysator</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">'analyse_text'</span><span class="p">])</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+</pre>
+
+
+<p>Bu metasınıf, <code>analyse_text</code> mesajının tanımını yakalayıp, bunu herzaman
+kayan noktalı bir değer döndüren statik bir metot’a çevirmek için
+<code>__new__</code> metodunun üstüne yazar (<code>make_analysator</code> fonksiyonunun
+yaptığı budur.).</p>
+<p>Burada <code>__init__</code> yerine <code>__new__</code> kullanımına dikkat edin. Neden
+<code>__init__</code> kullanılmadı? Benim düşüncem, bunun sadece bir tercih
+meselesi olduğu – aynı etki <code>__init__</code> metodunun üstüne yazarak da
+başarılabilirdi.</p>
+<p>pygments’den ikinci örnek biraz daha karmaşık, ama daha önceki
+örneklerde görmediğimiz birkaç özelliği içerdiği için açıklama zahmetine
+değer. <code>RegexLexerMeta</code> için kod bir hayli uzun, bu yüzden ilgili
+kısmı bırakmak için kodu keseceğim:</p>
+<pre class="code literal-block"><span></span> <span class="k">class</span> <span class="nc">RegexLexerMeta</span><span class="p">(</span><span class="n">LexerMeta</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Metaclass for RegexLexer, creates the self._tokens attribute from</span>
+<span class="sd">    self.tokens on the first instantiation.</span>
+<span class="sd">    """</span>
+
+    <span class="c1"># [...] kesilen kısım</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+        <span class="sd">"""Instantiate cls after preprocessing its token definitions."""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s1">'_tokens'</span><span class="p">):</span>
+            <span class="n">cls</span><span class="o">.</span><span class="n">_all_tokens</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">cls</span><span class="o">.</span><span class="n">_tmpname</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s1">'token_variants'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">cls</span><span class="o">.</span><span class="n">token_variants</span><span class="p">:</span>
+                <span class="c1"># don't process yet</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">cls</span><span class="o">.</span><span class="n">_tokens</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">process_tokendef</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="n">cls</span><span class="o">.</span><span class="n">tokens</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="n">__call__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+</pre>
+
+
+<p>Çoğunlukla, kod oldukça temiz; metasınıf <code>tokens</code> sınıf özelliğini
+inceliyor, ve bundan <code>_tokens</code> oluşturuyor. Bu sadece sınıfın
+oluşturulması sırasında yapılıyor. Burada özellikle ilgilendiğimiz iki
+şey var:</p>
+<ol>
+<li>
+<code>RegexLexerMeta</code> <code>LexerMeta</code>’dan miras alır, böylece bunun
+    kullanıcıları da <code>LexerMeta</code>’nın sağladığı hizmetleri alır.
+    Metasınıfların miras alınması, bunların Python’daki en güçlü dil
+    yapılarından birisi olmasının nedenlerinden birisidir. Bunları sınıf
+    dekoratörleriyle yanyana koyun mesela. Bazı basit işler için, sınıf
+    dekoratörleri metasınıfların yerine geçebilir, ama metasınıfların
+    miras ilişkisi kurabilmesi dekoratörlerin yapamaycağı birşeydir.</li>
+<li>
+<code>process_tokendef</code> hesaplamaları <code>__call__</code> içerisinde yapılıyor –
+    ve özel bir kontrol bunun sadece sınıfın ilk örneklenmesinde
+    çalıştığından emin oluyor. (<code>__call__</code>’un kendisi tüm
+    örneklenmelerde çalışsa da). Neden böyle yapılsın, bunu sınıf
+    üretimi anında yapmak varken (metasınıf’ın <code>__init__</code>’inde mesela)?
+    Bana öyle geliyor ki, bu bir çeşit optimizasyon olabilir. pygments
+    bir çok lexer ile birlikte gelir, ama belirli bir kod için bunların
+    sadece bir veya ikisini kullanmak isteyebilirsiniz. Sadece
+    kullandığınız lexer yerine, neden kullanmadığınız lexerlara yükleme
+    zamanı harcayasınız? Gerçek sebep bu olsa da olmasada, bence yine de
+    bu, metasınıfların kafa yorulması gereken ilginç bir yönü –
+    meta-işlerinin nerede ve ne zaman yapıldığını seçmenize olanak
+    sağlayan muhteşem esnekliği.</li>
+</ol>
+<h4>Sonuç</h4>
+<p>Bu makaleyi yazmaktaki amacım Pythondaki metasınıfların nasıl
+çalıştığını açıklamak ve gerçek Python kodundan sağlam metasınıf
+kullanım örnekleri göstermekti. Metasınıfların kötü bir şöhreti olduğunu
+biliyorum, çoğu insan bunları olması gerektiğinden daha fazla sihirli
+olarak görüyor. Benim bu konudaki düşüncem, diğer dil yapılarında olduğu
+gibi, metasınıfların bir <em>araç</em> olduğu ve programcının sonuçta bunu
+doğru kullanmaktan sorumlu olduğu. Her zaman iş gören en basit kodu
+yazın, ama ihtiyacınız olanın metasınıflar olduğunu hissederseniz,
+bunları kullanmakta özgürsünüz.</p>
+<p>Umarım bu makale sınıfların oluşturulması ve kullanılması için
+metasınıfların sağladığı esnekliği göstermiştir. Örnekler metasınıfların
+uygulanması ve kullanılmasında çeşitli yönlerini göstermiştir;
+<code>__init__</code>,<code>__new__</code> ve <code>__call__</code> metotlarının üstüne yazılması,
+metasınıfın miras alınması, sınıflara özellikler eklenmesi, obje
+metotlarının statik metotlara dönüştürülmesi ve gerek sınıf tanımında
+gerekse de örneklenme zamanında optimizasyonlar yapılması.</p>
+<p>Python içinde metasınıfların kullanılmasının en dikkate değer örnekleri
+muhtemelen ORM (Object Relational Mapping) çatılarıdır, Django’nun
+modellerinde olduğu gibi. Gerçekten, bunlar metasınıfların neler
+yapabileceğini göstermekte güçlü örneklerdir, ancak ben bunları burada
+göstermemeye karar verdim çünkü onların kodları karmaşık ve birçok
+alana-özel detaylar metasınıfları sergilemek olan asıl amaca zarar
+verirdi. Diğer yandan, bu makaleyi okumuş olmakla, daha karmaşık
+örnekleri anlamak için gereken herşeye sahip oldunuz.</p>
+<p>Ekleme: Eğer metasınıfların diğer ilginç örneklerini bulursanız lütfen
+bana bildirin. Daha fazla gerçek-hayat kullanımı görmekle bir hayli
+ilgileniyorum.</p>
+<h4>Referanslar</h4>
+<ul>
+<li>Resmi belgelerdeki <a href="http://docs.python.org/reference/datamodel.html">Data model sayfası</a>
+</li>
+<li>
+<a href="http://www.ibm.com/developerworks/linux/library/l-pymeta/index.html">Python’da metasınıf programlama</a> – metasınıfları açıklayan bir
+    dizi makale</li>
+<li>
+<a href="http://stackoverflow.com/questions/100003/what-is-a-metaclass-in-python">What is a metaclass in Python?</a> – muhteşem bir StackOverflow
+    tartışması.</li>
+<li>
+<a href="http://www.python.org/download/releases/2.2.3/descrintro">Python 2.2 içinde type ve sınıfları birleştirme</a> – Guido von
+    Rossum tarafından yazılan metasınıflara da dokunan bir hayli bilgi
+    verici makale</li>
+<li>
+<code>__new__</code> ve <code>__init__</code> arasındaki fark konusunda [bir StackOverflow
+    tartışması][] .</li>
+<li>
+<a href="http://stackoverflow.com/questions/392160/what-are-your-concrete-use-cases-for-metaclasses-in-python">metasınıfların sağlam kullanımı</a> hakkında bir diğer
+    StackOverlflow tartışması. .</li>
+</ul>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="beautiful-soup-ve-basitce-kullanimi.html" rel="prev" title="Python Beautiful Soup Kütüphanesi ve Basitçe Kullanımı">Önceki yazı</a>
+            </li>
+            <li class="next">
+                <a href="toplu-halde-http-durum-kodu-alma.html" rel="next" title="Toplu halde http durum kodu alma">Sonraki yazı</a>
+            </li>
+        </ul></nav></aside></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/jquery.min.js"></script><script src="../assets/js/bootstrap.min.js"></script><script src="../assets/js/moment-with-locales.min.js"></script><script src="../assets/js/fancydates.js"></script><script src="../assets/js/jquery.colorbox-min.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-tr.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("tr");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function() {
+    var cx = '013136674562336859018:ouohwab0yku';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44774134-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

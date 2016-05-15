@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
+<head>
+<meta charset="utf-8">
+<base href="http://ysar.net/python/debugging-decorator.html">
+<meta name="description" content="Python'da debug işlerini kolaylaştıracak bir decorator">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Debugging Decorator | Python, Yazılım, ve Programlama</title>
+<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/python/debugging-decorator.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Python'da debug işlerini kolaylaştıracak bir decorator">
+<meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="sha256-ftputil.html" title="Bloğu nasıl sunucuya yüklüyorum?" type="text/html">
+<link rel="next" href="neden-str-toplamamalisiniz.html" title="Neden str toplamamalısınız" type="text/html">
+<meta property="og:site_name" content="Python, Yazılım, ve Programlama">
+<meta property="og:title" content="Debugging Decorator">
+<meta property="og:url" content="http://ysar.net/python/debugging-decorator.html">
+<meta property="og:description" content="Python'da debug işlerini kolaylaştıracak bir decorator">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2013-10-26T02:37:00+03:00">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ana içeriğe geç</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://ysar.net/">
+
+                <span id="blog-title">Python, Yazılım, ve Programlama</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../yasar-arabaci.html">Hakkımda</a>
+                </li>
+<li>
+<a href="../soru-cevap.html">Soru-Cevap</a>
+                </li>
+<li>
+<a href="../archive.html">Arşiv</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS kaynağı</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search with google--><form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+<input type="hidden" name="q" value="site:http://ysar.net/"><input type="text" name="q" maxlength="255" results="0" placeholder="Search">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="debugging-decorator.md" id="sourcelink">Kaynak</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Debugging Decorator</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                    Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2013-10-26T02:37:00+03:00" itemprop="datePublished" title="2013-10-26 02:37">2013-10-26 02:37</time></a></p>
+            
+        <p class="sourceline"><a href="debugging-decorator.md" id="sourcelink">Kaynak</a></p>
+
+                <meta name="description" itemprop="description" content="Python'da debug işlerini kolaylaştıracak bir decorator">
+</div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Kod yazarken ve bu kodun tam olarak ne yaptığını anlamazken, fonksiyonların içine ara ara
+print serpiştiriyordum ki, neler döndüğünü görebileyim. Ancak malumunuz, bu printleri
+teker teker yazması, sonra teker teker silmesi bir hayli zahmetli bir işe dönüşebiliyor.
+Bu problemin üstesinden gelmek için, aşağıdaki decorator'u yazdım. İndirmek isteyenler <a href="https://gist.github.com/yasar11732/7163528/raw/3aac84a23fd57d3c4ee28d627c7607d68c3ac24b/debugging.py">debugging.py</a> adresinden indirebilir.<!-- TEASER_END --></p>
+<pre class="code literal-block"><span></span><span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">ast</span>
+
+
+<span class="k">def</span> <span class="nf">make_print_node</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ast</span><span class="o">.</span><span class="n">Print</span><span class="p">(</span><span class="n">dest</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Str</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)],</span> <span class="n">nl</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">make_print_with_percent_formatting</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">make_print_node</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="n">printnode</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Print</span><span class="p">(</span><span class="n">dest</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">nl</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">binop</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">BinOp</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Str</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">),</span> <span class="n">op</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Mod</span><span class="p">())</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">binop</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Load</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">name_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="n">name_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">arg</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Load</span><span class="p">()))</span>
+        <span class="n">binop</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">(</span><span class="n">elts</span><span class="o">=</span><span class="n">name_list</span><span class="p">)</span>
+
+    <span class="n">printnode</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">binop</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">printnode</span>
+
+<span class="k">def</span> <span class="nf">debugging</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="n">tree</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">func</span><span class="p">))</span>
+    <span class="n">func_ast</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">tree</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">FunctionDef</span><span class="p">)</span> <span class="ow">and</span> <span class="n">n</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">func</span><span class="o">.</span><span class="n">func_name</span><span class="p">:</span>
+            <span class="n">func_ast</span> <span class="o">=</span> <span class="n">n</span>
+            <span class="k">break</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">func_ast</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">func</span>
+
+    <span class="c1"># print ast.dump(func_ast)</span>
+
+    <span class="n">new_function_body</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># print called function's name</span>
+    <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_print_node</span><span class="p">(</span><span class="s2">"function </span><span class="si">%s</span><span class="s2"> called"</span> <span class="o">%</span> <span class="n">func</span><span class="o">.</span><span class="n">func_name</span><span class="p">))</span>
+
+    <span class="c1"># print function's locals</span>
+    <span class="n">mystr</span> <span class="o">=</span><span class="s2">"""for k, v in locals().items():</span>
+<span class="s2">    print k,v</span>
+<span class="s2">    """</span>
+    <span class="n">for_loop</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">mystr</span><span class="p">)</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">for_loop</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">func_ast</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Return</span><span class="p">):</span>
+            <span class="sd">"""</span>
+<span class="sd">            convert:</span>
+<span class="sd">                return expr</span>
+<span class="sd">            to:</span>
+<span class="sd">                __return_value__ = expr</span>
+<span class="sd">                print "returning %s" % __return_value__</span>
+<span class="sd">                return __return_value__</span>
+<span class="sd">            """</span>
+
+            <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">(</span><span class="n">targets</span><span class="o">=</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">'__return_value__'</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Store</span><span class="p">())],</span> <span class="n">value</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+            <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_print_with_percent_formatting</span><span class="p">(</span><span class="s1">'returning </span><span class="si">%s</span><span class="s1">'</span><span class="p">,</span> <span class="s1">'__return_value__'</span><span class="p">))</span>
+            <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">'__return_value__'</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Load</span><span class="p">())))</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">):</span>
+            <span class="sd">"""</span>
+<span class="sd">            convert:</span>
+<span class="sd">                a = expr</span>
+<span class="sd">            to:</span>
+<span class="sd">                a = expr</span>
+<span class="sd">                print "assigned new value to a, %r" % a</span>
+<span class="sd">            """</span>
+            <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">targets</span><span class="p">:</span>
+                <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_print_with_percent_formatting</span><span class="p">(</span><span class="s1">'assigned new value to '</span> <span class="o">+</span> <span class="n">target</span><span class="o">.</span><span class="n">id</span> <span class="o">+</span> <span class="s1">': </span><span class="si">%r</span><span class="s1">'</span><span class="p">,</span> <span class="n">target</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+
+
+
+    <span class="n">func_ast</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">new_function_body</span>
+    <span class="c1"># if you don't do this, compile&amp;exec will call this function recursively.</span>
+    <span class="n">func_ast</span><span class="o">.</span><span class="n">decorator_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># func_ast = ast.fix_missing_locations(func_ast)</span>
+    <span class="c1"># print "trying to compile this function:", ast.dump(func_ast)</span>
+    <span class="n">modul_ast</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">fix_missing_locations</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="p">[</span><span class="n">func_ast</span><span class="p">]))</span>
+    <span class="k">exec</span> <span class="nb">compile</span><span class="p">(</span><span class="n">modul_ast</span><span class="p">,</span><span class="s1">'&lt;string&gt;'</span><span class="p">,</span><span class="s1">'exec'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">locals</span><span class="p">()[</span><span class="n">func</span><span class="o">.</span><span class="n">func_name</span><span class="p">]</span>
+</pre>
+
+
+<p>Kullanımı çok basit. Örneğin şu kodu inceleyelim:</p>
+<pre class="code literal-block"><span></span><span class="nd">@debugging</span>
+<span class="k">def</span> <span class="nf">osman</span><span class="p">(</span><span class="n">ali</span><span class="p">,</span> <span class="n">veli</span><span class="p">,</span> <span class="n">mehmet</span><span class="p">,</span> <span class="n">zeynep</span> <span class="o">=</span> <span class="mi">48</span><span class="p">):</span>
+    <span class="n">ali</span> <span class="o">=</span> <span class="mi">129</span>
+    <span class="k">return</span> <span class="n">ali</span> <span class="o">+</span> <span class="n">veli</span>
+
+<span class="k">print</span> <span class="n">osman</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="mi">32</span><span class="p">)</span>
+</pre>
+
+
+<p>Bu kod şöyle bir çıktı veriyor:
+</p>
+<pre>
+function osman called
+mehmet 32
+zeynep 48
+veli 24
+ali 12
+assigned new value to ali: 129
+returning 153
+153
+</pre>
+<p>Gördüğünüz üzere, önce çalışan fonksiyonun ismini yazıyor. Daha sonra local değişkenleri gösteriyor. Her atama yapıldığında, bunu da belirtiyor. Son olarak, return olacağı zaman, neyin return olduğunu
+da gösteriyor. Fonksiyonu debug ettikten sonra da, <code>@debugging</code> decorator'unu kaldırarak bu çıktıyı durdurabilirsiniz.</p>
+<h3>Nasıl çalışıyor peki bu?</h3>
+<p>Eğer decorator'lerle ilgili temel bilgileriniz yoksa, <a href="decorator.html">Decorator nedir</a> yazısını okuyarak başlayabilirsiniz.</p>
+<p>Bu decorator'de, hedef fonksiyonun <code>ast</code> modülündeki fonksiyonları kullanarak syntax tree'sini oluşturdum. Syntax tree
+üzerinde gezinip, gerekli gördüğüm yerlere print ifadeleri ekleyip, tekrar derledim.</p>
+<p>Sizce bu decorator iş görür mü? Daha nasıl geliştirebilirim?</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="sha256-ftputil.html" rel="prev" title="Bloğu nasıl sunucuya yüklüyorum?">Önceki yazı</a>
+            </li>
+            <li class="next">
+                <a href="neden-str-toplamamalisiniz.html" rel="next" title="Neden str toplamamalısınız">Sonraki yazı</a>
+            </li>
+        </ul></nav></aside></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/jquery.min.js"></script><script src="../assets/js/bootstrap.min.js"></script><script src="../assets/js/moment-with-locales.min.js"></script><script src="../assets/js/fancydates.js"></script><script src="../assets/js/jquery.colorbox-min.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-tr.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("tr");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function() {
+    var cx = '013136674562336859018:ouohwab0yku';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44774134-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

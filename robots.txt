@@ -1,0 +1,4 @@
+Sitemap: http://ysar.net/sitemapindex.xml
+
+User-Agent: *
+Host: ysar.net

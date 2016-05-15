@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
+<head>
+<meta charset="utf-8">
+<base href="http://ysar.net/python/soket-socket.html">
+<meta name="description" content="Python socket modülünün kullanımını hiç bilmeyenlere uygun şekilde, örneklerle anlatan bu yazıyı, soket programcılığı yapmak isteyenler okusunlar.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python ile soketlere giriş | Python, Yazılım, ve Programlama</title>
+<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/python/soket-socket.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Python socket modülünün kullanımını hiç bilmeyenlere uygun şekilde, örneklerle anlatan bu yazıyı, soket programcılığı yapmak isteyenler okusunlar.">
+<meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="decorator.html" title="Python ve decorator... Nedir, ne işe yarar?" type="text/html">
+<link rel="next" href="soket-socket-2.html" title="Python ile soketler - 2" type="text/html">
+<meta property="og:site_name" content="Python, Yazılım, ve Programlama">
+<meta property="og:title" content="Python ile soketlere giriş">
+<meta property="og:url" content="http://ysar.net/python/soket-socket.html">
+<meta property="og:description" content="Python socket modülünün kullanımını hiç bilmeyenlere uygun şekilde, örneklerle anlatan bu yazıyı, soket programcılığı yapmak isteyenler okusunlar.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2012-08-17T15:55:00+03:00">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ana içeriğe geç</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://ysar.net/">
+
+                <span id="blog-title">Python, Yazılım, ve Programlama</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../yasar-arabaci.html">Hakkımda</a>
+                </li>
+<li>
+<a href="../soru-cevap.html">Soru-Cevap</a>
+                </li>
+<li>
+<a href="../archive.html">Arşiv</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS kaynağı</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search with google--><form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+<input type="hidden" name="q" value="site:http://ysar.net/"><input type="text" name="q" maxlength="255" results="0" placeholder="Search">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="soket-socket.md" id="sourcelink">Kaynak</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Python ile soketlere giriş</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                    Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2012-08-17T15:55:00+03:00" itemprop="datePublished" title="2012-08-17 15:55">2012-08-17 15:55</time></a></p>
+            
+        <p class="sourceline"><a href="soket-socket.md" id="sourcelink">Kaynak</a></p>
+
+                <meta name="description" itemprop="description" content="Python socket modülünün kullanımını hiç bilmeyenlere uygun şekilde, örneklerle anlatan bu yazıyı, soket programcılığı yapmak isteyenler okusunlar.">
+</div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Merhabalar,</p>
+<p>Bu yazıda, Python programlama diliyle soketlerin kullanılışı konusuna
+kısaca giriş yapmaya çalışacağım. Okuyucuda soketler hakkında temel
+bilgilerin olduğunu varsayıyorum. Bunların ne olduğu veya ne için
+kullanıldığı konusunda hiçbir bilgisi olmayanlar için şöyle
+özetleyebiliriz; <strong>soketler</strong> iletişim kanallarıdır. Bunlar aynı
+bilgisayarda iki işlem arası iletişim sağlayabilse de (örn: unix
+soketleri) bunları en çok ağ üzerinde iletişim için kullanırız.
+İnternetten bilgisayarınıza gelip giden tüm veriler için, mutlaka birer
+soket kullanılır.</p>
+<p>Anlatıma geçmeden önce şunu da söylemek istiyorum ki, Python'daki
+<em>socket</em> modülünü lazım olmadıkça kullanmayınız. Demek istediğim şu ki,
+bir internet sayfası indirmek için socket açmak, HTTP başlıklarını
+göndermek, gerekirse yönlendirilen sayfaya yeniden soket açmak gibi bir
+uğraşa girmeyin. Python bu tip yaygın kullanımlar için zaten daha üst
+seviye modüllere sahip bir dil. Amerika'yı yeniden keşfetmeye gerek yok. <!-- TEASER_END --></p>
+<p>Öyleyse, Python'daki socket modülünü alternatif bulamadığımız durumlarda
+kullanalım. Ağ bakımı/programcılığı konusunda bu modülün kullanım alanı
+kendisini belli edecektir.</p>
+<p>Bir örnekle başlayalım;</p>
+<pre class="code literal-block"><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span>
+  <span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+
+<span class="n">s</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="s2">"www.google.com.tr"</span><span class="p">,</span> <span class="mi">80</span><span class="p">))</span>
+</pre>
+
+
+<p>Bu örnekte bir client (ingilizcede müşteri demek) soket oluşturduk.
+Bunun anlamı, bu soket kendisi veri sunmayacak, bir sunucuya bağlanacak
+demek. Sunucu programlara ileriki yazılarda göz atmaya çalışacağım.</p>
+<p>Soket oluşturma fonksiyonuna ilk verdiğimiz argüman, bu soketin
+adresleme şeklini gösteriyor diyebiliriz. Bunun <code>socket.AF_INET</code> olması,
+bunun bildiğimiz IP adresi soketi olduğunu gösteriyor. Bunun yerine,
+<code>socket.AF_INET6</code> ile IPv6 kullanabiliriz. Bir de <code>socket.AF_UNIX</code> var
+ki, bu UNIX soketleri için kullanılıyor. Dolayısıyla her sistemde bu
+sabit tanımlı olmayabilir.</p>
+<p>İkinci argüman ise bu soketin iletişim tipini gösteriyor.
+<code>socket.SOCK_STREAM</code>, en yaygın kullanılan <a href="http://tr.wikipedia.org/wiki/TCP" title="Transmission Control Protocol">TCP</a> iletişim tipidir.
+Bundan sonra en yaygın kullanılan iletişim tipi <a href="http://tr.wikipedia.org/wiki/UDP" title="User Datagram Protocol">UDP</a> için
+<code>socket.SOCK_DGRAM</code> sabiti kullanılır.</p>
+<p>Daha sonra, elimizdeki <code>s</code> isimli soket objesinin <code>connect</code> isimli
+metoduyla, soketimizi internetteki bir diğer sokete (yani sunucuya)
+bağlayabiliriz. Bu metot adres türüne göre farklı argümanlar alabilir.
+<code>socket.AF_INET</code> için, adres ve porttan oluşan bir <em>tuple</em> veri tipi
+alır.</p>
+<p>Eğer internetle veya işletim sistemiyle ilgili bir hata oluşmadı ise, şu
+andan sonra soketimiz yazmak ve okumak için hazır. Bu işlemler için
+sırasıyla <code>send</code> ve <code>recv</code> metotları kullanılır. Aynı örnekten devam
+ederek, şunu deneyebiliriz;</p>
+<pre class="code literal-block"><span></span><span class="n">s</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">"GET / HTTP/1.1</span><span class="se">\r\n</span><span class="s2">Host: www.google.com.tr</span><span class="se">\r\n</span><span class="s2">Connection: Close</span><span class="se">\r\n</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">512</span><span class="p">)</span> <span class="c1"># 512 byte veri okumaya çalış</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">msg</span><span class="p">:</span> <span class="c1"># Eğer boş döndüyse,</span>
+        <span class="k">break</span>
+    <span class="k">print</span> <span class="n">msg</span>
+</pre>
+
+
+<p><strong>Not:</strong> Kodlar içerisindeki adres html tagları içinde görünüyorsa,
+onları kaldırın. Galiba Tumblr otomatik olarak onu linke çevirmeye
+çalışıyor :/</p>
+<p>Burada, muhtemelen yapılabilecek en kısa HTTP isteğini gerçekleştirdik.
+Daha sonra da, 512 byte'lar halinde okuyabildiğimiz kadar veri okuduk.
+İnternetten gelecek verinin tümünün ne kadar olduğunu bilmediğimiz için,
+boş veri okuyana kadar okumaya devam etmemiz gerekiyor. Bir yandan
+okudukça, bir yandan da ekrana yazmaya devam ettik.</p>
+<p><strong>Ekleme:</strong> <code>Connection: Close</code> header'ını eklemek önemli. Bu header
+olmazsa, server yeni bir istek almak için bağlantıyı açık tutabilir. Bu
+durumda, program bağlantının kapanacağını varsaydığından, bağlantının
+iki ucu da diğerinden veri beklerken program donabilir. (bkz: <a href="http://en.wikipedia.org/wiki/HTTP_persistent_connection">HTTP
+persistent connection</a>)</p>
+<p><del>Artık <code>s</code> isimli soketimizle işimiz bitti. HTTP protokolünde, bir kez
+veri okuduktan sonra bağlantı kapanır. Yeni bir sayfa okumak istersek,
+sıfırdan bir soket bağlantısı gerçekleştirmemiz gerekir.</del></p>
+<p>Bu yazıda konuya genel bir giriş yaptım. Bir sonraki yazıda sunucu
+programlarda soketlerin nasıl kullanılacağına değinmeyi planlıyorum.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="decorator.html" rel="prev" title="Python ve decorator... Nedir, ne işe yarar?">Önceki yazı</a>
+            </li>
+            <li class="next">
+                <a href="soket-socket-2.html" rel="next" title="Python ile soketler - 2">Sonraki yazı</a>
+            </li>
+        </ul></nav></aside></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/jquery.min.js"></script><script src="../assets/js/bootstrap.min.js"></script><script src="../assets/js/moment-with-locales.min.js"></script><script src="../assets/js/fancydates.js"></script><script src="../assets/js/jquery.colorbox-min.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-tr.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("tr");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function() {
+    var cx = '013136674562336859018:ouohwab0yku';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44774134-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

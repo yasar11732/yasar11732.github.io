@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
+<head>
+<meta charset="utf-8">
+<base href="http://ysar.net/index-11.html">
+<meta name="description" content="This is Yaşar Arabacı's personal blog">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python, Yazılım, ve Programlama (eski yazılar, sayfa 11) | Python, Yazılım, ve Programlama</title>
+<link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="assets/css/theme.css" rel="stylesheet" type="text/css">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
+<link rel="canonical" href="http://ysar.net/index-11.html">
+<link rel="prev" href="index.html" type="text/html">
+<link rel="next" href="index-10.html" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]-->
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ana içeriğe geç</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://ysar.net/">
+
+                <span id="blog-title">Python, Yazılım, ve Programlama</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="yasar-arabaci.html">Hakkımda</a>
+                </li>
+<li>
+<a href="soru-cevap.html">Soru-Cevap</a>
+                </li>
+<li>
+<a href="archive.html">Arşiv</a>
+                </li>
+<li>
+<a href="rss.xml">RSS kaynağı</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search with google--><form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+<input type="hidden" name="q" value="site:http://ysar.net/"><input type="text" name="q" maxlength="255" results="0" placeholder="Search">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right"></ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+
+    
+<div class="postindex">
+    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="algoritma/exact-cover-dancing-links-ve-sudoku-cozme.html" class="u-url">Exact Cover, Dancing Links ve Sudoku Çözme</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="algoritma/exact-cover-dancing-links-ve-sudoku-cozme.html" rel="bookmark"><time class="published dt-published" datetime="2013-11-03T06:32:00+02:00" title="2013-11-03 06:32">2013-11-03 06:32</time></a></p>
+        </div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<p>Donald Knuth tarafından geliştirilmiş olan "Dancing Links" algoritması, "exact cover" problemi
+ve bu probleme çevirilebilen sudoku gibi problemlerin çözümü için bir hayli etkin bir yöntem sunuyor.
+Bu yazıda, "exact cover" problemi, "dancing links" algoritması, sudoku probleminin exact cover
+problemine dönüştürülmesi konularından bahsedeceğim. Ayrıca, Ali Assaf tarafından "Algorithm X in 30 lines!"
+yazısında bahsedilen yönteme kısaca değineceğim. </p>
+<p class="more"><a href="algoritma/exact-cover-dancing-links-ve-sudoku-cozme.html">Devamını oku…</a></p>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="python/bir-optimizasyon-hikayesi.html" class="u-url">Bir optimizasyon hikayesi</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="python/bir-optimizasyon-hikayesi.html" rel="bookmark"><time class="published dt-published" datetime="2013-11-02T21:00:00+02:00" title="2013-11-02 21:00">2013-11-02 21:00</time></a></p>
+        </div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<p>Birazdan okuyacaklarınız, Python'da yazdığım basit bir fonksiyonu optimize etme hikayemdir.</p>
+<p>Çözmeye çalıştığım problem şu; bir string ve alt string verildiğinde, büyük string'in hangi
+indexlerindeki karakterleri birleştirerek alt string'i elde edebileceğimi bulan bir algoritma
+yazmak. Örneğin, büyük string "yasar arabaci", küçük string de "aa" olduğu zaman, algoritmanın
+vereceği sonuç <code>[(1, 3), (1, 6), (1, 8), (1, 10), (3, 6), (3, 8), (3, 10), (6, 8), (6, 10), (8, 10)]</code>
+olmalı. Örnekten de anlayacağınız üzere, alt stringi oluşturmak için, büyük string'den alacağım
+karakterlerin sırasının değişmesini istemiyorum. Diğer bir deyişle, sonuçlar içinde (3,1) istemiyorum.</p>
+<p>Bu problemi çözmek için yazdığım ilk algoritma şu oldu: </p>
+<p class="more"><a href="python/bir-optimizasyon-hikayesi.html">Devamını oku…</a></p>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="algoritma/pixel-siralama-videolari.html" class="u-url">Pixel Sıralama Videoları</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="algoritma/pixel-siralama-videolari.html" rel="bookmark"><time class="published dt-published" datetime="2013-10-28T12:37:17+02:00" title="2013-10-28 12:37">2013-10-28 12:37</time></a></p>
+        </div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<p>Geçen gün <a href="http://miratcan.tumblr.com/post/25087436669/python-ile-tersine-erime-efekti">Python ile tersine erime efekti</a>
+yazısını gördüm. Yaptığı şey çok hoşuma gitti, ben de özendim, o tarz birşey yapayım dedim. Tam olarak ne yapsam diye
+düşünürken, aklıma sorting algoritmaları geldi. Sort algoritmalarını bir resim üzerinde uygulasam ve ara adımlardan
+bir video oluştursam ilginç olabilir diye düşündüm, ve çeşitli sıralama algoritmaları ile birkaç video hazırladım.
+Buyurun bakalım, umarım beğenirsiniz: </p>
+<p class="more"><a href="algoritma/pixel-siralama-videolari.html">Devamını oku…</a></p>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="python/neden-str-toplamamalisiniz.html" class="u-url">Neden str toplamamalısınız</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="python/neden-str-toplamamalisiniz.html" rel="bookmark"><time class="published dt-published" datetime="2013-10-27T15:27:00+02:00" title="2013-10-27 15:27">2013-10-27 15:27</time></a></p>
+        </div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<p>Günlerden pazar, bir yandan çay içip bir yandan Python kurcalarken, aklıma döngü optimizasyon
+yöntemlerini denemek geldi. Daha önce bir yerde gördüğümü hatırladığım için, bir liste içindeki
+int'leri karaktere dönüştürüp, bir str içinde birleştirmeyi deniyorum. Bu yöntem bu kadar hızlı,
+şu yöntem bu kadar yavaş derken, acaba str objelerini + ile toplamak
+ne kadar kötü olabilir ki diye merak ettim. 1 milyon karakter ile şunu denedim: </p>
+<p class="more"><a href="python/neden-str-toplamamalisiniz.html">Devamını oku…</a></p>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="python/debugging-decorator.html" class="u-url">Debugging Decorator</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="python/debugging-decorator.html" rel="bookmark"><time class="published dt-published" datetime="2013-10-26T02:37:00+03:00" title="2013-10-26 02:37">2013-10-26 02:37</time></a></p>
+        </div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<p>Kod yazarken ve bu kodun tam olarak ne yaptığını anlamazken, fonksiyonların içine ara ara
+print serpiştiriyordum ki, neler döndüğünü görebileyim. Ancak malumunuz, bu printleri
+teker teker yazması, sonra teker teker silmesi bir hayli zahmetli bir işe dönüşebiliyor.
+Bu problemin üstesinden gelmek için, aşağıdaki decorator'u yazdım. İndirmek isteyenler <a href="https://gist.github.com/yasar11732/7163528/raw/3aac84a23fd57d3c4ee28d627c7607d68c3ac24b/debugging.py">debugging.py</a> adresinden indirebilir.</p>
+<p class="more"><a href="python/debugging-decorator.html">Devamını oku…</a></p>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="python/sha256-ftputil.html" class="u-url">Bloğu nasıl sunucuya yüklüyorum?</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="python/sha256-ftputil.html" rel="bookmark"><time class="published dt-published" datetime="2013-10-25T22:36:29+03:00" title="2013-10-25 22:36">2013-10-25 22:36</time></a></p>
+        </div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<p>Bu bloğu barındırdığım sunucumda, rsync kullanma ihtimalim yok, çünkü sadece
+html dosyaları upload edebildiğim bir paket kullanıyorum. SSH erişimi gibi
+bir şansım yok. Bundan önce dosyaları sunucuya atmak için, filezilla kullanıyordum.
+Filezilla ile upload yaparken, boyutu farklı ise veya kaynak daha yeniyse upload
+et gibi bir seçeneği var. Bu az çok işimi görüyordu. Ancak bunun da kendine göre
+bir takım sıkıntıları var. Bazen output klasörünü silip baştan oluşturma ihtiyacı
+duyuyorum. Bu gibi durumlarda, çoğu dosyanın içereği aslında değişmemiş olsa bile,
+tüm dosyaları baştan upload ediyor. Bir de bazen dosyaları yanlış yere atma gibi
+bir problem yaşıyorum. Geçenlerde anasayfa'nın index sayfası üzerine, başka
+bir klasörün index sayfasını atmışım mesela, biraz geç farkettim. Ayrıca, önceden
+attığım ama sonradan sildiğim içeriğin takibi yapmam da mümkün olmuyordu bu şekilde. </p>
+<p class="more"><a href="python/sha256-ftputil.html">Devamını oku…</a></p>
+</div>
+    </div>
+    </article>
+</div>
+
+        <nav class="postindexpager"><ul class="pager">
+<li class="previous">
+                <a href="index.html" rel="prev">Daha yeni yazılar</a>
+            </li>
+            <li class="next">
+                <a href="index-10.html" rel="next">Daha eski yazılar</a>
+            </li>
+        </ul></nav>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="assets/js/jquery.min.js"></script><script src="assets/js/bootstrap.min.js"></script><script src="assets/js/moment-with-locales.min.js"></script><script src="assets/js/fancydates.js"></script><script src="assets/js/jquery.colorbox-min.js"></script><script src="assets/js/colorbox-i18n/jquery.colorbox-tr.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("tr");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function() {
+    var cx = '013136674562336859018:ouohwab0yku';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44774134-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
+<head>
+<meta charset="utf-8">
+<base href="http://ysar.net/python/git-ve-github.html">
+<meta name="description" content="Git ve Github kullanmak için ilk adımlar ve temel bilgiler">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Git ve Github'a başlangıç | Python, Yazılım, ve Programlama</title>
+<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/python/git-ve-github.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Git ve Github kullanmak için ilk adımlar ve temel bilgiler">
+<meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="python-calisma-rehberi.html" title="Python Çalışma Rehberi" type="text/html">
+<link rel="next" href="test.html" title="Test" type="text/html">
+<meta property="og:site_name" content="Python, Yazılım, ve Programlama">
+<meta property="og:title" content="Git ve Github'a başlangıç">
+<meta property="og:url" content="http://ysar.net/python/git-ve-github.html">
+<meta property="og:description" content="Git ve Github kullanmak için ilk adımlar ve temel bilgiler">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2014-07-22T03:40:00+03:00">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ana içeriğe geç</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://ysar.net/">
+
+                <span id="blog-title">Python, Yazılım, ve Programlama</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../yasar-arabaci.html">Hakkımda</a>
+                </li>
+<li>
+<a href="../soru-cevap.html">Soru-Cevap</a>
+                </li>
+<li>
+<a href="../archive.html">Arşiv</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS kaynağı</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search with google--><form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+<input type="hidden" name="q" value="site:http://ysar.net/"><input type="text" name="q" maxlength="255" results="0" placeholder="Search">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="git-ve-github.md" id="sourcelink">Kaynak</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Git ve Github'a başlangıç</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                    Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2014-07-22T03:40:00+03:00" itemprop="datePublished" title="2014-07-22 03:40">2014-07-22 03:40</time></a></p>
+            
+        <p class="sourceline"><a href="git-ve-github.md" id="sourcelink">Kaynak</a></p>
+
+                <meta name="description" itemprop="description" content="Git ve Github kullanmak için ilk adımlar ve temel bilgiler">
+</div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Bir arkadaş mail yoluyla Git ve Github kullanımıyla ilgili bir yazı rica etti, hazır vaktim varken hazırlayayım istedim. Bu yazının hedef
+kitlesi git ve github kullanmaya tamamen sıfırdan başlayacak kişiler olacak. Dolayısıyla, sadece en temel konulardan bahsedeceğim. Zaten kendim
+de ileri seviye bir git kullanıcısı değilim. Ancak, günlük ihtiyaçlarımı idare edecek kadar git kullanabiliyorum. Yine de, git ve github
+konusundaki deneyimlerimin, bu yazının ihtiyaçlarını karşılamak için yeterli olacağına inanıyorum. Başlamadan önce değinmek istediğim bir
+diğer nokta da, özellikle github'la birlikte git nasıl kullanılır ona değineceğim. Hatta bazen, sadece github'a özgü özelliklere de değineceğim.
+Dolayısıyla, eğer github kullanmak istemiyorsanız, bu yazının bazı bölümleri sizi ilgilendirmeyecektir, baştan belirteyim. <!-- TEASER_END --></p>
+<h3>Git Nedir?</h3>
+<p>Öncelikle, kullanacağımız araçları tanımlamak faydalı olacaktır. Basitçe söylemek gerekirse, temel olarak şu işlere yarayan bir araç;
+birincisi, belgelerinizin tarihini tutuyor. Örneğin, ben bu yazıyı yazarken git kullansaydım, belgenin şu anki halini git kullanarak
+kaydedebilirdim. Daha sonra belgeyi yazdıkça, belli dönüm noktalarında da kaydetmeye devam edebilirim. Böylelikle, eğer ileride bir
+hata yaparsam, belgenin istediğim tarihteki haline geri dönebilirim. Hatta istersem, belgenin dünkü haliyle, bugünkü halini birleştirebilirim.
+Böylelikle, yaptığım hiçbir işi kaybetmemiş olurum.</p>
+<p>Git'in ikinci temel versiyonu da, paylaşımcı olması. Biraz önce, git kullanarak, belgelerinizin geçmişini kayıt altında tutabilirsiniz demiştik,
+paylaşımcı derken kastettiğim şey ise, bu tarihin kolaylıkla insanlar arasında paylaşılabilmesi. Diyelim ki, sizinle bu belgenin geçmişini paylaştım,
+siz de, bu belgenin üstünde bazı değişiklikler yaptınız. Git, sizin ve benim düzenleme geçmişlerini hiçbirşey kaybetmeden birleştirebiliyor. Böylelikle,
+aynı belge üzerinde birden fazla kişi çalışabiliyorsunuz.</p>
+<p>Git'in bir diğer özelliği de, dallanmaya izin veriyor olması. Diyelim ki, elinizin altında bir programın kararlı bir sürümü var. Bunun üzerinde,
+yeni bir özellik eklemek için değişiklik yapacaksınız. Bu durumda, programınızın kararlı sürümünü kaybetmiş olursunuz. Eğer programınızı git ile
+kontrol altında tutuyorsanız, kararlı halini ve yeni özelliği hazırladığınız halini, ayrı dallardan düzenleyebilirsiniz. Yeni sürümünüz hazır olduğu
+anda, bunu kararlı sürümle birleştirebilirsiniz. Eğer siz yeni bir özellik hazırlarken, başka birisi de ana program üzerinde başka değişiklikler
+yaparsa, bu yine de bir problem teşkil etmeyecektir.</p>
+<p>Github ise, yukarıdaki bahsettiğim paylaşımcı özellikler için, internet üzerinden bir mecra sağlıyor. Neyse, bu kadar teori yeter, biraz da iş
+üstünde görelim.</p>
+<h3>Github üzerinde depo oluşturmak</h3>
+<p>Normalde git dersleri, kendi bilgisayarınızda bir git deposu oluşturarak başlar. Ancak, ileride bazı kolaylıkları beraberinde
+getireceği için, ben önce github deposu oluşturarak başlamayı tercih ediyorum. Öncelikle, github'a üye olun. Üye olurken bir
+sıkıntı yaşamayacağınızı varsayıyorum. Üye girişi yaptıktan sonra, ana sayfada, yeşil bir <span style="background: #5ca941; color: #fff">+ New repository</span>
+butonu görecekseniz (<a href="https://github.com/repositories/new">Göremeyenler, buraya tıklasın</a>). Aşağıdaki gibi bir form karşınıza gelecek, bunu doldurun.</p>
+<p><img alt="Github new repository" src="http://i.imgur.com/HQlxjt7.png"></p>
+<p>Burada çok açıklayacak birşey yok. Depoyu, otomatik olarak, readme, lisans ve .gitignore dosyaları oluşturacak şekilde ayarladım. Siz de
+bu şekilde ayarlarsanız, yapmanız gereken amelelik bir nebze azalacaktır. <span style="background: #5ca941; color: #fff">Create Repository</span>
+dedikten sonra, şuna benzer bir deponun oluşması gerekiyor.</p>
+<p><img alt="Github, fresh repository" src="http://i.imgur.com/I1dc1hu.png"></p>
+<p>Oradaki 3 dosya, biraz önce yaptığımız ayarladan dolayı orda. Tamamen boş bir depo da oluşturabilirdik.</p>
+<p>Sırada, bu depoyu kendi bilgisayarımıza kopyalamak var. Bunun için, bilgisayarınızda git'in yüklü olması gerekiyor. Linux kullananlar,
+yazılım depolarında illa ki git'i bulabilecektir. Windows kullananlar için ise, çeşitli opsiyonlar mevcut. Benim windows kullananlara
+tavsiyem, <a href="http://git-scm.com/">Git resmi sitesinden</a> indirip, hiçbir ayarını değiştirmeden olduğu gibi kurmak olacaktır. Böylece,
+hem git gui, hem de git bash kurulacak. Yazının devamını takip edebilmek için, git bash'i çalıştırıp, anlattığım komutları oraya girmeniz
+gerekiyor.</p>
+<p>Hazır olduğunuzda, deponuzun https clone adresini bulmanız gerekiyor. Bunu deponuzun ana sayfasında, sağ alt tarafta görebilirsiniz. Eğer
+göremezseniz, adres çubuğunda gördüğünüz adrese <em>.git</em> eklemeniz yeterli olacaktır. ssh adresi yerine https adresini kullanmayı tercih ettim.
+ssh'nin kendine göre avantajları olsa da, kurulumu biraz da uğraştırıcı olacağı için, o kısmı atlıyorum. Herneyse, aşağıdaki komutu
+kullanarak, github üzerindeki git deponuzu bilgisayarınıza kopyalayın.</p>
+<pre class="code literal-block"><span></span>$ git clone https://github.com/yasar11732/gereksiz.git
+</pre>
+
+
+<p>Yukarıdaki adresi, kendi deponuzun adresiyle değiştirmeyi unutmayın. İsterseniz benim depomu da kopyalayabilirsiniz, ancak, yazının devamını
+adım adım takip etmenize engel olacak birtakım sıkıntıları da beraberinde getirecektir, şimdiden uyarayım. </p>
+<pre>
+Cloning into 'gereksiz'...
+remote: Counting objects: 5, done.
+remote: Compressing objects: 100% (5/5), done.
+remote: Total 5 (delta 0), reused 0 (delta 0)
+Unpacking objects: 100% (5/5), done.
+Checking connectivity... done.
+</pre>
+
+<p>Şimdi, bu yeni oluşan klasöre gidip, dosyalarımıza bir bakalım;</p>
+<pre class="code literal-block"><span></span>$ <span class="nb">cd</span> gereksiz
+$ ls
+</pre>
+
+
+<pre>
+LICENSE  README.md
+</pre>
+
+<p>Linux komutlarına aşina olmayanlar için, <code>cd</code> komutu klasör değiştirmeye, <code>ls</code> komutu ise, klasör içeriklerini listelemeye yarıyor. Windows'da
+da git bash linux ortamını taklit ettiği için, aynı komutlar orada da geçerli.</p>
+<p>Şimdi, taze git depomuzu biraz daha inceleyelim, <code>git log</code> komutu, deponun geçmişini göremenizi sağlıyor.</p>
+<pre class="code literal-block"><span></span>$ git log
+</pre>
+
+
+<pre>
+commit 1861843fb3a561fccb1a3162022831cbed021a3b
+Author: Yaşar Arabacı <yasar11732>
+Date:   Tue Jul 22 04:20:04 2014 +0300
+
+    Initial commit
+</yasar11732></pre>
+
+<p>Şu anda geçmişimde tek bir <em>commit</em> var. Bu <em>commit</em> github tarafından benim adıma otomatik olarak yapıldı. <em>Initial commit</em> de, bu <em>commit</em>'in
+mesajı. Git deposuna ne zaman bir şey kaydederseniz, ne yaptığınıza dair bir açıklama yazmak zorundasınız. Böylece, siz veya başkası, deponun
+geçmişine baktığında, depo geçmişi anlamlı görünecektir.</p>
+<p>Şimdi de <code>git remote</code> komutunu inceleyelim.</p>
+<pre class="code literal-block"><span></span>$ git remote -v
+</pre>
+
+
+<pre>
+origin  https://github.com/yasar11732/gereksiz.git (fetch)
+origin  https://github.com/yasar11732/gereksiz.git (push)
+</pre>
+
+<p>Yazının başında, deponuzun geçmişini paylaşabileceğinizi söylemiştik. Deponuzun geçmişini paylaşmanız için, remote adresleri eklemeniz gerekiyor.
+Böylece, değişiklikleri alırken veya gönderirken, gerekli adresten ismen bahsedebilirsiniz. Şu anda <em>origin</em> isminde tek bir remote var. Bu depoyu
+başka bir yerden kopyalayarak oluşturduğumuz için, asıl kaynak origin isminde bir remote olarak kendiliğinden ayarlandı. İstediğiniz kadar
+remote ekleyebilirsiniz, ancak şu anda buna bir lüzum olmadığında, o adımı atlıyorum.</p>
+<p>Artık sırada, bir takım değişiklikler yapıp, bunları git deposuna eklemek var. Buna geçmeden önce, 3 farklı dosya konumundan bahsedeceğim. Birincisi,
+çalışma kopyası, ikincisi <em>stage</em>, üçüncüsü ise <em>commit</em>. Çalışma kopyası, o anda klasörü açtığınızda göreceğiniz versiyon. Örneğin, şu anda git deposuna
+yeni bir dosya eklersek, bu sadece çalışma kopyasında bulunuyor olacak, git henüz bu dosyayı geçmişinize eklemedi.</p>
+<pre class="code literal-block"><span></span>echo "deneme" &gt; gereksiz.txt
+</pre>
+
+
+<p>Linux komutlarını bilmeyenler için, yukarıdaki komut <em>gereksiz.txt</em> isimli bir dosyaya, <em>deneme</em> yazıyor. Şimdi <code>git status</code> yazarak, deponun durumuna
+bir göz atalım.</p>
+<pre class="code literal-block"><span></span>$ git status
+</pre>
+
+
+<pre>
+On branch master
+Your branch is up-to-date with 'origin/master'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        gereksiz.txt
+
+nothing added to commit but untracked files present (use "git add" to track)
+</file></pre>
+
+<p>Çıktıyı biraz inceleyelim. Öncellikle, şu anda <em>master</em> isimli bir branch'de olduğumuzu görüyoruz. Bu yazıda branch'lere fazla değinmeyeceğim
+ama, <em>master</em> branch, ana branch'e verilen geleneksel bir isim. origin/master ile aramızda bir fark olmadığını da görüyoruz. Bu birazdan değişecek.
+Untracked files kısmında ise, çalışma kopyasında olup, git tarafında henüz takip edilmeyen dosyaları görüyoruz. Bu dosyanın git tarafından takip
+edilmesi için, bunları <em>stage</em> kısmına aktarmamız gerekiyor. <em>stage</em> kısmı, çalışma kopyasındaki değişiklikleri, kaydedilmeye hazırlandığı yer.</p>
+<pre class="code literal-block"><span></span>$ git add gereksiz.txt
+$ git status
+</pre>
+
+
+<pre>
+On branch master
+Your branch is up-to-date with 'origin/master'.
+
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+        new file:   gereksiz.txt
+</file></pre>
+
+<p>Windows üzerinde çalışanlar, CRLF ile ilgili bir uyarı alacaklar, bunu göz ardı edebilirsiniz. <code>git add &lt;dosya&gt;</code> komutu, dosyayı stage'e ekliyor.
+Tekrar <code>git status</code> ile duruma baktığımızda, gereksiz.txt'nin kaydedilecek değişikler arasında dahil olduğunu (<em>stage</em>'de olduğunu) görüyoruz. Eğer
+bunu kaydetmekten vazgeçersek, <em>stage</em>'den geri alabiliriz, ancak şuan bu yeni dosyayı, git geçmişine kaydetmeyi tercih edeceğiz.</p>
+<pre class="code literal-block"><span></span>$ git commit -m <span class="s2">"gereksiz.txt ekledim."</span>
+</pre>
+
+
+<pre>
+[master 1cfb62d] gereksiz.txt ekledim.
+ 1 file changed, 1 insertion(+)
+ create mode 100644 gereksiz.txt
+</pre>
+
+<p><code>git commit</code> komutu, <em>stage</em>'deki dosyaları, git geçmişine kaydediyor. <code>-m "gereksiz.txt ekledim"</code> kısmı ise, commit mesajını belirtiyor.
+Bunu teyit etmek için, <code>git log</code> komutuyla, geçmişimize bir göz atalım.</p>
+<pre class="code literal-block"><span></span>$ git log
+</pre>
+
+
+<pre>
+commit 1cfb62ddbebe707678ee547f844fb4d1f4ae15e8
+Author: Yaşar Arabacı <yasar11732>
+Date:   Tue Jul 22 05:18:04 2014 +0300
+
+    gereksiz.txt ekledim.
+
+commit 1861843fb3a561fccb1a3162022831cbed021a3b
+Author: Yaşar Arabacı <yasar11732>
+Date:   Tue Jul 22 04:20:04 2014 +0300
+
+    Initial commit
+</yasar11732></yasar11732></pre>
+
+<p>Artık geçmişimizde iki farklı commit var. <em>origin/master</em> branch'ine göre, 1 commit ilerdeyiz artık. Bunu <code>git status</code> komutuyla teyit edebilirsiniz.
+Değişiklikleri github'a geri yollamadan önce, son bir değişiklik daha yapalım.</p>
+<pre class="code literal-block"><span></span>$ <span class="nb">echo</span> <span class="s2">" ikinci değişiklik"</span> &gt;&gt; gereksiz.txt
+$ git status
+</pre>
+
+
+<pre>
+On branch master
+Your branch is ahead of 'origin/master' by 1 commit.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+        modified:   gereksiz.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+</file></file></pre>
+
+<p>İlk komuttaki <code>&gt;&gt;</code> dosyanın sonuna ekleme yapmamıza yarıyor. Şu an gereksiz.txt'nin değiştirildiğini ancak henüz stage'de olmadığını görüyoruz. Şu anda
+<code>git diff</code> komutuyla, <em>stage</em> ile çalışma kopyası arasındaki değişiklikleri görebiliriz. <code>git diff</code> komutu, herhangi iki commit veya dosya arasındaki
+farklılıkarı görmenize yarıyor. Eğer hiçbir parametre belirtmezseniz, <em>stage</em> ile çalışma kopyası arasındaki farklılıkları görüyorsunuz.</p>
+<pre class="code literal-block"><span></span>$ git diff
+</pre>
+
+
+<p></p>
+<pre>
+diff --git a/gereksiz.txt b/gereksiz.txt
+index 8836a06..6a4e197 100644
+--- a/gereksiz.txt
++++ b/gereksiz.txt
+@@ -1 +1,2 @@
+ deneme
++ ikinci değişiklik
+</pre>
+<p>Evet, dosyada ikinci satıra ikinci değişiklik yazıldığını görüyoruz. Bunu da daha önceki gibi, <code>git add gereksiz.txt</code> ile <em>stage</em>'e ekleyip, <code>git commit -m "ikinci değişiklik"</code>
+ile kaydedebiliriz.</p>
+<p>Artık yeterince değişiklik yaptığımıza göre, yerel değişiklikleri, github deposuna gönderebiliriz. Bunun için, <code>git push &lt;remote&gt; &lt;branch&gt;</code> komutunu kullanacağız.</p>
+<pre class="code literal-block"><span></span>$ git push origin master
+</pre>
+
+
+<pre>
+Username for 'https://github.com': yasar11732
+Password for 'https://yasar11732@github.com':
+Counting objects: 4, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 299 bytes | 0 bytes/s, done.
+Total 3 (delta 1), reused 0 (delta 0)
+To https://github.com/yasar11732/gereksiz.git
+   1861843..1cfb62d  master -&gt; master
+</pre>
+
+<p>Böylelikle, yerel değişiklikleri github'a yüklemiş olduk. İşlem sırasında, github kullanıcı adı ve şifrenizi girmeniz gerekecek. Şifrenizi girerken, karakterler
+ekranda görünmeyecek, kafanız karışmasın.</p>
+<p>Temel olarak git nasıl çalışıyor öğrendiğimize göre, github üzerinden nasıl sosyalleşiriz, biraz da ona değinelim. Github'da destek olmak istediğiniz bir
+depo varsa, doğrudan o depoya yazma hakkınız olmadığı için, önce kendinize bir kopyasını almanız gerekiyor. Forklamak istediğiniz depoya gittiğinizde, sağ
+üst köşede, fork linkini göreceksiniz. Bunu denemek için, https://github.com/yasar11732/gereksiz adresindeki depoyu forklayabilirsiniz.</p>
+<p>Bunu yaptıktan sonra,  https://github.com/<sizin nickiniz>/gereksiz adresinde benim depomun bir kopyasını bulacaksınız. Bu işlem, sadece dosyaları değil,
+tüm geçmişiyle birlikte git deposunu kopyalar. Bu yeni depo, biraz önceki gibi tamamen size ait bir depo. Yukarıda yaptığınız gibi, bu depoyu bilgisayarınıza
+klonlayıp, değişikler yapıp, bunları github'a geri yükleyebilirsiniz. Kolaylık olması açısından, direk github üzerinde bazı değişiklikler yapalım.</sizin></p>
+<p>Deponun ana ekranından, gereksiz.txt'ye tıklarsanız, yukarıda edit linki göreceksiniz. Böylece, doğrudan github üzerinden değişiklik yapıp bunları
+commit edebilirsiniz. En aşağıda, commit mesajını girip, commit changes tuşuna basmanız yeterli.</p>
+<p>Kendi deponuzun ana sayfasına geldinizde, <img alt="" src="http://i.imgur.com/muHsTuC.png"> benzeri bir tuş göreceksiniz. Bu tuş, orijinal deponun sahibine
+kendi deponuzda yaptığınız değişikleri bildirip, ben bunları yaptım, sen de bunları kendi depona al demek oluyor. Bu tuşa tıklayıp, bana bir pull
+request gönderin. Eğer yaptığınız değişiklikleri beğenirsem, merge ederim (sizin değişikliklerinizi kendi depoma dahil ederim).</p>
+<p>Siz de başka bir depodan yeni güncellemeleri almak istediğinizde, bunu <code>git pull &lt;remote&gt; &lt;branch&gt;</code> komutuyla yapıyorsunuz. Eğer remote güncellemeleri
+ile kendi değiştirdiğiniz dosyalar arasında bir çakışma yoksa, kolaylıkla değişiklikler birleşiyor. Eğer çakışma varsa, bu çakışmaları kendiniz
+çözümlemeniz gerek. Şu an yoruldum, daha fazla yazamayacağım. Merge ile ilgili detayları belki daha sonra tekrar yazarım. Kolay gelsin.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="python-calisma-rehberi.html" rel="prev" title="Python Çalışma Rehberi">Önceki yazı</a>
+            </li>
+            <li class="next">
+                <a href="test.html" rel="next" title="Test">Sonraki yazı</a>
+            </li>
+        </ul></nav></aside></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/jquery.min.js"></script><script src="../assets/js/bootstrap.min.js"></script><script src="../assets/js/moment-with-locales.min.js"></script><script src="../assets/js/fancydates.js"></script><script src="../assets/js/jquery.colorbox-min.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-tr.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("tr");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function() {
+    var cx = '013136674562336859018:ouohwab0yku';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44774134-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

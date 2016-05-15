@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
+<head>
+<meta charset="utf-8">
+<base href="http://ysar.net/python/l-system-tool.html">
+<meta name="description" content="Python Tk ile yazdığım L Sistemi çizme aracının beta sürümü github'da">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python L-Sistemi Aracı | Python, Yazılım, ve Programlama</title>
+<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/python/l-system-tool.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Python Tk ile yazdığım L Sistemi çizme aracının beta sürümü github'da">
+<meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="fractal.html" title="Python ile Fraktal Çizme" type="text/html">
+<link rel="next" href="l-system-tool-updates.html" title="L-System aracı güncellemeleri" type="text/html">
+<meta property="og:site_name" content="Python, Yazılım, ve Programlama">
+<meta property="og:title" content="Python L-Sistemi Aracı">
+<meta property="og:url" content="http://ysar.net/python/l-system-tool.html">
+<meta property="og:description" content="Python Tk ile yazdığım L Sistemi çizme aracının beta sürümü github'da">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2014-07-14T08:33:00+03:00">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ana içeriğe geç</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://ysar.net/">
+
+                <span id="blog-title">Python, Yazılım, ve Programlama</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../yasar-arabaci.html">Hakkımda</a>
+                </li>
+<li>
+<a href="../soru-cevap.html">Soru-Cevap</a>
+                </li>
+<li>
+<a href="../archive.html">Arşiv</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS kaynağı</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search with google--><form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+<input type="hidden" name="q" value="site:http://ysar.net/"><input type="text" name="q" maxlength="255" results="0" placeholder="Search">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="l-system-tool.md" id="sourcelink">Kaynak</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Python L-Sistemi Aracı</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                    Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2014-07-14T08:33:00+03:00" itemprop="datePublished" title="2014-07-14 08:33">2014-07-14 08:33</time></a></p>
+            
+        <p class="sourceline"><a href="l-system-tool.md" id="sourcelink">Kaynak</a></p>
+
+                <meta name="description" itemprop="description" content="Python Tk ile yazdığım L Sistemi çizme aracının beta sürümü github'da">
+</div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Merhabalar,</p>
+<p>Birkaç gün önce blog'dan <a href="fractal.html">Python kullanarak Fraktal şekiller</a> çizmek ile ilgili bir
+yazı yazmıştım. O yazıyı yazdıktan sonra, turtle'ın bu tarz grafikleri çizmek için fazla yavaş
+bir kütüphane olduğunun farkına vardım. Ayrıca, çok pratik de değildi.</p>
+<p>İnternette gördüğüm <a href="http://www.kevs3d.co.uk/dev/lsystems/">l-sistem çizen</a> websayfası çok hoşuma gitti,
+bir benzerini Python ile yazmaya karar verdim. <!-- TEASER_END --></p>
+<p>Kodların ilk sürümü, <a href="https://github.com/yasar11732/tklsystem">tklsystem</a> github deposunda. Bu sürüme
+beta demeye karar verdim, çünkü henüz pek denemedi bu program.</p>
+<p>Kodları windows üzerinde, Python 3.4.1 ile yazdım. Python 2.x sürümleriyle ne kadar uyumlu çalışır emin değilim.
+Programın Py2 versiyonuyla ilgilenmek isteyeniniz varsa, github'dan fork etmeyi unutmayın.</p>
+<p>Programı kullanmak için PIL kütüphanesine ihtiyacınız olacak. Windows için gerekli kurulum dosyalarını <a href="http://www.lfd.uci.edu/~gohlke/pythonlibs/">Gayri-resmi Python kurumları</a>
+sayfasından ulaşabilirsiniz. Linux için hangi paketleri yüklemek gerekir henüz tam emin değilim, kendi dağıtımınızın paketlerini biraz kurcalayın.</p>
+<p><a href="http://i.imgur.com/KHkV5Uq.png" target="_blank"><img src="http://i.imgur.com/KHkV5Uq.png" style="width:850px"></a></p>
+<p>Program yukarıdaki resimde gördüğünüz gibi bir arayüze sahip. Sol üstteki yazı kutucuklarına istediğiniz parametleri girdikten sonra, Enter'a veya
+alttaki render tuşuna basarak, ortadaki görüntüyü güncelleyebilirsiniz. Kutucuklar şu işlere yarıyor;</p>
+<ul>
+<li>
+<strong>Iterations</strong>: Axiom kaç kez büyütülecek. Bu sayı arttıkça oluşacak resim giderek komplex olacağı için, özellikle karmaşık sistemlerde
+ fazla büyük rakamlar kullanmayın. Önce 4-5 gibi bir rakam deneyin. Daha fazla detay istiyorsanız, detayları artırabilirsiniz.</li>
+<li>
+<strong>angle</strong>: Dönüş Açısı</li>
+<li>
+<strong>Axiom</strong>: Başlangıç Durumu</li>
+<li>
+<strong>rule1, rule2, rule3, rule4</strong>: Büyüme kuralları. Değişen ve yerine gelecek kısımları iki nokta (:) ile ayırın.</li>
+<li>
+<strong>constants</strong>: Sabitler. Bunlar çizgiye dönüşmez, büyümeyi kontrol etmek için kullandığınız fazladan değişkenler.</li>
+</ul>
+<p>Program'da bazı sabitler öntanımlı geliyor. Onların kullanımı da şu şekilde;</p>
+<ul>
+<li>
+<strong>+, -</strong>: Sağa dön, sola dön</li>
+<li>
+<strong>[, ]</strong>: Pozisyon ve açıyı kaydet, veya son kayıtlı pozisyon ve açıya geri dön.</li>
+<li>
+<strong>1,2,3,4</strong>: Aktif rengi değiştir.</li>
+</ul>
+<p>Programın ön tanımlı renklerini sol tarafta görebilirsiniz. Bunları üstüne tıklayarak, renkleri değiştirebilirsiniz.</p>
+<p>Eğer denediğiniz bir şekli beğendiyseniz, bunun denklemini <code>save</code> tuşuyla bir metin belgesine kaydedebilir, daha sonra bunu tekrar yükleyebilirsiniz.</p>
+<p>Ayrıca, o anki görüntüyü resim olarak da kaydedebilirsiniz.</p>
+<p>En sağda, programlar birlikte gelen, veya sizin kaydettiğiniz dosyaları görecekseniz, bunları da seçerek yükleyebilirsiniz.</p>
+<p>Böyle şeylere meraklı olanlarınız bir denesin, istek &amp; şikayet doğrultusunda, vaktim olursa, gerekli düzenlemeleri de yapabilirim. Hiç olmadı siz
+yapar github'dan pull request gönderirsiniz, o şekilde yaparız.</p>
+<p>Sağlıcakla.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="fractal.html" rel="prev" title="Python ile Fraktal Çizme">Önceki yazı</a>
+            </li>
+            <li class="next">
+                <a href="l-system-tool-updates.html" rel="next" title="L-System aracı güncellemeleri">Sonraki yazı</a>
+            </li>
+        </ul></nav></aside></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/jquery.min.js"></script><script src="../assets/js/bootstrap.min.js"></script><script src="../assets/js/moment-with-locales.min.js"></script><script src="../assets/js/fancydates.js"></script><script src="../assets/js/jquery.colorbox-min.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-tr.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("tr");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function() {
+    var cx = '013136674562336859018:ouohwab0yku';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44774134-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

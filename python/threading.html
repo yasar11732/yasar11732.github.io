@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
+<head>
+<meta charset="utf-8">
+<base href="http://ysar.net/python/threading.html">
+<meta name="description" content="Python'da paralel işlem yapmaya yarayan iki modülden biri olan threading modülünün mantığını ve kullanımını örneklerle anlatan bu yazı, yeni başlayanlara yöneliktir.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python threading modülü | Python, Yazılım, ve Programlama</title>
+<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+<meta content="#5670d4" name="theme-color">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/python/threading.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Python'da paralel işlem yapmaya yarayan iki modülden biri olan threading modülünün mantığını ve kullanımını örneklerle anlatan bu yazı, yeni başlayanlara yöneliktir.">
+<meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="soket-socket-yardimci-fonksiyon.html" title="Python soketler için faydalı 2 fonksiyon" type="text/html">
+<link rel="next" href="descriptor.html" title="Python 'descriptor' - giriş" type="text/html">
+<meta property="og:site_name" content="Python, Yazılım, ve Programlama">
+<meta property="og:title" content="Python threading modülü">
+<meta property="og:url" content="http://ysar.net/python/threading.html">
+<meta property="og:description" content="Python'da paralel işlem yapmaya yarayan iki modülden biri olan threading modülünün mantığını ve kullanımını örneklerle anlatan bu yazı, yeni başlayanlara yöneliktir.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2012-08-25T20:43:00+03:00">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ana içeriğe geç</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://ysar.net/">
+
+                <span id="blog-title">Python, Yazılım, ve Programlama</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../yasar-arabaci.html">Hakkımda</a>
+                </li>
+<li>
+<a href="../soru-cevap.html">Soru-Cevap</a>
+                </li>
+<li>
+<a href="../archive.html">Arşiv</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS kaynağı</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search with google--><form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+<input type="hidden" name="q" value="site:http://ysar.net/"><input type="text" name="q" maxlength="255" results="0" placeholder="Search">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="threading.md" id="sourcelink">Kaynak</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Python threading modülü</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                    Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2012-08-25T20:43:00+03:00" itemprop="datePublished" title="2012-08-25 20:43">2012-08-25 20:43</time></a></p>
+            
+        <p class="sourceline"><a href="threading.md" id="sourcelink">Kaynak</a></p>
+
+                <meta name="description" itemprop="description" content="Python'da paralel işlem yapmaya yarayan iki modülden biri olan threading modülünün mantığını ve kullanımını örneklerle anlatan bu yazı, yeni başlayanlara yöneliktir.">
+</div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Python'da paralel işlem yapmak için seçenek çok. Standart Python
+kütüphanesindeki threading, multiprocessing, subprocess gibi üst-seviye
+modüller bu işleri diğer dillere bakılırsa bir seviye daha
+kolaylaştırıyor. Standart modül dışında da, bu amaçlar için yazılmış
+<a href="http://www.stackless.com/" title="Thread-based Python programming">stackless</a> gibi modüller de var. Bu yazıda threading modülü
+incelenecek. Ne yazık ki, bu modül hakkında Türkçe kaynak bulmak
+konusunda sıkıntı var. Bu nedenle, bu yazıda pratik örneklerle, bu
+modülün kullanılışı anlatılmaya çalışılacak.</p>
+<p>Devam etmeden önce, process ve thread arasındaki farklara değinmekte
+fayda var. Threadler aynı işlem içerisinden, birkaç daldan çalışırlar.
+Yani, aynı hafızayı ve kaynakları kullanırlar. Bir başka deyişle, birkaç
+farklı thread, aynı veri üzerinde çalışabilir. Bu bir yandan daha hafif
+olmak ve thread'ler arasında iletişimin kolaylığı gibi üstünlüklere
+neden olsa da, diğer yandan kendine ait sorunları da beraberinde
+getirir. Bu sorunlara örnek olarak, <a href="http://tr.wikipedia.org/wiki/Deadlock" title="Deadlock in threading">deadlock</a> ve
+<a href="http://en.wikipedia.org/wiki/Race_condition#Computing" title="Race-condution in computing">race-condition</a> verilebilir. İşin güzel yanı ise, Python'daki GIL
+(Global Interpreter Lock) ve queue modülü sayesinde, Python'da
+thread'leri kullanmak diğer dillerden daha basittir. <!-- TEASER_END --></p>
+<p>Örnekleri Python 2.7'ye göre vereceğim. Kullandığım bazı özellikler,
+eski versiyonlarda olmayabilir veya 3.x versiyonlarında biraz
+değiştirilmiş olabilir. Ancak, bu, yazıyı takip etmeyi engellemez. İşin
+mantığı ve yönteminde önemli farklılıklar yoktur.</p>
+<p>Temel bir örnekle başlayalım;</p>
+<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
+
+<span class="k">def</span> <span class="nf">tekrarla</span><span class="p">(</span><span class="n">ne</span><span class="p">,</span> <span class="n">bekleme</span><span class="p">):</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">print</span> <span class="n">ne</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="n">bekleme</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="n">dum</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span> <span class="o">=</span> <span class="n">tekrarla</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"dum"</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">tis</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span> <span class="o">=</span> <span class="n">tekrarla</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"tis"</span><span class="p">,</span><span class="mf">0.5</span><span class="p">))</span>
+    <span class="n">ah</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span> <span class="o">=</span> <span class="n">tekrarla</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"ah"</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+
+    <span class="n">dum</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">tis</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">ah</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre>
+
+
+<p>Bu örneği çalıştırırsanız, şuna benzer bir çıktı alacaksınız;</p>
+<pre>
+dum
+tis
+ah
+
+tis
+dumtis
+
+tis
+dumtis
+
+tis
+ah
+tisdum
+</pre>
+
+<p>Çıktıyı incelersek, "dum","tis" ve "ah" kelimelerinin karışık şekilde
+yazıldığını görüyoruz. Kodları incelediğimizde, önce <code>sleep</code> fonksiyonu
+ve <code>Thread</code> sınıfı içe aktarılıyor. Daha sonra, <code>tekrarla</code> isimli bir
+fonksiyon tanımlanıyor. Bu fonksiyon, kendisine verilen bir kelimeyi,
+kendisine verilen zaman aralıklarında sürekli tekrarlayan bir fonksiyon.</p>
+<p>Daha sonra 3 adet <code>Thread</code> oluşturulduğunu görüyoruz. Bunların hepsi,
+kendilerine ait değişkenlere atanmışlar. Bunları oluştururken, bu
+thread'in hangi fonksiyonu çalıştıracağını nasıl belirledik, ve bu
+fonksiyona nasıl argümanları geçirdik dikkatle inceleyin.</p>
+<p>Son 3 satır, bu thread'lerin çalışmaya başladığı yer. Dikkat ediniz,
+bunlar oluşturulduğunda çalışmaya başlamıyor. <code>start()</code> metodunu
+kullandığımızda çalışmaya başlıyorlar. Böylece örneğimiz tamamlanmış
+oluyor.</p>
+<p>Yukarıda bahsedildiği gibi, thread'ler, kaynakların paylaşılması
+gerektiği zaman karmaşık hale gelebilir. Threading modülü, thread'ler
+arası zamanlamayı ayarlamak için <code>Lock()</code> ve <code>Event()</code> sınıfları gibi
+temel yöntemlere sahip olsa da, <code>Queue()</code> (sıra) kullanmak daha çok
+tercih edilen bir yöntem. Queue'lerin kullanılması hem daha kolay, hem
+de daha güvenlidir. Bunlarla çalışmak daha temiz ve anlaşılırdır.</p>
+<p>Aşağıda ilk önce, thread kullanmadan, birer birer web sayfası okuyan bir
+programcık örneği gösterilecek. Bu örnek, thread'lerle daha hızlı
+gerçekleştirilebilecek şeyler arasında klasik bir örnektir.</p>
+<pre class="code literal-block"><span></span><span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="n">siteler</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"http://www.python.org"</span><span class="p">,</span>
+           <span class="s2">"http://istihza.com"</span><span class="p">,</span>
+           <span class="s2">"http://yasararabaci.tumblr.com"</span><span class="p">,</span>
+           <span class="s2">"http://metehan.us"</span><span class="p">,</span>
+           <span class="s2">"http://blog.tanshaydar.com"</span><span class="p">,</span>
+           <span class="s2">"http://fatihmertdogancan.wordpress.com"</span><span class="p">,</span>
+           <span class="s2">"http://ozgurerdogdu.blogspot.com/"</span><span class="p">)</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">siteler</span><span class="p">:</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">site</span><span class="p">)</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span> <span class="c1"># okudugum veriyi goz ardi ediyorum, bu ornekte gerek yok.</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="k">print</span> <span class="s2">"</span><span class="si">%f</span><span class="s2"> saniye surdu"</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+</pre>
+
+
+<p>Bu kodu çağırdığınızda, okunan web sitelerini görmeyeceksiniz, çünkü
+gerek olmadığı için bir yere kaydetmedik veya ekrana bastırmadık. Ancak,
+işin sonunda, toplam ne kadar sürede bunların okunduğunu görebilirsiniz.
+Bunu yazdığım bilgisayarda, 8-10 saniye kadar sürdü. Kod bir hayli açık
+olduğundan açıklamaya gerek yok.</p>
+<p>Şimdi de thread örneğine bakalım;</p>
+<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
+<span class="kn">from</span> <span class="nn">Queue</span> <span class="kn">import</span> <span class="n">Queue</span>
+<span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">urlopen</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+
+<span class="n">sira</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+
+<span class="n">siteler</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"http://www.python.org"</span><span class="p">,</span>
+           <span class="s2">"http://istihza.com"</span><span class="p">,</span>
+           <span class="s2">"http://yasararabaci.tumblr.com"</span><span class="p">,</span>
+           <span class="s2">"http://metehan.us"</span><span class="p">,</span>
+           <span class="s2">"http://blog.tanshaydar.com"</span><span class="p">,</span>
+           <span class="s2">"http://fatihmertdogancan.wordpress.com"</span><span class="p">,</span>
+           <span class="s2">"http://ozgurerdogdu.blogspot.com/"</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">siteokuyan</span><span class="p">(</span><span class="n">que</span><span class="p">):</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">site</span> <span class="o">=</span> <span class="n">que</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">site</span><span class="p">)</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">que</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">basla</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>        
+    <span class="c1"># 5 thread olustur;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span> <span class="o">=</span> <span class="n">siteokuyan</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">sira</span><span class="p">,))</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="c1"># sitelerimizi siraya ekleyelim;</span>
+    <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">siteler</span><span class="p">:</span>
+        <span class="n">sira</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">site</span><span class="p">)</span>
+
+    <span class="c1"># siranin bosalmasini bekle</span>
+    <span class="n">sira</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="k">print</span> <span class="s2">"</span><span class="si">%s</span><span class="s2"> saniye surdu"</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">basla</span><span class="p">)</span>
+</pre>
+
+
+<p>Bu örnekte açıklanacak yeni şeyler var. İlk göze çarpan değişiklik, bu
+örnekte Queue'yi içe aktarmamız. Bu Queue, elimizdeki işleri tutacak ve
+iş istendikçe iş verecek. Bu Queue sınıfının sira isminde bir örneğini
+oluşturduk.</p>
+<p><code>siteokuyan</code> isimli fonksiyon, argüman olarak bir <code>Queue</code> objesi alıyor.
+<code>Queue</code> objesinden yeni bir iş almak için, bu objenin <code>get()</code> metodu
+kullanılır. Bu metot, sıradaki işi döndürür. Ayrıca, işi bitirdikten
+sonra, <code>task_done()</code> metodunu kullandığımıza da dikkat edin. Bu metot
+elimizdeki işimizi bitirdiğimizi <code>Queue</code> objesine belirtiyor.</p>
+<p>Daha sonra, bir for döngüsü ile 5 tane thread oluşturduk. Argüman olarak
+da yukarıda oluşturmuş olduğumuz sira objesini verdiğimize dikkat edin.
+Hepsine aynı Queue objesini verdik, çünkü hepsi aynı iş topluluğundan iş
+alacaklar. Burada yeni olan tek şey, bu thread'lerin daemon özelliğini
+True'ya ayarlamış olmamız. Eğer bunlar daemon olarak belirtilmezse,
+Python bu thread'ler sonlanmadan programınızı kapatmaz. Ancak dikkat
+ederseniz, thread olarak kullanacağımız fonksiyonda sonsuz bir while
+döngüsü var. Yani, eğer bunları daemon yapmazsak, programımız
+kapanmazdı.</p>
+<p>Daha sonra, başka bir for döngüsü ile elimizdeki siteleri sira objesine
+ekledik. Queue objesine iş eklemek için <code>put()</code> metodu kullanılır. Biz
+burada siraya yazı (string objesi) ekledik, ancak, aşağı yukarı herşey
+bu sıraya eklenebilir. <code>put()</code> metodu ile ne verirseniz, <code>get()</code> metodu
+ile onu alırsınız.</p>
+<p>Daha sonra, sira objesinin <code>join()</code> metoduyla elimizdeki işlerin
+tükenmesini bekledik. Bu metot, <code>put()</code> ile eklenen her iş, <code>get()</code> ile
+alınıp her bu iş için <code>task_done()</code> çağırılıncaya kadar programı
+bloklar. Böylece, elimizdeki işler bitmeden programın sonlanmasını
+önlemiş olacağız. Böylece bu örneğimizi de tamamlamış olduk.</p>
+<p>Queue'ler ve thread'ler bu şekilde bir arada çok temiz bir şekilde
+çalıştığı için, rahatlıkla birden fazla thread ve Queue ile aynı anda
+çalışabiliriz. Yukarıdaki örnekte, sadece tek bir sıradan iş alıp, bu
+siteleri okuduk. Aşağıdaki örnekte ise, iki tane sıra olacak. İlk
+sıradan site isimleri alınıp, bu siteler okunacak. Daha sonra bu okunmuş
+siteler ikinci bir sıraya konulacak. Başka bir thread grubu ise, okunmuş
+web sayfalarını sırasıyla işleyip bunların linklerini okuyacaklar.
+Linkleri okumak için <a href="http://www.crummy.com/software/BeautifulSoup/">BeautifulSoup</a> isimli modülü kullanacağım. Bu 3.
+şahıs bir modül olduğundan sizde bulunmayabilir. Ayrıca, konumuzla
+alakası olmadığından bu modülün detaylarına girmeyeceğim. Ancak, bunu
+rahatlıkla internetten bulup kurabilirsiniz.</p>
+<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
+<span class="kn">from</span> <span class="nn">Queue</span> <span class="kn">import</span> <span class="n">Queue</span>
+<span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">urlopen</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">BeautifulSoup</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="n">siteler</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"http://www.python.org"</span><span class="p">,</span>
+           <span class="s2">"http://istihza.com"</span><span class="p">,</span>
+           <span class="s2">"http://yasararabaci.tumblr.com"</span><span class="p">,</span>
+           <span class="s2">"http://metehan.us"</span><span class="p">,</span>
+           <span class="s2">"http://blog.tanshaydar.com"</span><span class="p">,</span>
+           <span class="s2">"http://fatihmertdogancan.wordpress.com"</span><span class="p">,</span>
+           <span class="s2">"http://ozgurerdogdu.blogspot.com/"</span><span class="p">)</span>
+
+<span class="n">ilk_sira</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+<span class="n">ikinci_sira</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">siteokuyan</span><span class="p">():</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">site</span> <span class="o">=</span> <span class="n">ilk_sira</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">site</span><span class="p">)</span>
+        <span class="n">icerik</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">ikinci_sira</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">icerik</span><span class="p">)</span>
+        <span class="n">ilk_sira</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">linkokuyan</span><span class="p">():</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">icerik</span> <span class="o">=</span> <span class="n">ikinci_sira</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">icerik</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">findAll</span><span class="p">([</span><span class="s1">'a'</span><span class="p">]):</span>
+            <span class="k">print</span> <span class="n">link</span>
+        <span class="n">ikinci_sira</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">basla</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span> <span class="o">=</span> <span class="n">siteokuyan</span><span class="p">)</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">siteler</span><span class="p">:</span>
+        <span class="n">ilk_sira</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">site</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span> <span class="o">=</span> <span class="n">linkokuyan</span><span class="p">)</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="n">ilk_sira</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="n">ikinci_sira</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+    <span class="k">print</span> <span class="s2">"</span><span class="si">%f</span><span class="s2"> saniye"</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">basla</span><span class="p">)</span>
+</pre>
+
+
+<p>Bu kodu çalıştırdığınızda, verdiğimiz sitelerdeki linklerin alt alta
+sıralandığını ve son olarak bu işlemin ne kadar sürdüğünü göreceksiniz.
+Burada farklı olarak yaptığımız en önemli şey, <code>siteokuyan()</code>
+fonksiyonunda okuduğumuz siteleri, ikinci_sira isimli Queue objesine
+eklememiz. Bu sayede, bunları <code>link_okuyan()</code> isimli fonksiyon bu
+sıradan alıp işleyecek. Diğer bir farklılık da, bu örnekte iki sırayı da
+beklememiz. Önce ilk sıradaki bütün linklerin okunmasını bekliyoruz.
+Böylece, ikinci sıraya eklenecek bütün sitelerin eklenmiş olduğundan
+emin oluyoruz. Daha sonra ikinci sıradaki bütün işlerin tamamlanmasını
+bekliyoruz. Böylece bu örneğimiz de tamamlanmış oluyor. Bu örnek biraz
+çaba ile ufak bir arama motoru veya data-mining programı haline
+getirilebilir.</p>
+<p>Bu yazıyı bitirirken şunu da belirtlemekte fayda var ki, threading
+modülü her soruna çözüm değil. Bazı durumlar için, ayrı işlem
+(multiprocessing) kullanmak daha uygun olabilir. Programcının elindeki
+problemi iyi değerlendirip, hangi aracın daha uygun olduğuna karar
+verebilmesi gerekir.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="soket-socket-yardimci-fonksiyon.html" rel="prev" title="Python soketler için faydalı 2 fonksiyon">Önceki yazı</a>
+            </li>
+            <li class="next">
+                <a href="descriptor.html" rel="next" title="Python 'descriptor' - giriş">Sonraki yazı</a>
+            </li>
+        </ul></nav></aside></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/jquery.min.js"></script><script src="../assets/js/bootstrap.min.js"></script><script src="../assets/js/moment-with-locales.min.js"></script><script src="../assets/js/fancydates.js"></script><script src="../assets/js/jquery.colorbox-min.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-tr.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("tr");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function() {
+    var cx = '013136674562336859018:ouohwab0yku';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44774134-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
