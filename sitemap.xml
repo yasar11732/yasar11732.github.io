@@ -23,7 +23,7 @@
  </url>
  <url>
   <loc>http://ysar.net/2016/index.html</loc>
-  <lastmod>2016-05-15T20:21:00Z</lastmod>
+  <lastmod>2016-05-15T20:29:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/algoritma/4-renk-teoremi-ve-harita-boyama.html</loc>
@@ -135,7 +135,7 @@
  </url>
  <url>
   <loc>http://ysar.net/index.html</loc>
-  <lastmod>2016-05-15T20:21:00Z</lastmod>
+  <lastmod>2016-05-15T20:29:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/python/5-django-ipucu.html</loc>
@@ -251,7 +251,7 @@
  </url>
  <url>
   <loc>http://ysar.net/python/git-ve-github.html</loc>
-  <lastmod>2016-05-15T20:21:00Z</lastmod>
+  <lastmod>2016-05-15T20:29:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/python/google-api-ile-url-kisaltma.html</loc>
@@ -299,7 +299,7 @@
  </url>
  <url>
   <loc>http://ysar.net/python/index.html</loc>
-  <lastmod>2016-05-15T20:21:00Z</lastmod>
+  <lastmod>2016-05-15T20:29:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/python/kayit-log-dosyalari.html</loc>
@@ -376,6 +376,10 @@
  <url>
   <loc>http://ysar.net/python/profile-modulu.html</loc>
   <lastmod>2016-05-15T20:21:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://ysar.net/python/programlama-dilleri.html</loc>
+  <lastmod>2016-05-15T20:29:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/python/python-calisma-rehberi.html</loc>
