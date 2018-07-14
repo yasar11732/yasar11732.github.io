@@ -2,20 +2,25 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
 <head>
 <meta charset="utf-8">
-<base href="http://ysar.net/python/threading.html">
 <meta name="description" content="Python'da paralel işlem yapmaya yarayan iki modülden biri olan threading modülünün mantığını ve kullanımını örneklerle anlatan bu yazı, yeni başlayanlara yöneliktir.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Python threading modülü | Python, Yazılım, ve Programlama</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/html4css1.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/code.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
-<meta content="#5670d4" name="theme-color">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
 <link rel="canonical" href="http://ysar.net/python/threading.html">
-<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Python'da paralel işlem yapmaya yarayan iki modülden biri olan threading modülünün mantığını ve kullanımını örneklerle anlatan bu yazı, yeni başlayanlara yöneliktir.">
-<meta name="author" content="Yaşar Arabacı">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-3760371725357973",
+    enable_page_level_ads: true
+  });
+</script><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="soket-socket-yardimci-fonksiyon.html" title="Python soketler için faydalı 2 fonksiyon" type="text/html">
 <link rel="next" href="descriptor.html" title="Python 'descriptor' - giriş" type="text/html">
 <meta property="og:site_name" content="Python, Yazılım, ve Programlama">
@@ -45,7 +50,7 @@
             </a>
         </div>
 <!-- /.navbar-header -->
-        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
             <ul class="nav navbar-nav">
 <li>
 <a href="../yasar-arabaci.html">Hakkımda</a>
@@ -88,15 +93,14 @@
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Python threading modülü</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                     Yaşar Arabacı
             </span></p>
             <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2012-08-25T20:43:00+03:00" itemprop="datePublished" title="2012-08-25 20:43">2012-08-25 20:43</time></a></p>
             
-        <p class="sourceline"><a href="threading.md" id="sourcelink">Kaynak</a></p>
+        <p class="sourceline"><a href="threading.md" class="sourcelink">Kaynak</a></p>
 
-                <meta name="description" itemprop="description" content="Python'da paralel işlem yapmaya yarayan iki modülden biri olan threading modülünün mantığını ve kullanımını örneklerle anlatan bu yazı, yeni başlayanlara yöneliktir.">
-</div>
+        </div>
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
@@ -132,7 +136,7 @@ mantığı ve yönteminde önemli farklılıklar yoktur.</p>
         <span class="k">print</span> <span class="n">ne</span>
         <span class="n">sleep</span><span class="p">(</span><span class="n">bekleme</span><span class="p">)</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
     <span class="n">dum</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span> <span class="o">=</span> <span class="n">tekrarla</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"dum"</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
     <span class="n">tis</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span> <span class="o">=</span> <span class="n">tekrarla</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"tis"</span><span class="p">,</span><span class="mf">0.5</span><span class="p">))</span>
     <span class="n">ah</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span> <span class="o">=</span> <span class="n">tekrarla</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"ah"</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
@@ -231,7 +235,7 @@ olduğundan açıklamaya gerek yok.</p>
         <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="n">que</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">basla</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>        
     <span class="c1"># 5 thread olustur;</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
@@ -322,7 +326,7 @@ rahatlıkla internetten bulup kurabilirsiniz.</p>
             <span class="k">print</span> <span class="n">link</span>
         <span class="n">ikinci_sira</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">basla</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span> <span class="o">=</span> <span class="n">siteokuyan</span><span class="p">)</span>
@@ -375,7 +379,7 @@ verebilmesi gerekir.</p>
         <!--End of body content-->
 
         <footer id="footer">
-            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2018         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
 </div>

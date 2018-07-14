@@ -6,11 +6,27 @@
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <sitemap>
+  <loc>http://ysar.net/algoritma/rss.xml</loc>
+  <lastmod>2018-07-14T19:58:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>http://ysar.net/diger/rss.xml</loc>
+  <lastmod>2018-07-14T19:58:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>http://ysar.net/python/rss.xml</loc>
+  <lastmod>2018-07-14T19:58:00Z</lastmod>
+ </sitemap>
+ <sitemap>
   <loc>http://ysar.net/rss.xml</loc>
-  <lastmod>2016-05-15T20:31:00Z</lastmod>
+  <lastmod>2018-07-14T19:58:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://ysar.net/sitemap.xml</loc>
-  <lastmod>2016-05-15T20:36:00Z</lastmod>
+  <lastmod>2018-07-14T19:58:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>http://ysar.net/yazilim-dunyasi/rss.xml</loc>
+  <lastmod>2018-07-14T19:58:00Z</lastmod>
  </sitemap>
 </sitemapindex>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Python, Yazılım, ve Programlama (Yazilim Dunyasi)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/yazilim-dunyasi/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Sat, 14 Jul 2018 19:58:26 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Neden İşletim Sistemi Geliştirmemeliyiz - Ekleme</title><link>http://ysar.net/yazilim-dunyasi/neden-isletim-sistemi-gelistirmemeliyiz-ekleme.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Geçen gün neden işletim sistemi geliştirmemeliyiz adında bir yazı yazmıştım.
+Galiba o yazıda konuya nasıl yaklaştığımı net olarak ifade edemedim. O yüzden
+bu konuyu biraz daha açmaya karar verdim. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/neden-isletim-sistemi-gelistirmemeliyiz-ekleme.html"&gt;Devamını oku…&lt;/a&gt; (4 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/neden-isletim-sistemi-gelistirmemeliyiz-ekleme.html</guid><pubDate>Thu, 24 Oct 2013 13:38:00 GMT</pubDate></item><item><title>Neden İşletim Sistemi Geliştirmemeliyiz?</title><link>http://ysar.net/yazilim-dunyasi/neden-isletim-sistemi-gelistirmemeliyiz.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Türkiye de işletim sistemi geliştirmek, özellikle Pardus'un çıkışından sonra, ilgin çeken
+bir konu haline geldi. Çeşitli forumlarda, işletim sistemi nasıl geliştirilir, Python ile
+işletim sistemi geliştirmek mümkün müdür gibi sorular soruldu. Daha dün &lt;a href="http://www.superbug.co/2013/10/neden-isletim-sistemi-gelistirmeliyiz.html"&gt;Neden işletim sistemi geliştirmeliyiz&lt;/a&gt;{: rel="nofollow" }
+isminde bir yazı okudum. Ben de diyorum ki, işletim sistemi &lt;strong&gt;geliştirmemeliyiz&lt;/strong&gt;. Bu yazıda, neden böyle düşündüğümü açıklayacağım. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/neden-isletim-sistemi-gelistirmemeliyiz.html"&gt;Devamını oku…&lt;/a&gt; (1 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/neden-isletim-sistemi-gelistirmemeliyiz.html</guid><pubDate>Tue, 22 Oct 2013 14:14:00 GMT</pubDate></item><item><title>Haskell Öğreniyorum</title><link>http://ysar.net/yazilim-dunyasi/haskell-tanitim.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Hazır tatil, boş vaktim varken Haskell öğrenmeye bir şans daha vereyim dedim. Bir yandan
+öğrenirken, bir yandan da ufak bir &lt;a href="http://learnyouahaskell.com/introduction"&gt;Haskell tanıtımı&lt;/a&gt; yapayım (bkz: araklamak).&lt;/p&gt;
+&lt;p&gt;Haskell &lt;strong&gt;tamamen fonksiyonel&lt;/strong&gt; bir dil. İmperatif dillerde, programa hangi adımları izleyeceğini
+adım adım anlatıp, neyin nasıl yapılacağını anlatıyoruz. Fonksiyonel dillerde ise, neyin ne olduğunu
+belirtiyoruz, nasıl yapılacağına program kendi karar veriyor.&lt;/p&gt;
+&lt;p&gt;Haskell &lt;strong&gt;tembel&lt;/strong&gt; bir dil. Haskell size bir sonuç göstermek zorunda kalmadıkça, fonksiyon çalıştırmaz.
+Örneğin, bir liste döndüren bir fonksiyonu çalıştırıp, ilk iki elemanını ekrana basmak istediğinizde,
+Haskell ilk iki elemanı bulacak kadar fonksiyonu çalıştırıp, orada bırakıyor.&lt;/p&gt;
+&lt;p&gt;Haskell, &lt;strong&gt;statik tipleme&lt;/strong&gt; kullanıyor. Yani, derleme sırasında bir takım hataları yakalayabiliyorsunuz. Ayrıca,
+C'nin aksine, çıkarım yapma yoluyla veri tiplerini bulabiliyor. Örneğin, &lt;code&gt;a = 5&lt;/code&gt; derseniz, &lt;code&gt;a&lt;/code&gt;'nın bir int
+olduğunu belirtmenize gerek yok, Haskell kendi anlıyor.&lt;/p&gt;
+&lt;p&gt;Haskell &lt;strong&gt;zarif ve ifade gücü yüksek&lt;/strong&gt; bir dil. Python'dan hatırlayacağınız, &lt;em&gt;list comprehension&lt;/em&gt; yapısı Haskell
+kaynaklı. Ne kadar az kod, o kadar kolay bakım gereksinimi ve o kadar az bug demek. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/haskell-tanitim.html"&gt;Devamını oku…&lt;/a&gt; (1 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/haskell-tanitim.html</guid><pubDate>Sun, 13 Oct 2013 09:51:18 GMT</pubDate></item><item><title>İyi Programcı Nasıl Olunur</title><link>http://ysar.net/yazilim-dunyasi/iyi-programci-yazilimci-nasil-olunur.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Ben iyi bir programcı olduğumu iddia edemem. Ancak, kendi çabalarıyla programcılık hakkında bazı şeyler öğrenmiş
+ve hayatının belirli bir kısmında, amatör olarak da olsa, programcılıkla uğraşmış biriyim. Bu maceram boyunca, edindiğim
+deneyimler doğrultusunda, doğru veya yanlış, "iyi programcı nasıl olunur?", "iyi programcı olmak için neler yapmak gerekir", "yazılım konusunda
+kendini geliştirme nasıl mümkün olur" gibi sorulara bir cevap yazıyorum. Yazı iki kısımdan oluşuyor; önce bana göre
+iyi bir programcı olmak için ihtiyaç duyacağınız şeylerden bahsedeceğim, sonra kendinizi geliştirebilmeniz için
+bazı adımlar tavsiye edeceğim. Ancak, bunlara geçmeden önce şunu da belirtmek istiyorum ki, bunları
+benim gibi bu işin okulunu okumamış ve kendi çabalarıyla programlama konusunda bir yerlere gelmek isteyen kişileri düşünerek yazdım.
+Çünkü, burada tavsiye edeceğim adımlar, zaten bilgisayar mühendisliği bölümlerinde derslerde veriliyordur diye düşünüyorum. O yüzden, bu yazı okullulara çok hitap etmeyebilir.&lt;/p&gt;
+&lt;p&gt;Bence programcılar iki kısımdan oluşuyor. İlk grup, programcılığı
+programcılık için yapanlar grubu. Bu gruptaki kişiler, sırf eğlence olsun diye program yazan, farklı ve yeni şeyler denemeye yatkın
+kişilerdir. Diğer grup ise, programcılığı bir araç olarak kullanan ve programcılık aracılığıyla
+bir işini halletmesi gereken kişilerdir. Bunlara örnek olarak, bilimsel amaçlarla programcılık yapanları
+verebiliriz. Bu yazı ilk gruba yönelik olacak. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/iyi-programci-yazilimci-nasil-olunur.html"&gt;Devamını oku…&lt;/a&gt; (5 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/iyi-programci-yazilimci-nasil-olunur.html</guid><pubDate>Wed, 09 Oct 2013 14:19:33 GMT</pubDate></item><item><title>Neden nikola'yı tercih ettim?</title><link>http://ysar.net/yazilim-dunyasi/python-nikola-static-site-generator.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Eğer statik blog oluşturucuların size göre olmadığını düşünüyorsanız, bu yazı fikrinizi değiştirebilir. Aslına bakarsanız, artık devir statik blog devri.
+Veritabanları'nın yerini markdown dosyaları ve html şablonları aldı. Statik siteler oluşturulduğu anda kullanılmaya hazır!&lt;/p&gt;
+&lt;p&gt;Statik bloglar, birtakım programlar tarafından oluşturulmuş html dosyalarından oluşturulan sitelerdir. Bu programlar, örneğin markdown gibi, bir markup dilinde
+yazılmış olan dosyaları okurlar ve bunları siteyi hazırlamak için kullanırlar. Böylece ortaya, index sayfası, RSS'i, site haritası dahil her şeyiyle tam bir
+site meydana gelir. Bu şekilde hazırlanmış sitelerin, alışılagelmiş blog sistemlerine göre birtakım avantajları vardır.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Güvenlik:&lt;/strong&gt; Statik siteler, güvenlik açığı bulundurmaz. Çünkü, dinamik olarak sunulan kısımları yoktur.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Verimli Kaynak Kullanımı:&lt;/strong&gt; Statik siteler çok az server kaynağı kullanırlar.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Platform bağımsızlığı:&lt;/strong&gt; Statik siteler, herhangi bir sunucuda rahatlıkla barındırılabilir. Belli bir php, python sürümü veya belli bir işletim sistemi ihtiyacı yoktur.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Ücretsiz Server İmkanı:&lt;/strong&gt; &lt;a href="http://pages.github.com/"&gt;GitHub Pages&lt;/a&gt; statik siteler için ücretsiz hosting sağlıyor. Üstelik, bununla birlikte kendi domain adınızı kullanabilirsiniz. &lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/python-nikola-static-site-generator.html"&gt;Devamını oku…&lt;/a&gt; (3 dakikalık okuma)&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/python-nikola-static-site-generator.html</guid><pubDate>Mon, 07 Oct 2013 17:26:00 GMT</pubDate></item><item><title>Java izlenimleri 2</title><link>http://ysar.net/yazilim-dunyasi/java-izlenimleri-2.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Yaklaşık 1 haftadır (belki daha fazla da olabilir, tam emin değilim) az
+çok Java'yla uğraşıyorum, az çok birşeyler yazdım;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/yasar11732/yas"&gt;yas&lt;/a&gt; git benzeri versiyon kontrol sistemi (gibi birşey)&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/yasar11732/HttpTools"&gt;HttpTools&lt;/a&gt; Http araçları kütüphanesi olacak, şimdilik sadece
+    sitelerin durum kodların topluca almaya yarayan bir class var.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/yasar11732/MathTools"&gt;MathTools&lt;/a&gt; Asal sayı, narsist sayı bulma ve labirent oluşturma
+    class'ları&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/yasar11732/wikicategory"&gt;wikicategory&lt;/a&gt; WikiPedia'a bir kategorideki makaleleri komple
+    almak için bir class &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Java'nın ve NYP'nin mantığını biraz daha iyi kavramaya başladığımı
+hissediyorum. Ancak, halen alışamadığım şeyler var. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/java-izlenimleri-2.html"&gt;Devamını oku…&lt;/a&gt; (1 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/java-izlenimleri-2.html</guid><pubDate>Wed, 14 Aug 2013 00:13:20 GMT</pubDate></item><item><title>Java'da ilk izlenimlerim</title><link>http://ysar.net/yazilim-dunyasi/javada-ilk-izlenimlerim.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Uzun zamandır java'yı denemek istiyordum ama nedense içten içe
+ayak diretiyordum. Şu günlerde biraz java öğrenmek için
+fırsatım oldu. Java diliyle ilgili ilk izlenimlerimi buradan
+paylaşayım dedim. Daha önce Python ve C gibi dillerle ufak
+tefek programlar yazan bana, Java bir hayli farklı geldi.
+Şimdilik alışamadığımı söylemem gerek.&lt;/p&gt;
+&lt;p&gt;Java dilinin en belirgin özelliklerinden birisi, Türkçe'ye nesne
+yönelimli programlama diye çevrilen "Object-oriented
+programming" paradigmasına sahip bir dil olması. Python'da da sınıflar
+ve objeler var ancak Java tam anlamıyla bir NYP dili. Beni
+billenler bilir, C++ ve genel anlamda NYP konusuna karşı
+biraz antipatim var. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/javada-ilk-izlenimlerim.html"&gt;Devamını oku…&lt;/a&gt; (1 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/javada-ilk-izlenimlerim.html</guid><pubDate>Sat, 10 Aug 2013 09:27:22 GMT</pubDate></item><item><title>İki adımda takipçi haritanızı oluşturun</title><link>http://ysar.net/yazilim-dunyasi/google-fusion-tables-twitter-follower-haritasi.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;h4&gt;1 - Takipçilerin bilgilerini csv formatında kaydedin.&lt;/h4&gt;
+&lt;p&gt;Öncelikle gerekli datayı twitter api'sinden almamız gerekiyor. Bunun için aşağıdaki kodları kullanacağız: &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/google-fusion-tables-twitter-follower-haritasi.html"&gt;Devamını oku…&lt;/a&gt; (2 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/google-fusion-tables-twitter-follower-haritasi.html</guid><pubDate>Fri, 01 Feb 2013 20:12:00 GMT</pubDate></item><item><title>Xlib, ne kadar zor olabilir ki?</title><link>http://ysar.net/yazilim-dunyasi/xlib-ne-kadar-zor-olabilir-ki.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Dün müydü, ondan önceki gün müydü hatırlamıyorum, aklıma bir fikir
+geldi. Mouse ile tıkladığım noktaları bir yere kaydedeyim, bir kaç gün
+veri topladıktan sonra da scatter plot'unu çizerim, enteresan birşey
+olur diye düşündüm.&lt;/p&gt;
+&lt;p&gt;Mouse ile tıklanan noktaları bulmak kısmını Xlib ile yapmak gerekir diye
+düşündüm, gui kütüphaneleri işimi görmüyordu, çünkü programın pencere
+oluşturmadan arka planda çalışması, hangi pencere seçili olursa olsun,
+mouse tıklanma durumunu görebilmesi lazımdı. Aradan bir miktar araştırma
+süresi geçtikten sonra, #xorg-devel'de şöyle bir muhabbet geçti; &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/xlib-ne-kadar-zor-olabilir-ki.html"&gt;Devamını oku…&lt;/a&gt; (3 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/xlib-ne-kadar-zor-olabilir-ki.html</guid><pubDate>Tue, 29 Jan 2013 22:01:27 GMT</pubDate></item><item><title>Tumblr bloguna gist gömmek</title><link>http://ysar.net/yazilim-dunyasi/tumblr-bloguna-gist-gommek.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Aşağıda hem açıklamasını, hem de çalışan örneğini görebilirsiniz;&lt;/p&gt;
+&lt;script src="https://gist.github.com/yasar11732/4660391.js"&gt;&lt;/script&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/tumblr-bloguna-gist-gommek.html</guid><pubDate>Mon, 28 Jan 2013 23:47:39 GMT</pubDate></item></channel></rss>

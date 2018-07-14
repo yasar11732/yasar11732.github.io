@@ -2,20 +2,25 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
 <head>
 <meta charset="utf-8">
-<base href="http://ysar.net/python/birkac-soruya-cevap.html">
 <meta name="description" content="Python'daki __init__ gibi fonksiyonların amacı, java'da olduğu gibi mouse ve key listener yapma, PyQT olayları, raise kullanmanın amacı, map, filter, global fonksiyonlarının amacı anlatıldı.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Python Hakkında Birkaç Soruya Cevap | Python, Yazılım, ve Programlama</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/html4css1.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/code.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
-<meta content="#5670d4" name="theme-color">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
 <link rel="canonical" href="http://ysar.net/python/birkac-soruya-cevap.html">
-<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Python'daki __init__ gibi fonksiyonların amacı, java'da olduğu gibi mouse ve key listener yapma, PyQT olayları, raise kullanmanın amacı, map, filter, global fonksiyonlarının amacı anlatıldı.">
-<meta name="author" content="Yaşar Arabacı">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-3760371725357973",
+    enable_page_level_ads: true
+  });
+</script><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="djangoda-aggregate-and-annotate.html" title="Django'da Aggregate ve Annotate" type="text/html">
 <link rel="next" href="str-objesini-genisletmek.html" title="Python'da str Objesini Genişletmek" type="text/html">
 <meta property="og:site_name" content="Python, Yazılım, ve Programlama">
@@ -45,7 +50,7 @@
             </a>
         </div>
 <!-- /.navbar-header -->
-        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
             <ul class="nav navbar-nav">
 <li>
 <a href="../yasar-arabaci.html">Hakkımda</a>
@@ -88,15 +93,14 @@
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Python Hakkında Birkaç Soruya Cevap</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                     Yaşar Arabacı
             </span></p>
             <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2011-08-29T20:43:00+03:00" itemprop="datePublished" title="2011-08-29 20:43">2011-08-29 20:43</time></a></p>
             
-        <p class="sourceline"><a href="birkac-soruya-cevap.md" id="sourcelink">Kaynak</a></p>
+        <p class="sourceline"><a href="birkac-soruya-cevap.md" class="sourcelink">Kaynak</a></p>
 
-                <meta name="description" itemprop="description" content="Python'daki __init__ gibi fonksiyonların amacı, java'da olduğu gibi mouse ve key listener yapma, PyQT olayları, raise kullanmanın amacı, map, filter, global fonksiyonlarının amacı anlatıldı.">
-</div>
+        </div>
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
@@ -144,7 +148,7 @@ Sınıfların adı ise, nasıl tanımladıysanız, o şekildedir.</p>
 <span class="sd">"""</span>
 <span class="k">class</span> <span class="nc">a</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">benim_adim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
 <span class="sd">"""</span>
 <span class="sd">&gt;&gt;&gt; b = a()</span>
 <span class="sd">&gt;&gt;&gt;b.benim_adim()</span>
@@ -153,7 +157,7 @@ Sınıfların adı ise, nasıl tanımladıysanız, o şekildedir.</p>
 <span class="sd">AttributeError: a instance has no attribute __name__</span>
 <span class="sd">&gt;&gt;&gt; Sınıf instance'ı (tr:örnek) için __name__ tanımlı değildir.</span>
 <span class="sd">"""</span>
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">bisiler_yap</span><span class="p">()</span>
 </pre>
 
@@ -165,8 +169,8 @@ Sınıfların adı ise, nasıl tanımladıysanız, o şekildedir.</p>
 <span class="sd">basar.</span>
 <span class="sd">"""</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">__file__</span><span class="p">)</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
 </pre>
 
 
@@ -194,7 +198,7 @@ aynı zamanda, fonksiyonlar, sınıflar ve metotlar için de tanımlıdır.</p>
 <span class="sd">os_belgeleri.py</span>
 <span class="sd">"""</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="k">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">__doc__</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
 <span class="c1">#OS routines for Mac, NT, or Posix depending on what system we're on.</span>
 <span class="c1">#</span>
 <span class="c1">#This exports:</span>
@@ -244,12 +248,12 @@ sınıf örneği oluşturulduktan hemen sonra çağırılır. Çok sık kullanı
 bir sınıf metodudur. Sınıf örneğinin kullanıma hazır olması için gereken
 tüm işlemler <code>__init__()</code> metodu içerisinde yapılır.</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">Foo</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="s2">"yeni bir sınıf örneği oluşturulduğunda, bu örneğin _sayi özelliği 10 olarak atanır."</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sayi</span> <span class="o">=</span> <span class="mi">10</span>
 
 <span class="k">class</span> <span class="nc">Bar</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sayi</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sayi</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
         <span class="sd">"""</span>
 <span class="sd">        bu sınıfı oluşturuken, sayıyı değiştirmenize izin verir. Öntanımlı değeri 10dur</span>
 <span class="sd">        a = Bar()</span>
@@ -260,7 +264,7 @@ tüm işlemler <code>__init__()</code> metodu içerisinde yapılır.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sayi</span> <span class="o">=</span> <span class="n">sayi</span>
 
 <span class="k">class</span> <span class="nc">keyword_args</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="s2">"Oluşturulduğu anda aldığı kelime argümanları kendi özelliği olarak ayarlar."</span>
         <span class="k">for</span> <span class="n">anahtar</span><span class="p">,</span> <span class="n">deger</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">anahtar</span><span class="p">,</span><span class="n">deger</span><span class="p">)</span>
@@ -276,11 +280,11 @@ anahtar alma ve anahtar ayarlama işlemlerinde çağırılır.
 <code>b = a[5]</code> gibi bir ifade kullandığınızda, Python bunu
 <code>b = a.__getitem__(5)</code> şeklinde çalıştırır.</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">Foo</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sozluk</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">anahtar</span><span class="p">,</span><span class="n">deger</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">anahtar</span><span class="p">,</span><span class="n">deger</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sozluk</span><span class="p">[</span><span class="n">anahtar</span><span class="p">]</span> <span class="o">=</span> <span class="n">deger</span>
-    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">anahtar</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">anahtar</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sozluk</span><span class="p">[</span><span class="n">anahtar</span><span class="p">]</span>
 
 <span class="n">a</span> <span class="o">=</span> <span class="n">Foo</span><span class="p">()</span>
@@ -298,13 +302,13 @@ obje karşılaştırılırken kullanılır. Çoğu zaman <code>True</code> ya da
 python tarafından <code>if a.__eq__(b)</code> şeklinde yorumlanır.</p>
 <pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
 <span class="k">class</span> <span class="nc">BasariSansi</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">oran</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">oran</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">oran</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">False</span>
-    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">oran</span><span class="p">):</span>
-        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__eq__</span><span class="p">(</span><span class="n">oran</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">oran</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">oran</span><span class="p">)</span>
 <span class="n">a</span> <span class="o">=</span> <span class="n">BasariSansi</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
@@ -358,8 +362,8 @@ tanesi şöyle birşey:</p>
         <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="n">QEvent</span><span class="o">.</span><span class="n">KeyPress</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">SIGNAL</span><span class="p">(</span><span class="s2">"TusaBasildi"</span><span class="p">),</span><span class="n">event</span><span class="o">.</span><span class="n">key</span><span class="p">())</span>
 <span class="k">class</span> <span class="nc">Uygulama</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">QMainWindow</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">QMainWindow</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">yazi_alani</span> <span class="o">=</span> <span class="n">BenimYaziAlani</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yazi_alani</span><span class="p">,</span><span class="n">SIGNAL</span><span class="p">(</span><span class="s2">"TusaBasildi"</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">basilan_tus</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">basilan_tus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">tus</span><span class="p">):</span>
@@ -460,7 +464,7 @@ olması için, <code>global</code> kullanılır.</p>
         <!--End of body content-->
 
         <footer id="footer">
-            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2018         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
 </div>

@@ -2,20 +2,25 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
 <head>
 <meta charset="utf-8">
-<base href="http://ysar.net/python/lexical-analiz-3.html">
 <meta name="description" content="Daha önceki iki yazıda yazmış olduğumuz Lexer'a ufak dokunuşlar yapacağız.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lexical Analiz 3 | Python, Yazılım, ve Programlama</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/html4css1.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/code.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
-<meta content="#5670d4" name="theme-color">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
 <link rel="canonical" href="http://ysar.net/python/lexical-analiz-3.html">
-<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Daha önceki iki yazıda yazmış olduğumuz Lexer'a ufak dokunuşlar yapacağız.">
-<meta name="author" content="Yaşar Arabacı">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-3760371725357973",
+    enable_page_level_ads: true
+  });
+</script><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="lexical-analiz-2.html" title="Lexical Analiz 2" type="text/html">
 <link rel="next" href="parsing-parser-topdown-operator-precedence.html" title="Parsing Kavramı ve Yöntemleri" type="text/html">
 <meta property="og:site_name" content="Python, Yazılım, ve Programlama">
@@ -45,7 +50,7 @@
             </a>
         </div>
 <!-- /.navbar-header -->
-        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
             <ul class="nav navbar-nav">
 <li>
 <a href="../yasar-arabaci.html">Hakkımda</a>
@@ -88,15 +93,14 @@
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Lexical Analiz 3</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                     Yaşar Arabacı
             </span></p>
             <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2013-10-14T23:20:00+03:00" itemprop="datePublished" title="2013-10-14 23:20">2013-10-14 23:20</time></a></p>
             
-        <p class="sourceline"><a href="lexical-analiz-3.md" id="sourcelink">Kaynak</a></p>
+        <p class="sourceline"><a href="lexical-analiz-3.md" class="sourcelink">Kaynak</a></p>
 
-                <meta name="description" itemprop="description" content="Daha önceki iki yazıda yazmış olduğumuz Lexer'a ufak dokunuşlar yapacağız.">
-</div>
+        </div>
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
@@ -106,7 +110,7 @@ yapılabileceğinden bahsettiğim birkaç eklemeyi de göstereyim dedim.</p>
 <h3>Satır Sayma</h3>
 <p>Satır sayma konusu çok kolay, <code>_lexInitial</code> ve <code>_lexString</code> yeni satırla karşılaştıklarında, bir değişkeni artıracak.
 Ayrıca, gönderdiğimiz tokenlere satır bilgisi de ekleyeceğiz. <!-- TEASER_END --></p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inp</span><span class="p">,</span> <span class="n">que</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"unnamed lexer"</span><span class="p">):</span>
+<pre class="code literal-block"><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inp</span><span class="p">,</span> <span class="n">que</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"unnamed lexer"</span><span class="p">):</span>
     <span class="c1"># Yukarıla aynı</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">line</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="k">def</span> <span class="nf">_lexInitial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -176,7 +180,7 @@ token olarak belirtebiliriz.</p>
 <h3>Indentation</h3>
 <p>Geldik zurnanın zırt dediği yere! Önce kodları görelim:</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">Lexer</span><span class="p">(</span><span class="n">Thread</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inp</span><span class="p">,</span> <span class="n">que</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"unnamed lexer"</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inp</span><span class="p">,</span> <span class="n">que</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"unnamed lexer"</span><span class="p">):</span>
         <span class="c1"># Aynısı</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">indentlevels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -260,7 +264,7 @@ yoksa, Exception veriyor. Tıpkı Python dilinin yaptığı gibi.</p>
 
 
 <p>Burada olup biten de oldukça açık. Son olarak, lexer'ımızın son halini bir test edelim.</p>
-<pre class="code literal-block"><span></span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+<pre class="code literal-block"><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">tokenq</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
     <span class="n">myinput</span> <span class="o">=</span> <span class="s2">"""if myname == "yasar":</span>
 <span class="s2">    12 + 12 = 28</span>
@@ -325,7 +329,7 @@ bile, lexer konusunda sizin için eğitsel bir deneyim olmuştur diye ümit ediy
         <!--End of body content-->
 
         <footer id="footer">
-            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2018         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
 </div>

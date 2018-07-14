@@ -2,20 +2,25 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
 <head>
 <meta charset="utf-8">
-<base href="http://ysar.net/python/python-ile-parser-yapimi.html">
 <meta name="description" content="Python ile parser yapıyoruz. Bu yazıda, Operatör önceliği konusu var. Bitmiş kodlar  github'da.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Python ile parser yapımı | Python, Yazılım, ve Programlama</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/html4css1.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/code.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
-<meta content="#5670d4" name="theme-color">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
 <link rel="canonical" href="http://ysar.net/python/python-ile-parser-yapimi.html">
-<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Python ile parser yapıyoruz. Bu yazıda, Operatör önceliği konusu var. Bitmiş kodlar  github'da.">
-<meta name="author" content="Yaşar Arabacı">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-3760371725357973",
+    enable_page_level_ads: true
+  });
+</script><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="parsing-parser-topdown-operator-precedence.html" title="Parsing Kavramı ve Yöntemleri" type="text/html">
 <link rel="next" href="parser-yardimci-fonksiyonlar.html" title="Parser - Yardımcı Fonksiyonlar" type="text/html">
 <meta property="og:site_name" content="Python, Yazılım, ve Programlama">
@@ -45,7 +50,7 @@
             </a>
         </div>
 <!-- /.navbar-header -->
-        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
             <ul class="nav navbar-nav">
 <li>
 <a href="../yasar-arabaci.html">Hakkımda</a>
@@ -88,15 +93,14 @@
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Python ile parser yapımı</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                     Yaşar Arabacı
             </span></p>
             <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2013-10-16T15:06:00+03:00" itemprop="datePublished" title="2013-10-16 15:06">2013-10-16 15:06</time></a></p>
             
-        <p class="sourceline"><a href="python-ile-parser-yapimi.md" id="sourcelink">Kaynak</a></p>
+        <p class="sourceline"><a href="python-ile-parser-yapimi.md" class="sourcelink">Kaynak</a></p>
 
-                <meta name="description" itemprop="description" content="Python ile parser yapıyoruz. Bu yazıda, Operatör önceliği konusu var. Bitmiş kodlar  github'da.">
-</div>
+        </div>
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
@@ -155,13 +159,13 @@ gücünden yüksek olduğu sürece, müteakip sembollerin <code>led</code> metod
 metotları tekrar <code>Expression</code> metodunu çağırabilirler.</p>
 <p>Yukarıda, örnek olarak verdiğimiz ifade üzerinden gidecek olursak, önce değeri 1 olan NUMBER tokeninin <code>nud</code> metodu çağırılacak.</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">number_token</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
 
     <span class="k">def</span> <span class="nf">nud</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">"(NUMBER </span><span class="si">%i</span><span class="s2">)"</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
 </pre>
 
@@ -175,7 +179,7 @@ Eğer öyleyse, sıradaki token'in <code>led</code> metodu çağırılacak. En b
 tokeni. Onu da bu şekilde yazabiliriz.</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">operator_add_token</span><span class="p">:</span>
     <span class="n">lbp</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parser</span> <span class="o">=</span> <span class="n">parser</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">second</span> <span class="o">=</span> <span class="bp">None</span>
 
@@ -184,7 +188,7 @@ tokeni. Onu da bu şekilde yazabiliriz.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">"(+ </span><span class="si">%r</span><span class="s2"> </span><span class="si">%r</span><span class="s2">)"</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">second</span><span class="p">)</span>
 </pre>
 
@@ -206,7 +210,7 @@ operatörü <code>2</code>'yi mi kendine bağlayacak, yoksa <code>2 * 3</code>'�
 Önce 2'nin nud metodu çağırılacak, sonra * ifadesinin bağlayıcılık gücüne bakılacak. Peki * operatörü ne kadar bağlıyor?</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">operator_multiply_token</span><span class="p">:</span>
     <span class="n">lbp</span> <span class="o">=</span> <span class="mi">20</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parser</span> <span class="o">=</span> <span class="n">parser</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">second</span> <span class="o">=</span> <span class="bp">None</span>
 
@@ -215,7 +219,7 @@ operatörü <code>2</code>'yi mi kendine bağlayacak, yoksa <code>2 * 3</code>'�
         <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">"(* </span><span class="si">%r</span><span class="s2"> </span><span class="si">%r</span><span class="s2">)"</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">second</span><span class="p">)</span>
 </pre>
 
@@ -264,7 +268,7 @@ ikinci eleman ise, yine iki elemandan oluşan bir * sembolü.</p>
         <!--End of body content-->
 
         <footer id="footer">
-            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2018         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
 </div>

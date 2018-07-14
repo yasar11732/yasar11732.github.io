@@ -2,20 +2,25 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
 <head>
 <meta charset="utf-8">
-<base href="http://ysar.net/python/orneklerle-meta-classes-siniflar.html">
 <meta name="description" content="Python meta sınıflar sizin de kafanızı karıştırıyorsa bu yazıyı okuyun. Eli Bendersky anlatmış, ben de çevirdim.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Örneklerle Python Metasınıflar | Python, Yazılım, ve Programlama</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/html4css1.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/code.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
-<meta content="#5670d4" name="theme-color">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
 <link rel="canonical" href="http://ysar.net/python/orneklerle-meta-classes-siniflar.html">
-<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Python meta sınıflar sizin de kafanızı karıştırıyorsa bu yazıyı okuyun. Eli Bendersky anlatmış, ben de çevirdim.">
-<meta name="author" content="Yaşar Arabacı">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-3760371725357973",
+    enable_page_level_ads: true
+  });
+</script><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="beautiful-soup-ve-basitce-kullanimi.html" title="Python Beautiful Soup Kütüphanesi ve Basitçe Kullanımı" type="text/html">
 <link rel="next" href="toplu-halde-http-durum-kodu-alma.html" title="Toplu halde http durum kodu alma" type="text/html">
 <meta property="og:site_name" content="Python, Yazılım, ve Programlama">
@@ -45,7 +50,7 @@
             </a>
         </div>
 <!-- /.navbar-header -->
-        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
             <ul class="nav navbar-nav">
 <li>
 <a href="../yasar-arabaci.html">Hakkımda</a>
@@ -88,15 +93,14 @@
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Örneklerle Python Metasınıflar</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                     Yaşar Arabacı
             </span></p>
             <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2011-12-23T08:54:00+02:00" itemprop="datePublished" title="2011-12-23 08:54">2011-12-23 08:54</time></a></p>
             
-        <p class="sourceline"><a href="orneklerle-meta-classes-siniflar.md" id="sourcelink">Kaynak</a></p>
+        <p class="sourceline"><a href="orneklerle-meta-classes-siniflar.md" class="sourcelink">Kaynak</a></p>
 
-                <meta name="description" itemprop="description" content="Python meta sınıflar sizin de kafanızı karıştırıyorsa bu yazıyı okuyun. Eli Bendersky anlatmış, ben de çevirdim.">
-</div>
+        </div>
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
@@ -173,9 +177,9 @@ sınıfı olmak zorunda, değil mi? Kesinlikle. Python <code>__class__</code>
 <pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">SomeKlass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span> <span class="k">pass</span>
 <span class="o">...</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">someobject</span> <span class="o">=</span> <span class="n">SomeKlass</span><span class="p">()</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">someobject</span><span class="o">.</span><span class="n">__class__</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">someobject</span><span class="o">.</span><span class="vm">__class__</span>
 <span class="o">&lt;</span><span class="k">class</span> <span class="nc">__main__</span><span class="o">.</span><span class="n">SomeKlass</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">SomeKlass</span><span class="o">.</span><span class="n">__class__</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">SomeKlass</span><span class="o">.</span><span class="vm">__class__</span>
 <span class="o">&lt;</span><span class="nb">type</span> <span class="s1">'type'</span><span class="o">&gt;</span>
 </pre>
 
@@ -242,7 +246,7 @@ alınır. Aksi takdirde metasınıf <code>type</code>dır.</p>
 <p>Ki bu, makalenin başında gördüğümüzle tutarlı. Ancak diğer yandan eğer
 <code>MyKlass</code> bir metasınıf <em>tanımlasaydı</em>:</p>
 <pre class="code literal-block"><span></span> <span class="k">class</span> <span class="nc">MyKlass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-  <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">MyMeta</span>
+  <span class="vm">__metaclass__</span> <span class="o">=</span> <span class="n">MyMeta</span>
   <span class="n">foo</span> <span class="o">=</span> <span class="mi">2</span>
 </pre>
 
@@ -265,34 +269,34 @@ yazar.<code>__new__</code> yeni obje yaratılmasını kontrol etmek istediğiniz
 (bizim durumumuzda bu bir sınıf) ve <code>__init__</code> yeni obje yaratıldıktan
 sonra, ilklenmesini istediğinizde uygulanmalıdır.</p>
 <p>Yani, <code>MyMeta</code> çağırıldığında, merdiven altında yapılan şey:</p>
-<pre class="code literal-block"><span></span><span class="n">MyKlass</span> <span class="o">=</span> <span class="n">MyMeta</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">MyMeta</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">)</span>
-<span class="n">MyMeta</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">MyClass</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">)</span>
+<pre class="code literal-block"><span></span><span class="n">MyKlass</span> <span class="o">=</span> <span class="n">MyMeta</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="n">MyMeta</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">)</span>
+<span class="n">MyMeta</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">MyClass</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">)</span>
 </pre>
 
 
 <p>Burada olup biteni göstermek için daha sağlam bir örnek var. Haydi bir
 metasınıf için şu tanımı yazalım:</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">MyMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
         <span class="k">print</span> <span class="s1">'-----------------------------------'</span>
         <span class="k">print</span> <span class="s2">"Sınıf için hafıza ayırılıyor"</span><span class="p">,</span> <span class="n">name</span>
         <span class="k">print</span> <span class="n">meta</span>
         <span class="k">print</span> <span class="n">bases</span>
         <span class="k">print</span> <span class="n">dct</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">MyMeta</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">MyMeta</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
         <span class="k">print</span> <span class="s1">'-----------------------------------'</span>
         <span class="k">print</span> <span class="s2">"Sınıf başlatılıyor"</span><span class="p">,</span> <span class="n">name</span>
-        <span class="k">print</span> <span class="n">cls</span>
+        <span class="k">print</span> <span class="bp">cls</span>
         <span class="k">print</span> <span class="n">bases</span>
         <span class="k">print</span> <span class="n">dct</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">MyMeta</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MyMeta</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">)</span>
 </pre>
 
 
 <p>Python aşağıdaki class tanımını çalıştırdığında:</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">MyKlass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">MyMeta</span>
+    <span class="vm">__metaclass__</span> <span class="o">=</span> <span class="n">MyMeta</span>
 
     <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
         <span class="k">pass</span>
@@ -333,15 +337,15 @@ anınında çalışmasının aksine, zaten oluşturulmuş sınıfın, yeni bir o
 örneklenmesi (ÇN:instantiate) için "çağırıldığında" çalıştırılması. İşte
 bunu açıklığa kavuşturmak için biraz kod:</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">MyMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
-        <span class="k">print</span> <span class="s1">'__call__ of '</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s1">'__call__ of '</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
         <span class="k">print</span> <span class="s1">'__call__ *args='</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="n">__call__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">MyKlass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">MyMeta</span>
+    <span class="vm">__metaclass__</span> <span class="o">=</span> <span class="n">MyMeta</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
         <span class="k">print</span> <span class="s1">'MyKlass object with a=</span><span class="si">%s</span><span class="s1">, b=</span><span class="si">%s</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 
 <span class="k">print</span> <span class="s1">'Şimdi foo oluşturacağım'</span>
@@ -379,19 +383,19 @@ açıklayacağım.</p>
 <p>İşte <code>class Template</code> içerisinden ilk birkaç satır:</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">Template</span><span class="p">:</span>
     <span class="sd">"""A string class for supporting $-substitutions."""</span>
-    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">_TemplateMetaclass</span>
+    <span class="vm">__metaclass__</span> <span class="o">=</span> <span class="n">_TemplateMetaclass</span>
 
     <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">'$'</span>
-    <span class="n">idpattern</span> <span class="o">=</span> <span class="s1">r'[_a-z][_a-z0-9]*'</span>
+    <span class="n">idpattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">'[_a-z][_a-z0-9]*'</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="n">template</span>
 </pre>
 
 
 <p>Ve bu da <code>_TemplateMetaclass</code> :</p>
 <pre class="code literal-block"><span></span>  <span class="k">class</span> <span class="nc">_TemplateMetaclass</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
-    <span class="n">pattern</span> <span class="o">=</span> <span class="s2">r"""</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"""</span>
 <span class="s2">    </span><span class="si">%(delim)s</span><span class="s2">(?:</span>
 <span class="s2">      (?P</span><span class="si">%(delim)s</span><span class="s2">) |   # Escape sequence of two delimiters</span>
 <span class="s2">      (?P</span><span class="si">%(id)s</span><span class="s2">)      |   # delimiter and a Python identifier</span>
@@ -400,16 +404,16 @@ açıklayacağım.</p>
 <span class="s2">    )</span>
 <span class="s2">    """</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">_TemplateMetaclass</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">_TemplateMetaclass</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">)</span>
         <span class="k">if</span> <span class="s1">'pattern'</span> <span class="ow">in</span> <span class="n">dct</span><span class="p">:</span>
-            <span class="n">pattern</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">pattern</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">pattern</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">pattern</span> <span class="o">=</span> <span class="n">_TemplateMetaclass</span><span class="o">.</span><span class="n">pattern</span> <span class="o">%</span> <span class="p">{</span>
-                <span class="s1">'delim'</span> <span class="p">:</span> <span class="n">_re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">delimiter</span><span class="p">),</span>
-                <span class="s1">'id'</span>    <span class="p">:</span> <span class="n">cls</span><span class="o">.</span><span class="n">idpattern</span><span class="p">,</span>
+                <span class="s1">'delim'</span> <span class="p">:</span> <span class="n">_re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">delimiter</span><span class="p">),</span>
+                <span class="s1">'id'</span>    <span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">idpattern</span><span class="p">,</span>
                 <span class="p">}</span>
-        <span class="n">cls</span><span class="o">.</span><span class="n">pattern</span> <span class="o">=</span> <span class="n">_re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">_re</span><span class="o">.</span><span class="n">IGNORECASE</span> <span class="o">|</span> <span class="n">_re</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">pattern</span> <span class="o">=</span> <span class="n">_re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">_re</span><span class="o">.</span><span class="n">IGNORECASE</span> <span class="o">|</span> <span class="n">_re</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">)</span>
 </pre>
 
 
@@ -465,8 +469,8 @@ ve del_foo için de aynı şekilde. (ÇN: <a href="http://docs.python.org/librar
 <p>İşte metasınıf, önemli kısımlara vurgu yapmak için biraz kısaltılmış
 olarak:</p>
 <pre class="code literal-block"><span></span>  <span class="k">class</span> <span class="nc">AccessorType</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
-        <span class="nb">type</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="nb">type</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
         <span class="n">accessors</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">prefixs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"get_"</span><span class="p">,</span> <span class="s2">"set_"</span><span class="p">,</span> <span class="s2">"del_"</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -514,10 +518,10 @@ lexerlar için temel sınıf:</p>
 <span class="sd">    static methods which always return float values.</span>
 <span class="sd">    """</span>
 
-    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
         <span class="k">if</span> <span class="s1">'analyse_text'</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
             <span class="n">d</span><span class="p">[</span><span class="s1">'analyse_text'</span><span class="p">]</span> <span class="o">=</span> <span class="n">make_analysator</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">'analyse_text'</span><span class="p">])</span>
-        <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
 </pre>
 
 
@@ -541,18 +545,18 @@ kısmı bırakmak için kodu keseceğim:</p>
 
     <span class="c1"># [...] kesilen kısım</span>
 
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
         <span class="sd">"""Instantiate cls after preprocessing its token definitions."""</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s1">'_tokens'</span><span class="p">):</span>
-            <span class="n">cls</span><span class="o">.</span><span class="n">_all_tokens</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="n">cls</span><span class="o">.</span><span class="n">_tmpname</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s1">'token_variants'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">cls</span><span class="o">.</span><span class="n">token_variants</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="s1">'_tokens'</span><span class="p">):</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_all_tokens</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_tmpname</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="s1">'token_variants'</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">cls</span><span class="o">.</span><span class="n">token_variants</span><span class="p">:</span>
                 <span class="c1"># don't process yet</span>
                 <span class="k">pass</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">cls</span><span class="o">.</span><span class="n">_tokens</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">process_tokendef</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="n">cls</span><span class="o">.</span><span class="n">tokens</span><span class="p">)</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">_tokens</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">process_tokendef</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">tokens</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="n">__call__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
 </pre>
 
 
@@ -647,7 +651,7 @@ ilgileniyorum.</p>
         <!--End of body content-->
 
         <footer id="footer">
-            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2018         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
 </div>

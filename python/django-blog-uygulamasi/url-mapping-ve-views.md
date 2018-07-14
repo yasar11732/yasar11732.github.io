@@ -151,6 +151,7 @@ from blog.models import makale
 def makaleView(request, slug):
     mkl = get_object_or_404(makale, slug=slug)
     return HttpResponse(mkl.makale)
+
 Bu yazımızda, url tanımlamaya ve tarayıcıya basit statik veya dinamik
 içerikler göndermeye çalıştık. Ancak, view fonksiyonlarının içerisinden
 tarayıcıya doğrudan veri göndermek çok doğru bir geliştici davranışı

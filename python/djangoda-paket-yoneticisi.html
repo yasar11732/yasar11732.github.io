@@ -2,20 +2,25 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
 <head>
 <meta charset="utf-8">
-<base href="http://ysar.net/python/djangoda-paket-yoneticisi.html">
 <meta name="description" content="Django modelleri web programı geliştirmek için değil, bir paket yöneticisi yapmak için kullanılabilir mi?">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Django Modelleriyle Paket Yöneticisi | Python, Yazılım, ve Programlama</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/html4css1.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/code.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
-<meta content="#5670d4" name="theme-color">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
 <link rel="canonical" href="http://ysar.net/python/djangoda-paket-yoneticisi.html">
-<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Django modelleri web programı geliştirmek için değil, bir paket yöneticisi yapmak için kullanılabilir mi?">
-<meta name="author" content="Yaşar Arabacı">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-3760371725357973",
+    enable_page_level_ads: true
+  });
+</script><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="if-else-mi-try-except-mi.html" title="If..Else yada Try..Except, hangisi ne zaman kullanılmalı?" type="text/html">
 <link rel="next" href="../algoritma/benzer-yazi-analizi.html" title="Benzer yazı analizi 1" type="text/html">
 <meta property="og:site_name" content="Python, Yazılım, ve Programlama">
@@ -45,7 +50,7 @@
             </a>
         </div>
 <!-- /.navbar-header -->
-        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
             <ul class="nav navbar-nav">
 <li>
 <a href="../yasar-arabaci.html">Hakkımda</a>
@@ -88,15 +93,14 @@
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Django Modelleriyle Paket Yöneticisi</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                     Yaşar Arabacı
             </span></p>
             <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2011-08-17T14:49:00+03:00" itemprop="datePublished" title="2011-08-17 14:49">2011-08-17 14:49</time></a></p>
             
-        <p class="sourceline"><a href="djangoda-paket-yoneticisi.md" id="sourcelink">Kaynak</a></p>
+        <p class="sourceline"><a href="djangoda-paket-yoneticisi.md" class="sourcelink">Kaynak</a></p>
 
-                <meta name="description" itemprop="description" content="Django modelleri web programı geliştirmek için değil, bir paket yöneticisi yapmak için kullanılabilir mi?">
-</div>
+        </div>
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
@@ -179,7 +183,7 @@ başlayabilirsiniz. Örnek kodlar yorumlarıyla birlikte aşağıda:</p>
 
 <span class="c1"># veritabani klasörünü python yoluna ekleyelim :)</span>
 
-<span class="n">PROJE_DIZINI</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">))</span>
+<span class="n">PROJE_DIZINI</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PROJE_DIZINI</span><span class="p">,</span><span class="s2">"veritabani"</span><span class="p">))</span>
 
 <span class="c1"># artık modellerimizi projemize dahil edebiliriz.</span>
@@ -197,13 +201,13 @@ başlayabilirsiniz. Örnek kodlar yorumlarıyla birlikte aşağıda:</p>
 
     <span class="c1"># paketi geçici bir klasöre açalım,</span>
     <span class="c1"># uzatmamak için rastgele isim üretmedim.</span>
-    <span class="n">paket</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="s2">u"/tmp/rasgeleuretilmişisim"</span><span class="p">)</span>
+    <span class="n">paket</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="sa">u</span><span class="s2">"/tmp/rasgeleuretilmişisim"</span><span class="p">)</span>
 
     <span class="c1"># Şimdi paket bilgilerini yüklemeliyiz, bu örnekte</span>
     <span class="c1"># paket bilgilerinin bir python modülünde olduğunu varsayıyorum</span>
     <span class="c1"># üstünde çalışması daha kolay :)</span>
 
-    <span class="n">paket_bilgileri</span> <span class="o">=</span> <span class="n">imp</span><span class="o">.</span><span class="n">load_source</span><span class="p">(</span><span class="s2">"paket_bilgisi"</span><span class="p">,</span><span class="s2">u"/tmp/rasgeleuretilmiçisim/ayarlar.py"</span><span class="p">)</span>
+    <span class="n">paket_bilgileri</span> <span class="o">=</span> <span class="n">imp</span><span class="o">.</span><span class="n">load_source</span><span class="p">(</span><span class="s2">"paket_bilgisi"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"/tmp/rasgeleuretilmiçisim/ayarlar.py"</span><span class="p">)</span>
 
     <span class="c1"># Eğer paket zaten yüklüyse, hata vererek çıkıcaz.</span>
     <span class="k">try</span><span class="p">:</span>
@@ -230,7 +234,7 @@ başlayabilirsiniz. Örnek kodlar yorumlarıyla birlikte aşağıda:</p>
     <span class="c1"># Dosyaları sisteme kopyalayabiliriz.</span>
 
     <span class="k">for</span> <span class="n">dosya</span> <span class="ow">in</span> <span class="n">paket_bilgileri</span><span class="o">.</span><span class="n">dosyalar</span><span class="p">:</span>
-        <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="s2">u"/tmp/rasgeleuretilmisisim/"</span> <span class="o">+</span> <span class="n">dosya</span><span class="p">,</span> <span class="n">dosya</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="sa">u</span><span class="s2">"/tmp/rasgeleuretilmisisim/"</span> <span class="o">+</span> <span class="n">dosya</span><span class="p">,</span> <span class="n">dosya</span><span class="p">)</span>
 
     <span class="c1"># paketi veritabanına kaydedelim</span>
 
@@ -288,7 +292,7 @@ göstermek istedim.</p>
         <!--End of body content-->
 
         <footer id="footer">
-            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2018         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
 </div>

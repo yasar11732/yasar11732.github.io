@@ -2,20 +2,25 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
 <head>
 <meta charset="utf-8">
-<base href="http://ysar.net/python/cesitli-yazilim-gelistirme-desenleri.html">
 <meta name="description" content="Design patterns, yazılım geliştirirken sıkça karşılaşılan problemlere tekrar tekrar kullanılabilecek çözümler sunar. Bu yazıda, çeşitli yazılım geliştirme desenlerinin Python ile kullanımı anlatılacak.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Python ile Çeşitli Yazılım Geliştirme Desenleri (Design Patterns) | Python, Yazılım, ve Programlama</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/html4css1.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/code.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
-<meta content="#5670d4" name="theme-color">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
 <link rel="canonical" href="http://ysar.net/python/cesitli-yazilim-gelistirme-desenleri.html">
-<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Design patterns, yazılım geliştirirken sıkça karşılaşılan problemlere tekrar tekrar kullanılabilecek çözümler sunar. Bu yazıda, çeşitli yazılım geliştirme desenlerinin Python ile kullanımı anlatılacak.">
-<meta name="author" content="Yaşar Arabacı">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-3760371725357973",
+    enable_page_level_ads: true
+  });
+</script><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="and-ve-or.html" title="Python'da and ve or" type="text/html">
 <link rel="next" href="kayit-log-dosyalari.html" title="Python ile kayıt (log) dosyaları" type="text/html">
 <meta property="og:site_name" content="Python, Yazılım, ve Programlama">
@@ -45,7 +50,7 @@
             </a>
         </div>
 <!-- /.navbar-header -->
-        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
             <ul class="nav navbar-nav">
 <li>
 <a href="../yasar-arabaci.html">Hakkımda</a>
@@ -88,15 +93,14 @@
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Python ile Çeşitli Yazılım Geliştirme Desenleri (Design Patterns)</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                     Yaşar Arabacı
             </span></p>
             <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2011-09-17T18:14:00+03:00" itemprop="datePublished" title="2011-09-17 18:14">2011-09-17 18:14</time></a></p>
             
-        <p class="sourceline"><a href="cesitli-yazilim-gelistirme-desenleri.md" id="sourcelink">Kaynak</a></p>
+        <p class="sourceline"><a href="cesitli-yazilim-gelistirme-desenleri.md" class="sourcelink">Kaynak</a></p>
 
-                <meta name="description" itemprop="description" content="Design patterns, yazılım geliştirirken sıkça karşılaşılan problemlere tekrar tekrar kullanılabilecek çözümler sunar. Bu yazıda, çeşitli yazılım geliştirme desenlerinin Python ile kullanımı anlatılacak.">
-</div>
+        </div>
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
@@ -116,11 +120,11 @@ tüm parçalarının tek bir obje üzerinden işlem yapmasını
 sağlayabiliriz<sup><a href="http://www.python.org/workshops/1997-10/proceedings/savikko.html#sec:singleton" title="Design Patterns in Python">1</a></sup>. Benim uygulamam şu şekilde oldu.</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">singleton</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">instance</span> <span class="o">=</span> <span class="bp">None</span>
- <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">instance</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">cls</span><span class="o">.</span><span class="n">instance</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">singleton</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">instance</span>
- <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+ <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">instance</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">instance</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">singleton</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">instance</span>
+ <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
      <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">"sayi"</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sayi</span> <span class="o">=</span> <span class="mi">5</span>
 
@@ -172,7 +176,7 @@ bir mantık, ikincisi de ebeveyn objeye ulaşması için gereken bir erişim
 noktası. Gerçek hayatta kullanılamayacak kadar aptal bir örnek olsa da,
 şöyle birşey yazdım bununla ilgili:</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">StringHandler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">canHandle</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">string</span><span class="p">):</span>
@@ -189,14 +193,14 @@ noktası. Gerçek hayatta kullanılamayacak kadar aptal bir örnek olsa da,
 
 
 <span class="k">class</span> <span class="nc">osmanHandler</span><span class="p">(</span><span class="n">StringHandler</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">osmanHandler</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">osmanHandler</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">canHandle</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"osman"</span><span class="p">]</span>
 
 
 <span class="k">class</span> <span class="nc">orhanHandler</span><span class="p">(</span><span class="n">StringHandler</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">orhanHandler</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">orhanHandler</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">canHandle</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"orhan"</span><span class="p">]</span>
 
 <span class="sd">"""     </span>
@@ -235,22 +239,22 @@ amacı, asıl objeye erişimi kontrol etmek. Asıl objeye erişimi neden
 kontrol etmek isteyeceğiniz programınızın gereksinimlerine göre değişir.
 Ben göstermelik olsun diye, şöyle birşey yaptım.</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">kibar</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">main</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">main</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main</span> <span class="o">=</span> <span class="n">main</span>
-    <span class="k">def</span> <span class="nf">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">attribute</span><span class="p">):</span>
-       <span class="n">main</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">kibar</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__getattribute__</span><span class="p">(</span><span class="s2">"main"</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">attribute</span><span class="p">):</span>
+       <span class="n">main</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">kibar</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="s2">"main"</span><span class="p">)</span>
        <span class="k">if</span> <span class="n">attribute</span> <span class="o">==</span> <span class="s2">"main"</span><span class="p">:</span>
          <span class="k">return</span> <span class="n">main</span>
      <span class="k">if</span> <span class="ow">not</span> <span class="n">attribute</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"_lutfen"</span><span class="p">):</span>
            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">"Kibar olun! -&gt; </span><span class="si">%s</span><span class="s2">_lutfen"</span> <span class="o">%</span> <span class="n">attribute</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">main</span><span class="p">,</span><span class="n">attribute</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">"_lutfen"</span><span class="p">))</span>
-    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">key</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">key</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">main</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-   <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">key</span><span class="p">,</span><span class="n">item</span><span class="p">):</span>
+   <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">key</span><span class="p">,</span><span class="n">item</span><span class="p">):</span>
      <span class="bp">self</span><span class="o">.</span><span class="n">main</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span>
-   <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">__str__</span><span class="p">()</span>
+   <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
 
 <span class="sd">"""   </span>
 <span class="sd">&gt;&gt;&gt; a = kibar('osman')</span>
@@ -296,15 +300,15 @@ akrobasi yapılabilir, ancak, onlara girmeye yeltenmeyeceğim bile.</p>
 <pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">MakeProxy</span><span class="p">(</span><span class="n">obje</span><span class="p">):</span>
    <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
  <span class="k">class</span> <span class="nc">proxy</span><span class="p">(</span><span class="n">obje</span><span class="p">):</span>
-      <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-                        <span class="nb">super</span><span class="p">(</span><span class="n">proxy</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+      <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                        <span class="nb">super</span><span class="p">(</span><span class="n">proxy</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
-                <span class="k">def</span> <span class="nf">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">attr</span><span class="p">):</span>
-                        <span class="n">counter</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">proxy</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__getattribute__</span><span class="p">(</span><span class="s2">"counter"</span><span class="p">)</span>
+                <span class="k">def</span> <span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">attr</span><span class="p">):</span>
+                        <span class="n">counter</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">proxy</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="s2">"counter"</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s2">"counter"</span><span class="p">:</span>
                             <span class="k">return</span> <span class="n">counter</span>
                         <span class="n">counter</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-                        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">proxy</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__getattribute__</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">proxy</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">proxy</span>
 <span class="sd">"""</span>
 <span class="sd">&gt;&gt;&gt; list_proxy = MakeProxy(list)</span>
@@ -347,7 +351,7 @@ akrobasi yapılabilir, ancak, onlara girmeye yeltenmeyeceğim bile.</p>
         <!--End of body content-->
 
         <footer id="footer">
-            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2018         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
 </div>

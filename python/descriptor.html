@@ -2,20 +2,25 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
 <head>
 <meta charset="utf-8">
-<base href="http://ysar.net/python/descriptor.html">
 <meta name="description" content="Python'daki descriptor'ler, diğer dillerdeki protected alanlara benzer obje özellikleri oluşturmamızı sağlıyor. Böylece, obje elemanlarına erişimi kontrol altında tutabiliyoruz.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Python 'descriptor' - giriş | Python, Yazılım, ve Programlama</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/html4css1.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/code.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
-<meta content="#5670d4" name="theme-color">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
 <link rel="canonical" href="http://ysar.net/python/descriptor.html">
-<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Python'daki descriptor'ler, diğer dillerdeki protected alanlara benzer obje özellikleri oluşturmamızı sağlıyor. Böylece, obje elemanlarına erişimi kontrol altında tutabiliyoruz.">
-<meta name="author" content="Yaşar Arabacı">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-3760371725357973",
+    enable_page_level_ads: true
+  });
+</script><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="threading.html" title="Python threading modülü" type="text/html">
 <link rel="next" href="soket-socket-makefile.html" title="socket objelerinden dosya yapmak" type="text/html">
 <meta property="og:site_name" content="Python, Yazılım, ve Programlama">
@@ -45,7 +50,7 @@
             </a>
         </div>
 <!-- /.navbar-header -->
-        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
             <ul class="nav navbar-nav">
 <li>
 <a href="../yasar-arabaci.html">Hakkımda</a>
@@ -88,15 +93,14 @@
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Python 'descriptor' - giriş</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                     Yaşar Arabacı
             </span></p>
             <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2012-08-28T02:44:00+03:00" itemprop="datePublished" title="2012-08-28 02:44">2012-08-28 02:44</time></a></p>
             
-        <p class="sourceline"><a href="descriptor.md" id="sourcelink">Kaynak</a></p>
+        <p class="sourceline"><a href="descriptor.md" class="sourcelink">Kaynak</a></p>
 
-                <meta name="description" itemprop="description" content="Python'daki descriptor'ler, diğer dillerdeki protected alanlara benzer obje özellikleri oluşturmamızı sağlıyor. Böylece, obje elemanlarına erişimi kontrol altında tutabiliyoruz.">
-</div>
+        </div>
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
@@ -113,30 +117,30 @@ descriptor'ler burada devreye giriyor. Bu 'descriptor' denen şey bizim
 bunların erişimi kontrol altında tutmamıza yardımcı oluyor. <!-- TEASER_END --></p>
 <p>Peki, tam olarak nedir bu descriptor? Özetle, aşağıdaki metotlardan
 herhangi birini tanımlamış objelere descriptor diyoruz;</p>
-<pre class="code literal-block"><span></span><span class="n">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">)</span>
-<span class="n">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-<span class="n">__delete__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
+<pre class="code literal-block"><span></span><span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">)</span>
+<span class="fm">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+<span class="fm">__delete__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
 </pre>
 
 
 <p>Şimdi uygulamalı olarak, çok basit bir descriptor görelim;</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">SayiDescriptor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
-    <span class="k">def</span> <span class="nf">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2"> bir sayi degil."</span> <span class="o">%</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">Insan</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">yas</span> <span class="o">=</span> <span class="n">SayiDescriptor</span><span class="p">(</span><span class="s2">"_yas"</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">yas</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">yas</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">yas</span> <span class="o">=</span> <span class="n">yas</span>
 
 <span class="n">a</span> <span class="o">=</span> <span class="n">Insan</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
@@ -195,7 +199,7 @@ bakarak email veya telefon numarası için descriptor yapabilirsiniz.</p>
 Aşağıdaki örnek, hem yukarıdakiyle eşdeğer, hem de daha temiz görünüyor;</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">Insan</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">yas</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">yas</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_yas</span> <span class="o">=</span> <span class="n">yas</span>
 
     <span class="k">def</span> <span class="nf">yget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -229,7 +233,7 @@ sıkışmış bir descriptor.</p>
 oluşturabileceğimize bakalım;</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">Insan</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">yas</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">yas</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_yas</span> <span class="o">=</span> <span class="n">yas</span>
 
     <span class="nd">@property</span>
@@ -271,7 +275,7 @@ fonksiyonu da değerin atanmasından sorumlu kıldık.</p>
         <!--End of body content-->
 
         <footer id="footer">
-            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2018         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
 </div>

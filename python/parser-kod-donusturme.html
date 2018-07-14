@@ -2,20 +2,25 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
 <head>
 <meta charset="utf-8">
-<base href="http://ysar.net/python/parser-kod-donusturme.html">
 <meta name="description" content="Python benzeri syntax'dan C benzeri syntax'a kod dönüştüren Parser'ı bitiriyoruz.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Parser - Kod Dönüştürme | Python, Yazılım, ve Programlama</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/html4css1.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/code.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
-<meta content="#5670d4" name="theme-color">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
 <link rel="canonical" href="http://ysar.net/python/parser-kod-donusturme.html">
-<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Python benzeri syntax'dan C benzeri syntax'a kod dönüştüren Parser'ı bitiriyoruz.">
-<meta name="author" content="Yaşar Arabacı">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-3760371725357973",
+    enable_page_level_ads: true
+  });
+</script><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="python-paket-istatistikleri.html" title="Python Paket İstatistikleri" type="text/html">
 <link rel="next" href="python-package-statistics-additions.html" title="Python package statistics - addition" type="text/html">
 <meta property="og:site_name" content="Python, Yazılım, ve Programlama">
@@ -45,7 +50,7 @@
             </a>
         </div>
 <!-- /.navbar-header -->
-        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
             <ul class="nav navbar-nav">
 <li>
 <a href="../yasar-arabaci.html">Hakkımda</a>
@@ -88,15 +93,14 @@
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Parser - Kod Dönüştürme</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                     Yaşar Arabacı
             </span></p>
             <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2013-10-18T19:45:33+03:00" itemprop="datePublished" title="2013-10-18 19:45">2013-10-18 19:45</time></a></p>
             
-        <p class="sourceline"><a href="parser-kod-donusturme.md" id="sourcelink">Kaynak</a></p>
+        <p class="sourceline"><a href="parser-kod-donusturme.md" class="sourcelink">Kaynak</a></p>
 
-                <meta name="description" itemprop="description" content="Python benzeri syntax'dan C benzeri syntax'a kod dönüştüren Parser'ı bitiriyoruz.">
-</div>
+        </div>
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
@@ -161,7 +165,7 @@ bakabilirsiniz.</p>
 <p>Halletmem gereken birşey daha var. Bir statement listesi, expression statement ve bir kod bloğu, parse tree'de sembol olarak
 bulunmuyor. Bu sebeple, onlar için wrapper sınıflar yazıp, onları parse tree'e ekleyeceğim:</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">BlockWrapper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stmts</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stmts</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stmts</span> <span class="o">=</span> <span class="n">stmts</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
     <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -172,7 +176,7 @@ bulunmuyor. Bu sebeple, onlar için wrapper sınıflar yazıp, onları parse tre
 
 <span class="k">class</span> <span class="nc">ExpressionStatementWrapper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">expr</span> <span class="o">=</span> <span class="n">expr</span>
 
     <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -180,7 +184,7 @@ bulunmuyor. Bu sebeple, onlar için wrapper sınıflar yazıp, onları parse tre
 
 
 <span class="k">class</span> <span class="nc">StatementsWrapper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stmts</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stmts</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stmts</span> <span class="o">=</span> <span class="n">stmts</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
 
@@ -229,7 +233,7 @@ düzenleyeceğim.</p>
 
 
 <p>Artık kodları deneyebiliriz:</p>
-<pre class="code literal-block"><span></span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+<pre class="code literal-block"><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">tokenq</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"test.txt"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya</span><span class="p">:</span>
@@ -291,7 +295,7 @@ sonrası da size kalmış.</p>
         <!--End of body content-->
 
         <footer id="footer">
-            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2018         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
 </div>

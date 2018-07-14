@@ -2,20 +2,25 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
 <head>
 <meta charset="utf-8">
-<base href="http://ysar.net/python/soket-programlama-ve-multiprocessing.html">
 <meta name="description" content="Multiprocessing ve socket modüllerini öğrenmek için bu yazıdaki örnekleri inceleyebilirsiniz. Basitçe anlattım.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Python ile soket programlama ve multiprocessing modülü | Python, Yazılım, ve Programlama</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/html4css1.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/code.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
-<meta content="#5670d4" name="theme-color">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
 <link rel="canonical" href="http://ysar.net/python/soket-programlama-ve-multiprocessing.html">
-<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Multiprocessing ve socket modüllerini öğrenmek için bu yazıdaki örnekleri inceleyebilirsiniz. Basitçe anlattım.">
-<meta name="author" content="Yaşar Arabacı">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-3760371725357973",
+    enable_page_level_ads: true
+  });
+</script><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="excel-kutuphaneleri.html" title="Python ve Excel Kütüphaneleri" type="text/html">
 <link rel="next" href="beautiful-soup-ve-basitce-kullanimi.html" title="Python Beautiful Soup Kütüphanesi ve Basitçe Kullanımı" type="text/html">
 <meta property="og:site_name" content="Python, Yazılım, ve Programlama">
@@ -45,7 +50,7 @@
             </a>
         </div>
 <!-- /.navbar-header -->
-        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
             <ul class="nav navbar-nav">
 <li>
 <a href="../yasar-arabaci.html">Hakkımda</a>
@@ -88,15 +93,14 @@
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Python ile soket programlama ve multiprocessing modülü</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                     Yaşar Arabacı
             </span></p>
             <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2011-10-17T19:42:00+03:00" itemprop="datePublished" title="2011-10-17 19:42">2011-10-17 19:42</time></a></p>
             
-        <p class="sourceline"><a href="soket-programlama-ve-multiprocessing.md" id="sourcelink">Kaynak</a></p>
+        <p class="sourceline"><a href="soket-programlama-ve-multiprocessing.md" class="sourcelink">Kaynak</a></p>
 
-                <meta name="description" itemprop="description" content="Multiprocessing ve socket modüllerini öğrenmek için bu yazıdaki örnekleri inceleyebilirsiniz. Basitçe anlattım.">
-</div>
+        </div>
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
@@ -127,7 +131,7 @@ yararlanabilirsiniz :) <!-- TEASER_END --></p>
         <span class="n">client</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">"Content-Type: text/html</span><span class="se">\r\n\r\n</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">client</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">"OK"</span><span class="p">)</span>
         <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
     <span class="n">num_workers</span> <span class="o">=</span> <span class="mi">5</span>
 
     <span class="n">serversocket</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
@@ -158,7 +162,7 @@ yapmak da mümkün:</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span> <span class="o">=</span> <span class="s2">"localhost"</span><span class="p">,</span> <span class="mi">9090</span>
     <span class="n">server</span> <span class="o">=</span> <span class="n">SocketServer</span><span class="o">.</span><span class="n">ForkingTCPServer</span><span class="p">((</span><span class="n">HOST</span><span class="p">,</span><span class="n">PORT</span><span class="p">),</span> <span class="n">MyTCPHandler</span><span class="p">)</span>
     <span class="n">server</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
@@ -186,7 +190,7 @@ yakın.</p>
         <!--End of body content-->
 
         <footer id="footer">
-            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2018         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
 </div>

@@ -2,20 +2,25 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
 <head>
 <meta charset="utf-8">
-<base href="http://ysar.net/python/django-blog-uygulamasi/yonetici-paneli.html">
 <meta name="description" content="Django'da yönetici (admin) sayfaları nasıl oluşuturulur? Uygulamalar yönetici paneline nasıl kaydedilir? Django yönetici panelinde otomatik alan doldurma nasıl yapılır?">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Django ile Blog Geliştirme - Yönetici Paneli | Python, Yazılım, ve Programlama</title>
 <link href="../../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="../../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/html4css1.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
 <link href="../../assets/css/code.css" rel="stylesheet" type="text/css">
 <link href="../../assets/css/colorbox.css" rel="stylesheet" type="text/css">
 <link href="../../assets/css/theme.css" rel="stylesheet" type="text/css">
-<meta content="#5670d4" name="theme-color">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
 <link rel="canonical" href="http://ysar.net/python/django-blog-uygulamasi/yonetici-paneli.html">
-<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Django'da yönetici (admin) sayfaları nasıl oluşuturulur? Uygulamalar yönetici paneline nasıl kaydedilir? Django yönetici panelinde otomatik alan doldurma nasıl yapılır?">
-<meta name="author" content="Yaşar Arabacı">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-3760371725357973",
+    enable_page_level_ads: true
+  });
+</script><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="uygulama-modeller.html" title="Django ile Blog Geliştirme - Modeller" type="text/html">
 <link rel="next" href="../django-abstract-model.html" title="Django'da Abstract Modeller" type="text/html">
 <meta property="og:site_name" content="Python, Yazılım, ve Programlama">
@@ -45,7 +50,7 @@
             </a>
         </div>
 <!-- /.navbar-header -->
-        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
             <ul class="nav navbar-nav">
 <li>
 <a href="../../yasar-arabaci.html">Hakkımda</a>
@@ -88,15 +93,14 @@
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Django ile Blog Geliştirme - Yönetici Paneli</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                     Yaşar Arabacı
             </span></p>
             <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2011-08-07T20:21:00+03:00" itemprop="datePublished" title="2011-08-07 20:21">2011-08-07 20:21</time></a></p>
             
-        <p class="sourceline"><a href="yonetici-paneli.md" id="sourcelink">Kaynak</a></p>
+        <p class="sourceline"><a href="yonetici-paneli.md" class="sourcelink">Kaynak</a></p>
 
-                <meta name="description" itemprop="description" content="Django'da yönetici (admin) sayfaları nasıl oluşuturulur? Uygulamalar yönetici paneline nasıl kaydedilir? Django yönetici panelinde otomatik alan doldurma nasıl yapılır?">
-</div>
+        </div>
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
@@ -145,7 +149,7 @@ değişiklikleri yapın, urls modülünüzün şu şekilde görünmesi gerekiyor
 <span class="n">admin</span><span class="o">.</span><span class="n">autodiscover</span><span class="p">()</span>
 
 <span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span>
-    <span class="n">url</span><span class="p">(</span><span class="s1">r'^admin/'</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">)),</span>
+    <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">'^admin/'</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">)),</span>
 <span class="p">)</span>
 </pre>
 
@@ -257,7 +261,7 @@ url şemamızı tanımalayacak ve <code>views</code> modülü içerisinde birka�
         <!--End of body content-->
 
         <footer id="footer">
-            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2018         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
 </div>

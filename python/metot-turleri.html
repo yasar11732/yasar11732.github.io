@@ -2,20 +2,25 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
 <head>
 <meta charset="utf-8">
-<base href="http://ysar.net/python/metot-turleri.html">
 <meta name="description" content="Özellikle @classmethod a yönelik, Python'daki metot çeşitleri hakkında bir yazı.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Python Metot Türleri | Python, Yazılım, ve Programlama</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/html4css1.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/code.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
-<meta content="#5670d4" name="theme-color">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
 <link rel="canonical" href="http://ysar.net/python/metot-turleri.html">
-<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Özellikle @classmethod a yönelik, Python'daki metot çeşitleri hakkında bir yazı.">
-<meta name="author" content="Yaşar Arabacı">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-3760371725357973",
+    enable_page_level_ads: true
+  });
+</script><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="../diger/devlet-siteleri.html" title="Devlet Siteleri" type="text/html">
 <link rel="next" href="threading-vs-multiprocessing.html" title="Threading mi, yoksa multiprocessing mi kullanmalıyım" type="text/html">
 <meta property="og:site_name" content="Python, Yazılım, ve Programlama">
@@ -45,7 +50,7 @@
             </a>
         </div>
 <!-- /.navbar-header -->
-        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
             <ul class="nav navbar-nav">
 <li>
 <a href="../yasar-arabaci.html">Hakkımda</a>
@@ -88,15 +93,14 @@
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">Python Metot Türleri</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                     Yaşar Arabacı
             </span></p>
             <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2013-11-15T18:17:06+02:00" itemprop="datePublished" title="2013-11-15 18:17">2013-11-15 18:17</time></a></p>
             
-        <p class="sourceline"><a href="metot-turleri.md" id="sourcelink">Kaynak</a></p>
+        <p class="sourceline"><a href="metot-turleri.md" class="sourcelink">Kaynak</a></p>
 
-                <meta name="description" itemprop="description" content="Özellikle @classmethod a yönelik, Python'daki metot çeşitleri hakkında bir yazı.">
-</div>
+        </div>
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
@@ -117,7 +121,7 @@ ilk argüman olarak, kendisini çağıran örneğe bir referans alır. Böylece,
 imkanı bulurlar. Aşağıdaki kodları inceleyelim;</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">ikisayi</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span>
 
@@ -164,7 +168,7 @@ sınıfına mecburi/otomatik bir referans alır. Bunu o sınıfın bir örneğin
 Kendisini çağıran sınıfa bir referans aldığı için, alt sınıflarda da istenildiği gibi çalışacaktır. Örneğin, diyelim ki, bir telefon numarasını temsil eden bir sınıfınız var:</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">TelNo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ulkekodu</span><span class="p">,</span> <span class="n">alankodu</span><span class="p">,</span> <span class="n">numara</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ulkekodu</span><span class="p">,</span> <span class="n">alankodu</span><span class="p">,</span> <span class="n">numara</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ulkekodu</span> <span class="o">=</span> <span class="n">ulkekodu</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alankodu</span> <span class="o">=</span> <span class="n">alankodu</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">numara</span> <span class="o">=</span> <span class="n">numara</span>
@@ -199,14 +203,14 @@ güzel ama, bu numarayı arayabilmemiz daha da güzel olurdu. Bunun için, TelNo
 tanımlayacaksınız. Her seferinde tek tek bu dönüşüm işlemini yapmak hem yorucu olacak, hem de kodlar çorba olacak.</p>
 <p>Buna alternatif olarak, <code>TelNo</code> objesinde, <code>from_string</code> isminde bir <code>@classmethod</code> tanımladığımızda, ne olduğuna bakalım;</p>
 <pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">TelNo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ulkekodu</span><span class="p">,</span> <span class="n">alankodu</span><span class="p">,</span> <span class="n">numara</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ulkekodu</span><span class="p">,</span> <span class="n">alankodu</span><span class="p">,</span> <span class="n">numara</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ulkekodu</span> <span class="o">=</span> <span class="n">ulkekodu</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alankodu</span> <span class="o">=</span> <span class="n">alankodu</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">numara</span> <span class="o">=</span> <span class="n">numara</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_string</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">cls</span><span class="p">(</span><span class="o">*</span><span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">from_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">*</span><span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">))</span>
 
 <span class="k">class</span> <span class="nc">AranabilenTelNo</span><span class="p">(</span><span class="n">TelNo</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">ara</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -243,7 +247,7 @@ hem alt sınıf için tekrar ayrı fonksiyon yazmak zorunda kalmadık, hem de, d
         <!--End of body content-->
 
         <footer id="footer">
-            Contents © 2016         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            Contents © 2018         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
             
         </footer>
 </div>
