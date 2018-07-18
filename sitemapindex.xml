@@ -10,12 +10,16 @@
   <lastmod>2018-07-14T19:58:00Z</lastmod>
  </sitemap>
  <sitemap>
+  <loc>http://ysar.net/categories/mathjax.xml</loc>
+  <lastmod>2018-07-18T20:22:00Z</lastmod>
+ </sitemap>
+ <sitemap>
   <loc>http://ysar.net/diger/rss.xml</loc>
   <lastmod>2018-07-14T19:58:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://ysar.net/euler/rss.xml</loc>
-  <lastmod>2018-07-16T21:33:00Z</lastmod>
+  <lastmod>2018-07-18T20:22:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://ysar.net/python/rss.xml</loc>
@@ -23,11 +27,11 @@
  </sitemap>
  <sitemap>
   <loc>http://ysar.net/rss.xml</loc>
-  <lastmod>2018-07-16T21:33:00Z</lastmod>
+  <lastmod>2018-07-18T20:22:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://ysar.net/sitemap.xml</loc>
-  <lastmod>2018-07-16T21:33:00Z</lastmod>
+  <lastmod>2018-07-18T20:22:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://ysar.net/yazilim-dunyasi/rss.xml</loc>
