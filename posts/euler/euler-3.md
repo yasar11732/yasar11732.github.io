@@ -162,7 +162,7 @@ ulaşmayı ya da  \\(600851475143\\) sayısının asal sayı çıkmasını bekli
 Burada sadece 40bit bir sayıyı asal çarpanlarına ayırdık. Şu an internetimizin önemli bir kısmının güvenliği
 1024 bit (309 haneli sayıları düşünün) RSA şifrelemeye bağlı, ve insanlık tarihinin şu ana kadar asal çarpanlara
 ayırabildiği en büyük sayı 768bit RSA sayısı (232 haneli bir sayı düşünün). Rivayet odur ki, bu işlemi tamamlamak
-sadece 4 yıl sürmüş. Bu kadar büyük sayıların önünde, insan hayattaki yerini düşünüp bir ah çekiyor. 
+sadece 4 yıl sürmüş. Bizimki de o kadar kötü sayılmaz ama, nereden baksan 12 haneli bir sayıydı.
 
 ## Gelecek Problem
 
