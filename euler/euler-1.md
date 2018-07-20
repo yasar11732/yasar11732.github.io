@@ -1,5 +1,5 @@
 <!--
-.. date: 2018/07/02 23:52:00
+.. date: 2018/07/16 23:52:00
 .. slug: euler-1
 .. title: (Euler 1) 3 ve 5'in katları
 .. description: Project Euler problemlerini çözdüğüm bu yeni serinin ilk sayısında, en kolay Project Euler sorusunu çözeceğiz
