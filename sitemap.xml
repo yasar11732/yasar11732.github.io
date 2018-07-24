@@ -27,7 +27,7 @@
  </url>
  <url>
   <loc>http://ysar.net/2018/index.html</loc>
-  <lastmod>2018-07-20T23:25:00Z</lastmod>
+  <lastmod>2018-07-24T20:10:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/algoritma/4-renk-teoremi-ve-harita-boyama.html</loc>
@@ -75,15 +75,15 @@
  </url>
  <url>
   <loc>http://ysar.net/archive.html</loc>
-  <lastmod>2018-07-20T21:23:00Z</lastmod>
+  <lastmod>2018-07-23T19:42:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/categories/index.html</loc>
-  <lastmod>2018-07-20T21:23:00Z</lastmod>
+  <lastmod>2018-07-23T19:42:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/categories/mathjax.html</loc>
-  <lastmod>2018-07-20T23:02:00Z</lastmod>
+  <lastmod>2018-07-24T20:10:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/diger/devlet-siteleri.html</loc>
@@ -107,11 +107,15 @@
  </url>
  <url>
   <loc>http://ysar.net/euler/euler-3.html</loc>
-  <lastmod>2018-07-20T23:02:00Z</lastmod>
+  <lastmod>2018-07-23T19:42:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://ysar.net/euler/euler-4.html</loc>
+  <lastmod>2018-07-24T20:10:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/euler/index.html</loc>
-  <lastmod>2018-07-20T23:25:00Z</lastmod>
+  <lastmod>2018-07-24T20:10:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/index-1.html</loc>
@@ -123,7 +127,7 @@
  </url>
  <url>
   <loc>http://ysar.net/index-11.html</loc>
-  <lastmod>2018-07-20T21:23:00Z</lastmod>
+  <lastmod>2018-07-23T19:42:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/index-2.html</loc>
@@ -159,7 +163,7 @@
  </url>
  <url>
   <loc>http://ysar.net/index.html</loc>
-  <lastmod>2018-07-20T23:25:00Z</lastmod>
+  <lastmod>2018-07-24T20:10:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/python/5-django-ipucu.html</loc>
