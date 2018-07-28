@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Ardışık doğal sayıların toplamını ve ardışık sayıların karelerini toplamını alacağız.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>(Euler 6) Ardışık Sayıların Toplamı | Python, Yazılım, ve Programlama</title>
+<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/html4css1.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/euler/euler-6.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-3760371725357973",
+    enable_page_level_ads: true
+  });
+</script><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="euler-5.html" title="(Euler 5) EBOB EKOK" type="text/html">
+<meta property="og:site_name" content="Python, Yazılım, ve Programlama">
+<meta property="og:title" content="(Euler 6) Ardışık Sayıların Toplamı">
+<meta property="og:url" content="http://ysar.net/euler/euler-6.html">
+<meta property="og:description" content="Ardışık doğal sayıların toplamını ve ardışık sayıların karelerini toplamını alacağız.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-07-28T21:13:00+03:00">
+<meta property="article:tag" content="mathjax">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ana içeriğe geç</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://ysar.net/">
+
+                <span id="blog-title">Python, Yazılım, ve Programlama</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../yasar-arabaci.html">Hakkımda</a>
+                </li>
+<li>
+<a href="../soru-cevap.html">Soru-Cevap</a>
+                </li>
+<li>
+<a href="../archive.html">Arşiv</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS kaynağı</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search with google--><form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+<input type="hidden" name="q" value="site:http://ysar.net/"><input type="text" name="q" maxlength="255" results="0" placeholder="Search">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="euler-6.md" id="sourcelink">Kaynak</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">(Euler 6) Ardışık Sayıların Toplamı</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2018-07-28T21:13:00+03:00" itemprop="datePublished" title="2018-07-28 21:13">2018-07-28 21:13</time></a></p>
+            
+        <p class="sourceline"><a href="euler-6.md" class="sourcelink">Kaynak</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>İlk 10 doğal sayının karelerinin toplamı</p>
+<p>$$1^2+2^2+...+10^2=385$$</p>
+<p>ilk 10 doğal sayının toplamının karesi ise,</p>
+<p>$$(1+2+3...+10)^2=55^2=3025$$</p>
+<p>olduğundan, ilk 10 sayının karelerinin toplamı ile toplamlarının karelerinin farkı \(3025-385=2640\)dır. İlk 100 doğal sayının
+karelerinin toplamı ile toplamlarının karesi arasındaki farkı bulunuz.  <!-- TEASER_END --></p>
+<p>Problem tanımı oldukça açık. Basit bir çözümle başlayıp, bunu nasıl geliştirebiliriz diye bakacağız.</p>
+<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">euler6</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+</pre>
+
+
+<p>Bu çözüm benim bilgisayarımda \(n = 10000000\) sayısına kadar problemsiz bir şekilde çözüm üretebiliyor. Pek kötü sayılmaz, ama
+matematik kaslarımızı geliştirerek çok daha verimli bir şekilde problemi çözebiliriz. Öncelikle, problemin şu kısmına bir göz atalım.</p>
+<p>$$(1+2+3...+10)^2=55^2=3025$$</p>
+<p>Parantez içindeki kısım ardışık sayıların toplamı. Ardışık sayıların toplamı formulü, bilinen bir formül, ama ikinci kısımda kullanacağımız
+yönteme altyapı oluşturması açısından, ardışık sayıların toplamı formülünü baştan icat edeceğiz. 1'den n'e kadar olan sayıların toplamı
+\(f(n) = 1 + 2 + ... + n\) olsun. \(n\) sayısına göre \(f(n)\) fonksiyonundaki 1. ve 2. derece değişikliği \(\triangle\) sembolü
+ile göstereceğiz. \(n\) ve \(f(n)\) arasındaki ilişkiyi anlamak için aşağıdaki tabloya göz atalım.</p>
+<p><img alt="Ardışık Sayılar Toplamı" src="../images/ardisik_sayilar_toplami.svg"></p>
+<p>Yukarıdaki tabloya göre, \(\triangle_2\)'nin değişkenlik göstermediğini görebiliriz. Bu durumda, \(f(n)\) fonksiyonunu ikinci
+derece bir polinom biçiminde ifade edebiliriz. (ikinci derece türevi sabit olduğundan)
+\(f(n) = an^2 + bn + c\) diyelim. Bu durumda, \(n=1\), \(n=2\) ve \(n=3\) değerlerinden, üç bilinmeyenli 3 denklem elde
+ederek, \(a\), \(b\) ve \(c\) değerlerini hesaplayabiliriz.</p>
+<p>$$\begin{eqnarray}
+    f(1) = 1 &amp;= a + b + c \\
+    f(2) = 3 &amp;= 4a + 2b + c \\
+    f(3) = 6 &amp;= 9a + 3b + c \\
+\end{eqnarray}
+$$</p>
+<p>Yukarıdaki 3 bilinmeyenli 3 denklemi çözdüğünüzde, \(a = 1/2, b=1/2, c=0\) sonucuna ulaşmanız gerekiyor. Aksi takdirde, işlemlerinizi
+kontrol edip, bu sonuca ulaşın. Bu durumda, \(f(n) = \frac{n^2}{2} + \frac{n}{2} = \frac{n(n+1)}{2}\) sonucuna ulaşırız. Böylece, matematik kitaplarındaki
+ardışık sayılar toplamı formulünü kanıtlamış olduk. Bu durumda, <code>euler6</code> fonksiyonumuzu şu şekilde yazabiliriz.</p>
+<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">euler6</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+</pre>
+
+
+<p>Problemin diğer kısmına göz atarsak, ilk kısımla oldukça benzer bir yapıda olduğunu görürüz.</p>
+<p>$$1^2+2^2+...+10^2=385$$</p>
+<p>Aynı yöntemle devam edecek olursak, \(g(n) = 0^2 + 1^2 + 2^2 + ... + n^2\) olsun. Bu defa, \(1^2\) yerine, \(0^2\) ile başladık.
+Bu fark, sonucu değiştirmemekle birlikte, sonuca ulaşmak için gerekli işlemleri kolaylaştıracak. Bir önceki tablonun benzerini,
+bu  fonksiyon için de inceleyelim.</p>
+<p><img alt="Ardışık Sayıların Karelerinin Toplamı" src="../images/sum_squares.svg"></p>
+<p>Bu fonksiyonun ilkinden bir farkı olmamakla birlikte, 3. dereceden bir fonksiyon. Yani, fonksiyon \(g(n) = an^3 + bn^2 + cn +d\) biçiminde olacak.
+\(g(0) = 0\) olduğundan, \(d = 0\) olacak. Bu nedenle, yine 3 bilinmeyenli 3 denklem çözeceğiz.</p>
+<p>$$\begin{eqnarray}
+    f(1) = 1  &amp;= a + b + c \\
+    f(2) = 5  &amp;= 8a + 4b + 2c \\
+    f(3) = 14 &amp;= 27a + 9b + 3c \\
+\end{eqnarray}
+$$</p>
+<p>Yukarıdaki denklemleri çözdüğünüzde, \(a = 1/3, b=1/2, c=1/6\) sonucuna ulaşacağız. Demek ki, \(g(n) = \frac{n^3}{3} + \frac{n^2}{2} + \frac{n}{6} = \frac{n(n+1)(2n+1)}{6}\)</p>
+<p>Problemin iki parçasının çözümünü yanyana koyup, daha da sadeleştirebiliriz.</p>
+<p>$$\begin{eqnarray}
+    e(n) &amp;= \left(\frac{n(n+1)}{2}\right)^2 - \frac{2n^3+3n^2+n}{6}\\
+         &amp;= \frac{n^4+2n^3+n^2}{4}-\frac{2n^3+3n^2+n}{6}\\
+         &amp;= \frac{3n^4+2n^3-3n^2-2n}{12}\\
+\end{eqnarray}
+$$</p>
+<p>Bu fonksiyonun Python karşılığı da şu şekilde olacak.</p>
+<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">euler6</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n</span><span class="o">**</span><span class="mi">4</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="mi">3</span><span class="o">*</span><span class="n">n</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="p">)</span><span class="o">/</span><span class="mi">12</span>
+</pre>
+
+
+<p>Bir hayli emek harcadık, bakalım sonuçlara nasıl yansımış? Kodları test etmek için, aşağıdaki kodları kullandım.</p>
+<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">euler6_control</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">euler6_test</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n</span><span class="o">**</span><span class="mi">4</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="mi">3</span><span class="o">*</span><span class="n">n</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="p">)</span><span class="o">/</span><span class="mi">12</span>
+</pre>
+
+
+<p><a href="https://docs.python.org/2/library/timeit.html#basic-examples">timeit.timeit</a> sonuçlarımız aşağıdaki gibi. (number=10)</p>
+<p><img alt="Benchmark Tablosu" src="../images/euler6-chart.svg"></p>
+<p>Görüldüğü üzere, fonksiyonumuzun ilk halinin çalışma süresi, \(n\) sayısının büyüklüğüne bağlı olarak ciddi oranda artış gösterirken,
+son fonksiyonumuzun çalışma süresi, girdi sayısının büyüklüğüne çok duyarlı değil. Örneğin, \(n=100000\) için, <code>euler6_control</code> fonksiyonunun
+ikiyüzbin civarı işlem yapması gerekirken, <code>euler6_test</code> fonksiyonunun sadece 11 işlem yapması gerekiyor. Son versiyonumuzun avantajı da burada.</p>
+<p>Ardışık sayıların toplam formüllerini olduğu gibi kullanmak yerine, matematiksel arkaplanları hakkında birşeyler yazmak istedim. Yazıyı daha ilginç
+kılmıştır diye ümit ediyorum.</p>
+<h3>Kaynakça</h3>
+<ol>
+<li><a href="https://trans4mind.com/personal_development/mathematics/series/sumNaturalNumbers.htm#mozTocId914933">Ken Ward's Mathematics Pages</a></li>
+<li><a href="https://www.onlinemathlearning.com/simultaneous-equations-matrices.html">Using Matrices to Solve a System of Equations or Simultaneous Equations</a></li>
+<li><a href="https://matrix.reshish.com/matrixMethod.php">Inverse Matrix Method Calculator</a></li>
+</ol>
+<h3>Gelecek Problem</h3>
+<p>İlk 6 asal sayıyı listelersek:  2, 3, 5, 7, 11, ve 13, 6. asal sayının 13 olduğunu görürüz.</p>
+<p>1001'inci asal sayı kaçtır.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../categories/mathjax.html" rel="tag">mathjax</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="euler-5.html" rel="prev" title="(Euler 5) EBOB EKOK">Önceki yazı</a>
+            </li>
+        </ul></nav></aside><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+        </script></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2018         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/jquery.min.js"></script><script src="../assets/js/bootstrap.min.js"></script><script src="../assets/js/moment-with-locales.min.js"></script><script src="../assets/js/fancydates.js"></script><script src="../assets/js/jquery.colorbox-min.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-tr.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("tr");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function() {
+    var cx = '013136674562336859018:ouohwab0yku';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44774134-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
