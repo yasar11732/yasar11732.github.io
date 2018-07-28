@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="153.71mm" height="41.328mm" version="1.1" viewBox="0 0 153.71 41.328" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+ <defs>
+  <clipPath id="clipPath2319">
+   <path d="m51.36 606.34h451.3v130.7h-451.3z" clip-rule="evenodd"/>
+  </clipPath>
+  <clipPath id="clipPath2335">
+   <path d="m51.36 708.96h451.3v13.56h-451.3z" clip-rule="evenodd"/>
+  </clipPath>
+  <clipPath id="clipPath2355">
+   <path d="m51.36 694.44h451.3v13.56h-451.3z" clip-rule="evenodd"/>
+  </clipPath>
+  <clipPath id="clipPath2375">
+   <path d="m51.36 679.92h451.3v13.56h-451.3z" clip-rule="evenodd"/>
+  </clipPath>
+  <clipPath id="clipPath2395">
+   <path d="m51.36 665.4h451.3v13.56h-451.3z" clip-rule="evenodd"/>
+  </clipPath>
+  <clipPath id="clipPath2415">
+   <path d="m51.36 650.86h451.3v13.584h-451.3z" clip-rule="evenodd"/>
+  </clipPath>
+  <clipPath id="clipPath2435">
+   <path d="m51.36 636.34h451.3v13.56h-451.3z" clip-rule="evenodd"/>
+  </clipPath>
+  <clipPath id="clipPath2455">
+   <path d="m51.36 621.82h451.3v13.56h-451.3z" clip-rule="evenodd"/>
+  </clipPath>
+  <clipPath id="clipPath2475">
+   <path d="m51.36 607.3h451.3v13.56h-451.3z" clip-rule="evenodd"/>
+  </clipPath>
+  <clipPath id="clipPath2495">
+   <path d="m49.44 604.3h455.26v134.66h-455.26z" clip-rule="evenodd"/>
+  </clipPath>
+ </defs>
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <g transform="translate(-19.906 -29.14)">
+  <g transform="matrix(.35278 0 0 -.35278 -3.5857 284.37)" clip-path="url(#clipPath2319)" fill="#d8d8d8" fill-rule="evenodd">
+   <path d="m66.6 693.84h435.7v14.64h-435.7z"/>
+   <path d="m66.6 664.8h435.7v14.64h-435.7z"/>
+   <path d="m66.6 635.74h435.7v14.64h-435.7z"/>
+   <path d="m66.6 606.7h435.7v14.64h-435.7z"/>
+  </g>
+  <g transform="matrix(.35278 0 0 -.35278 -3.5857 284.37)">
+   <g clip-path="url(#clipPath2335)" fill="#000000" font-family="Calibri" font-size="11.04px" font-weight="bold">
+    <text transform="matrix(1,0,0,-1,140.3,712.32)">
+     <tspan x="0" y="0">n</tspan>
+    </text>
+    <text transform="matrix(1,0,0,-1,247.61,712.32)">
+     <tspan x="0 5.52 11.40432 14.15328 19.673281 23.625601 29.256001 34.753922 39.445919 45.330238 51.214561 55.045441 59.008801 64.89312" y="0">euler6_control</tspan>
+    </text>
+    <text transform="matrix(1,0,0,-1,396.79,712.32)">
+     <tspan x="0 5.52 11.40432 14.15328 19.673281 23.625601 29.256001 34.753922 38.584801 44.13792 48.542881" y="0">euler6_test</tspan>
+    </text>
+   </g>
+  </g>
+  <g transform="matrix(.35278 0 0 -.35278 -3.5857 284.37)">
+   <g clip-path="url(#clipPath2355)" fill="#000000" font-family="Calibri" font-size="11.04px">
+    <text transform="matrix(1,0,0,-1,137.54,697.8)">
+     <tspan x="0 5.6399798" y="0">10</tspan>
+    </text>
+    <text transform="matrix(1,0,0,-1,257.45,697.8)">
+     <tspan x="0 5.6304002 8.3903999 14.0208 19.651199 25.281601 30.912001 36.5424 42.172798" y="0">0,0000241</tspan>
+    </text>
+    <text transform="matrix(1,0,0,-1,399.07,697.8)">
+     <tspan x="0 5.6304002 8.3903999 14.0208 19.651199 25.281601 30.912001 36.5424 42.172798" y="0">0,0000063</tspan>
+    </text>
+   </g>
+  </g>
+  <g transform="matrix(.35278 0 0 -.35278 -3.5857 284.37)">
+   <g clip-path="url(#clipPath2375)" fill="#000000" font-family="Calibri" font-size="11.04px">
+    <text transform="matrix(1,0,0,-1,134.78,683.28)">
+     <tspan x="0 5.6399798 11.27996" y="0">100</tspan>
+    </text>
+    <text transform="matrix(1,0,0,-1,257.45,683.28)">
+     <tspan x="0 5.6304002 8.3903999 14.0208 19.651199 25.281601 30.912001 36.5424 42.172798" y="0">0,0000849</tspan>
+    </text>
+    <text transform="matrix(1,0,0,-1,399.07,683.28)">
+     <tspan x="0 5.6304002 8.3903999 14.0208 19.651199 25.281601 30.912001 36.5424 42.172798" y="0">0,0000055</tspan>
+    </text>
+   </g>
+  </g>
+  <g transform="matrix(.35278 0 0 -.35278 -3.5857 284.37)">
+   <g clip-path="url(#clipPath2395)" fill="#000000" font-family="Calibri" font-size="11.04px">
+    <text transform="matrix(1,0,0,-1,131.9,668.76)">
+     <tspan x="0 5.6399798 11.27996 16.919941" y="0">1000</tspan>
+    </text>
+    <text transform="matrix(1,0,0,-1,257.45,668.76)">
+     <tspan x="0 5.6304002 8.3903999 14.0208 19.651199 25.281601 30.912001 36.5424 42.172798" y="0">0,0007204</tspan>
+    </text>
+    <text transform="matrix(1,0,0,-1,399.07,668.76)">
+     <tspan x="0 5.6304002 8.3903999 14.0208 19.651199 25.281601 30.912001 36.5424 42.172798" y="0">0,0000561</tspan>
+    </text>
+   </g>
+  </g>
+  <g transform="matrix(.35278 0 0 -.35278 -3.5857 284.37)" clip-path="url(#clipPath2415)" fill="#000000" font-family="Calibri" font-size="11.04px">
+   <text transform="matrix(1,0,0,-1,129.14,654.24)">
+    <tspan x="0 5.6399798 11.27996 16.919941 22.559919" y="0">10000</tspan>
+   </text>
+   <text transform="matrix(1,0,0,-1,257.45,654.24)">
+    <tspan x="0 5.6304002 8.3903999 14.0208 19.651199 25.281601 30.912001 36.5424 42.172798" y="0">0,0112687</tspan>
+   </text>
+   <text transform="matrix(1,0,0,-1,399.07,654.24)">
+    <tspan x="0 5.6304002 8.3903999 14.0208 19.651199 25.281601 30.912001 36.5424 42.172798" y="0">0,0000284</tspan>
+   </text>
+  </g>
+  <g transform="matrix(.35278 0 0 -.35278 -3.5857 284.37)">
+   <g clip-path="url(#clipPath2435)" fill="#000000" font-family="Calibri" font-size="11.04px">
+    <text transform="matrix(1,0,0,-1,126.26,639.7)">
+     <tspan x="0 5.6399798 11.27996 16.919941 22.559919 28.1999" y="0">100000</tspan>
+    </text>
+    <text transform="matrix(1,0,0,-1,257.45,639.7)">
+     <tspan x="0 5.6304002 8.3903999 14.0208 19.651199 25.281601 30.912001 36.5424 42.172798" y="0">0,6164694</tspan>
+    </text>
+    <text transform="matrix(1,0,0,-1,399.07,639.7)">
+     <tspan x="0 5.6304002 8.3903999 14.0208 19.651199 25.281601 30.912001 36.5424 42.172798" y="0">0,0000379</tspan>
+    </text>
+   </g>
+  </g>
+  <g transform="matrix(.35278 0 0 -.35278 -3.5857 284.37)">
+   <g clip-path="url(#clipPath2455)" fill="#000000" font-family="Calibri" font-size="11.04px">
+    <text transform="matrix(1,0,0,-1,123.5,625.18)">
+     <tspan x="0 5.6399798 11.27996 16.919941 22.559919 28.1999 33.839882" y="0">1000000</tspan>
+    </text>
+    <text transform="matrix(1,0,0,-1,254.69,625.18)">
+     <tspan x="0 5.6304002 11.2608 14.0208 19.651199 25.281601 30.912001 36.5424 42.172798 47.8032" y="0">10,1747201</tspan>
+    </text>
+    <text transform="matrix(1,0,0,-1,399.07,625.18)">
+     <tspan x="0 5.6304002 8.3903999 14.0208 19.651199 25.281601 30.912001 36.5424 42.172798" y="0">0,0000482</tspan>
+    </text>
+   </g>
+  </g>
+  <g transform="matrix(.35278 0 0 -.35278 -3.5857 284.37)">
+   <g clip-path="url(#clipPath2475)" fill="#000000" font-family="Calibri" font-size="11.04px">
+    <text transform="matrix(1,0,0,-1,120.62,610.66)">
+     <tspan x="0 5.6399798 11.27996 16.919941 22.559919 28.1999 33.839882 39.479858" y="0">10000000</tspan>
+    </text>
+    <text transform="matrix(1,0,0,-1,251.81,610.66)">
+     <tspan x="0 5.6304002 11.2608 16.891199 19.651199 25.281601 30.912001 36.5424 42.172798 47.8032 53.433601" y="0">106,3708281</tspan>
+    </text>
+    <text transform="matrix(1,0,0,-1,399.07,610.66)">
+     <tspan x="0 5.6304002 8.3903999 14.0208 19.651199 25.281601 30.912001 36.5424 42.172798" y="0">0,0000375</tspan>
+    </text>
+   </g>
+  </g>
+  <g transform="matrix(.35278 0 0 -.35278 -3.5857 284.37)" clip-path="url(#clipPath2495)">
+   <path d="m66.66 723.42h435.58" fill="none" stroke="#000" stroke-linecap="square" stroke-linejoin="round" stroke-miterlimit="10" stroke-width=".14"/>
+   <path d="m66.6 722.52h435.7v0.96h-435.7z" fill-rule="evenodd"/>
+   <path d="m66.66 708.9h435.58" fill="none" stroke="#000" stroke-linecap="square" stroke-linejoin="round" stroke-miterlimit="10" stroke-width=".14"/>
+   <path d="m66.6 708h435.7v0.96h-435.7z" fill-rule="evenodd"/>
+   <path d="m66.66 607.24h435.58" fill="none" stroke="#000" stroke-linecap="square" stroke-linejoin="round" stroke-miterlimit="10" stroke-width=".14"/>
+   <path d="m66.6 606.34h435.7v0.96001h-435.7z" fill-rule="evenodd"/>
+  </g>
+ </g>
+</svg>
