@@ -146,14 +146,6 @@ ekledik. Yukarıdaki ifadeyi sadeleştirirsek, yeni tahminimiz
 Bu kodları çalıştırdığımda, yaklaşık olarak ikinci versiyonla aynı sonucu
 aaldım. Ciddi bir ilerleme kaydedemedik gibi görünüyor.
 
-
-## Silinmiş Sahneler
-
-Not: Bu kısım aslında yazının ilk halinin bir parçasıydı, ancak, giderek karmaşık ve
-içinden çıkılması güç bir hal aldı. Bu nedenle, bu versiyonu yarıda bırakıp,
-yazmaktan vazgeçtim. Ancak, tamamen silmeye gönlüm razı olmadı. Yazdığım
-kadarıyla, aşağıda paylaşıyorum.
-
 Peki `basit_sieve` fonksiyonunu tamamen bir kenara bırakamaz mıyız? Netice
 itibariyle, ilk yüzbin asal sayının hangileri olduğunu bilmemize gerek yok.
 Ancak, bunu yapabilmek için, ilk yüzbin asal sayıyı bilmeden, yüzbinbirinci
