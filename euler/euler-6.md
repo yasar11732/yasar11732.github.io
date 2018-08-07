@@ -123,4 +123,4 @@ kılmıştır diye ümit ediyorum.
 
 İlk 6 asal sayıyı listelersek:  2, 3, 5, 7, 11, ve 13, 6. asal sayının 13 olduğunu görürüz.
 
-1001'inci asal sayı kaçtır.
+10001'inci asal sayı kaçtır.

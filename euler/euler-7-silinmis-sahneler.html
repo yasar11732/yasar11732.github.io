@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Belli Bir Sıradaki Asal Sayıları Sayacağız">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>(Euler 7) 10001. Asal Sayı (SİLİNMİŞ SAHNELER) | Python, Yazılım, ve Programlama</title>
+<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/html4css1.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/euler/euler-7-silinmis-sahneler.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><link rel="stylesheet" type="text/css" href="../styles/main.css">
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-3760371725357973",
+    enable_page_level_ads: true
+  });
+</script><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="euler-6.html" title="(Euler 6) Ardışık Sayıların Toplamı" type="text/html">
+<link rel="next" href="euler-7.html" title="(Euler 7) 10001. Asal Sayı" type="text/html">
+<meta property="og:site_name" content="Python, Yazılım, ve Programlama">
+<meta property="og:title" content="(Euler 7) 10001. Asal Sayı (SİLİNMİŞ SAHNELER)">
+<meta property="og:url" content="http://ysar.net/euler/euler-7-silinmis-sahneler.html">
+<meta property="og:description" content="Belli Bir Sıradaki Asal Sayıları Sayacağız">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-08-07T21:25:00+03:00">
+<meta property="article:tag" content="mathjax">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ana içeriğe geç</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://ysar.net/">
+
+                <span id="blog-title">Python, Yazılım, ve Programlama</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../yasar-arabaci.html">Hakkımda</a>
+                </li>
+<li>
+<a href="../soru-cevap.html">Soru-Cevap</a>
+                </li>
+<li>
+<a href="../archive.html">Arşiv</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS kaynağı</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search with google--><form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+<input type="hidden" name="q" value="site:http://ysar.net/"><input type="text" name="q" maxlength="255" results="0" placeholder="Search">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="euler-7-silinmis-sahneler.md" id="sourcelink">Kaynak</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">(Euler 7) 10001. Asal Sayı (SİLİNMİŞ SAHNELER)</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2018-08-07T21:25:00+03:00" itemprop="datePublished" title="2018-08-07 21:25">2018-08-07 21:25</time></a></p>
+            
+        <p class="sourceline"><a href="euler-7-silinmis-sahneler.md" class="sourcelink">Kaynak</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Bu yazıya 7. Euler Probleminin çözümüyle ilgili birşeyler yazma niyetiyle başlamıştım. Ancak, yazdıkça
+asıl konudan çok uzaklaştığımı farkedip, yeniden başlamaya karar verdim. Yine de, yazdıklarımı kaybetmek
+istemedim, olduğu kadarıyla yayınlıyorum.</p>
+<!-- TEASER_END -->
+
+<p>İlk 6 asal sayıyı listelersek:  2, 3, 5, 7, 11, ve 13, 6. asal sayının 13
+olduğunu görürüz.</p>
+<p>10001'inci asal sayı kaçtır.</p>
+<p><a href="euler-3.html">3. Euler problemi çözümünde</a> belli bir aralıktaki asal
+sayıları tespit etmek için Eratosten Kalburu yöntemini kullanmıştık. Bu
+yöntemde, belli bir aralıktaki asal sayıları tespit etmek için, asal olduğunu
+kanıtladığımız sayıların katlarını listeden silme yöntemini kullandık. Bu
+yöntem sayesinde, hızlı bir şekilde asal sayı tespiti yapabilmiştik.
+Hatırlatma amacıyla, kodlarımıza tekrar bir göz atalım.</p>
+<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">basit_sieve</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
+    <span class="n">sieve_limit</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+
+    <span class="n">primes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">next_prime</span> <span class="o">=</span> <span class="n">candidates</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">primes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_prime</span><span class="p">)</span>
+        <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="n">next_prime</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">next_prime</span> <span class="o">&gt;</span> <span class="n">sieve_limit</span><span class="p">:</span>
+            <span class="n">primes</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
+            <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">return</span> <span class="n">primes</span>
+
+<span class="k">def</span> <span class="nf">gelismis_sieve</span><span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">known_primes</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">known_primes</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">basit_sieve</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+
+    <span class="n">sieve_limit</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+
+    <span class="n">primes</span> <span class="o">=</span> <span class="n">known_primes</span><span class="p">[:]</span>
+
+    <span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">known_primes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+
+    <span class="k">for</span> <span class="n">prime</span> <span class="ow">in</span> <span class="n">known_primes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">prime</span> <span class="o">&gt;</span> <span class="n">sieve_limit</span><span class="p">:</span>
+            <span class="n">primes</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
+            <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">break</span>
+        <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="n">prime</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">next_prime</span> <span class="o">=</span> <span class="n">candidates</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">primes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_prime</span><span class="p">)</span>
+        <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="n">next_prime</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">next_prime</span> <span class="o">&gt;</span> <span class="n">sieve_limit</span><span class="p">:</span>
+            <span class="n">primes</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
+            <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">return</span> <span class="n">primes</span>
+</pre>
+
+
+<p>Euler Problemleri orjinal olarak modern bilgisayalara nazaran çok daha zayıf
+bilgisayalar göz önünde bulunarak tasarlandığı için, biz euler problemini
+100001. asal sayı için çözeceğiz. Hedefimiz, bu sonuca 1sn'den daha hızlı bir
+şekilde ulaşmak. Bu problemin çözümü için, <code>basit_sieve</code> yöntemini doğrudan
+kullanamayız, çünkü, 100001. asal sayıyı tespit etmek için, kaçıncı sayıya
+kadar olan asal sayıları bulmamız gerektiğini bilmiyoruz. Bu nedenle, 100001.
+asal sayıya ulaşana dek, <code>gelismis_sieve</code> fonksiyonunu çalıştıracağız. İlk
+denemem aşağıdaki şekilde olacak:</p>
+<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">euler7</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+
+    <span class="n">p</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">gelismis_sieve</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="nb">max</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="n">p</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">p</span><span class="p">[</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre>
+
+
+<p>Bu kodlar 100001. asal sayı için benim bilgisayarımda ortalama 6.3sn'de
+tamamlanıyor. Daha iyisini yapabilir miyiz? Burada akla gelen ilk optimizasyon,
+ <code>gelismis_sieve</code> fonksiyonunun çağrılma sayısını azaltmak, hatta mümkün
+olursa, bu fonksiyonun yerine, sadece <code>basit_sieve</code> fonksiyonu ile sonuca
+ulaşmak. Çünkü, <code>gelismis_sieve</code> çalışabilmek için, <code>basit_sieve</code> fonksiyonun
+yaptığı bazı işlemleri tekrar etmek zorunda olduğundan, performans kaybına yol
+açıyor.</p>
+<p>Küçük bir gözlemle, hesap yapmaya çok daha iyi bir noktadan başlayabiliriz.
+Dikkat ederseniz, bir sayıya kadar olan asalların sayısı o sayının yarısından
+fazla olamaz. Örneğin, 100'e kadar olan asal sayılar en fazla 50 adet olabilir,
+ çünkü, 2 hariç çift sayılar asal olamazlar. İkinin kendisi asal sayı olduğu 
+için bu sınırın 51 olması gerektiğini düşünebilirsiniz, ancak, 1 sayısı asal
+olmadığından hesap tekrar 50'ye geri düşüyor. Bir sayıya kadar olan asalların
+sayısını veren fonksiyona \(\pi(x)\) dersek, \(\pi(x)&lt;=\frac{x}{2}\)
+olduğunu kanıtlamış olduk. Programın başlangıç parametleri biraz daha optimize
+olduğundan, her döngüde üst sınırı 2 kat artırmak yerine, 1.6 kat artırmak daha
+uygun olur tahmininden yola çıkarak (1.6 tamamen tahmin üzerine verilmiş bir
+değer, siz bununla oynayarak farklı ihtimaller deneyebilirsiniz), kodları
+aşağıdaki şekilde revize edebiliriz.</p>
+<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">euler7</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+
+    <span class="n">p</span> <span class="o">=</span> <span class="n">basit_sieve</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">gelismis_sieve</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mf">1.6</span><span class="o">*</span><span class="nb">max</span><span class="p">(</span><span class="n">p</span><span class="p">)),</span> <span class="n">p</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">p</span><span class="p">[</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre>
+
+
+<p>Yukardaki versiyon benim bilgisayarımda 1.9-2.0 saniye ortalamasında sonuç
+veriyor. İlk versiyona göre oldukça başarılı. Daha iyisini yapabilir miyiz?
+İkinin katlarını hesapladığımız gibi, üçün katlarını da hesaba dahil ederek,
+ilk tahmini biraz daha güçlendirebiliriz.Yeni tahminimiz
+\(\pi(x) &lt;= x - \frac{x}{2} - \frac{x}{3} + \frac{x}{6}\). Bu aralıkta hem
+ikinin hem de üçün katı olan sayılar iki kere çıkarma işlemine tabi
+tutulduğundan, hesabı düzeltmek için altının katı olan sayıları tekrar tahmine
+ekledik. Yukarıdaki ifadeyi sadeleştirirsek, yeni tahminimiz
+\(\pi(x)&lt;=\frac{x}{3}\) oldu. Kodları tekrar revize edebiliriz.</p>
+<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">euler7</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+
+    <span class="n">p</span> <span class="o">=</span> <span class="n">basit_sieve</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">gelismis_sieve</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mf">1.2</span><span class="o">*</span><span class="nb">max</span><span class="p">(</span><span class="n">p</span><span class="p">)),</span> <span class="n">p</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">p</span><span class="p">[</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre>
+
+
+<p>Bu kodları çalıştırdığımda, yaklaşık olarak ikinci versiyonla aynı sonucu
+aaldım. Ciddi bir ilerleme kaydedemedik gibi görünüyor.</p>
+<h3>Silinmiş Sahneler</h3>
+<p>Not: Bu kısım aslında yazının ilk halinin bir parçasıydı, ancak, giderek karmaşık ve
+içinden çıkılması güç bir hal aldı. Bu nedenle, bu versiyonu yarıda bırakıp,
+yazmaktan vazgeçtim. Ancak, tamamen silmeye gönlüm razı olmadı. Yazdığım
+kadarıyla, aşağıda paylaşıyorum.</p>
+<p>Peki <code>basit_sieve</code> fonksiyonunu tamamen bir kenara bırakamaz mıyız? Netice
+itibariyle, ilk yüzbin asal sayının hangileri olduğunu bilmemize gerek yok.
+Ancak, bunu yapabilmek için, ilk yüzbin asal sayıyı bilmeden, yüzbinbirinci
+sırada olduğumuzu bilmemiz gerekiyor. Bunu yapabilmek için de, \(\pi(x)\)
+değerini tahmini olarak değil, tam olarak hesaplamamız gerek. \(\pi(x)\)'i
+tam olarak hesaplayabildiğimiz durumda x yerine farklı sayılar deneyerek,
+\(\pi(300000)&lt;1000&lt;\pi(1500000)\) benzeri bir eşitsizlik elde edip, aralığı
+daralta daralta istediğimiz sayıya ulaşabiliriz.</p>
+<p>Eğer 2'nin ve 3'ün katlarında yaptığımız gibi, belli bir aralıktaki sayıların
+içinden, asal sayıların katları olan - dolayısıyla asal olmayan - sayıları
+çıkarırsak, geriye sadece asal sayılar kalır. Bizim istediğimiz de bu. Bir tek
+problemimiz var, 2'nin, 3'ün ve 5'in katsayılarını silmek istediğimizde işler
+bir adım daha karmaşıklaşacak. \(S(2)\) ikinin katlarının sayısı, \(S(3)\)
+üçün katlarının sayısı, \(S(5)\)'in katlarının sayısı dersek;</p>
+<p>$$\begin{eqnarray} 
+S(2 \cup 3 \cup 5) &amp;= S(2) + S(3) + S(5) \\
+                   &amp; -(S(2 \cap 3) + S(2 \cap 5) + S(3 \cap 5)) \\
+                   &amp; + S(2 \cap 3 \cap 5) \\
+\end{eqnarray}$$</p>
+<p>Elemek istediğimiz asal sayılar, birkaçdan daha fazla olduğunda nasıl bir yöntem
+izleyeceğiz?</p>
+<h3>Ekleme - Çıkarma Prensibi</h3>
+<p>Yukarıda kullandığımız yöntemin daha genel şekline Kombinatorik teoride Ekleme-Çıkarma
+prensibi demişler. Prensibin genel şekli matematik notasyonunda aşağıdaki şekilde gösterilir.</p>
+<p>$$
+\begin{align}
+\left|\bigcup_{i=1}^n A_i\right| = {} &amp; \sum_{i=1}^n |A_i| - \sum_{1 \le i &lt; j \le n} |A_i\cap A_j| + \cdots {} \\
+&amp; {} \cdots + \sum_{1 \le i &lt; j &lt; k \le n} |A_i \cap A_j\cap A_k| - \cdots + (-1)^{n-1} \left|A_1\cap\cdots\cap A_n\right|.
+\end{align}
+$$</p>
+<p>Birçok garip sembol, büyüklü küçüklü harfler falan, formül kafa karıştırmasın. Biz kelimelerle ifade
+edelim. Birden fazla kümenin birleşiminin eleman sayısını hesaplarken, önce kümelerin teker teker eleman
+sayılarını toplayacağız. Daha sonra, ikili kesişimlerinin eleman sayılarını çıkaracağız. Sonra 3'lü kesişimlerinin
+eleman sayılarını geri ekleyeceğiz, sonra 4lü kesişimlerinin eleman sayılarını geri çıkaracağız, vs... Adı üstünde
+ekleme çıkarma prensibi. Prensip güzelmiş, Python ile yapalım. Birden başlayıp, bir üst sınıra kadar olan sayılar içinde,
+listemizdeki sayılara bölünmeyen kaç sayı olduğunu hesaplayalım.</p>
+<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="nb">reduce</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">mul</span>
+
+<span class="k">def</span> <span class="nf">ekle_cikar</span><span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">sayilar</span><span class="p">):</span>
+
+    <span class="k">return</span> <span class="n">limit</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span>
+        <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="n">i</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">limit</span> <span class="o">/</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="n">grb</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sayilar</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">grb</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="n">sayilar</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">)</span>
+</pre>
+
+
+<p>Fonksiyon güzel oldu, küçük birkaç modifikasyon ile \(\pi(x)\) fonksiyonunu kesin olarak hesaplayabiliriz.</p>
+<h3>Legendre’nin Formulü</h3>
+<p>$$
+\pi(x) + 1 = \pi(\sqrt{x}) + \lfloor x \rfloor - \sum_{p_i \leq \sqrt{x}} \left \lfloor \frac{x}{p_i} \right \rfloor + \sum_{p_i &lt; p_j \leq \sqrt{x}} \left \lfloor \frac{x}{p_i p_j} \right \rfloor - \sum_{p_i &lt; p_j &lt; p_k \leq \sqrt{x}} \left \lfloor \frac{x}{p_i p_j p_k} \right \rfloor + \dots
+$$</p>
+<p>Eratosten kalburu yönteminden bildiğimiz üzere, 1 ile \(n\) arasındaki asal sayıları bulmak için, kalburu \(\sqrt{n}\) sayısına kadar
+işletiyoruz. Neden? Diyelim ki, 2..100 aralığındaki asal sayıları bulmak istiyoruz. Bunun için bu aralıktaki 2, 3, 5 ve 7 sayılarının katlarını
+temizliyoruz. 11 ve daha büyük asalların katlarını temizlemeye ihtiyacımız yok, çünkü, bunların katları aynı zamanda 2,3,5 veya 7'nin katları
+olmak zorunda. Aynı fikir,  Legendre’nin Formulü yönteminde de kullanılmış. Ekleme-Çıkarma prensibi ile birleştirince, yukarıdaki formül
+ortaya çıkıyor. Python ile yapalım;</p>
+<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">Legendre</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+
+    <span class="n">p</span> <span class="o">=</span> <span class="n">basit_sieve</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">+</span> <span class="n">ekle_cikar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+</pre>
+
+
+<p>Fonksiyonun çalışma süresini test etmek için uygun bir zaman.</p>
+<div class="centered">
+<svg class="line5" version="1.1" viewbox="0 0 68.012 30.0602" xmlns="http://www.w3.org/2000/svg"><defs><clippath id="b"><path d="m51.36 649.3h191.81v87.744h-191.81z" clip-rule="evenodd"></path></clippath><clippath id="a"><path d="m49.44 647.26h195.77v91.704h-195.77z" clip-rule="evenodd"></path></clippath></defs><g transform="translate(-47.2211 -88.5595)"><g transform="matrix(.352778 0 0 -.352778 29.4446 347.675)"><g clip-path="url(#b)"><g><path d="m50.88 678.72h191.93v14.64h-191.93z" fill="#d8d8d8" fill-rule="evenodd"></path><path d="m50.88 649.66h191.93v14.664h-191.93z" fill="#d8d8d8" fill-rule="evenodd"></path><text transform="matrix(1,0,0,-1,53.04,726.84)" fill="#000000" font-family="cmbxti10" font-size="11.04px"><tspan x="0 7.1760001 14.0208 24.46464 30.337919 36.211201 41.742241 51.468479 57.948959" y="0">number=10</tspan></text></g><text transform="matrix(1,0,0,-1,53.04,697.2)" fill="#000000" font-family="cmcsc8" font-size="11.04px" stroke="#000000" stroke-miterlimit="10" stroke-width=".31543"><tspan x="0 6.2265601 13.65648 20.72208 28.03056 33.418079 37.006081 44.071678 51.501598" y="0">fonksiyon</tspan></text><text transform="matrix(1,0,0,-1,159.02,697.2)" fill="#000000" font-family="cmcsc8" font-size="11.04px" stroke="#000000" stroke-miterlimit="10" stroke-width=".31543"><tspan x="0 7.9046402 14.97024 23.603519 30.669121 37.734718 43.718399 50.784 59.417278" y="0">Zamanlama</tspan></text><g fill="#000000" font-size="11.04px"><text transform="matrix(1,0,0,-1,53.04,682.68)" font-family="cmbxti10"><tspan x="0 7.69488 13.56816 19.441441 25.31472 32.490719 39.015362 44.546398 50.419682 55.663681 62.144161 68.624641 75.105118" y="0">Legendre(100)</tspan></text><text transform="matrix(1,0,0,-1,173.42,682.68)" font-family="cmbx10"><tspan x="0 6.348 9.8697596 16.21776 22.56576 28.913759 35.261761 41.60976 47.990879 54.338879 60.686878" y="0">0,000222643</tspan></text><text transform="matrix(1,0,0,-1,53.04,668.16)" font-family="cmbxti10"><tspan x="0 7.69488 13.56816 19.441441 25.31472 32.490719 39.015362 44.546398 50.419682 55.663681 62.144161 68.624641 75.105118 81.585602" y="0">Legendre(1000)</tspan></text><text transform="matrix(1,0,0,-1,173.42,668.16)" font-family="cmbx10"><tspan x="0 6.348 9.8697596 16.21776 22.56576 28.913759 35.261761 41.60976 47.990879 54.338879 60.686878" y="0">0,010299206</tspan></text><text transform="matrix(1,0,0,-1,53.04,653.64)" font-family="cmbxti10"><tspan x="0 7.69488 13.56816 19.441441 25.31472 32.490719 39.015362 44.546398 50.419682 55.663681 62.144161 68.624641 75.105118 81.585602 88.066078" y="0">Legendre(10000)</tspan></text><text transform="matrix(1,0,0,-1,173.42,653.64)" font-family="cmbx10"><tspan x="0 6.348 12.696 19.06608 22.54368 28.89168 35.239681 41.60976 47.95776 54.305759 60.675838" y="0">752,3459562</tspan></text></g></g><g clip-path="url(#a)"><path d="m50.46 723.42v-74.06" fill="none" stroke="#000" stroke-linecap="square" stroke-linejoin="round" stroke-miterlimit="10" stroke-width=".14"></path><path d="m50.4 649.3h0.96v74.184h-0.96z" fill-rule="evenodd"></path><path d="m156.44 722.46v-73.1" fill="none" stroke="#000" stroke-linecap="square" stroke-linejoin="round" stroke-miterlimit="10" stroke-width=".14"></path><path d="m156.38 649.3h0.95999v73.224h-0.95999z" fill-rule="evenodd"></path><path d="m242.27 722.46v-73.1" fill="none" stroke="#000" stroke-linecap="square" stroke-linejoin="round" stroke-miterlimit="10" stroke-width=".14"></path><path d="m242.21 649.3h0.95999v73.224h-0.95999z" fill-rule="evenodd"></path><path d="m51.42 723.42h191.69" fill="none" stroke="#000" stroke-linecap="square" stroke-linejoin="round" stroke-miterlimit="10" stroke-width=".14"></path><path d="m51.36 722.52h191.81v0.96h-191.81z" fill-rule="evenodd"></path><path d="m51.42 693.78h191.69" fill="none" stroke="#000" stroke-linecap="square" stroke-linejoin="round" stroke-miterlimit="10" stroke-width=".14"></path><path d="m51.36 692.88h191.81v0.96h-191.81z" fill-rule="evenodd"></path><path d="m51.42 679.26h191.69" fill="none" stroke="#000" stroke-linecap="square" stroke-linejoin="round" stroke-miterlimit="10" stroke-width=".14"></path><path d="m51.36 678.36h191.81v0.96h-191.81z" fill-rule="evenodd"></path><path d="m51.42 664.74h191.69" fill="none" stroke="#000" stroke-linecap="square" stroke-linejoin="round" stroke-miterlimit="10" stroke-width=".14"></path><path d="m51.36 663.84h191.81v0.96h-191.81z" fill-rule="evenodd"></path><path d="m51.42 650.2h191.69" fill="none" stroke="#000" stroke-linecap="square" stroke-linejoin="round" stroke-miterlimit="10" stroke-width=".14"></path><path d="m51.36 649.3h191.81v0.95999h-191.81z" fill-rule="evenodd"></path></g></g></g></svg>
+</div>
+
+<p>Hmm. Bir sorunumuz var. Bu fonksiyonun çalışması oldukça uzun sürüyor. Aslını söylemek gerekirse, Legendre'nin formulü, asal sayıları saymak için
+pek etkili bir yöntem değil. Ancak, bu kadar yavaş çalışmasında bizim de payımız var. Formulün orjinaline bağlı kalmak adına, yapılacak bir takım
+optimizasyonlardan vazgeçtik. <code>ekle_cikar</code> fonksiyonunu optimize ederek, biraz hız kazanabiliriz. <code>ekle_cikar</code> fonksiyonunun ilk versiyonunda
+bir sürü gereksiz kombinasyon hesaplıyoruz. Mesela, \(\pi(200)\) hesaplanırken, 200'den küçük ve 2,3,5,7 ve 11'in ortak katı olan herhangi bir
+sayı olamayacağını biliyoruz, çünkü \(ekok(2,3,5,7,11) = 2310\). Bu durumda, 2,3,5,7 ve 13 sayılarının ortak katını kontrol etmeye gerek yok, çünkü
+bu bir öncekinden bile daha büyük bir sayı olamak zorunda. Eğer kombinasyon hesabını fonksiyonumuzun içine dahil edersek,
+gereksiz kombinasyon hesapları yapmaktan kurtulabiliriz. Böylece fonksiyonumuz hızlanacaktır.</p>
+<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">ekle_cikar2</span><span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">sayilar</span><span class="p">):</span>
+
+    <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sayilar</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sayilar</span><span class="p">)):</span>
+        <span class="s2">"Döngüden erken çıkabilmek için, kombinasyonları kendimiz hesaplayacağz"</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">grb</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">sayilar</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">)</span>
+        <span class="n">denominator</span> <span class="o">=</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="n">grb</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">denominator</span> <span class="o">&gt;</span> <span class="n">limit</span><span class="p">:</span>
+            <span class="s2">"Erken çıkış noktalarından biri"</span>
+            <span class="k">break</span>
+
+        <span class="n">t</span> <span class="o">+=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="n">i</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">limit</span> <span class="o">/</span> <span class="n">denominator</span> <span class="p">)</span>
+
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">indices</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">!=</span> <span class="n">k</span> <span class="o">+</span> <span class="n">n</span> <span class="o">-</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">break</span>
+
+            <span class="n">indices</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
+                <span class="n">indices</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+
+            <span class="n">grb</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">sayilar</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">)</span>
+            <span class="n">denominator</span> <span class="o">=</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="n">grb</span><span class="p">)</span>
+
+
+            <span class="k">if</span> <span class="n">denominator</span> <span class="o">&gt;</span> <span class="n">limit</span><span class="p">:</span>
+                <span class="s2">"Erken çıkış noktalarından diğeri"</span>
+                <span class="n">indices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span>
+                <span class="k">continue</span>
+
+            <span class="n">t</span> <span class="o">+=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="n">i</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">limit</span> <span class="o">/</span> <span class="n">denominator</span> <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">limit</span> <span class="o">-</span> <span class="n">t</span>
+
+<span class="k">def</span> <span class="nf">Legendre2</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+
+    <span class="n">p</span> <span class="o">=</span> <span class="n">basit_sieve</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">+</span> <span class="n">ekle_cikar2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+</pre>
+
+
+<p>Bu optimizasyon yüzünden, fonksiyonumuz oldukça karmaşık bir hal aldı. Yukarıda neler döndüğünü anlamakta güçlük çekerseniz, fazla kafaya takmayın. Yazının
+ilerleyen bölümlerinde asal sayı saymak için daha etkin bir algoritmayı inceleyeceğiz. Şimdiye kadar yaptıklarımız, o algoritmayı anlamaya
+yardımcı olacak fikir egzersizleri. Yine de, yaptığımız optimizasyonu bir test edelim.</p>
+<style>
+img[alt=legendre2benchmark] {
+    width: 280px;
+    display: block;
+    margin: auto;
+}
+</style>
+<p><img alt="legendre2benchmark" src="../images/Legendre2_Timeit.svg"></p>
+<p>Çok daha iyi, ama hala Eratosten kalburunun yerini tutamaz. Yalnız hafıza gereksinimi bir hayli düşük. Hafıza problemi yaşayacak kadar büyük
+sayılarla muhatap olacaksanız, bu fonksiyonu (mümkünse C ile yazarak) deneyebilirsiniz, ancak, biraz beklemeyi göze almanız gerekiyor. Biz asıl
+konumuza dönelim.</p>
+<h3>Meissel-Lehmer Algoritması</h3>
+<p>Şu ana kadar yaptıklarımız bizi sonuca pek yaklaştırmamış olsa da, artık Meissel-Lehmer algorimatsını incelemek için gerekli fikirsel altyapıya
+sahibiz.Öncelikle bazı tanımlar yapacağız. \(\phi(x, a)\) fonksiyonu, x'e kadar olan sayıların içinde, \(a\)'ıncı sıradaki asal sayıdan
+küçük veya eşit asal çarpanı olmayan sayıların sayısı olsun. Örneğin, \(\phi(20, 2) = \left \vert{\{ 1, 5, 7, 11, 13, 17, 19\}} \right \vert = 7\).
+Örnekte, \(x = 20\) için birinci ve ikinci asal sayının (2 ve 3) katlarını silerek, kalan elemanların sayısını aldık. Bu tanıma ile birlikte
+Legendre'nin formulünü şu şekilde de yazabiliriz; \( \pi(x) = \phi(x, a) + a - 1 : a = \pi(\sqrt{x})\). Şimdi de, \(P_k(x, a)\), 1 ile x arasındaki
+sayılardan, tam olarak k adet asal çarpanı olan ve, bu asal çarpanlardan hiçbiri \(p_a\)'dan (a'ıncı sıradaki asal sayı) küçük veya eşit olmayan
+sayıların sayısı olsun. Örneğin, \(P_2(50, 2) = \left \vert{\{ 25, 35, 49 \}} \right \vert = 3 \). Bu iki tanımdan yola çıkarak, aşağıdaki tanıma
+ulaşabiliriz. (\(P_0(x,a) = 1\))</p>
+<p>$$
+\phi(x, a) = P_0(a, x) + P_1(x, a) + P_2(x, a) + \dots
+$$</p>
+<p>Buraya kadar yaptıklarımızın, asal sayıların sayısını hesaplamakla bir ilgisi yok gibi görünse de, yukarıdaki tanımda \(P_1(x, a)\) terimi çok
+ilginç bir terim. Kelimelerle ifade edersek, 1 ile x arasındaki sayılardan, tam olarak 1 adet asal çarpanı olan, ve bu asal çarpanlardan hiçbiri
+\(p_a\)'dan küçük veya eşit olmayan sayıların sayısı. Tam olarak 1 adet asal çarpanı olmak demek, zaten o sayının kendisinin asal sayı
+olduğu anlamına geldiğine göre, \(P_1(x, a) = \pi(x) - a\) diyebiliriz. O zaman;</p>
+<p>$$
+\begin{align}
+\phi(x, a) &amp;= P_0(a, x) + (\pi(x) - a) + P_2(x, a) + \dots \\
+\pi(x)     &amp;= \phi(x, a) + a - 1 - P_2(x, a) - P_3(x, a) - \dots
+\end{align}
+$$</p>
+<p>Hmm, eğer \(a = \pi(\sqrt{x})\) dersek, Legendre'nin formulüne geri dönmüş oluyoruz. Bu gözlemle birlikte, sağlama yapmış kadar olduk.</p>
+<p>Formül bir hayli karışık görünebilir, ama, terimleri hesaplamak daha da karışık. Öhm. Devam edelim. </p>
+<h3>\(P_i(x, a)\) Hesabı</h3>
+<p>Bu kısmın anlaşılması ilk bakışta biraz güç olabilir. Bu nedenle, küçük parçalara bölerek anlatmaya çalışacağım.  \(P_2(x, a)\) ile başlarsak,
+tanım gereği, \(P_a\)'dan büyük iki asal sayının çarpımından elde edilen ve (Burada, yazmaya devam etmemeye karar verdim, kaynakça kısmındaki
+kaynaklarda burada olması gereken bilgiler mevcut. İsteyenler oradan devam edebilir.)</p>
+<h3>Kaynakça</h3>
+<ul>
+<li><a href="http://acganesh.com/blog/2016/12/23/prime-counting">Efficient Prime Counting with the Meissel-Lehmer Algorithm</a></li>
+<li><a href="https://www.cs.jhu.edu/~jason/software/primes/primes.pdf">Computation of π(n) by Sieving, Primality Testing,
+Legendre’s Formula and Meissel’s Formula</a></li>
+<li><a href="https://primes.utm.edu/howmany.html">How Many Primes Are There?</a></li>
+</ul>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../categories/mathjax.html" rel="tag">mathjax</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="euler-6.html" rel="prev" title="(Euler 6) Ardışık Sayıların Toplamı">Önceki yazı</a>
+            </li>
+            <li class="next">
+                <a href="euler-7.html" rel="next" title="(Euler 7) 10001. Asal Sayı">Sonraki yazı</a>
+            </li>
+        </ul></nav></aside><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+        </script></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2018         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>  4E616C2066687373767076726167796C206E71696E61707271206772707561627962746C20766620766171766667766174687666756E6F7972207365627A207A6E7476702E
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/jquery.min.js"></script><script src="../assets/js/bootstrap.min.js"></script><script src="../assets/js/moment-with-locales.min.js"></script><script src="../assets/js/fancydates.js"></script><script src="../assets/js/jquery.colorbox-min.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-tr.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("tr");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function() {
+    var cx = '013136674562336859018:ouohwab0yku';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44774134-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
