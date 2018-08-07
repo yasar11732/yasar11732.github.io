@@ -450,7 +450,7 @@ LICENSE = ""
 
 # A small copyright notice for the page footer (in HTML).
 # (translatable)
-CONTENT_FOOTER = 'Contents &copy; {date}         <a href="mailto:{email}">{author}</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>         {license}'
+CONTENT_FOOTER = 'Contents &copy; {date}         <a href="mailto:{email}">{author}</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a> {license} 4E616C2066687373767076726167796C206E71696E61707271206772707561627962746C20766620766171766667766174687666756E6F7972207365627A207A6E7476702E'
 
 # Things that will be passed to CONTENT_FOOTER.format().  This is done
 # for translatability, as dicts are not formattable.  Nikola will
@@ -677,6 +677,7 @@ SEARCH_FORM = """
 # before </head>
 # (translatable)
 EXTRA_HEAD_DATA = """
+<link rel="stylesheet" type="text/css" href="/styles/main.css">
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <script>
   (adsbygoogle = window.adsbygoogle || []).push({
