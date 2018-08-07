@@ -2,7 +2,7 @@
 .. date: 2018/08/07 21:25:00
 .. slug: euler-7-silinmis-sahneler
 .. title: (Euler 7) 10001. Asal Sayı (SİLİNMİŞ SAHNELER)
-.. description: Belli Bir Sıradaki Asal Sayıları Sayacağız
+.. description: Euler 7 çözümü ilk denemesi
 .. tags: mathjax
 -->
 
