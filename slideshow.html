@@ -1,0 +1,94 @@
+<html>
+<head>
+<script>
+function show_image(idx)
+{
+    if(slider)
+        slider.style.left = "-" + ((idx - 1) * 422) + "px";
+        
+    return false;
+}
+</script>
+<style>
+
+div, img {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+.slideshow-mask{
+    width: 422px;
+    height: 155px;
+    overflow: hidden;
+}
+
+.slideshow-image-container {
+    position: relative;
+    width: 5486;
+    height:155px;
+    left: 0px;
+    transition-property: left;
+    transition-duration: 1s;
+}
+
+.slideshow-image-container img {
+    display: block;
+    float: left;
+    width: 422px;
+    height:155px;
+}
+
+#slideshow-menu {
+    list-style-type: none;
+}
+#slideshow-menu li {
+    display: inline;
+}
+
+#slideshow-menu li a {
+    padding: 8px;
+    background-color: #dddddd;
+    border-radius: 1px;
+    text-decoration: none;
+}
+</style>
+</head>
+<body>
+
+<div class="slideshow-mask">
+<div class="slideshow-image-container" id="slider">
+<img src="frame1.png"/>
+<img src="frame2.png"/>
+<img src="frame3.png"/>
+<img src="frame4.png"/>
+<img src="frame5.png"/>
+<img src="frame6.png"/>
+<img src="frame7.png"/>
+<img src="frame8.png"/>
+<img src="frame9.png"/>
+<img src="frame10.png"/>
+<img src="frame11.png"/>
+<img src="frame12.png"/>
+<img src="frame13.png"/>
+</div>
+
+</div>
+<ul class="slideshow-menu" id="slideshow-menu">
+<li><a href="#" onclick="return show_image(1);">1</a></li>
+<li><a href="#" onclick="return show_image(2)">2</a></li>
+<li><a href="#" onclick="return show_image(3)">3</a></li>
+<li><a href="#" onclick="return show_image(4)">4</a></li>
+<li><a href="#" onclick="return show_image(5)">5</a></li>
+<li><a href="#" onclick="return show_image(6)">6</a></li>
+<li><a href="#" onclick="return show_image(7)">7</a></li>
+<li><a href="#" onclick="return show_image(8)">8</a></li>
+<li><a href="#" onclick="return show_image(9)">9</a></li>
+<li><a href="#" onclick="return show_image(10)">10</a></li>
+<li><a href="#" onclick="return show_image(11)">11</a></li>
+<li><a href="#" onclick="return show_image(12)">12</a></li>
+<li><a href="#" onclick="return show_image(13)">13</a></li>
+</ul>
+
+</body>
+</html>
