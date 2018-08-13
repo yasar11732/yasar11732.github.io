@@ -23,7 +23,7 @@ Programın Py2 versiyonuyla ilgilenmek isteyeniniz varsa, github'dan fork etmeyi
 Programı kullanmak için PIL kütüphanesine ihtiyacınız olacak. Windows için gerekli kurulum dosyalarını [Gayri-resmi Python kurumları](http://www.lfd.uci.edu/~gohlke/pythonlibs/)
 sayfasından ulaşabilirsiniz. Linux için hangi paketleri yüklemek gerekir henüz tam emin değilim, kendi dağıtımınızın paketlerini biraz kurcalayın.
 
-<a href="http://i.imgur.com/KHkV5Uq.png" target="_blank"><img src="http://i.imgur.com/KHkV5Uq.png"/ style="width:850px"></a>
+![Program Ekran Görüntüsü](/images/KHkV5Uq.png)
 
 Program yukarıdaki resimde gördüğünüz gibi bir arayüze sahip. Sol üstteki yazı kutucuklarına istediğiniz parametleri girdikten sonra, Enter'a veya
 alttaki render tuşuna basarak, ortadaki görüntüyü güncelleyebilirsiniz. Kutucuklar şu işlere yarıyor;
