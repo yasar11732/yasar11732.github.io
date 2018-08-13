@@ -58,7 +58,7 @@ Fraktal çizmek için ise, en basit yol, recursive fonksiyon kullanmak. Mesela, 
 	
 Şöyle bir resim oluşması gerekiyor;
 
-![fractal tree](http://i.imgur.com/Tk1EIT2.png)
+![fractal tree](/images/Tk1EIT2.png)
 
 Her ne kadar recursive fonksiyonlar basit olsa da, şekiller karmaşıklaştıkça uygulaması daha zor olabilir. Bunun yerine, fraktal çizmek
 için L-Sistemi denilen bir sistem kullanacağız. Eğer fraktal meraklısı bir insansanız, L-sistemini zaten duymuşsunuzdur. Bilmeyenler için kısaca
@@ -84,12 +84,12 @@ içinde yenilenmenin kuralını, L-Sistemi ile belirleyip, kaplumbağa'ya o şek
 
 Örnek olarak, Koch Snowflake şeklinin ilk 3 adımına bakalım.
 
-![Koch Snowflake](http://i.imgur.com/SkDploA.png)
+![Koch Snowflake](/images/SkDploA.png)
 
 Evet, önce düz bir çizgi ile başladık, daha sonra bu çizgiyi 3'e bölüp, ortadaki kısmı silip, üstüne bir eşkanar üçgen yerleştirdik. Daha sonra da, her çizgi bölümü
 için, bunu tekrarlıyoruz. Eğer aynı işlemi 6. adıma kadar devam edersek, şöyle bir şekil elde ediyoruz.
 
-![Koch Snowflake step 5](http://i.imgur.com/pjJe1XX.png)
+![Koch Snowflake step 5](/images/pjJe1XX.png)
 
 Şimdi de bu işlemi, L-Sisteminde nasıl ifade edebileceğimize bakalım;
 
@@ -313,6 +313,6 @@ Buradaki ana fikirden yola çıkarak, farklı fraktallar çizmek için kullanıl
 
 Bunlar da sonuçlarımız;
 
-<a href="http://i.imgur.com/4hyocnt.png"><img src="http://i.imgur.com/4hyocnt.png" style="width:850px"></a>
+![Sonuçlar](/images/4hyocnt.png)
 
 Peki ya bundan sonra? Daha farklı fraktal şekiller çizmek için yeni L-sistemi kuralları araştırılabilir. Eğer yeni şekiller eklersem, onları da daha sonra paylaşırım.

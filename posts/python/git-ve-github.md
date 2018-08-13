@@ -43,13 +43,13 @@ getireceği için, ben önce github deposu oluşturarak başlamayı tercih ediyo
 sıkıntı yaşamayacağınızı varsayıyorum. Üye girişi yaptıktan sonra, ana sayfada, yeşil bir <span style="background: #5ca941; color: #fff">+ New repository</span>
 butonu görecekseniz ([Göremeyenler, buraya tıklasın](https://github.com/repositories/new)). Aşağıdaki gibi bir form karşınıza gelecek, bunu doldurun.
 
-![Github new repository](http://i.imgur.com/HQlxjt7.png)
+![Github new repository](/images/HQlxjt7.png)
 
 Burada çok açıklayacak birşey yok. Depoyu, otomatik olarak, readme, lisans ve .gitignore dosyaları oluşturacak şekilde ayarladım. Siz de
 bu şekilde ayarlarsanız, yapmanız gereken amelelik bir nebze azalacaktır. <span style="background: #5ca941; color: #fff">Create Repository</span>
 dedikten sonra, şuna benzer bir deponun oluşması gerekiyor.
 
-![Github, fresh repository](http://i.imgur.com/I1dc1hu.png)
+![Github, fresh repository](/images/I1dc1hu.png)
 
 Oradaki 3 dosya, biraz önce yaptığımız ayarladan dolayı orda. Tamamen boş bir depo da oluşturabilirdik.
 
@@ -272,7 +272,7 @@ klonlayıp, değişikler yapıp, bunları github'a geri yükleyebilirsiniz. Kola
 Deponun ana ekranından, gereksiz.txt'ye tıklarsanız, yukarıda edit linki göreceksiniz. Böylece, doğrudan github üzerinden değişiklik yapıp bunları
 commit edebilirsiniz. En aşağıda, commit mesajını girip, commit changes tuşuna basmanız yeterli.
 
-Kendi deponuzun ana sayfasına geldinizde, ![](http://i.imgur.com/muHsTuC.png) benzeri bir tuş göreceksiniz. Bu tuş, orijinal deponun sahibine
+Kendi deponuzun ana sayfasına geldinizde, ![Pull Request](/images/muHsTuC.png) benzeri bir tuş göreceksiniz. Bu tuş, orijinal deponun sahibine
 kendi deponuzda yaptığınız değişikleri bildirip, ben bunları yaptım, sen de bunları kendi depona al demek oluyor. Bu tuşa tıklayıp, bana bir pull
 request gönderin. Eğer yaptığınız değişiklikleri beğenirsem, merge ederim (sizin değişikliklerinizi kendi depoma dahil ederim).
 
