@@ -1,8 +1,8 @@
 <!--
 .. date: 2018/08/16 21:38:00
 .. slug: euler-9
-.. title: (Euler 9) Fibonacci Üçlüsü
-.. description: Bir dizi sayı içerisinde, çarpımı en yüksek alt diziyi bulacağız
+.. title: (Euler 9) Pisagot Üçlüsü
+.. description: Toplamı 1000 eden Pisagor üçlüsünü bulacağız
 .. tags: mathjax
 -->
 
