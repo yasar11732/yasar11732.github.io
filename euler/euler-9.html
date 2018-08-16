@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Bir dizi sayı içerisinde, çarpımı en yüksek alt diziyi bulacağız">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>(Euler 9) Fibonacci Üçlüsü | Python, Yazılım, ve Programlama</title>
+<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/html4css1.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/euler/euler-9.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><link rel="stylesheet" type="text/css" href="../styles/main.css">
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-3760371725357973",
+    enable_page_level_ads: true
+  });
+</script><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="euler-8.html" title="(Euler 8) Çarpımı en büyük alt dizi" type="text/html">
+<meta property="og:site_name" content="Python, Yazılım, ve Programlama">
+<meta property="og:title" content="(Euler 9) Fibonacci Üçlüsü">
+<meta property="og:url" content="http://ysar.net/euler/euler-9.html">
+<meta property="og:description" content="Bir dizi sayı içerisinde, çarpımı en yüksek alt diziyi bulacağız">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-08-16T21:38:00+03:00">
+<meta property="article:tag" content="mathjax">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ana içeriğe geç</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://ysar.net/">
+
+                <span id="blog-title">Python, Yazılım, ve Programlama</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../yasar-arabaci.html">Hakkımda</a>
+                </li>
+<li>
+<a href="../soru-cevap.html">Soru-Cevap</a>
+                </li>
+<li>
+<a href="../archive.html">Arşiv</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS kaynağı</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search with google--><form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+<input type="hidden" name="q" value="site:http://ysar.net/"><input type="text" name="q" maxlength="255" results="0" placeholder="Search">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="euler-9.md" id="sourcelink">Kaynak</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">(Euler 9) Fibonacci Üçlüsü</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2018-08-16T21:38:00+03:00" itemprop="datePublished" title="2018-08-16 21:38">2018-08-16 21:38</time></a></p>
+            
+        <p class="sourceline"><a href="euler-9.md" class="sourcelink">Kaynak</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Pisagor üçlüsü \(a^2 + b^2 = c^2\) eşiliğini sağlayan \(a &lt; b &lt; c\) üçlüsüne verilen isimdir. Örneğin, \(3^2 + 4^2 = 9+16 = 25 = 5^2\) gibi.</p>
+<p>\(a+b+c=1000\) olan tek bir pisagor üçlüsü vardır. Bu üçlüde \(a \cdot b \cdot c\) çarpımını bulunuz. <!-- TEASER_END --></p>
+<p>İlk akla gelen yöntem, teker teker tüm ihtimalleri denemek.</p>
+<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+
+<span class="k">def</span> <span class="nf">euler9</span><span class="p">():</span>
+
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1001</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+
+            <span class="n">c</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">a</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">b</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span> <span class="o">==</span> <span class="mi">1000</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+</pre>
+
+
+<p>Her zamanki gibi, Euler Problemlerinde ilk akla gelenden daha iyisi var. \(a^2 + b^2 = c^2\) eşitliğini sağlayan terimlerin her birini
+sabit bir sayıyla çarpığınızda eşitlik bozulmaz. Şu şekilde gösterelim;</p>
+<p>$$\begin{align}
+a^2 + b^2 = c^2 &amp;&amp; \text{Bunu doğru kabul ediyoruz.} \\
+k^2(a^2 + b^2) = k^2 \cdot c^2 &amp;&amp; \text{Eşitliğin her iki tarafını } k^2 \text{ ile çarpalım} \\
+k^2 \cdot a^2 + k^2 \cdot b^2 = k^2 \cdot c^2 &amp;&amp; k^2 \text{ terimini parantez içine dağıtalım} \\
+(k \cdot a)^2 + (k \cdot b)^2 = (k \cdot c)^2 &amp;&amp; \text{kareli terimleri parantez içine gruplarsak, önermemizi kanıtlamış olduk.}
+\end{align}$$</p>
+<p>O halde, eğer \(a^2 + b^2 = c^2\) olduğunda \(\frac{1000}{a + b + c} = k\) dersek, \((k \cdot a)^2 + (k \cdot b)^2 = (k \cdot c)^2 \)
+eşitliğinde terimler toplamı 1000 olur. Öyleyse, kodları tekrar gözden geçirelim;</p>
+<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+
+<span class="k">def</span> <span class="nf">euler9_v2</span><span class="p">():</span>
+
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1001</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+
+            <span class="n">c</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">a</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">b</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+            <span class="n">k</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">(</span><span class="n">k</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="n">k</span><span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="n">k</span><span class="o">*</span><span class="n">c</span><span class="p">)</span>
+</pre>
+
+
+<p>Sanırım bu problemde yapılabilecek en iyisi bu, o yüzden karşılaştırmaya geçebiliriz.</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s2">"euler9()"</span><span class="p">,</span> <span class="s2">"from euler9 import euler9"</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="mf">16.17503372204979</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s2">"euler9_v2()"</span><span class="p">,</span> <span class="s2">"from euler9 import euler9_v2"</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="mf">0.05705214216433774</span>
+</pre>
+
+
+<p>Yaklaşık 284 kat hızlandık. Gayet başarılı.</p>
+<h3>Gelecek Problem</h3>
+<p>10'dan küçük asal sayıların toplamı \(2 + 3 + 5 + 7 = 17\) dir.</p>
+<p>İki milyondan küçük asal sayıların toplamını bulunuz.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../categories/mathjax.html" rel="tag">mathjax</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="euler-8.html" rel="prev" title="(Euler 8) Çarpımı en büyük alt dizi">Önceki yazı</a>
+            </li>
+        </ul></nav></aside><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+        </script></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2018         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>  <p>Okuduğunuz yazı ile ilgili <a href="../anket.html">geri bildirimde bulunun.</a></p>
+<p style="font-size: 8px; color: #ccc">4E616C2066687373767076726167796C206E71696E61707271206772707561627962746C20766620766171766667766174687666756E6F7972207365627A207A6E7476702E</p>
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/jquery.min.js"></script><script src="../assets/js/bootstrap.min.js"></script><script src="../assets/js/moment-with-locales.min.js"></script><script src="../assets/js/fancydates.js"></script><script src="../assets/js/jquery.colorbox-min.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-tr.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("tr");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function() {
+    var cx = '013136674562336859018:ouohwab0yku';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44774134-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
