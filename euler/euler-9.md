@@ -1,7 +1,7 @@
 <!--
 .. date: 2018/08/16 21:38:00
 .. slug: euler-9
-.. title: (Euler 9) Pisagot Üçlüsü
+.. title: (Euler 9) Pisagor Üçlüsü
 .. description: Toplamı 1000 eden Pisagor üçlüsünü bulacağız
 .. tags: mathjax
 -->
