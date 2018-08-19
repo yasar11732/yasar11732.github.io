@@ -27,7 +27,7 @@
  </url>
  <url>
   <loc>http://ysar.net/2018/index.html</loc>
-  <lastmod>2018-08-16T20:21:00Z</lastmod>
+  <lastmod>2018-08-19T21:53:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/algoritma/4-renk-teoremi-ve-harita-boyama.html</loc>
@@ -79,15 +79,15 @@
  </url>
  <url>
   <loc>http://ysar.net/archive.html</loc>
-  <lastmod>2018-08-16T19:21:00Z</lastmod>
+  <lastmod>2018-08-19T18:43:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/categories/index.html</loc>
-  <lastmod>2018-08-16T19:21:00Z</lastmod>
+  <lastmod>2018-08-19T18:43:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/categories/mathjax.html</loc>
-  <lastmod>2018-08-16T20:21:00Z</lastmod>
+  <lastmod>2018-08-19T21:53:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/diger/devlet-siteleri.html</loc>
@@ -104,6 +104,10 @@
  <url>
   <loc>http://ysar.net/euler/euler-1.html</loc>
   <lastmod>2018-08-12T19:40:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://ysar.net/euler/euler-10.html</loc>
+  <lastmod>2018-08-19T21:53:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/euler/euler-2.html</loc>
@@ -139,11 +143,15 @@
  </url>
  <url>
   <loc>http://ysar.net/euler/euler-9.html</loc>
-  <lastmod>2018-08-16T20:21:00Z</lastmod>
+  <lastmod>2018-08-19T18:43:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://ysar.net/euler/index-1.html</loc>
+  <lastmod>2018-08-19T18:43:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/euler/index.html</loc>
-  <lastmod>2018-08-16T20:21:00Z</lastmod>
+  <lastmod>2018-08-19T21:53:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/index-1.html</loc>
@@ -159,7 +167,7 @@
  </url>
  <url>
   <loc>http://ysar.net/index-12.html</loc>
-  <lastmod>2018-08-16T19:21:00Z</lastmod>
+  <lastmod>2018-08-19T18:43:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/index-2.html</loc>
@@ -195,7 +203,7 @@
  </url>
  <url>
   <loc>http://ysar.net/index.html</loc>
-  <lastmod>2018-08-16T20:21:00Z</lastmod>
+  <lastmod>2018-08-19T21:53:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/python/5-django-ipucu.html</loc>

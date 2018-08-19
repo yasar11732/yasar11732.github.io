@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="2 milyondan küçük asal sayıları toplayacağız">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>(Euler 10) Asal Sayılar Toplamı | Python, Yazılım, ve Programlama</title>
+<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/html4css1.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/euler/euler-10.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><link rel="stylesheet" type="text/css" href="../styles/main.css">
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-3760371725357973",
+    enable_page_level_ads: true
+  });
+</script><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="euler-9.html" title="(Euler 9) Pisagor Üçlüsü" type="text/html">
+<meta property="og:site_name" content="Python, Yazılım, ve Programlama">
+<meta property="og:title" content="(Euler 10) Asal Sayılar Toplamı">
+<meta property="og:url" content="http://ysar.net/euler/euler-10.html">
+<meta property="og:description" content="2 milyondan küçük asal sayıları toplayacağız">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-08-19T21:38:00+03:00">
+<meta property="article:tag" content="mathjax">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ana içeriğe geç</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://ysar.net/">
+
+                <span id="blog-title">Python, Yazılım, ve Programlama</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../yasar-arabaci.html">Hakkımda</a>
+                </li>
+<li>
+<a href="../soru-cevap.html">Soru-Cevap</a>
+                </li>
+<li>
+<a href="../archive.html">Arşiv</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS kaynağı</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search with google--><form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+<input type="hidden" name="q" value="site:http://ysar.net/"><input type="text" name="q" maxlength="255" results="0" placeholder="Search">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="euler-10.md" id="sourcelink">Kaynak</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">(Euler 10) Asal Sayılar Toplamı</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2018-08-19T21:38:00+03:00" itemprop="datePublished" title="2018-08-19 21:38">2018-08-19 21:38</time></a></p>
+            
+        <p class="sourceline"><a href="euler-10.md" class="sourcelink">Kaynak</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>10'dan küçük asal sayıların toplamı \(2 + 3 + 5 + 7 = 17\) dir.</p>
+<p>İki milyondan küçük asal sayıların toplamını bulunuz. <!-- TEASER_END --></p>
+<p>Bir başka asal sayı problemi. <a href="euler-7.html">7. Euler Problemi çözümünde</a> yazdığımız <code>basit_sieve2</code> fonksiyonu ile bu problemi
+kolayca çözebiliriz.</p>
+<pre class="code literal-block"><span></span><span class="k">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">basit_sieve2</span><span class="p">(</span><span class="mi">2000000</span><span class="p">))</span>
+</pre>
+
+
+<p>Bu problemin çözümünü bu kadar kısa tutmamak için, klasik kalbur yöntemine yapılabilecek geliştirmeleri biraz araştırdım. Sonuç olarak, aşağıdaki
+fonksiyonu yazdım. (<a href="https://stackoverflow.com/a/3035188/886669">Stackoverflowda daha hızlı çalışan fonksiyonlar var</a> ancak, daha anlaşılır olması
+açısından, kendi yazdığım versiyonu kullanacağım.)</p>
+<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">basit_sieve3</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
+    <span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+    <span class="n">candidates</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+    <span class="n">candidates</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">limit</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">c</span><span class="p">:</span>
+            <span class="n">candidates</span><span class="p">[(</span><span class="n">c</span><span class="o">*</span><span class="n">c</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="o">*</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">((</span><span class="n">limit</span> <span class="o">-</span> <span class="n">c</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">6</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">candidates</span><span class="p">[(</span><span class="n">c</span> <span class="o">*</span> <span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="mi">4</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">%</span><span class="mi">3</span><span class="o">==</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="o">*</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">((</span><span class="n">limit</span> <span class="o">-</span> <span class="n">c</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="mi">4</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">%</span><span class="mi">3</span><span class="o">==</span><span class="mi">2</span><span class="p">))</span> <span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">6</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">x</span><span class="p">]</span>
+</pre>
+
+
+<p>İlk görüşte bir hayli karışık geliyor, ancak, parça parça incelediğimizde her şey anlaşılır olacak. Öncelikle, burada yapılan optimizasyonun
+ana fikrini anlamak için, <a href="euler-3.html"><code>basit_sieve</code></a> ve <a href="euler-7"><code>basit_sieve2</code></a> fonksiyonlarını karşılaştıralım.</p>
+<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+<span class="k">def</span> <span class="nf">basit_sieve</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
+    <span class="n">sieve_limit</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+
+    <span class="n">primes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">next_prime</span> <span class="o">=</span> <span class="n">candidates</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">primes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_prime</span><span class="p">)</span>
+        <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="n">next_prime</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">next_prime</span> <span class="o">&gt;</span> <span class="n">sieve_limit</span><span class="p">:</span>
+            <span class="n">primes</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
+            <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">return</span> <span class="n">primes</span>
+
+<span class="k">def</span> <span class="nf">basit_sieve2</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
+
+    <span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
+    <span class="n">limit_sq_root</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">limit</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">c</span> <span class="o">&gt;</span> <span class="n">limit_sq_root</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
+            <span class="n">slice_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">candidates</span><span class="p">[</span><span class="n">i</span><span class="p">::</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">slice_size</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+</pre>
+
+
+<p>Burada dikkat çekmek istediğim kısım, muhtemel asal sayı listelerinin nasıl oluşturulduğu. Önceki versiyonda, <code>candidates = range(2, limit+1)</code> iken,
+sonraki versiyonda <code>candidates = range(3, limit+1, 2)</code> olarak yazdık. İkinci versiyonda, 3'den başlayarak, sadece tek sayıları listeledik. Bunun
+nedeni, çift sayıların asal sayı olamayacağını biliyor olmamız. Peki, bu fikri daha ileriye götürebilir miyiz? Mesela, 2 ve 3'ün katları olmayan
+sayıları listeleyerek başlayabilir miyiz? Evet, yapabiliriz. </p>
+<pre class="code literal-block"><span></span><span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="n">candidates</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="n">candidates</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+</pre>
+
+
+<p>Bu kodlar çalıştıdığında, örneğin <code>limit = 50</code> ise, <code>candidates = [5, 7, 11, 13, 17, 19, 23, 25, 29, 31, 35, 37, 41, 43, 47, 49]</code> olacak. Peki, bunun
+avantajı ne? Üzerinde çalıştığımız listenin uzunluğu, limitimizin üçte birine düştü. Bu avantajla birlikte, başka bir komplikasyon karşımıza çıkıyor.
+Listede olması gereken sayıların üçte ikisi yerinde olmadığı için, indekslerin ona göre kayıdırılması lazım. Aşağıdaki kısımların yaptığı da tam olarak bu;</p>
+<pre class="code literal-block"><span></span><span class="n">candidates</span><span class="p">[(</span><span class="n">c</span><span class="o">*</span><span class="n">c</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="o">*</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">((</span><span class="n">limit</span> <span class="o">-</span> <span class="n">c</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">6</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">candidates</span><span class="p">[(</span><span class="n">c</span> <span class="o">*</span> <span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="mi">4</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">%</span><span class="mi">3</span><span class="o">==</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="o">*</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">((</span><span class="n">limit</span> <span class="o">-</span> <span class="n">c</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="mi">4</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">%</span><span class="mi">3</span><span class="o">==</span><span class="mi">2</span><span class="p">))</span> <span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">6</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+</pre>
+
+
+<p>Kodların karmaşasını ortadan kaldırmak için, küçük parçalar halinde inceleyeceğiz. Öncelikle, eskiden, asal sayı olmayan sayıları bir hamlede
+elekten geçirirken (<code>candidates[i::c] = [0] * slice_size</code>), şimdi, bunu iki kısım halinde yapıyoruz. Böylece, elememiz gereken sayıların indekslerini
+çok daha kolay bir şekilde hesaplayabileceğiz. Bu işlemi iki parçada yaptığımız için, dilimlemede kullandığımız adım, <code>c</code> yerine <code>2*c</code> oldu. Önceki
+seferde olduğu gibi, asal sayıların katlarını elemeye, o döngüde bulduğumuz asal sayının karesi ile başlıyoruz. Ancak, sayıların üçte ikisi yerinde
+olmadığında, asal sayının karesinin listedeki yerini <code>c*c/3</code> olarak hesapladık. Sıfır tabanlı indeksleme yaptığımız için, <code>-1</code> eklememiz
+gerekti. <code>((limit - c*c)/(6*c)+1)</code> kısmı ise, klasik ardışık sayılarda terim sayısı formülü (\(\text{terim sayisi} = \frac{\text{son terim} - \text{ilk terim}}{\text{artis miktari}} + 1\))
+Artış miktarı <code>6*c</code> çünkü, listede <code>2*c</code> adımlar atıyoruz, ve sayıların <code>1/3</code>ü yerinde yok.</p>
+<p>Asıl bomba şimdi geliyor. İkinci kısımdaki başlangıç noktasını bulmak için, asal sayıyı, ya iki fazlasıyla, ya da dört fazlasıyla çarpacağız. Nedenine gelirsek,
+eğer bulduğumuz asal sayının iki fazlası, 3'ün tam katı ise, <code>c * (c+2)</code>listede bulunmayacaktır. Çünkü, 3'ün katların daha listeyi oluştururken elemiştik. Peki, 2 veya 4 olduğuna
+nasıl karar vereceğiz? Öncelikle, ardışık tek sayıların mod 3'deki değerlerine bir göz atalım. </p>
+<p>$$
+\begin{align}
+5 \equiv 2 &amp;(mod 3)\\
+7 \equiv 1 &amp;(mod 3)\\
+9 \equiv 0 &amp;(mod 3)\\
+11 \equiv 2 &amp;(mod 3)\\
+13 \equiv 1 &amp;(mod 3)\\
+\end{align}
+$$</p>
+<p>Yukarıdaki denklikleri incelersek, \(n \equiv 2 (mod 3)\) olduğunda 2 artırmamız, \(n \equiv 1 (mod 3)\) olduğunda ise 4 artırmamız gerektiği
+anlaşılıyor. \(n \equiv 0 (mod 3)\) olduduğu bir durum olamaz, çünkü, bu sayıları zaten baştan eledik. <code>c+4-2*(c%3==2)</code> ifadesi, <code>c</code>nin değerine
+göre, <code>c+2</code> veya <code>c+4</code> sayılarına eşit oluyor. Böylece, başlangıç noktasını hesaplayabiliyoruz. Programın geri kalanının, daha önce gördüklerimizden
+bir farkı yok. Şimdi de, zamanlamaya bir göz atalım.</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">timeit</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s2">"sum(basit_sieve2(2000000))"</span><span class="p">,</span> <span class="s2">"from euler10 import basit_sieve2"</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="mf">29.754030365461645</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s2">"sum(basit_sieve3(2000000))"</span><span class="p">,</span> <span class="s2">"from euler10 import basit_sieve3"</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="mf">24.98745897986229</span>
+</pre>
+
+
+<p>Yaklaşık yüzde 16 hız kazandık. Fonksiyonumuzun zaten bir hayli hızlı olduğunu göz önünde bulundurursak, gayet iyi bir performans artışı.</p>
+<h3>Kaynakça</h3>
+<ul>
+<li><a href="https://www.cs.hmc.edu/~oneill/papers/Sieve-JFP.pdf">The Genuine Sieve of Eratosthenes</a></li>
+<li><a href="http://eprints.whiterose.ac.uk/3784/1/runcimanc1.pdf">Lazy wheel sieves and spirals of primes</a></li>
+<li><a href="https://stackoverflow.com/a/3035188/886669">Fastest way to list all primes below N</a></li>
+</ul>
+<h3>Gelecek Problem</h3>
+<p>Aşağıdaki 20x20 şeklinde dizilmiş sayılardan, köşegen üzerinde bulunan 4 tanesi kırmızıyla işaretlenmiştir.</p>
+<p style="font-family:'courier new';text-align:center;font-size:10pt;">
+08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08<br>
+49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00<br>
+81 49 31 73 55 79 14 29 93 71 40 67 53 88 30 03 49 13 36 65<br>
+52 70 95 23 04 60 11 42 69 24 68 56 01 32 56 71 37 02 36 91<br>
+22 31 16 71 51 67 63 89 41 92 36 54 22 40 40 28 66 33 13 80<br>
+24 47 32 60 99 03 45 02 44 75 33 53 78 36 84 20 35 17 12 50<br>
+32 98 81 28 64 23 67 10 <span style="color:#ff0000;"><b>26</b></span> 38 40 67 59 54 70 66 18 38 64 70<br>
+67 26 20 68 02 62 12 20 95 <span style="color:#ff0000;"><b>63</b></span> 94 39 63 08 40 91 66 49 94 21<br>
+24 55 58 05 66 73 99 26 97 17 <span style="color:#ff0000;"><b>78</b></span> 78 96 83 14 88 34 89 63 72<br>
+21 36 23 09 75 00 76 44 20 45 35 <span style="color:#ff0000;"><b>14</b></span> 00 61 33 97 34 31 33 95<br>
+78 17 53 28 22 75 31 67 15 94 03 80 04 62 16 14 09 53 56 92<br>
+16 39 05 42 96 35 31 47 55 58 88 24 00 17 54 24 36 29 85 57<br>
+86 56 00 48 35 71 89 07 05 44 44 37 44 60 21 58 51 54 17 58<br>
+19 80 81 68 05 94 47 69 28 73 92 13 86 52 17 77 04 89 55 40<br>
+04 52 08 83 97 35 99 16 07 97 57 32 16 26 26 79 33 27 98 66<br>
+88 36 68 87 57 62 20 72 03 46 33 67 46 55 12 32 63 93 53 69<br>
+04 42 16 73 38 25 39 11 24 94 72 18 08 46 29 32 40 62 76 36<br>
+20 69 36 41 72 30 23 88 34 62 99 69 82 67 59 85 74 04 36 16<br>
+20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54<br>
+01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48<br></p>
+
+<p>Bu sayıların çarpımı 26 × 63 × 78 × 14 = 1788696 yapar.</p>
+<p>Bu sayıların içerisinde, yatay, dikey veya çapraz olarak ardışık
+4 sayının çarpımı en fazla kaçtır?</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../categories/mathjax.html" rel="tag">mathjax</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="euler-9.html" rel="prev" title="(Euler 9) Pisagor Üçlüsü">Önceki yazı</a>
+            </li>
+        </ul></nav></aside><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+        </script></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2018         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>  <p>Okuduğunuz yazı ile ilgili <a href="../anket.html">geri bildirimde bulunun.</a></p>
+<p style="font-size: 8px; color: #ccc">4E616C2066687373767076726167796C206E71696E61707271206772707561627962746C20766620766171766667766174687666756E6F7972207365627A207A6E7476702E</p>
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/jquery.min.js"></script><script src="../assets/js/bootstrap.min.js"></script><script src="../assets/js/moment-with-locales.min.js"></script><script src="../assets/js/fancydates.js"></script><script src="../assets/js/jquery.colorbox-min.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-tr.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("tr");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  (function() {
+    var cx = '013136674562336859018:ouohwab0yku';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44774134-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
