@@ -1,5 +1,5 @@
 <!--
-.. date: 2018/08/19 21:38:00
+.. date: 2018/08/20 00:57:00
 .. slug: euler-10
 .. title: (Euler 10) Asal Sayılar Toplamı
 .. description: 2 milyondan küçük asal sayıları toplayacağız
