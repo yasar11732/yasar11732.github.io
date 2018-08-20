@@ -679,14 +679,15 @@ SEARCH_FORM = """
 EXTRA_HEAD_DATA = """
 <link rel="stylesheet" type="text/css" href="/styles/main.css">
 <script>
-   if(document.location.hostname == "ysar.net")
-   {
-      document.write('<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"><\/script>')
+if(document.location.hostname == "ysar.net")
+    document.write('<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"><\/script>');
+</script>
+<script>
+
      (adsbygoogle = window.adsbygoogle || []).push({
         google_ad_client: "ca-pub-3760371725357973",
         enable_page_level_ads: true
       });
-   }
 
 </script>
 """
