@@ -16,11 +16,16 @@
 <link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
 <link rel="canonical" href="http://ysar.net/yazilim-dunyasi/bitly-php-kutuphane.html">
 <!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><link rel="stylesheet" type="text/css" href="../styles/main.css">
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>
-  (adsbygoogle = window.adsbygoogle || []).push({
-    google_ad_client: "ca-pub-3760371725357973",
-    enable_page_level_ads: true
-  });
+<script>
+   if(document.location.hostname == "ysar.net")
+   {
+      document.write('<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"><\/script>')
+     (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-3760371725357973",
+        enable_page_level_ads: true
+      });
+   }
+
 </script><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="bitly-php-library.html" title="Announcing php library for bitly api" type="text/html">
 <link rel="next" href="real-scientists-make-their-own-data.html" title="Real scientists make their own data" type="text/html">
@@ -242,24 +247,27 @@ bırakıyorum. Kolay gele...</p>
     moment.locale("tr");
     fancydates(0, "YYYY-MM-DD HH:mm");
     </script><!-- end fancy dates --><script>
-  (function() {
-    var cx = '013136674562336859018:ouohwab0yku';
-    var gcse = document.createElement('script');
-    gcse.type = 'text/javascript';
-    gcse.async = true;
-    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
-        '//www.google.com/cse/cse.js?cx=' + cx;
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(gcse, s);
-  })();
-</script><script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  if(document.location.hostname == "ysar.net")
+  {
+      (function() {
+        var cx = '013136674562336859018:ouohwab0yku';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+      
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-44774134-1', 'auto');
-  ga('send', 'pageview');
+          ga('create', 'UA-44774134-1', 'auto');
+          ga('send', 'pageview');
+  }
 
 </script>
 </body>

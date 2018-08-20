@@ -16,11 +16,16 @@
 <link rel="canonical" href="http://ysar.net/euler/index-1.html">
 <link rel="prev" href="index.html" type="text/html">
 <!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><link rel="stylesheet" type="text/css" href="../styles/main.css">
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>
-  (adsbygoogle = window.adsbygoogle || []).push({
-    google_ad_client: "ca-pub-3760371725357973",
-    enable_page_level_ads: true
-  });
+<script>
+   if(document.location.hostname == "ysar.net")
+   {
+      document.write('<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"><\/script>')
+     (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-3760371725357973",
+        enable_page_level_ads: true
+      });
+   }
+
 </script><link rel="alternate" type="application/rss+xml" title="RSS for section_index euler" href="rss.xml">
 </head>
 <body>
@@ -85,7 +90,25 @@
             </p>
 
     </header><div class="postindex">
-    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="euler-1.html" class="u-url">(Euler 1) 3 ve 5'in katları</a></h1>
+    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="euler-2.html" class="u-url">(Euler 2) Çift Fibonacci Sayıları</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="euler-2.html" rel="bookmark"><time class="published dt-published" datetime="2018-07-18T23:21:00+03:00" title="2018-07-18 23:21">2018-07-18 23:21</time></a></p>
+        </div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<p><a href="https://projecteuler.net/problem=2">Project Eulerdeki 2 numaralı problem</a> şu şekilde; Fibonacci dizisinde her bir sayı, kendinden
+önce gelen iki sayının toplamı alınarak bulunur. 1 ve 2 ile başlayarak, ilk 10 sayı şu şekildedir;</p>
+<p>$$
+    1,2,3,5,8,13,21,34,55,89, ...
+$$</p>
+<p>dört milyonu geçmeyen fibonacci sayıları içerisinde, çift olanlarının toplamını bulunuz. </p>
+<p class="more"><a href="euler-2.html">Devamını oku…</a></p>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="euler-1.html" class="u-url">(Euler 1) 3 ve 5'in katları</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Yaşar Arabacı
@@ -108,7 +131,9 @@ düşünüyorum. Python kullanarak programlama öğrenmek isteyen arkadaşlara f
 <li class="previous">
                 <a href="index.html" rel="prev">Daha yeni yazılar</a>
             </li>
-        </ul></nav>
+        </ul></nav><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+        </script>
 </div>
 
         </div>
@@ -127,24 +152,27 @@ düşünüyorum. Python kullanarak programlama öğrenmek isteyen arkadaşlara f
     moment.locale("tr");
     fancydates(0, "YYYY-MM-DD HH:mm");
     </script><!-- end fancy dates --><script>
-  (function() {
-    var cx = '013136674562336859018:ouohwab0yku';
-    var gcse = document.createElement('script');
-    gcse.type = 'text/javascript';
-    gcse.async = true;
-    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
-        '//www.google.com/cse/cse.js?cx=' + cx;
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(gcse, s);
-  })();
-</script><script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  if(document.location.hostname == "ysar.net")
+  {
+      (function() {
+        var cx = '013136674562336859018:ouohwab0yku';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+      
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-44774134-1', 'auto');
-  ga('send', 'pageview');
+          ga('create', 'UA-44774134-1', 'auto');
+          ga('send', 'pageview');
+  }
 
 </script>
 </body>

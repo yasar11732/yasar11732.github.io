@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="20x20 dizilmiş sayıların içinde, yatay, dikey veya çapraz olarak ardışık 4 sayının çarpımı en fazla kaç olabilir?">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>(Euler 11) 11. Euler Problemi Çözümü | Python, Yazılım, ve Programlama</title>
+<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/html4css1.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/euler/euler-11.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><link rel="stylesheet" type="text/css" href="../styles/main.css">
+<script>
+   if(document.location.hostname == "ysar.net")
+   {
+      document.write('<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"><\/script>')
+     (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-3760371725357973",
+        enable_page_level_ads: true
+      });
+   }
+
+</script><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="euler-10.html" title="(Euler 10) Asal Sayılar Toplamı" type="text/html">
+<meta property="og:site_name" content="Python, Yazılım, ve Programlama">
+<meta property="og:title" content="(Euler 11) 11. Euler Problemi Çözümü">
+<meta property="og:url" content="http://ysar.net/euler/euler-11.html">
+<meta property="og:description" content="20x20 dizilmiş sayıların içinde, yatay, dikey veya çapraz olarak ardışık 4 sayının çarpımı en fazla kaç olabilir?">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-08-20T17:15:00+03:00">
+<meta property="article:tag" content="mathjax">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ana içeriğe geç</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://ysar.net/">
+
+                <span id="blog-title">Python, Yazılım, ve Programlama</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../yasar-arabaci.html">Hakkımda</a>
+                </li>
+<li>
+<a href="../soru-cevap.html">Soru-Cevap</a>
+                </li>
+<li>
+<a href="../archive.html">Arşiv</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS kaynağı</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search with google--><form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+<input type="hidden" name="q" value="site:http://ysar.net/"><input type="text" name="q" maxlength="255" results="0" placeholder="Search">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="euler-11.md" id="sourcelink">Kaynak</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">(Euler 11) 11. Euler Problemi Çözümü</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2018-08-20T17:15:00+03:00" itemprop="datePublished" title="2018-08-20 17:15">2018-08-20 17:15</time></a></p>
+            
+        <p class="sourceline"><a href="euler-11.md" class="sourcelink">Kaynak</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Aşağıdaki 20x20 şeklinde dizilmiş sayılardan, köşegen üzerinde bulunan 4 tanesi kırmızıyla işaretlenmiştir.</p>
+<p style="font-family:'courier new';text-align:center;font-size:10pt;">
+08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08<br>
+49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00<br>
+81 49 31 73 55 79 14 29 93 71 40 67 53 88 30 03 49 13 36 65<br>
+52 70 95 23 04 60 11 42 69 24 68 56 01 32 56 71 37 02 36 91<br>
+22 31 16 71 51 67 63 89 41 92 36 54 22 40 40 28 66 33 13 80<br>
+24 47 32 60 99 03 45 02 44 75 33 53 78 36 84 20 35 17 12 50<br>
+32 98 81 28 64 23 67 10 <span style="color:#ff0000;"><b>26</b></span> 38 40 67 59 54 70 66 18 38 64 70<br>
+67 26 20 68 02 62 12 20 95 <span style="color:#ff0000;"><b>63</b></span> 94 39 63 08 40 91 66 49 94 21<br>
+24 55 58 05 66 73 99 26 97 17 <span style="color:#ff0000;"><b>78</b></span> 78 96 83 14 88 34 89 63 72<br>
+21 36 23 09 75 00 76 44 20 45 35 <span style="color:#ff0000;"><b>14</b></span> 00 61 33 97 34 31 33 95<br>
+78 17 53 28 22 75 31 67 15 94 03 80 04 62 16 14 09 53 56 92<br>
+16 39 05 42 96 35 31 47 55 58 88 24 00 17 54 24 36 29 85 57<br>
+86 56 00 48 35 71 89 07 05 44 44 37 44 60 21 58 51 54 17 58<br>
+19 80 81 68 05 94 47 69 28 73 92 13 86 52 17 77 04 89 55 40<br>
+04 52 08 83 97 35 99 16 07 97 57 32 16 26 26 79 33 27 98 66<br>
+88 36 68 87 57 62 20 72 03 46 33 67 46 55 12 32 63 93 53 69<br>
+04 42 16 73 38 25 39 11 24 94 72 18 08 46 29 32 40 62 76 36<br>
+20 69 36 41 72 30 23 88 34 62 99 69 82 67 59 85 74 04 36 16<br>
+20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54<br>
+01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48<br></p>
+
+<p>Bu sayıların çarpımı 26 × 63 × 78 × 14 = 1788696 yapar.</p>
+<p>Bu sayıların içerisinde, yatay, dikey veya çapraz olarak ardışık
+4 sayının çarpımı en fazla kaçtır? <!-- TEASER_END --></p>
+<p>Bu problemin çözümü için, bütün olasıkları değerlendirip, içlerinden en büyüğünü seçmek dışında bir çözüm yolumuz yok. Sol üstten
+başlayarak, herbir sayı için, 4 farklı yönde gruplar oluşturup, bunların çarpımını alacağız. Örneğin, en üst sırada, soldan dördüncü
+sütundaki 97 sayısı için, bu grupları aşağıdaki gibi olacak.</p>
+<p style="font-family:'courier new';text-align:center;font-size:10pt;">
+08 02 22 <span style="border: 1px solid black"><b>97</b></span> <span style="background-color: #0f0f0f; color: #ffffff"><b>38</b></span> <span style="background-color: #0f0f0f; color: #ffffff"><b>15</b></span> <span style="background-color: #0f0f0f; color: #ffffff"><b>00</b></span> 40 00 75 04 05 07 78 52 12 50 77 91 08<br>
+49 49 <span style="background-color: #ff0000"><b>99</b></span> <span style="background-color: #00ff00"><b>40</b></span> <span style="background-color: #0000ff; color: #ffffff"><b>17</b></span> 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00<br>
+81 <span style="background-color: #ff0000"><b>49</b></span> 31 <span style="background-color: #00ff00"><b>73</b></span> 55 <span style="background-color: #0000ff; color: #ffffff"><b>79</b></span> 14 29 93 71 40 67 53 88 30 03 49 13 36 65<br><span style="background-color: #ff0000"><b>52</b></span> 70 95 <span style="background-color: #00ff00"><b>23</b></span> 04 60 <span style="background-color: #0000ff; color: #ffffff"><b>11</b></span> 42 69 24 68 56 01 32 56 71 37 02 36 91<br>
+22 31 16 71 51 67 63 89 41 92 36 54 22 40 40 28 66 33 13 80<br>
+24 47 32 60 99 03 45 02 44 75 33 53 78 36 84 20 35 17 12 50<br>
+32 98 81 28 64 23 67 10 26 38 40 67 59 54 70 66 18 38 64 70<br>
+67 26 20 68 02 62 12 20 95 63 94 39 63 08 40 91 66 49 94 21<br>
+24 55 58 05 66 73 99 26 97 17 78 78 96 83 14 88 34 89 63 72<br>
+21 36 23 09 75 00 76 44 20 45 35 14 00 61 33 97 34 31 33 95<br>
+78 17 53 28 22 75 31 67 15 94 03 80 04 62 16 14 09 53 56 92<br>
+16 39 05 42 96 35 31 47 55 58 88 24 00 17 54 24 36 29 85 57<br>
+86 56 00 48 35 71 89 07 05 44 44 37 44 60 21 58 51 54 17 58<br>
+19 80 81 68 05 94 47 69 28 73 92 13 86 52 17 77 04 89 55 40<br>
+04 52 08 83 97 35 99 16 07 97 57 32 16 26 26 79 33 27 98 66<br>
+88 36 68 87 57 62 20 72 03 46 33 67 46 55 12 32 63 93 53 69<br>
+04 42 16 73 38 25 39 11 24 94 72 18 08 46 29 32 40 62 76 36<br>
+20 69 36 41 72 30 23 88 34 62 99 69 82 67 59 85 74 04 36 16<br>
+20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54<br>
+01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48<br></p>
+
+<p>Sınıra yakın sayılar için, bu dörtlü grupların herbirini oluşturmak mümkün olmayacak. Örneğin, sol üst köşede bulunan 08 sayısı için, sol çapraz
+grubunu oluşturmak mümkün değil. Tüm bu taramları ayrı ayrı kodlamak yerine, genel bir fonksiyon yazıp, tarama yolunu argüman olarak vererek
+çalıştırabiliriz. Yaptığımız taramanın sınır dışına çıkıp çıkmadığını, döngünün içinde kontrol etmek yerine, döngüye başlamadan kontrol etmek
+daha pratik bir yöntem olacaktır. </p>
+<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">mul</span>
+
+<span class="n">mul_list</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">tara</span><span class="p">(</span><span class="n">matris</span><span class="p">,</span> <span class="n">vektor</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Matris Koordinat Sistemi sol üstten başlayıp, sağ altta biter, 0 tabanlıdır</span>
+
+<span class="sd">    (0,0)  (0,1) (0,2) ... (0, 19)</span>
+<span class="sd">    (1,0)  (1,1) (1,2) ... (1, 19)</span>
+<span class="sd">    .</span>
+<span class="sd">    .</span>
+<span class="sd">    .</span>
+<span class="sd">    (19,0) (19,1) (19,2) ... (19, 19)</span>
+
+<span class="sd">    Matrisi Python içersinde liste listesi olarak tanımlıyacağız.</span>
+
+<span class="sd">    matris = [</span>
+<span class="sd">        [8, 2, 22, 97, 38, 15, 0, 40, 0, 75, 4, 5, 7, 78, 52, 12, 50, 77, 91, 8],</span>
+<span class="sd">        [...],</span>
+<span class="sd">        [1, 70, 54, 71, 83, 51, 54, 69, 16, 92, 33, 48, 61, 43, 52, 1, 89, 19, 67, 48]</span>
+<span class="sd">    ]</span>
+
+<span class="sd">    Vektor (0,0) dan başlayan dörtlünün bitiş koordinatıdır. Blog yazısındaki örneğe göre</span>
+<span class="sd">    yazılması gerekn vektörler</span>
+
+<span class="sd">    (3, -3) (Kırmızı dörtlü)</span>
+<span class="sd">    (3,  0) (Yeşil dörtlü)</span>
+<span class="sd">    (3,  3) (Mavi dörtlü)</span>
+<span class="sd">    (0,  3) (Siyah dörtlü)</span>
+
+
+<span class="sd">    """</span>
+
+    <span class="s2">"Matris satır ve sütun sayıları"</span>
+    <span class="n">n_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matris</span><span class="p">)</span>
+    <span class="n">n_cols</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matris</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="s2">"Tarayacağımız alan sınırları"</span>
+    <span class="n">p_row_begin</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">vektor</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">p_col_begin</span>   <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">vektor</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">p_row_end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_rows</span><span class="p">,</span> <span class="n">n_rows</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">vektor</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">p_col_end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_cols</span><span class="p">,</span> <span class="n">n_cols</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">vektor</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="s2">"Gruplamaya başladıktan sonra, elemanları bulmak için"</span>
+    <span class="s2">"atacağımız adımların satır ve sütün olarak değerleri"</span>
+    <span class="n">v_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">vektor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">vektor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="mi">1</span>
+    <span class="n">row_step</span> <span class="o">=</span> <span class="n">vektor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">v_len</span>
+    <span class="n">col_step</span> <span class="o">=</span> <span class="n">vektor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">v_len</span>
+
+    <span class="s2">"Bulduğumuz en büyük çarpım ve grup"</span>
+    <span class="n">max_product</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">max_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="s2">"İlk 2 döngü gruplamaya başlayacağımız sayının koordinatları için"</span>
+    <span class="k">for</span> <span class="n">p_row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p_row_begin</span><span class="p">,</span> <span class="n">p_row_end</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">p_col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p_col_begin</span><span class="p">,</span> <span class="n">p_col_end</span><span class="p">):</span>
+
+            <span class="s2">"Gruplamayı burada yapıyoruz."</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">v_len</span><span class="p">):</span>
+                <span class="n">group</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">matris</span><span class="p">[</span><span class="n">p_row</span><span class="o">+</span><span class="n">i</span><span class="p">][</span><span class="n">p_col</span><span class="o">+</span><span class="n">k</span><span class="p">])</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="n">row_step</span>
+                <span class="n">k</span> <span class="o">+=</span> <span class="n">col_step</span>
+
+            <span class="s2">"Gruplama bitti, çarpım eğer daha önce bulduklarımızdan fazla ise"</span>
+            <span class="s2">"yeni maksimum olarak bu grubu alalım"</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">mul_list</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">m</span> <span class="o">&gt;</span> <span class="n">max_product</span><span class="p">:</span>
+                <span class="n">max_product</span> <span class="o">=</span> <span class="n">m</span>
+                <span class="n">max_list</span> <span class="o">=</span> <span class="n">group</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">max_product</span><span class="p">,</span> <span class="n">max_list</span><span class="p">)</span>
+</pre>
+
+
+<p>İstediğimiz yönde tarama yapan fonksiyonumuzu yazdığımıza göre, 4 farklı yönde taramalarımızı yapıp, elde ettiğimiz sonuçlar içerisinde en iyisini
+bulabiliriz.</p>
+<pre class="code literal-block"><span></span><span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="k">if</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="n">y</span><span class="p">,</span>
+          <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">tara</span><span class="p">(</span><span class="n">matris</span><span class="p">,</span> <span class="n">d</span><span class="p">),</span> <span class="p">(</span>
+              <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+          <span class="p">))</span>
+      <span class="p">)</span>
+</pre>
+
+
+<p>Bu şekilde genel bir çözüm bulduğumuzda, problemin diğer varyasyonlarını da kolaylıkla çözebiliriz. Örneğin, çarpımı en büyük olan beşli
+grubu şu şekilde bulabiliriz.</p>
+<pre class="code literal-block"><span></span><span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="k">if</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="n">y</span><span class="p">,</span>
+          <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">tara</span><span class="p">(</span><span class="n">matris</span><span class="p">,</span> <span class="n">d</span><span class="p">),</span> <span class="p">(</span>
+              <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+          <span class="p">))</span>
+      <span class="p">)</span>
+</pre>
+
+
+<p>Ya da, eğer sadece yatay ve dikey dörtlüleri istiyorsak, şöyle birşey yapabiliriz.</p>
+<pre class="code literal-block"><span></span><span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="k">if</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="n">y</span><span class="p">,</span>
+          <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">tara</span><span class="p">(</span><span class="n">matris</span><span class="p">,</span> <span class="n">d</span><span class="p">),</span> <span class="p">(</span>
+            <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+          <span class="p">))</span>
+      <span class="p">)</span>
+</pre>
+
+
+<h4>Bonus (multiprocessing)</h4>
+<p>Burada çok lüzumlu olmasa da, buna benzer problemlerde problemin çözümü için gerekli işi işlemciler veya server'lar arasında dağıtmak isteyebilirsiniz.
+Yukarıda çözdüğümüz Euler Problemi, Map-Reduce mantığıyla çözmek için uygun bir problem. Map-Reduce yönteminde, önce problem belirli alt problemlere
+ayrılıp, çözülmesi için ilgili işlemci/server tarafına gönderiliyor (Map kısmı burası), daha sonra elde edilen kısmi çözümler tek bir çözüme
+indirgeniyor (Reduce kısmı burası). Ben yukarıdaki çözümü özellikle buna uygun olması için yazdım. Her bir tarama yönünü ayrı bir işlemde
+tarayıp, sonuçları ana işlem içererisinde birleştireceğiz.</p>
+<pre class="code literal-block"><span></span><span class="c1"># -*- coding: utf8 -*-</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">mul</span>
+
+<span class="n">mul_list</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="n">matris_str</span> <span class="o">=</span> <span class="s2">"""08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08</span>
+<span class="s2">49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00</span>
+<span class="s2">81 49 31 73 55 79 14 29 93 71 40 67 53 88 30 03 49 13 36 65</span>
+<span class="s2">52 70 95 23 04 60 11 42 69 24 68 56 01 32 56 71 37 02 36 91</span>
+<span class="s2">22 31 16 71 51 67 63 89 41 92 36 54 22 40 40 28 66 33 13 80</span>
+<span class="s2">24 47 32 60 99 03 45 02 44 75 33 53 78 36 84 20 35 17 12 50</span>
+<span class="s2">32 98 81 28 64 23 67 10 26 38 40 67 59 54 70 66 18 38 64 70</span>
+<span class="s2">67 26 20 68 02 62 12 20 95 63 94 39 63 08 40 91 66 49 94 21</span>
+<span class="s2">24 55 58 05 66 73 99 26 97 17 78 78 96 83 14 88 34 89 63 72</span>
+<span class="s2">21 36 23 09 75 00 76 44 20 45 35 14 00 61 33 97 34 31 33 95</span>
+<span class="s2">78 17 53 28 22 75 31 67 15 94 03 80 04 62 16 14 09 53 56 92</span>
+<span class="s2">16 39 05 42 96 35 31 47 55 58 88 24 00 17 54 24 36 29 85 57</span>
+<span class="s2">86 56 00 48 35 71 89 07 05 44 44 37 44 60 21 58 51 54 17 58</span>
+<span class="s2">19 80 81 68 05 94 47 69 28 73 92 13 86 52 17 77 04 89 55 40</span>
+<span class="s2">04 52 08 83 97 35 99 16 07 97 57 32 16 26 26 79 33 27 98 66</span>
+<span class="s2">88 36 68 87 57 62 20 72 03 46 33 67 46 55 12 32 63 93 53 69</span>
+<span class="s2">04 42 16 73 38 25 39 11 24 94 72 18 08 46 29 32 40 62 76 36</span>
+<span class="s2">20 69 36 41 72 30 23 88 34 62 99 69 82 67 59 85 74 04 36 16</span>
+<span class="s2">20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54</span>
+<span class="s2">01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48"""</span>
+
+<span class="n">matris</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">)]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">matris_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">tara</span><span class="p">(</span><span class="n">matris</span><span class="p">,</span> <span class="n">vektor</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Matris Koordinat Sistemi sol üstten başlayıp, sağ altta biter, 0 tabanlıdır</span>
+
+<span class="sd">    (0,0)  (0,1) (0,2) ... (0, 19)</span>
+<span class="sd">    (1,0)  (1,1) (1,2) ... (1, 19)</span>
+<span class="sd">    .</span>
+<span class="sd">    .</span>
+<span class="sd">    .</span>
+<span class="sd">    (19,0) (19,1) (19,2) ... (19, 19)</span>
+
+<span class="sd">    Matrisi Python içersinde liste listesi olarak tanımlıyacağız.</span>
+
+
+<span class="sd">    matris = [</span>
+<span class="sd">        [8, 2, 22, 97, 38, 15, 0, 40, 0, 75, 4, 5, 7, 78, 52, 12, 50, 77, 91, 8],</span>
+<span class="sd">        [...],</span>
+<span class="sd">        [1, 70, 54, 71, 83, 51, 54, 69, 16, 92, 33, 48, 61, 43, 52, 1, 89, 19, 67, 48]</span>
+<span class="sd">    ]</span>
+
+<span class="sd">    Vektor (0,0) dan başlayan dörtlünün bitiş koordinatıdır. Blog yazısındaki örneğe göre</span>
+<span class="sd">    yazılması gerekn vektörler</span>
+
+<span class="sd">    (3, -3) (Kırmızı dörtlü)</span>
+<span class="sd">    (3,  0) (Yeşil dörtlü)</span>
+<span class="sd">    (3,  3) (Mavi dörtlü)</span>
+<span class="sd">    (0,  3) (Siyah dörtlü)</span>
+
+
+<span class="sd">    """</span>
+    <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">vektor</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vektor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="s2">"Matris satır ve sütun sayıları"</span>
+    <span class="n">n_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matris</span><span class="p">)</span>
+    <span class="n">n_cols</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matris</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="s2">"Tarayacağımız alan sınırları"</span>
+    <span class="n">p_row_begin</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">p_col_begin</span>   <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">p_row_end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_rows</span><span class="p">,</span> <span class="n">n_rows</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">p_col_end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_cols</span><span class="p">,</span> <span class="n">n_cols</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="s2">"Gruplamaya başladıktan sonra, elemanları bulmak için"</span>
+    <span class="s2">"atacağımız adımların sayısı ve yönü"</span>
+    <span class="n">v_len</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+    <span class="n">row_step</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+    <span class="n">col_step</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+
+    <span class="s2">"Bulduğumuz en büyük çarpım ve grup"</span>
+    <span class="n">max_product</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">max_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="s2">"İlk 2 döngü gruplamaya başlayacağımız sayının koordinatları için"</span>
+    <span class="k">for</span> <span class="n">p_row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p_row_begin</span><span class="p">,</span> <span class="n">p_row_end</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">p_col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p_col_begin</span><span class="p">,</span> <span class="n">p_col_end</span><span class="p">):</span>
+
+            <span class="s2">"Gruplamayı burada yapıyoruz."</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">v_len</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">group</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">matris</span><span class="p">[</span><span class="n">p_row</span><span class="o">+</span><span class="n">i</span><span class="p">][</span><span class="n">p_col</span><span class="o">+</span><span class="n">k</span><span class="p">])</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="n">row_step</span>
+                <span class="n">k</span> <span class="o">+=</span> <span class="n">col_step</span>
+
+            <span class="s2">"Gruplama bitti, çarpım eğer daha önce bulduklarımızdan fazla ise"</span>
+            <span class="s2">"yeni maksimum olarak bu grubu alalım"</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">mul_list</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">m</span> <span class="o">&gt;</span> <span class="n">max_product</span><span class="p">:</span>
+                <span class="n">max_product</span> <span class="o">=</span> <span class="n">m</span>
+                <span class="n">max_list</span> <span class="o">=</span> <span class="n">group</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">max_product</span><span class="p">,</span> <span class="n">max_list</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+
+    <span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
+    <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+
+    <span class="s2">"4 işlemden oluşan bir işlem havuzu"</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="s2">"Map için kullanılacak fonksiyon tek bir argüman almak zorunda"</span>
+    <span class="s2">"bu nedenle, matris argümanını önceden sabitliyoruz"</span>
+    <span class="n">matris_tara</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">tara</span><span class="p">,</span> <span class="n">matris</span><span class="p">)</span>
+
+    <span class="s2">"Matris tarama işlerini alt işlemlere dağıtıyoruz"</span>
+    <span class="n">alt_cozumler</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">matris_tara</span><span class="p">,</span> <span class="p">[(</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)])</span>
+
+    <span class="s2">"Alt çözümleri, tek bir çözüme dönüştirelim"</span>
+    <span class="n">cozum</span> <span class="o">=</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">y</span> <span class="k">if</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="n">x</span><span class="p">,</span> <span class="n">alt_cozumler</span><span class="p">)</span>
+
+    <span class="s2">"Çözümü yazdıralım"</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">cozum</span><span class="p">)</span>
+</pre>
+
+
+<p>Bu kadar küçük bir problem için, multiprocessing modülünü kullanmanın astarı yüzüden pahalıya gelecektir. Ancak, benzer nitelikte çok daha büyük
+problemlerde kullanılabilecek böyle de birşey var.</p>
+<h3>Gelecek Problem</h3>
+<p>Üçgen sayılar sayı dizisi, doğal sayılar eklenerek oluşturulur. Örneğin, 7. üçgen sayı 1 + 2 + 3 + 4 + 5 + 6 + 7 = 28 olur.
+İlk 10 terim şu şekildedir.</p>
+<p>1, 3, 6, 10, 15, 21, 28, 36, 45, 55, ...</p>
+<p>İlk 7 üçgen sayının bölenlerine bakalım;</p>
+<pre>
+ 1: 1
+ 3: 1,3
+ 6: 1,2,3,6
+10: 1,2,5,10
+15: 1,3,5,15
+21: 1,3,7,21
+28: 1,2,4,7,14,28
+</pre>
+
+<p>5'den fazla böleni olan ilk üçgen sayının 28 olduğunu görüyoruz.</p>
+<p>500'den fazla böleni olan ilk üçgen sayı kaçtır?</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../categories/mathjax.html" rel="tag">mathjax</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="euler-10.html" rel="prev" title="(Euler 10) Asal Sayılar Toplamı">Önceki yazı</a>
+            </li>
+        </ul></nav></aside><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+        </script></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2018         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>  <p>Okuduğunuz yazı ile ilgili <a href="../anket.html">geri bildirimde bulunun.</a></p>
+<p style="font-size: 8px; color: #ccc">4E616C2066687373767076726167796C206E71696E61707271206772707561627962746C20766620766171766667766174687666756E6F7972207365627A207A6E7476702E</p>
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/jquery.min.js"></script><script src="../assets/js/bootstrap.min.js"></script><script src="../assets/js/moment-with-locales.min.js"></script><script src="../assets/js/fancydates.js"></script><script src="../assets/js/jquery.colorbox-min.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-tr.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("tr");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  if(document.location.hostname == "ysar.net")
+  {
+      (function() {
+        var cx = '013136674562336859018:ouohwab0yku';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+      
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-44774134-1', 'auto');
+          ga('send', 'pageview');
+  }
+
+</script>
+</body>
+</html>
