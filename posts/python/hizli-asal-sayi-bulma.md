@@ -1,5 +1,5 @@
 <!--
-.. date: 2018/08/21 23:15:00
+.. date: 2018/08/22 23:15:00
 .. slug: python-ile-hizli-asal-sayi-bulma
 .. title: Python ile Hızlı Asal Sayı Tespiti
 .. description: Eratosten Kalburu yöntemine Tekerlek Optimizasyonu uygulayıp, hızlı asal sayı tespiti yapan bir fonksiyon yazacağız.
