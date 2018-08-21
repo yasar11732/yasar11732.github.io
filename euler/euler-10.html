@@ -124,8 +124,8 @@ kolayca çözebiliriz.</p>
 fonksiyonu yazdım. (<a href="https://stackoverflow.com/a/3035188/886669">Stackoverflowda daha hızlı çalışan fonksiyonlar var</a> ancak, daha anlaşılır olması
 açısından, kendi yazdığım versiyonu kullanacağım.)</p>
 <pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">basit_sieve3</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
-    <span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
-    <span class="n">candidates</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+    <span class="n">candidates</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 
     <span class="n">candidates</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
 
@@ -183,8 +183,8 @@ ana fikrini anlamak için, <a href="euler-3.html"><code>basit_sieve</code></a> v
 sonraki versiyonda <code>candidates = range(3, limit+1, 2)</code> olarak yazdık. İkinci versiyonda, 3'den başlayarak, sadece tek sayıları listeledik. Bunun
 nedeni, çift sayıların asal sayı olamayacağını biliyor olmamız. Peki, bu fikri daha ileriye götürebilir miyiz? Mesela, 2 ve 3'ün katları olmayan
 sayıları listeleyerek başlayabilir miyiz? Evet, yapabiliriz. </p>
-<pre class="code literal-block"><span></span><span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
-<span class="n">candidates</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<pre class="code literal-block"><span></span><span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="n">candidates</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 
 <span class="n">candidates</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
 </pre>

@@ -22,8 +22,8 @@ açısından, kendi yazdığım versiyonu kullanacağım.)
 
     :::python
     def basit_sieve3(limit):
-        candidates = range(5, limit, 6)
-        candidates.extend(range(7, limit, 6))
+        candidates = range(5, limit+1, 6)
+        candidates.extend(range(7, limit+1, 6))
         
         candidates.sort()
         
@@ -81,8 +81,8 @@ nedeni, çift sayıların asal sayı olamayacağını biliyor olmamız. Peki, bu
 sayıları listeleyerek başlayabilir miyiz? Evet, yapabiliriz. 
 
     :::python
-    candidates = range(5, limit, 6)
-    candidates.extend(range(7, limit, 6))
+    candidates = range(5, limit+1, 6)
+    candidates.extend(range(7, limit+1, 6))
     
     candidates.sort()
     
