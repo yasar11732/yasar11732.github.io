@@ -8,11 +8,11 @@
 
 Eğer bloğumu takip ediyorsanız, son birkaç haftadır Euler problemi çözümlerimi paylaştığımı biliyorsunuz. Euler Problemleri,
 programcılık problemleri olduğu kadar, matematik problemleri de sayılabilir. Bu yazıda, bu problemlerin çözümünde sıklıkla faydalandığım
-SageMath programından bahsedeceğim. <!--TEASER_END-->
+[SageMath](http://www.sagemath.org/) programından bahsedeceğim. <!--TEASER_END-->
 
 ## SageMath nedir?
 
-[SageMath](http://www.sagemath.org/) websitesinde, tanımı şu şekilde yapılıyor.
+SageMath websitesinde, tanımı şu şekilde yapılıyor.
 
 > SageMath is a free open-source mathematics software system licensed under the GPL.
 > It builds on top of many existing open-source packages: NumPy, SciPy, matplotlib,
