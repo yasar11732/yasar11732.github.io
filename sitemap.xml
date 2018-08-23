@@ -27,7 +27,7 @@
  </url>
  <url>
   <loc>http://ysar.net/2018/index.html</loc>
-  <lastmod>2018-08-23T10:50:00Z</lastmod>
+  <lastmod>2018-08-23T17:33:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/algoritma/4-renk-teoremi-ve-harita-boyama.html</loc>
@@ -79,15 +79,15 @@
  </url>
  <url>
   <loc>http://ysar.net/archive.html</loc>
-  <lastmod>2018-08-22T22:24:00Z</lastmod>
+  <lastmod>2018-08-23T13:39:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/categories/index.html</loc>
-  <lastmod>2018-08-22T22:24:00Z</lastmod>
+  <lastmod>2018-08-23T13:39:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/categories/mathjax.html</loc>
-  <lastmod>2018-08-23T10:50:00Z</lastmod>
+  <lastmod>2018-08-23T17:33:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/diger/devlet-siteleri.html</loc>
@@ -124,6 +124,10 @@
  <url>
   <loc>http://ysar.net/euler/euler-12.html</loc>
   <lastmod>2018-08-22T22:24:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://ysar.net/euler/euler-13.html</loc>
+  <lastmod>2018-08-23T17:33:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/euler/euler-2.html</loc>
@@ -163,11 +167,11 @@
  </url>
  <url>
   <loc>http://ysar.net/euler/index-1.html</loc>
-  <lastmod>2018-08-22T15:13:00Z</lastmod>
+  <lastmod>2018-08-23T13:39:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/euler/index.html</loc>
-  <lastmod>2018-08-22T18:12:00Z</lastmod>
+  <lastmod>2018-08-23T17:33:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/factor.html</loc>
@@ -199,7 +203,7 @@
  </url>
  <url>
   <loc>http://ysar.net/index-13.html</loc>
-  <lastmod>2018-08-22T22:24:00Z</lastmod>
+  <lastmod>2018-08-23T13:39:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/index-2.html</loc>
@@ -235,7 +239,7 @@
  </url>
  <url>
   <loc>http://ysar.net/index.html</loc>
-  <lastmod>2018-08-23T10:50:00Z</lastmod>
+  <lastmod>2018-08-23T17:33:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/primes.html</loc>
@@ -711,7 +715,7 @@
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/sage-math.html</loc>
-  <lastmod>2018-08-23T10:50:00Z</lastmod>
+  <lastmod>2018-08-23T13:39:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/sayilarla-archlinux-paketcileri.html</loc>
