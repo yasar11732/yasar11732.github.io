@@ -1,7 +1,7 @@
 <!--
 .. date: 2018/08/23 16:36:00
 .. slug: euler-13
-.. title: (Euler 13) C programlama dilinde büyük sayıları toplama
+.. title: (Euler 13) C Programlama Dilinde Büyük Sayıları Toplama
 .. description: 100 adet 50 basamaklı sayının toplamının ilk 10 hanesini bulacağız
 .. tags: mathjax
 -->
