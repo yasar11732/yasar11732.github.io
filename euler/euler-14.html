@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Başlangıcı bir milyondan daha küçük olan en uzun Collatz dizisini bulacağız.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>(Euler 14) En Uzun Collatz Dizisi | Python, Yazılım, ve Programlama</title>
+<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/html4css1.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/euler/euler-14.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><link rel="stylesheet" type="text/css" href="../styles/main.css">
+<script>
+if(document.location.hostname == "ysar.net")
+    document.write('<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"><\/script>');
+</script><script>
+
+     (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-3760371725357973",
+        enable_page_level_ads: true
+      });
+
+</script><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="euler-13.html" title="(Euler 13) C Programlama Dilinde Büyük Sayıları Toplama" type="text/html">
+<meta property="og:site_name" content="Python, Yazılım, ve Programlama">
+<meta property="og:title" content="(Euler 14) En Uzun Collatz Dizisi">
+<meta property="og:url" content="http://ysar.net/euler/euler-14.html">
+<meta property="og:description" content="Başlangıcı bir milyondan daha küçük olan en uzun Collatz dizisini bulacağız.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-08-24T02:21:00+03:00">
+<meta property="article:tag" content="mathjax">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ana içeriğe geç</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://ysar.net/">
+
+                <span id="blog-title">Python, Yazılım, ve Programlama</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../yasar-arabaci.html">Hakkımda</a>
+                </li>
+<li>
+<a href="../soru-cevap.html">Soru-Cevap</a>
+                </li>
+<li>
+<a href="../archive.html">Arşiv</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS kaynağı</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search with google--><form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+<input type="hidden" name="q" value="site:http://ysar.net/"><input type="text" name="q" maxlength="255" results="0" placeholder="Search">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="euler-14.md" id="sourcelink">Kaynak</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="#" class="u-url">(Euler 14) En Uzun Collatz Dizisi</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    Yaşar Arabacı
+            </span></p>
+            <p class="dateline"><a href="#" rel="bookmark"><time class="published dt-published" datetime="2018-08-24T02:21:00+03:00" itemprop="datePublished" title="2018-08-24 02:21">2018-08-24 02:21</time></a></p>
+            
+        <p class="sourceline"><a href="euler-14.md" class="sourcelink">Kaynak</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Aşağıdaki yinelemeli dizi pozitif tamsayılar kümesi için tanımlanmıştır:</p>
+<p style="margin-left:50px;"><var>n</var> → <var>n</var>/2 (<var>n</var> çift ise)<br><var>n</var> → 3<var>n</var> + 1 (<var>n</var> tek ise)</p>
+
+<p>Yukarıdaki kurala göre, 13 sayısından başlayarak aşağıdaki diziyi elde ederiz:</p>
+<div style="text-align:center;">13 → 40 → 20 → 10 → 5 → 16 → 8 → 4 → 2 → 1</div>
+
+<p>13 ile başlayıp 1 ile biten bu dizinin 10 elemanlı olduğu görünüyor. Henüz kanıtlanamamış olsa da, tüm başlangıç sayılarının 1 sayısına ulaştığı düşünülüyor.</p>
+<p>Bir milyonun altındaki hangi başlangıç sayısı ile en uzun dizi elde edilir? <!--TEASER_END--></p>
+<p>Not: Dizi başladıktan sonra bir milyon üzerine çıkabilir.</p>
+<p>Birden başlayıp bir milyona kadar olan sayılar için Collatz dizisi uzunluğunu karşılaştırmamız gerekiyor. Sık sık aynı hesapları yapmamak için
+daha önce bulduğumuz sonuçları hafızada tutacağız.</p>
+<p><img alt="Collatz Serisi" src="../images/collatz.png"></p>
+<p>Taramayı küçük sayılardan büyük sayılara doğru yapacağız. Collatz dizisini oluştururken, başladığımız sayıdan daha küçük bir sayıya
+rastlarsak, dizinin kalan kısmını daha önceki taramalarda bulmuş olacağımız için, bu kısmın uzunluğunu hafızadan okuyacağız.
+Örneğin, 13 → 40 → 20 → 10 → 5 → 16 → 8 → 4 → 2 → 1 serisinde, 10 sayısının
+Collatz uzunluğunu hafızadan bulup, üzerine 3 ekleyeğiz, 13'ün Collatz uzunluğunu hafızaya kaydedeceğiz. Ancak, 40 ve 20'nin Collatz
+uzunluğunu hafızaya kaydetmeyeceğiz. Böylece, neyin hafıza olduğunu, hafızayı okumadan biliriz. Ayrıca, hafızanın aşırı büyümesinin
+önüne geçmiş oluruz. Algoritmanın Python ve C dillerinde uygulaması aşağıdaki şekilde;</p>
+<pre class="code literal-block"><span></span><span class="ch">#!/usr/bin/python</span>
+
+<span class="n">cache</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000000</span>
+
+<span class="n">cache</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">cache</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">cache</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">m_i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1000000</span><span class="p">):</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">a</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">while</span> <span class="n">b</span><span class="o">&gt;=</span><span class="n">a</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="s2">"Python 3 ile yazilacaksa, en sondaki +2 yerine +1 yazilacak"</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">b</span><span class="o">%</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">b</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">c</span> <span class="o">=</span> <span class="n">c</span><span class="o">+</span><span class="n">cache</span><span class="p">[</span><span class="n">b</span><span class="p">]</span>
+        <span class="n">cache</span><span class="p">[</span><span class="n">a</span><span class="p">]</span><span class="o">=</span><span class="n">c</span>
+
+        <span class="k">if</span> <span class="n">c</span> <span class="o">&gt;</span> <span class="n">m</span><span class="p">:</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">c</span>
+            <span class="n">m_i</span> <span class="o">=</span> <span class="n">a</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s2">"En uzun dizi </span><span class="si">%s</span><span class="s2"> ile basliyor ve </span><span class="si">%s</span><span class="s2"> elemanli"</span> <span class="o">%</span> <span class="p">(</span><span class="n">m_i</span><span class="p">,</span> <span class="n">m</span><span class="p">))</span>
+</pre>
+
+
+<p><br></p>
+<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+
+<span class="c1">// int 4 byte iken yaklaşık 4MB</span>
+<span class="cp">#define CACHE_SIZE 1000000</span>
+
+<span class="kt">int</span> <span class="n">cache</span><span class="p">[</span><span class="n">CACHE_SIZE</span><span class="p">];</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+    <span class="c1">// İlk birkaç seriyi hafızaya alabiliriz</span>
+    <span class="n">cache</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">cache</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="n">cache</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+    <span class="kt">uint32_t</span> <span class="n">max</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">max_i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="kt">uint32_t</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">;</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="n">a</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">a</span><span class="o">&lt;</span><span class="mi">1000000</span><span class="p">;</span><span class="n">a</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">b</span> <span class="o">&gt;=</span> <span class="n">a</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">c</span><span class="o">++</span><span class="p">;</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">b</span><span class="o">%</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span> <span class="p">(</span><span class="n">b</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">b</span> <span class="o">+</span> <span class="mi">2</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="n">c</span> <span class="o">=</span> <span class="n">c</span><span class="o">+</span><span class="n">cache</span><span class="p">[</span><span class="n">b</span><span class="p">];</span>
+        <span class="n">cache</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">max</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">max</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+            <span class="n">max_i</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">"En uzun dizi %d ile basliyor ve %d elemanli.</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">max_i</span><span class="p">,</span> <span class="n">max</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Python versiyonu 1.7 saniye gibi bir sürede tamamlanırken, C versiyonu 15 milisaniyede tamamlanıyor. Eğer hafızadan değer kullanmayı iptal edersek, Python
+versiyonunun çalışma süresi 35 saniyeye, C versiyonunun çalışma süresi ise 324 milisaniyeye çıkıyor.</p>
+<h3>Gelecek Problem</h3>
+<p>2x2 ızgaranın sol üst köşesinden başlayarak, ve sadece sağa veya aşağıya hareket ederek, sağ alt köşeye tam olarak 6 yol vardır.</p>
+<div style="text-align: center">
+<img src="data:image/gif;base64,R0lGODlh0ACXAMQAAAAAALXf/7fg/7zi/8Tl/8jn/8fo/8zp/9Ts/9nv/93x/+Pz/+v2/+34//P6/////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP///yH5BAEAAB8AIf4cVWxlYWQgR0lGIFNtYXJ0U2F2ZXIgVmVyIDIuMAAsAAAAANAAlwAABf/gJ45kaZ5oqq7sB7xwLM9ya98ore8v3vLAoHDmyw2DxSTriFSemNAowEmSWoHU6nVL03K/sawLPHWWxeSzUp0mo91msSidZaPrsLs5H5eri2FUdnV4PYR7hmtyLoJ8fXN6iH9JkziBin6NiZiQh5KRlI6Ui5U3l5yMnmuiqICsPqWAmrE2g4KFtLWzt5mfvJ2/q5utsK+WpLvBuT+4oK7DsMi+j6nBodCy06O9wssrttTX3t/JxOamxscj4yrsRtjR2tnOxfCmVfT17jnl2/no9nSt+wdw35N+81Q9M1gC3LmCBH+kExhxyUSK1cItrPjt4hJp3VQxbNhMoT5rGi3/efw40ORJlxBT+hMnkmPHgBg3ykyok9pIfAhn9hS6UyJOlsCKGv3ZMqTSe/ISMk1KE2atle1AVvVpsx1WclHVdX031SHRlyhVgtE6dObUjFufel3LLa5bumH1tYlCCg7XN3jlptg79gmdpmljJr56ePHSmoVNnHoI1alji0fBUqWM+a3noDzRonoLVzRnZnnF2pVat+3ZeJYFk4Vs9XHtnKZfMy4L9LYXJqpPr+NbeTXs0roNAy8ufPhy3Gp5I5Y95sjx5nOeQ1c8unXnJsyTKxdyPfdx0vuslw99E3z46LQvj+fBfn17+vZ3x6eeHUv94EvtIF57+2H3mw4DIhUd/4L/2faXb/MRkaBmC0rYYGcFTiiZgBoO1o2F+TnYXWTOgRjidt9NBiB8yni3Ww0G8iMOjB1uOExmiKEnyVcyyjeYiScS+BtGOn6IY4/8HXjkQfIAKVlvPv7II5IxNqRikHP9wSCSRX4IIYULSRdbdV0wuVmNNpL4pCZqlmglflB2KUybUF5DJ5lv+peUnKG4iKVXfr5oxZ57beFHoYMChigUizTq6KOQRnrfFZJWaumlmKYoRaacduopptp9KuqopIbJYamopqqqjaeu6uqro8IJ66y0glpmrbjmCqmTuvbqq2u/BiusRcMWa+yxyCar7LLMNuvss9BGK+201FZr7f+12Gar7bbcduvtt+CGK+645JZr7rnopqvuuuy2y+qijOICr3qzzKvelSv+mWWUWZVUJZP4vqevlEx95i+aAE9pZpKs8uvhwRcKFDCKArP4L0kQD/zwxKg5PBvDGINWsTocK3jxkCDXadzIUJUMJsJ5erzwmBrL6HK/Mjec8nQrU9yywmvmHPPOZ5rHssRAh0w0nkt7ljTP29z8sNAonwy10T4jveTMMFfd9dUWf92S1FSKzbTVRYcdMWpkc722kGgjh3XHvLQddNNPp300hkunYrfScf8N9t5wm+133npnzXfgilINlOCDK1742zinRncfkCd+ec+bU06w42MjLnf/vmrXfDfNpJMsusEiS1456oSDlfnosX/edON9lzE765abbHbmRe5+Z38FD3+24brbG2+9X4B+vOcbKx/qjM3jHRjm0i9PffZb9q7ppmRy756pXDgvfIbQD+048LjfHrnr493JfsamK83n3PDrHPjqoNxfevpeA6D6GPe+znHHavNrXf4W5j+y0MuA+rGemB7kMOIsMID1w2AGcxSoCOnpgm6S4Jcq10CCjc93/6vdx9ynOQg6UFYgJJ75+Ie+mg1BgDIUoflUhiby4PB5G8whC2mnQuJ1r4gaROIAf8dDAH4wdYv7HQ1b1CYYKlGIUtza6dzSwSzR6IcJ9N7LWFPFvyNCsXBLcpoWATcG1ZRQU+sTxc3UOEEskrCLXlxjAW1nxGXQ0SS8ihMevTjC+JVoYn9EiRkFKb/zxcaKLZxcaCCZkTcapZGbOGEiNaLJJgZRdEREow8juS9FjrKSgwQUJikVyu+JzxBseCUl9SJLUNZyluW63vZuqUdtVU9evOylL1nZqGAKM1w3DFYy3WXCRebqlMz04Oxihcto9hGUpGqVNZtJmlLdapuTWlYgwblEZE1zXceEVTrJyc52MisEADs=" alt="">
+</div>
+
+<p>20x20 ızgarada bu şekilde kaç adet yol vardır?</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../categories/mathjax.html" rel="tag">mathjax</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="euler-13.html" rel="prev" title="(Euler 13) C Programlama Dilinde Büyük Sayıları Toplama">Önceki yazı</a>
+            </li>
+        </ul></nav></aside><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+        </script></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2018         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>  <p>Okuduğunuz yazı ile ilgili <a href="../anket.html">geri bildirimde bulunun.</a></p>
+<p style="font-size: 8px; color: #ccc">4E616C2066687373767076726167796C206E71696E61707271206772707561627962746C20766620766171766667766174687666756E6F7972207365627A207A6E7476702E</p>
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/jquery.min.js"></script><script src="../assets/js/bootstrap.min.js"></script><script src="../assets/js/moment-with-locales.min.js"></script><script src="../assets/js/fancydates.js"></script><script src="../assets/js/jquery.colorbox-min.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-tr.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("tr");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  if(document.location.hostname == "ysar.net")
+  {
+      (function() {
+        var cx = '013136674562336859018:ouohwab0yku';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+      
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-44774134-1', 'auto');
+          ga('send', 'pageview');
+  }
+
+</script>
+</body>
+</html>
