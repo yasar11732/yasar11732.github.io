@@ -122,3 +122,4 @@ versiyonunun çalışma süresi 35 saniyeye, C versiyonunun çalışma süresi i
 </div>
 
 20x20 ızgarada bu şekilde kaç adet yol vardır?
+
