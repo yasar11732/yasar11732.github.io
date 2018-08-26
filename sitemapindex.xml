@@ -7,7 +7,7 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <sitemap>
   <loc>http://ysar.net/algoritma/rss.xml</loc>
-  <lastmod>2018-08-26T11:34:00Z</lastmod>
+  <lastmod>2018-08-26T16:32:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://ysar.net/categories/mathjax.xml</loc>
@@ -27,14 +27,14 @@
  </sitemap>
  <sitemap>
   <loc>http://ysar.net/rss.xml</loc>
-  <lastmod>2018-08-26T11:34:00Z</lastmod>
+  <lastmod>2018-08-26T16:32:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://ysar.net/sitemap.xml</loc>
-  <lastmod>2018-08-26T13:43:00Z</lastmod>
+  <lastmod>2018-08-26T16:32:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://ysar.net/yazilim-dunyasi/rss.xml</loc>
-  <lastmod>2018-08-26T11:34:00Z</lastmod>
+  <lastmod>2018-08-26T16:32:00Z</lastmod>
  </sitemap>
 </sitemapindex>
