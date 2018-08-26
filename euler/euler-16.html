@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="2'nin">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>(Euler 16) Büyük Üslü Sayının Haneleri Toplamı | Python, Yazılım, ve Programlama</title>
+<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/html4css1.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/euler/euler-16.html">
+<!--[if lt IE 9]><script src="../assets/js/html5.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="euler-15.html" title="(Euler 15) Izgara Üzerindeki Yollar" type="text/html">
+<meta property="og:site_name" content="Python, Yazılım, ve Programlama">
+<meta property="og:title" content="(Euler 16) Büyük Üslü Sayının Haneleri Toplamı">
+<meta property="og:url" content="http://ysar.net/euler/euler-16.html">
+<meta property="og:description" content="2'nin">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-08-26T19:47:00+03:00">
+<meta property="article:tag" content="mathjax">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Ana içeriğe geç</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://ysar.net/">
+
+                <span id="blog-title">Python, Yazılım, ve Programlama</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" role="navigation" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../yasar-arabaci.html">Hakkımda</a>
+                </li>
+<li>
+<a href="../rss.xml">RSS kaynağı</a>
+
+                
+            </li>
+</ul>
+<!-- Custom search with google--><form id="search" action="//www.google.com/search" method="get" class="navbar-form pull-left">
+<input type="hidden" name="q" value="site:http://ysar.net/"><input type="text" name="q" maxlength="255" results="0" placeholder="Search">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right"></ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name">(Euler 16) Büyük Üslü Sayının Haneleri Toplamı</h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>\(2^{15} = 32768\) ve rakamları toplamı \(3 + 2 + 7 + 6 + 8 = 26\).</p>
+<p>\(2^{1000}\) sayısının rakamları toplamı kaçtır? <!--TEASER_END--></p>
+<p><a href="euler-13.html">13. Euler Problemi Çözümünde</a> olduğu gibi, bu sorunun da Python veya BigInteger kütüphanesi
+kullanan herhangi bir dilde çözmenin enteresan bir tarafı yok. <code>sum(int(x) for x in str(2**1000))</code> yazmanın bir esprisi yok.
+16. Euler Problemi çözümünü tekrar C dilinde yapacağım. Kendi mini <code>bigint_t</code> türümü tanımlayarak başlıyorum.</p>
+<pre class="code literal-block"><span></span><span class="cp">#define LIMB_MOD 1000000000</span>
+<span class="cp">#define LIMB_COUNT 250</span>
+
+<span class="cm">/* secilen veri tipi 2xLIMB_MOD sayisini </span>
+<span class="cm"> * alabilecek kadar buyuk olmali</span>
+<span class="cm"> */</span>
+<span class="k">typedef</span> <span class="kt">uint32_t</span> <span class="n">limb_t</span><span class="p">;</span> 
+<span class="k">typedef</span> <span class="n">limb_t</span> <span class="n">bigint_t</span><span class="p">[</span><span class="n">LIMB_COUNT</span><span class="p">];</span>
+</pre>
+
+
+<p>Standart bir BigInteger veri türü için dinamik array kullanılsa da, ben kodlaması daha basit
+olacağından sabit uzunluklu bir array kullandım. <code>uint32_t</code> türündeki her bir
+elemanı onluk tabanda 9 haneli bir sayı olarak düşüneceğim.
+Her bir eleman onluk sistemde 9 hane tutacağı için, 9x250 = 2250 haneli sayılara kadar işlem
+yapabileceğiz. \(2^n\) sayısının onluk tabanda hane sayısını tahmin etmek için, \( n * 0.3 \) formülünü
+kullanabiliriz. Dolayısıyla, tahmini olarak \(2^{1000}\) sayısı 300 haneli bir rakam olacak.
+2250 hane fazlasıyla yeterli olacaktır.</p>
+<p>Devam etmeden önce, LIMB nedir, ondan bahsedeyim. <a href="https://gmplib.org/">GMP</a> kütüphanesinde, büyük
+sayıların her bir parçası için LIMB (tr. uzuv) ismini kullanmışlar. Terminolojiyi oradan aldım.
+Eğer her bir <code>limb</code> için 64 bit kullanmayı tercih ederseniz, <code>limb_t</code>'yi <code>uint64_t</code> ve <code>LIMB_MOD</code>
+sabitini <code>1000000000000000000</code> olarak tanımlayabilirsiniz. Bu durumda, her bir limb onluk tabanda 18 hane
+yerine geçebilir.</p>
+<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">bigint_set_uc</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">,</span> <span class="n">limb_t</span> <span class="n">n2</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">memset</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">bigint_t</span><span class="p">));</span>
+    <span class="kt">div_t</span> <span class="n">d</span> <span class="o">=</span> <span class="n">div</span><span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="n">LIMB_MOD</span><span class="p">);</span>
+    <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">rem</span><span class="p">;</span>
+    <span class="n">n</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">quot</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Bunu <code>bigint_t</code> değerine ilk atamayı yapmak için kullanıyorum. Burada çok ilginç birşey yok.</p>
+<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">bigint_twice</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="n">limb_t</span> <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="kt">div_t</span> <span class="n">d</span><span class="p">;</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">LIMB_COUNT</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">limb_t</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">tmp</span><span class="p">)</span> <span class="o">+</span> <span class="n">carry</span><span class="p">;</span>
+        <span class="kt">div_t</span> <span class="n">d</span> <span class="o">=</span> <span class="n">div</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">LIMB_MOD</span><span class="p">);</span>
+        <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">rem</span><span class="p">;</span>
+        <span class="n">carry</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">quot</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">carry</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// toplam bigint_t'yi aştı</span>
+        <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"!!!!!!OVERFLOW!!!!!!!"</span><span class="p">);</span>
+        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Üs alma işlemini tekrar eden çarpma işlemi olarak düşünürsek, büyük sayılarda çarpma işlemi yapmak
+için bir fonksiyona ihtiyacımız var. Genel bir fonksiyon yazmak yerine, verilen büyük sayıyı
+ikiye katlayan bir fonksiyon yazdım. \(2^{1000}\) sayısını hesaplamak için, bu yeterli olacaktır. Sayıyı
+ikiyle çarpmak için, kendisiyle toplama işlemi yapıyorum. Basamak taşıma mantığı, <a href="euler-13.html">13. Euler Çözümünde</a>
+yaptığımla aynı. </p>
+<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">bigint_print</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">LIMB_COUNT</span><span class="p">;</span>
+
+    <span class="c1">// skip leading zeros</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">--</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">"%u"</span><span class="p">,</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+
+    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">--</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"%09u"</span><span class="p">,</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="p">}</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Sayıyı Little-Endian (küçük haneler array'in başında) olarak düşündüğüm için,
+yazdırma işlemini sondan başa doğru yapmak gerekiyor. Sayının başındaki sıfırları
+yazdırmamak için, iki ayrı döngü kullanmam gerekti.</p>
+<pre class="code literal-block"><span></span><span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="n">bigint_t</span> <span class="n">n</span><span class="p">;</span>
+    <span class="n">bigint_set_uc</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">bigint_twice</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+
+    <span class="p">}</span>
+    <span class="n">bigint_print</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Programı denemeye hazırız. Büyük sayıya 1 değerini atayıp, 1000 defa ikiyle çarparsak, istediğimiz sayıyı elde etmiş oluyoruz.</p>
+<pre class="code literal-block"><span></span>10715086071862673209484250490600018105614048117055
+33607443750388370351051124936122493198378815695858
+12759467291755314682518714528569231404359845775746
+98574803934567774824230985421074605062371141877954
+18215304647498358194126739876755916554394607706291
+45711964776865421676604298316526243868372056680693
+76
+</pre>
+
+
+<p>Tabi ki, soru bize \(2^{1000}\) sayısını değil, hanelerinin toplamını soruyor. Onun için de, ayrı bir fonksiyon yazabiliriz.</p>
+<pre class="code literal-block"><span></span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">bigint_sumdigits</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">LIMB_COUNT</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">limb_t</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">sum</span> <span class="o">=</span> <span class="n">sum</span> <span class="o">+</span> <span class="p">(</span><span class="n">tmp</span> <span class="o">%</span> <span class="mi">10</span><span class="p">);</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">/</span> <span class="mi">10</span><span class="p">;</span>
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">sum</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Kodların tümü şu şekilde;</p>
+<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string.h&gt; /* memset */</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt; /* uint32_t */</span><span class="cp"></span>
+
+<span class="cp">#define LIMB_MOD 1000000000</span>
+<span class="cp">#define LIMB_COUNT 250</span>
+
+<span class="cm">/* secilen veri tipi 2xLIMB_MOD sayisini </span>
+<span class="cm"> * alabilecek kadar buyuk olmali</span>
+<span class="cm"> */</span>
+<span class="k">typedef</span> <span class="kt">uint32_t</span> <span class="n">limb_t</span><span class="p">;</span> 
+<span class="k">typedef</span> <span class="n">limb_t</span> <span class="n">bigint_t</span><span class="p">[</span><span class="n">LIMB_COUNT</span><span class="p">];</span>
+
+<span class="kt">void</span> <span class="nf">bigint_set_uc</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">,</span> <span class="n">limb_t</span> <span class="n">n2</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">memset</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">bigint_t</span><span class="p">));</span>
+    <span class="kt">div_t</span> <span class="n">d</span> <span class="o">=</span> <span class="n">div</span><span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="n">LIMB_MOD</span><span class="p">);</span>
+    <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">rem</span><span class="p">;</span>
+    <span class="n">n</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">quot</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">bigint_twice</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="n">limb_t</span> <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="kt">div_t</span> <span class="n">d</span><span class="p">;</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">LIMB_COUNT</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">limb_t</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">tmp</span><span class="p">)</span> <span class="o">+</span> <span class="n">carry</span><span class="p">;</span>
+        <span class="kt">div_t</span> <span class="n">d</span> <span class="o">=</span> <span class="n">div</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">LIMB_MOD</span><span class="p">);</span>
+        <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">rem</span><span class="p">;</span>
+        <span class="n">carry</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">quot</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">carry</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// toplam bigint_t'yi aştı</span>
+        <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"!!!!!!OVERFLOW!!!!!!!"</span><span class="p">);</span>
+        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">bigint_sumdigits</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">LIMB_COUNT</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">limb_t</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">sum</span> <span class="o">=</span> <span class="n">sum</span> <span class="o">+</span> <span class="p">(</span><span class="n">tmp</span> <span class="o">%</span> <span class="mi">10</span><span class="p">);</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">/</span> <span class="mi">10</span><span class="p">;</span>
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">sum</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// bigint_t is little-endian</span>
+<span class="kt">void</span> <span class="nf">bigint_print</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">LIMB_COUNT</span><span class="p">;</span>
+
+    <span class="c1">// skip leading zeros</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">--</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">"%u"</span><span class="p">,</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+
+    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">--</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"%09u"</span><span class="p">,</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="p">}</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="n">bigint_t</span> <span class="n">n</span><span class="p">;</span>
+    <span class="n">bigint_set_uc</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">bigint_twice</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+
+    <span class="p">}</span>
+    <span class="n">bigint_print</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"Haneleri Toplami: %u</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">bigint_sumdigits</span><span class="p">(</span><span class="n">n</span><span class="p">));</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Eğer onluk haneleri hiç işin içine katmazsak, \(2^{1000}\) sayısını hesaplamak çok daha kolay olur. İkilik tabanda
+sayıyı ikiye katlamak için, bitleri sola kaydırmak yeterli. Dolayısıyla, 1001. biti 1 olarak değiştirirsek, \(2^{1000}\)
+sayısını hesaplamış olacağız.
+Ancak, sayıyı onluk hanelere çevirmek için, parça parça bölüm ve kalan hesabı yapmamız imkansız
+hale gelecek. Bu nedenle, <code>bigint_t</code> üzerinde, bölme ve kalan alma işlemi tanımlamamız gerekiyor. Bölme işlemini, tekrar
+eden çıkarma işlemi gibi tanımlayabilecek olsak da, bu şekilde \(2^{1000}\) sayısını bir kere bile 10'a bölemeyiz.
+(Bing-Bang ile bölmeye başlamış olsak, hala program çalışıyor olurdu).
+O yüzden, daha akıllı bir bölme işlemine ihtiyacımız olacak. Boş vakitlerimde, üzerinde 4 işlem yapılabilecek bir
+BigInteger kütüphanesi yazmayı düşünüyorum. Eğer tamamlayabilirsem, onu da ayrı bir yazıya konu edeceğim.</p>
+<h3>Gelecek Problem</h3>
+<p>(Problemin orjinali İngilizce kelimeler üzerine kurulu, ben çevirirken Türkçeleştirdim.)</p>
+<p>1'den 5'e kadar olan sayılar yazıyla bir, iki, üç, dört ve beş olur ve toplamda 3 + 3 + 2 + 4 + 3 = 15 harften oluşur.</p>
+<p>Eğer birden bine kadar (bin dahil) sayılar yazılırsa, kaç harf kullanılır.</p>
+<p>(Not: Boşlukları saymayın. Örneğin, yüz yirmi üç 10 harften oluşur)</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="euler-15.html" rel="prev" title="(Euler 15) Izgara Üzerindeki Yollar">Önceki yazı</a>
+            </li>
+        </ul></nav></aside><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+        </script></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2018         <a href="mailto:yasar11732@gmail.com">Yaşar Arabacı</a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a> <p style="font-size: 8px; color: #ccc">4E616C2066687373767076726167796C206E71696E61707271206772707561627962746C20766620766171766667766174687666756E6F7972207365627A207A6E7476702E</p>
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../assets/js/jquery.min.js"></script><script src="../assets/js/bootstrap.min.js"></script><script src="../assets/js/moment-with-locales.min.js"></script><script src="../assets/js/fancydates.js"></script><script src="../assets/js/jquery.colorbox-min.js"></script><script src="../assets/js/colorbox-i18n/jquery.colorbox-tr.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("tr");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+  if(document.location.hostname == "ysar.net")
+  {
+      (function() {
+        var cx = '013136674562336859018:ouohwab0yku';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+      
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-44774134-1', 'auto');
+          ga('send', 'pageview');
+  }
+
+</script>
+</body>
+</html>
