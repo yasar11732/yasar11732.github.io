@@ -26,7 +26,7 @@ SITE_URL = "http://ysar.net/"
 # If not set, defaults to SITE_URL
 # BASE_URL = "http://ysar.net/"
 BLOG_EMAIL = "yasar11732@gmail.com"
-BLOG_DESCRIPTION = "This is Ya\u015far Arabac\u0131's personal blog"  # (translatable)
+BLOG_DESCRIPTION = "Ya\u015far Arabac\u0131 İnternet Günlüğü"  # (translatable)
 
 # Nikola is multilingual!
 #
@@ -109,14 +109,12 @@ TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"
 NAVIGATION_LINKS = {
     DEFAULT_LANG: (
         ("/yasar-arabaci.html", "Hakkımda"),
-        ("/soru-cevap.html", "Soru-Cevap"),
-        ("/archive.html", "Arşiv"),
         ("/rss.xml", "RSS kaynağı"),
     ),
 }
 
 # Name of the theme to use.
-THEME = "bootstrap3"
+THEME = "ysarnet"
 
 # Below this point, everything is optional
 
@@ -609,11 +607,11 @@ SOCIAL_BUTTONS_CODE = ""
 # SHOW_SOURCELINK = True
 # Copy the source files for your pages?
 # Setting it to False implies SHOW_SOURCELINK = False
-# COPY_SOURCES = True
+COPY_SOURCES = False
 
 # Modify the number of Post per Index Page
 # Defaults to 10
-# INDEX_DISPLAY_POST_COUNT = 10
+INDEX_DISPLAY_POST_COUNT = 5000
 
 # By default, Nikola generates RSS files for the website and for tags, and
 # links to it.  Set this to False to disable everything RSS-related.
@@ -676,7 +674,21 @@ SEARCH_FORM = """
 # Extra things you want in the pages HEAD tag. This will be added right
 # before </head>
 # (translatable)
-EXTRA_HEAD_DATA = """"""
+EXTRA_HEAD_DATA = """
+<link rel="stylesheet" type="text/css" href="/styles/main.css">
+<script>
+if(document.location.hostname == "ysar.net")
+    document.write('<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"><\/script>');
+</script>
+<script>
+
+     (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-3760371725357973",
+        enable_page_level_ads: true
+      });
+
+</script>
+"""
 # Google Analytics or whatever else you use. Added to the bottom of <body>
 # in the default template (base.tmpl).
 # (translatable)
@@ -810,3 +822,9 @@ LOGGING_HANDLERS = {
 # Put in global_context things you want available on all your templates.
 # It can be anything, data, functions, modules, etc.
 GLOBAL_CONTEXT = {}
+
+FRONT_INDEX_HEADER = """
+<p style="font-size: 18px; font-family: Georgia; margin-bottom:30px;">Hoşgeldiniz. Ya\u015far Arabac\u0131'nın internet günlüğüne ulaştınız. 2011 yılından bu yana, ilgimi çeken konular ve
+yaptığım küçük çalışmalarla ilgili yazılar yazıyorum. Yazdığım tüm yazılara buradan ulaşabilirsiniz. Ayrıca, bana yöneltilen programlama
+sorularıyla ilgili <a style="color:red; text-decoration: none" href="/soru-cevap.html">Soru-Cevap</a> sayfasına göz atın.</p>
+"""
