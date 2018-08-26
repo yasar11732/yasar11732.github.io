@@ -674,21 +674,8 @@ SEARCH_FORM = """
 # Extra things you want in the pages HEAD tag. This will be added right
 # before </head>
 # (translatable)
-EXTRA_HEAD_DATA = """
-<link rel="stylesheet" type="text/css" href="/styles/main.css">
-<script>
-if(document.location.hostname == "ysar.net")
-    document.write('<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"><\/script>');
-</script>
-<script>
+EXTRA_HEAD_DATA = ""
 
-     (adsbygoogle = window.adsbygoogle || []).push({
-        google_ad_client: "ca-pub-3760371725357973",
-        enable_page_level_ads: true
-      });
-
-</script>
-"""
 # Google Analytics or whatever else you use. Added to the bottom of <body>
 # in the default template (base.tmpl).
 # (translatable)
