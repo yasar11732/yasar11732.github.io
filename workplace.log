@@ -1,10 +1,12 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6630 64-bit) (preloaded format=pdflatex 2018.4.28)  29 JUL 2018 22:27
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6630 64-bit) (preloaded format=latex 2018.8.27)  28 AUG 2018 09:34
 entering extended mode
-**./workplace.tex
-(workplace.tex
-LaTeX2e <2017-04-15>
-Babel <3.18> and hyphenation patterns for 75 language(s) loaded.
-("C:\Program Files\MiKTeX 2.9\tex\latex\base\article.cls"
+**\makeatletter\def\HCode{\futurelet\HCode\HChar}\def\HChar{\ifx\HCode\def\HCod
+e##1{\Link##1}\expandafter\HCode\else\expandafter\Link\fi}\def\Link#1.a.b.c.{\g
+@addto@macro\@documentclasshook{\RequirePackage[#1,html]{tex4ht}}\let\HCode\doc
+umentstyle\def\documentstyle{\let\documentstyle\HCode\expandafter\def\csname te
+x4ht\endcsname{#1,html}\def\HCode####1{\documentstyle[tex4ht,}\@ifnextchar[{\HC
+ode}{\documentstyle[tex4ht]}}}\makeatother\HCode .a.b.c.\input  workplace.tex
+(workplace.tex ("C:\Program Files\MiKTeX 2.9\tex\latex\base\article.cls"
 Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
 ("C:\Program Files\MiKTeX 2.9\tex\latex\base\size10.clo"
 File: size10.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
@@ -21,7 +23,20 @@ File: size10.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
 \belowcaptionskip=\skip42
 \bibindent=\dimen102
 )
-("C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty"
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\tex4ht.st
+y"
+version 2016-07-18-16:08
+Package: tex4ht 
+--------------------------------------
+--- Note --- for _ at preamble, use the command line option `early_'
+--------------------------------------
+--------------------------------------
+--- Note --- for ^ at preamble, use the command line option `early^'
+--------------------------------------
+\tmp:toks=\toks14
+)
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\usepackag
+e.4ht") ("C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty"
 Package: amsmath 2017/09/02 v2.17a AMS math features
 \@mathmargin=\skip43
 
@@ -31,7 +46,7 @@ Package: amstext 2000/06/29 v2.01 AMS text
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsgen.sty"
 File: amsgen.sty 1999/11/30 v2.0 generic functions
-\@emptytoks=\toks14
+\@emptytoks=\toks15
 \ex@=\dimen103
 ))
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsbsy.sty"
@@ -61,24 +76,329 @@ LaTeX Font Info:    Redeclaring font encoding OMS on input line 713.
 \dotsspace@=\muskip10
 \c@parentequation=\count94
 \dspbrk@lvl=\count95
-\tag@help=\toks15
+\tag@help=\toks16
 \row@=\count96
 \column@=\count97
 \maxfields@=\count98
-\andhelp@=\toks16
+\andhelp@=\toks17
 \eqnshift@=\dimen106
 \alignsep@=\dimen107
 \tagshift@=\dimen108
 \tagwidth@=\dimen109
 \totwidth@=\dimen110
 \lineht@=\dimen111
-\@envbody=\toks17
+\@envbody=\toks18
 \multlinegap=\skip44
 \multlinetaggap=\skip45
-\mathdisplay@stack=\toks18
+\mathdisplay@stack=\toks19
 LaTeX Info: Redefining \[ on input line 2817.
 LaTeX Info: Redefining \] on input line 2818.
-) (workplace.aux)
+)
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\tex4ht.4h
+t"
+version 2017-05-09-09:21
+--------------------------------------
+--- Note --- for additional information, use the command line option `info'
+--------------------------------------
+
+::::::::::::::::::::::::::::::::::::::::::
+ TeX4ht info is available in the log file 
+::::::::::::::::::::::::::::::::::::::::::
+)
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\tex4ht.st
+y"
+version 2016-07-18-16:08
+
+--- needs --- tex4ht workplace ---
+\tmp:cnt=\count99
+\openout15 = `workplace.tmp'.
+
+(workplace.tmp)
+\tmp:dim=\skip46
+--------------------------------------
+--- Note --- for XML code, use the command line option `xml' or `xhtml'
+--------------------------------------
+ (workplace.xref)
+\:refout=\write3
+\openout3 = `workplace.xref'.
+
+
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4.4ht
+"
+version 2017-05-09-09:20
+--------------------------------------
+--- Note --- to remove the <?xml version=...?> processing instruction use the c
+ommand line option `no-VERSION'
+--------------------------------------
+--------------------------------------
+--- Note --- to remove the DOCTYPE declaration use the command line option `no-
+DOCTYPE'
+--------------------------------------
+)
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4-mat
+h.4ht"
+version 2017-03-30-16:04
+)
+--------------------------------------
+--- Note --- for marking of the base font, use the command line option `fonts+'
+
+--------------------------------------
+--------------------------------------
+--- Note --- for non active _, use the command line option `no_'
+--------------------------------------
+--------------------------------------
+--- Note --- for _ of catcode 13, use the command line option `_13'
+--------------------------------------
+--------------------------------------
+--- Note --- for non active ^, use the command line option `no^'
+--------------------------------------
+--------------------------------------
+--- Note --- for ^ of catcode 13, use the command line option `^13'
+--------------------------------------
+
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4.4ht
+"
+version 2017-05-09-09:20
+--------------------------------------
+--- Note --- for alternative charset, use the command line option `charset=...'
+
+--------------------------------------
+--------------------------------------
+--- Note --- to ignore CSS font decoration, use the `NoFonts' command line opti
+on
+--------------------------------------
+--------------------------------------
+--- Note --- for jpg bitmaps of pictures, use the `jpg' command line option. (C
+haracter bitmaps are controled only by `g' records of tex4ht.env and `-g' switc
+hes of tex4ht.c) 
+--------------------------------------
+--------------------------------------
+--- Note --- for gif bitmaps of pictures, use the `gif' command line option. (C
+haracter bitmaps are controled only by `g' records of tex4ht.env and `-g' switc
+hes of tex4ht.c) 
+--------------------------------------
+--------------------------------------
+--- Note --- for content and toc in 2 frames, use the command line option `fram
+es'
+--------------------------------------
+--------------------------------------
+--- Note --- for content, toc, and footnotes in 3 frames, use the command line 
+option `frames-fn'
+--------------------------------------
+--------------------------------------
+--- Note --- for file extension name xht, use the command line option `xht'
+--------------------------------------
+TeX4ht package options: html
+--------------------------------------
+--- Note --- To print a timestamp, use the command line option timestamp
+--------------------------------------
+--------------------------------------
+--- Note --- to ignore CSS code, use the command line option `-css
+--------------------------------------
+--------------------------------------
+--- Note --- for inline CSS code, use the command line option `css-in'
+--------------------------------------
+--------------------------------------
+--- Note --- for pop ups on mouse over, use the command line option `mouseover'
+
+--------------------------------------
+--------------------------------------
+--- Note --- for addressing images in a subdirectory, use the command line opti
+on `imgdir:.../'
+--------------------------------------
+)
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4-mat
+h.4ht"
+version 2017-03-30-16:04
+)
+\:tokwrite=\toks20
+\:tokpage=\toks21
+--------------------------------------
+--- Note --- for back links to toc, use the command line option `sections+'
+--------------------------------------
+--------------------------------------
+--- Note --- for linear crosslinks of pages, use the command line option `next'
+
+--------------------------------------
+\openout15 = `workplace.4ct'.
+
+\:tocout=\write4
+\openout4 = `workplace.4tc'.
+
+
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4.4ht
+"
+version 2017-05-09-09:20
+)
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4-mat
+h.4ht"
+version 2017-03-30-16:04
+)
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\latex.4ht
+"
+version 2017-01-24-15:21
+LaTeX Info: Redefining \_ on input line 168.
+--------------------------------------
+--- Note --- for links into captions, instead of float heads, use the command l
+ine option `refcaption'
+--------------------------------------
+
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4.4ht
+"
+version 2017-05-09-09:20
+--------------------------------------
+--- Note --- For mini tocs immediately aftter the header use the command line o
+ption `minitoc<'
+--------------------------------------
+--------------------------------------
+--- Note --- for enumerated list elements with valued data, use the command lin
+e option `enumerate+'
+--------------------------------------
+--------------------------------------
+--- Note --- for enumerated list elements li's with value attributes, use the c
+ommand line option `enumerate-'
+--------------------------------------
+--------------------------------------
+--- Note --- for CSS2 code, use the command line option `css2'
+--------------------------------------
+--------------------------------------
+--- Note --- for pictorial tabular, use the command line option `pic-tabular'
+--------------------------------------
+--------------------------------------
+--- Note --- for bitmap fbox'es, use the command line option `pic-fbox'
+--------------------------------------
+--------------------------------------
+--- Note --- for bitmap framebox'es, use the command line option `pic-framebox'
+
+--------------------------------------
+--------------------------------------
+--- Note --- for inline footnotes use command line option `fn-in'
+--------------------------------------
+--------------------------------------
+--- Note --- for tracing of latex font commands, use the command line option `f
+onts'
+--------------------------------------
+--------------------------------------
+--- Note --- for width specifications of tabular p entries, use the `p-width' c
+ommand line option or a configuration similar to \Configure{HColWidth}{\HCode{ 
+style="width:\HColWidth"}}
+--------------------------------------
+)
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4-mat
+h.4ht"
+version 2017-03-30-16:04
+--------------------------------------
+--- Note --- for pictorial eqnarray, use the command line option `pic-eqnarray'
+
+--------------------------------------
+--------------------------------------
+--- Note --- for pictorial array, use the command line option `pic-array'
+--------------------------------------
+--------------------------------------
+--- Note --- for pictorial $...$ environments, use the command line option `pic
+-m' (not recommended!!)
+--------------------------------------
+--------------------------------------
+--- Note --- for pictorial $...$ and $$...$$ environments with latex alt, use t
+he command line option `pic-m+' (not safe!!)
+--------------------------------------
+--------------------------------------
+--- Note --- for pictorial array, use the command line option `pic-array'
+--------------------------------------
+))
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\fontmath.
+4ht"
+version 2009-05-21-09:32
+
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4.4ht
+"
+version 2017-05-09-09:20
+)
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4-mat
+h.4ht"
+version 2017-03-30-16:04
+))
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\article.4
+ht"
+version 2009-05-21-09:32
+
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4.4ht
+"
+version 2017-05-09-09:20
+--------------------------------------
+--- Note --- for automatic sectioning pagination, use the command line option `
+1', `2', `3', '4', '5', '6', or '7'
+--------------------------------------
+--------------------------------------
+--- Note --- for files named derived from section titles, use the command line 
+option `sec-filename'
+--------------------------------------
+--------------------------------------
+--- Note --- for i-columns index, use the command line option `index=i' (e.g., 
+index=2)
+--------------------------------------
+)
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4-mat
+h.4ht"
+version 2017-03-30-16:04
+))
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\amsmath.4
+ht"
+version 2009-05-21-09:32
+\tmp:muskip=\muskip11
+
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4.4ht
+"
+version 2017-05-09-09:20
+)
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4-mat
+h.4ht"
+version 2017-03-30-16:04
+))
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\amstext.4
+ht"
+version 2009-05-21-09:32
+
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4.4ht
+"
+version 2017-05-09-09:20
+)
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4-mat
+h.4ht"
+version 2017-03-30-16:04
+))
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\amsbsy.4h
+t"
+version 2009-05-21-09:32
+
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4.4ht
+"
+version 2017-05-09-09:20
+)
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4-mat
+h.4ht"
+version 2017-03-30-16:04
+))
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\amsopn.4h
+t"
+version 2009-05-21-09:32
+
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4.4ht
+"
+version 2017-05-09-09:20
+)
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4-mat
+h.4ht"
+version 2017-03-30-16:04
+))
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4.4ht
+"
+version 2017-05-09-09:20
+)
+("C:\Users\yasar\AppData\Local\Programs\MiKTeX 2.9\tex\generic\tex4ht\html4-mat
+h.4ht"
+version 2017-03-30-16:04
+)) (workplace.aux)
 \openout1 = `workplace.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 4.
@@ -93,26 +413,21 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 4.
 LaTeX Font Info:    ... okay on input line 4.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 4.
 LaTeX Font Info:    ... okay on input line 4.
+--- file workplace.css ---
+l. 6 Writing workplace.idv[1] (workplace0x.png)
+l. 6 Writing workplace.idv[2] (workplace1x.png)
+l. 6 Writing workplace.idv[3] (workplace2x.png)
+l. 6 Writing workplace.idv[4] (workplace3x.png)
+ [1
 
-[1
-
-{C:/Users/yasar/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
-(workplace.aux) ) 
+] (workplace.aux) ) 
 Here is how much of TeX's memory you used:
- 819 strings out of 493305
- 9230 string characters out of 3138874
- 64058 words of memory out of 3000000
- 4438 multiletter control sequences out of 15000+200000
+ 4493 strings out of 493306
+ 50531 string characters out of 3138900
+ 239948 words of memory out of 3000000
+ 8033 multiletter control sequences out of 15000+200000
  4094 words of font info for 16 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 27i,12n,20p,223b,128s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cm
-ex10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb
-><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Prog
-ram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on workplace.pdf (1 page, 36309 bytes).
-PDF statistics:
- 22 PDF objects out of 1000 (max. 8388607)
- 0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 30i,4n,25p,678b,209s stack positions out of 5000i,500n,10000p,200000b,50000s
 
+Output written on workplace.dvi (1 page, 11648 bytes).
