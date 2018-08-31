@@ -27,7 +27,7 @@
  </url>
  <url>
   <loc>http://ysar.net/2018/index.html</loc>
-  <lastmod>2018-08-31T19:07:00Z</lastmod>
+  <lastmod>2018-08-31T21:54:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/algoritma/4-renk-teoremi-ve-harita-boyama.html</loc>
@@ -75,7 +75,7 @@
  </url>
  <url>
   <loc>http://ysar.net/archive.html</loc>
-  <lastmod>2018-08-30T21:38:00Z</lastmod>
+  <lastmod>2018-08-31T19:51:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/categories/index.html</loc>
@@ -195,7 +195,7 @@
  </url>
  <url>
   <loc>http://ysar.net/index.html</loc>
-  <lastmod>2018-08-31T19:07:00Z</lastmod>
+  <lastmod>2018-08-31T21:54:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/primes.html</loc>
@@ -570,6 +570,10 @@
   <lastmod>2018-08-27T15:11:00Z</lastmod>
  </url>
  <url>
+  <loc>http://ysar.net/yazilim-dunyasi/c-array-ve-string.html</loc>
+  <lastmod>2018-08-31T21:54:00Z</lastmod>
+ </url>
+ <url>
   <loc>http://ysar.net/yazilim-dunyasi/git-deposunu-bolme.html</loc>
   <lastmod>2018-08-27T15:11:00Z</lastmod>
  </url>
@@ -587,7 +591,7 @@
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/index.html</loc>
-  <lastmod>2018-08-31T19:07:00Z</lastmod>
+  <lastmod>2018-08-31T21:54:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/iyi-programci-yazilimci-nasil-olunur.html</loc>
@@ -623,7 +627,7 @@
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/sablon-doldurucu.html</loc>
-  <lastmod>2018-08-31T19:07:00Z</lastmod>
+  <lastmod>2018-08-31T19:51:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/sage-math.html</loc>
@@ -632,10 +636,6 @@
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/sayilarla-archlinux-paketcileri.html</loc>
   <lastmod>2018-08-27T15:11:00Z</lastmod>
- </url>
- <url>
-  <loc>http://ysar.net/yazilim-dunyasi/statik-site-olustur.html</loc>
-  <lastmod>2018-08-30T22:10:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/tumblr-bloguna-gist-gommek.html</loc>

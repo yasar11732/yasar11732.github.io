@@ -1,5 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Python, Yazılım, ve Programlama (Yazilim Dunyasi)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/yazilim-dunyasi/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Fri, 31 Aug 2018 19:07:07 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>C ile Komut Okuyan ve Şablon Dolduran Program</title><link>http://ysar.net/yazilim-dunyasi/sablon-doldurucu.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Malum, bir aydan daha fazla süredir boş vakitlerimde Euler Problemlerinin çözümüyle uğraşıyordum. &lt;a href="http://ysar.net/euler/euler-13.html"&gt;13.&lt;/a&gt; ve &lt;a href="http://ysar.net/euler/euler-16"&gt;16.&lt;/a&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Python, Yazılım, ve Programlama (Yazilim Dunyasi)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/yazilim-dunyasi/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Fri, 31 Aug 2018 21:54:46 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>C Programlama Dilinde Array İndeksi ve Pointer Aritmetiği</title><link>http://ysar.net/yazilim-dunyasi/c-array-ve-string.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;style&gt;
+img[alt=c-array]
+{
+    width: 500px;
+}
+&lt;/style&gt;
+
+&lt;p&gt;Üç yıl önce twitter'dan şöyle birşey paylaşmıştım.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="c-array" src="http://ysar.net/c-array.png"&gt;&lt;/p&gt;
+&lt;p&gt;Linkteki program şu şekilde;&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[])&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mh"&gt;0x02&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="se"&gt;\12\12&lt;/span&gt;&lt;span class="s"&gt;y%s&lt;/span&gt;&lt;span class="se"&gt;\0&lt;/span&gt;&lt;span class="s"&gt;ar arabaci&lt;/span&gt;&lt;span class="se"&gt;\12\12&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s"&gt;"basar&lt;/span&gt;&lt;span class="se"&gt;\0&lt;/span&gt;&lt;span class="s"&gt;ilar diler"&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Bugün nereden düştüyse, bu program aklıma düştü. Bu program, bana kalırsa, C mülakatlarında kullanılabilecek özellikte bir program.
+Bu programın çıktısını, derlemeden anlayabilenleri tebrik ediyorum. Eğer anlamadıysanız ve biraz kafa yormak istiyorsanız,
+yazıyı okumaya bu noktada ara verebilirsiniz.&lt;/p&gt;
+&lt;p&gt;Bu programda ana fikir, array (veya pointer) indekslemenin, pointer aritmetiği yapmanın kısa yolu olduğu (En. Syntatic Sugar). Örneğin,
+&lt;code&gt;char *y = "Yasar"&lt;/code&gt; dersek, &lt;code&gt;y&lt;/code&gt; değişkeni, 6 elemanlı (string NULL ile sonlandırıldığı için) bir karakter array'inin ilk elemanının
+adresini tutar. Bu array üzerinde, &lt;code&gt;y[2]&lt;/code&gt; ifadesi ile, &lt;code&gt;*(y+2)&lt;/code&gt; ifadesi aynı sonucu doğurur. Aynı fikirden devam edersek, &lt;code&gt;2[y]&lt;/code&gt; ise,
+&lt;code&gt;*(2+y)&lt;/code&gt; olur. Daha açık söylemek gerekirse, &lt;code&gt;y[2]&lt;/code&gt; ile &lt;code&gt;2[y]&lt;/code&gt; ifadeleri aynı görevi görür. Bu bilgiler ışığında, orjinal program ile,
+aşağıdaki eşdeğer olur;&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[])&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="se"&gt;\12\12&lt;/span&gt;&lt;span class="s"&gt;y%s&lt;/span&gt;&lt;span class="se"&gt;\0&lt;/span&gt;&lt;span class="s"&gt;ar arabaci&lt;/span&gt;&lt;span class="se"&gt;\12\12&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mh"&gt;0x02&lt;/span&gt;&lt;span class="p"&gt;]),&lt;/span&gt; &lt;span class="s"&gt;"basar&lt;/span&gt;&lt;span class="se"&gt;\0&lt;/span&gt;&lt;span class="s"&gt;ilar diler"&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Daha anlaşılır olması için, string literaller yerine, değişken kullanabilir.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[])&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;s1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="se"&gt;\12\12&lt;/span&gt;&lt;span class="s"&gt;y%s&lt;/span&gt;&lt;span class="se"&gt;\0&lt;/span&gt;&lt;span class="s"&gt;ar arabaci&lt;/span&gt;&lt;span class="se"&gt;\12\12&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;s2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"basar&lt;/span&gt;&lt;span class="se"&gt;\0&lt;/span&gt;&lt;span class="s"&gt;ilar diler"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s1&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mh"&gt;0x02&lt;/span&gt;&lt;span class="p"&gt;]),&lt;/span&gt; &lt;span class="n"&gt;s2&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;String üzerinden işlem yapan tüm standart C fonksiyonları gibi, &lt;code&gt;printf&lt;/code&gt; fonksiyonu da, bir string'in NULL karakterle bittiğini düşünür. Dolayısıyla,
+&lt;code&gt;s1&lt;/code&gt; ve &lt;code&gt;s2&lt;/code&gt; de, NULL karakterden sonrasını silerek, programı daha da sadeleştirebiliriz. Ayrıca, hexadecimal &lt;code&gt;0x02&lt;/code&gt;, decimal olarak &lt;code&gt;2&lt;/code&gt; eder. İndeksleme
+yerine de, pointer aritmetiği kullanabiliriz.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[])&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;s1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="se"&gt;\12\12&lt;/span&gt;&lt;span class="s"&gt;y%s"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;s2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"basar"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s1&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;s2&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;&lt;code&gt;s1+2&lt;/code&gt; ve &lt;code&gt;s2+1&lt;/code&gt;, &lt;code&gt;s1&lt;/code&gt; değişkenini üçüncü karakterden itibaren, &lt;code&gt;s2&lt;/code&gt; değişkenini de ikinci karakterden itibaren &lt;code&gt;printf&lt;/code&gt; fonksiyonuna
+gönderiyor. Bunu da sadeleştirebiliriz (\12 ifadesi, ascii kodu 12 olan karakter yerine geçiyor. Yani, \12 tek bir karakter);&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[])&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;s1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"y%s"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;s2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"asar"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;s2&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Kodlar yeterince sadeleştiğine göre, &lt;code&gt;s1&lt;/code&gt; ve &lt;code&gt;s2&lt;/code&gt; değişkenlerine ihtiyacımız kalmadı.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[])&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;        
+    &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"y%s"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"asar"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Bu programın çıktısı da, kendini belli ediyor. Siz kendinizi nasıl hissedersiniz bilmem ama, ben array indekslemenin
+tersten de çalıştığını öğrendiğimde, kendimi bir hayli aydınlanmış hissetmiştim.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/c-array-ve-string.html</guid><pubDate>Fri, 31 Aug 2018 19:28:00 GMT</pubDate></item><item><title>C ile Komut Okuyan ve Şablon Dolduran Program</title><link>http://ysar.net/yazilim-dunyasi/sablon-doldurucu.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Malum, bir aydan daha fazla süredir boş vakitlerimde Euler Problemlerinin çözümüyle uğraşıyordum. &lt;a href="http://ysar.net/euler/euler-13.html"&gt;13.&lt;/a&gt; ve &lt;a href="http://ysar.net/euler/euler-16"&gt;16.&lt;/a&gt;
 Euler problemlerinin çözümünü, problemin varoluş gayesine uygun olsun diye C Programla Dili ile yaptım. Bu esnada, C ile program yazma konusunda nostaljik bir keyif
 aldım. Birkaç gündür C ile değişik küçük programlar deniyorum. Yaptığım programlardan birini, blog yazımda paylaşayım diye düşündüm. Aşağıdaki program &lt;code&gt;{*&lt;/code&gt; ve &lt;code&gt;*}&lt;/code&gt;
 tagları arasındaki komutları çalıştırıp, metin belgesinde yerine koyan basit bir şablon doldurma programı. Girdisini standart girdiden alıyor, çıktısını standart çıktıya veriyor.&lt;/p&gt;
@@ -340,5 +435,4 @@ yönelimli programlama diye çevrilen "Object-oriented
 programming" paradigmasına sahip bir dil olması. Python'da da sınıflar
 ve objeler var ancak Java tam anlamıyla bir NYP dili. Beni
 billenler bilir, C++ ve genel anlamda NYP konusuna karşı
-biraz antipatim var. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/javada-ilk-izlenimlerim.html"&gt;Devamını oku…&lt;/a&gt; (1 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/javada-ilk-izlenimlerim.html</guid><pubDate>Sat, 10 Aug 2013 09:27:22 GMT</pubDate></item><item><title>İki adımda takipçi haritanızı oluşturun</title><link>http://ysar.net/yazilim-dunyasi/google-fusion-tables-twitter-follower-haritasi.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;h4&gt;1 - Takipçilerin bilgilerini csv formatında kaydedin.&lt;/h4&gt;
-&lt;p&gt;Öncelikle gerekli datayı twitter api'sinden almamız gerekiyor. Bunun için aşağıdaki kodları kullanacağız: &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/google-fusion-tables-twitter-follower-haritasi.html"&gt;Devamını oku…&lt;/a&gt; (2 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/google-fusion-tables-twitter-follower-haritasi.html</guid><pubDate>Fri, 01 Feb 2013 20:12:00 GMT</pubDate></item></channel></rss>
+biraz antipatim var. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/javada-ilk-izlenimlerim.html"&gt;Devamını oku…&lt;/a&gt; (1 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/javada-ilk-izlenimlerim.html</guid><pubDate>Sat, 10 Aug 2013 09:27:22 GMT</pubDate></item></channel></rss>
