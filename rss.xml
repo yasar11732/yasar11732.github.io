@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Python, Yazılım, ve Programlama</title><link>http://ysar.net/</link><description>Yaşar Arabacı İnternet Günlüğü</description><atom:link href="http://ysar.net/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Fri, 31 Aug 2018 21:54:46 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>C Programlama Dilinde Array İndeksi ve Pointer Aritmetiği</title><link>http://ysar.net/yazilim-dunyasi/c-array-ve-string.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;style&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Python, Yazılım, ve Programlama</title><link>http://ysar.net/</link><description>Yaşar Arabacı İnternet Günlüğü</description><atom:link href="http://ysar.net/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Sat, 01 Sep 2018 20:04:54 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>(Euler 17) Sayıların Harf Sayısı</title><link>http://ysar.net/euler/euler-17.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;(Problemin orjinali İngilizce kelimeler üzerine kurulu, ben çevirirken Türkçeleştirdim.)&lt;/p&gt;
+&lt;p&gt;1'den 5'e kadar olan sayılar yazıyla bir, iki, üç, dört ve beş olur ve toplamda 3 + 3 + 2 + 4 + 3 = 15 harften oluşur.&lt;/p&gt;
+&lt;p&gt;Eğer birden bine kadar (bin dahil) sayılar yazılırsa, kaç harf kullanılır.&lt;/p&gt;
+&lt;p&gt;(Not: Boşlukları saymayın. Örneğin, yüz yirmi üç 10 harften oluşur) &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/euler/euler-17.html"&gt;Devamını oku…&lt;/a&gt; (2 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/euler/euler-17.html</guid><pubDate>Sat, 01 Sep 2018 17:40:00 GMT</pubDate></item><item><title>C Programlama Dilinde Array İndeksi ve Pointer Aritmetiği</title><link>http://ysar.net/yazilim-dunyasi/c-array-ve-string.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;style&gt;
 img[alt=c-array]
 {
     width: 500px;
@@ -413,29 +416,4 @@ programcılık problemleri olduğu kadar, matematik problemleri de sayılabilir.
 
 &lt;p&gt;5'den fazla böleni olan ilk üçgen sayının 28 olduğunu görüyoruz.&lt;/p&gt;
 &lt;p&gt;500'den fazla böleni olan ilk üçgen sayı kaçtır? &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/euler/euler-12.html"&gt;Devamını oku…&lt;/a&gt; (10 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/euler/euler-12.html</guid><pubDate>Wed, 22 Aug 2018 15:06:00 GMT</pubDate></item><item><title>Python ile Hızlı Asal Sayı Tespiti</title><link>http://ysar.net/python/python-ile-hizli-asal-sayi-bulma.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Normalde bugün Euler Problemleri serisinde 12. yazıyı yazacaktım, ama kendimi asal sayı tespit programlarına biraz fazla kaptırdım. Euler
-problemine geçmeden önce, son yazdığım asal sayı bulma fonksiyonunu paylaşayım istedim. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/python/python-ile-hizli-asal-sayi-bulma.html"&gt;Devamını oku…&lt;/a&gt; (1 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/python/python-ile-hizli-asal-sayi-bulma.html</guid><pubDate>Tue, 21 Aug 2018 20:15:00 GMT</pubDate></item><item><title>(Euler 11) 11. Euler Problemi Çözümü</title><link>http://ysar.net/euler/euler-11.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Aşağıdaki 20x20 şeklinde dizilmiş sayılardan, köşegen üzerinde bulunan 4 tanesi kırmızıyla işaretlenmiştir.&lt;/p&gt;
-&lt;p style="font-family:'courier new';text-align:center;font-size:10pt;"&gt;
-08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08&lt;br&gt;
-49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00&lt;br&gt;
-81 49 31 73 55 79 14 29 93 71 40 67 53 88 30 03 49 13 36 65&lt;br&gt;
-52 70 95 23 04 60 11 42 69 24 68 56 01 32 56 71 37 02 36 91&lt;br&gt;
-22 31 16 71 51 67 63 89 41 92 36 54 22 40 40 28 66 33 13 80&lt;br&gt;
-24 47 32 60 99 03 45 02 44 75 33 53 78 36 84 20 35 17 12 50&lt;br&gt;
-32 98 81 28 64 23 67 10 &lt;span style="color:#ff0000;"&gt;&lt;b&gt;26&lt;/b&gt;&lt;/span&gt; 38 40 67 59 54 70 66 18 38 64 70&lt;br&gt;
-67 26 20 68 02 62 12 20 95 &lt;span style="color:#ff0000;"&gt;&lt;b&gt;63&lt;/b&gt;&lt;/span&gt; 94 39 63 08 40 91 66 49 94 21&lt;br&gt;
-24 55 58 05 66 73 99 26 97 17 &lt;span style="color:#ff0000;"&gt;&lt;b&gt;78&lt;/b&gt;&lt;/span&gt; 78 96 83 14 88 34 89 63 72&lt;br&gt;
-21 36 23 09 75 00 76 44 20 45 35 &lt;span style="color:#ff0000;"&gt;&lt;b&gt;14&lt;/b&gt;&lt;/span&gt; 00 61 33 97 34 31 33 95&lt;br&gt;
-78 17 53 28 22 75 31 67 15 94 03 80 04 62 16 14 09 53 56 92&lt;br&gt;
-16 39 05 42 96 35 31 47 55 58 88 24 00 17 54 24 36 29 85 57&lt;br&gt;
-86 56 00 48 35 71 89 07 05 44 44 37 44 60 21 58 51 54 17 58&lt;br&gt;
-19 80 81 68 05 94 47 69 28 73 92 13 86 52 17 77 04 89 55 40&lt;br&gt;
-04 52 08 83 97 35 99 16 07 97 57 32 16 26 26 79 33 27 98 66&lt;br&gt;
-88 36 68 87 57 62 20 72 03 46 33 67 46 55 12 32 63 93 53 69&lt;br&gt;
-04 42 16 73 38 25 39 11 24 94 72 18 08 46 29 32 40 62 76 36&lt;br&gt;
-20 69 36 41 72 30 23 88 34 62 99 69 82 67 59 85 74 04 36 16&lt;br&gt;
-20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54&lt;br&gt;
-01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48&lt;br&gt;&lt;/p&gt;
-
-&lt;p&gt;Bu sayıların çarpımı 26 × 63 × 78 × 14 = 1788696 yapar.&lt;/p&gt;
-&lt;p&gt;Bu sayıların içerisinde, yatay, dikey veya çapraz olarak ardışık
-4 sayının çarpımı en fazla kaçtır? &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/euler/euler-11.html"&gt;Devamını oku…&lt;/a&gt; (8 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/euler/euler-11.html</guid><pubDate>Mon, 20 Aug 2018 18:59:00 GMT</pubDate></item></channel></rss>
+problemine geçmeden önce, son yazdığım asal sayı bulma fonksiyonunu paylaşayım istedim. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/python/python-ile-hizli-asal-sayi-bulma.html"&gt;Devamını oku…&lt;/a&gt; (1 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/python/python-ile-hizli-asal-sayi-bulma.html</guid><pubDate>Tue, 21 Aug 2018 20:15:00 GMT</pubDate></item></channel></rss>
