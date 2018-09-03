@@ -1,5 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Python, Yazılım, ve Programlama (mathjax ile ilgili yazılar)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/categories/mathjax.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Sat, 01 Sep 2018 20:04:54 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>(Euler 17) Sayıların Harf Sayısı</title><link>http://ysar.net/euler/euler-17.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;(Problemin orjinali İngilizce kelimeler üzerine kurulu, ben çevirirken Türkçeleştirdim.)&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Python, Yazılım, ve Programlama (mathjax ile ilgili yazılar)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/categories/mathjax.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Mon, 03 Sep 2018 23:34:19 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Kamera Arkası: Python Sözlükler</title><link>http://ysar.net/python/kamera-arkasi-sozlukler.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;10 yılı aşkın süredir programlama öğreniyorum. Bu uzun zaman zarfı içerisinde, &lt;a href="https://www.gnu.org/software/libc/manual/html_mono/libc.html"&gt;glibc belgelerinin&lt;/a&gt; çoğunu
+okumak, &lt;a href="http://www.dipmat.univpm.it/~demeio/public/the_c_programming_language_2.pdf"&gt;referans kitaplar okumak&lt;/a&gt;, &lt;a href="https://stackoverflow.com/users/886669/yasar?tab=questions&amp;amp;sort=votes"&gt;soru sormak&lt;/a&gt;,
+&lt;a href="http://ysar.net/soru-cevap.html"&gt;soru cevaplamak&lt;/a&gt;, &lt;a href="https://github.com/yasar11732/CodeIgniter-Belge-Cevirisi"&gt;belge çevirmek&lt;/a&gt; ve &lt;a href="http://ysar.net/"&gt;blog yazmak&lt;/a&gt; gibi envai çeşit aktivitenin içerisinde
+bulundum. Bunca aktivitenin içinde hiçbiri, kendimden daha deneyimli ve becerikli programcılar tarafından yazılan kodları okumak kadar hızlı fayda vermedi. Bu demek değil
+ki, saydığım onca şeyin bir faydasını görmedim. Onlar olmadan, okuduğum kodları anlayabilecek ve kendi kodlarıma tatbik edebilecek temel bilgilere sahip olamazdım. Ancak,
+temel bilgiler öğrenmenin ve standart programlar yazmanın eğitsel katkısı kaybolmaya başladığında, profesyonel programcılar tarafından yazılmış, birçok kişi tarafından
+kullanılan kodlar, yeni veya daha rafine fikirler edinmeme yardımcı oldu. Bu şekilde faydalandığım kaynaklardan biri de, &lt;a href="https://github.com/python/cpython/blob/2.7/Objects/dictobject.c"&gt;Python sözlük objesi kaynak kodları&lt;/a&gt;. Dinamik array ve Hash Table (Tr. Komut Çizelgesi)
+özelliklerine sahip bu ilginç veri yapısı, &lt;em&gt;keyword&lt;/em&gt; argümanları, sınıfların metodları, global ve gömülü değişkenler gibi, bir anahtarla veriyi
+eşlemek gereken her yerde kullanılıyor. Bu yüzden Python için önemli bir yeri var. &lt;/p&gt;
+&lt;p&gt;Büyük bir projenin kaynak kodlarını okumak, çoğu zaman korkutucudur. Neyse ki, &lt;code&gt;dictobject.c&lt;/code&gt; içindeki yorumlar öyle açık ki, tahmine gerek bırakmıyor.
+Bu yazının büyük bir kısmı, &lt;code&gt;dictobject.c&lt;/code&gt; içindeki yorumların kendi kelimelerimle ifadesinden ibaret olacak. Burada bahsedilen konuları anlamak için, giriş seviyesinde Python bilgisi,
+orta derecede C bilgisi, temel veri yapıları konusunda bilgi sahibi olmanız faydalı olacaktır.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Not&lt;/strong&gt;: Buradaki inceleme Python 2.7'deki &lt;code&gt;dictobject.c&lt;/code&gt; dosyası üzerinden yapıldı, &lt;a href="https://raw.githubusercontent.com/python/cpython/3.7/Objects/dictobject.c"&gt;bu dosyanın 3.7 deki halinde&lt;/a&gt;
+ciddi farklılıklar var.&lt;/p&gt;
+&lt;p&gt;Python sözlükleri C dilinde hash tablosu olarak tasarlanmış. Tablonun her bir girdisi, aşağıdaki yapıda;&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="cm"&gt;/* Cached hash code of me_key.  Note that hash codes are C longs.&lt;/span&gt;
+&lt;span class="cm"&gt;     * We have to use Py_ssize_t instead because dict_popitem() abuses&lt;/span&gt;
+&lt;span class="cm"&gt;     * me_hash to hold a search finger.&lt;/span&gt;
+&lt;span class="cm"&gt;     */&lt;/span&gt;
+    &lt;span class="n"&gt;Py_ssize_t&lt;/span&gt; &lt;span class="n"&gt;me_hash&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;PyObject&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;me_key&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;PyObject&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;me_value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="n"&gt;PyDictEntry&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;&lt;code&gt;struct&lt;/code&gt; yapısı çok basit. Sözlük anahtarı olarak kullanılan objenin &lt;code&gt;hash&lt;/code&gt; değeri, anahtar ve değer olarak kullanılan objeleri
+işaret eden pointerlar var. Tablo içindeki bu girdilerin her birine slot deniyor. Bir slotun, 3 farklı tipi olabiliyor. Kullanılmamış
+slotlarda, &lt;code&gt;me_key&lt;/code&gt; ve &lt;code&gt;me_value&lt;/code&gt; değerleri &lt;code&gt;NULL&lt;/code&gt; oluyor. Aktif slotlarda, &lt;code&gt;me_key != NULL &amp;amp;&amp;amp; me_key != dummy&lt;/code&gt; ve &lt;code&gt;me_value != NULL&lt;/code&gt;
+oluyor. Dummy diye adlandırdıkları slotlar ise, eskiden geçerli bir (anahtar, değer) barındıran ama şu an boş olan slotlar. Bunlarda
+ise, &lt;code&gt;me_key == dummy&lt;/code&gt; ve &lt;code&gt;me_value == NULL&lt;/code&gt; oluyor. &lt;code&gt;dummy&lt;/code&gt; ilk kez sözlük objesi oluşturulduğunda bir defaya mahsus olmak üzere
+oluşturulan ve tek amacı bir hash tablosu slotunun boş olduğunu belirtmek olan bir Python objesi. Bunun neden gerekli olduğu, ekleme
+ve arama bölümlerinde açıklanacak.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;_dictobject&lt;/span&gt; &lt;span class="n"&gt;PyDictObject&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;_dictobject&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;PyObject_HEAD&lt;/span&gt;
+    &lt;span class="n"&gt;Py_ssize_t&lt;/span&gt; &lt;span class="n"&gt;ma_fill&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;  &lt;span class="cm"&gt;/* # Active + # Dummy */&lt;/span&gt;
+    &lt;span class="n"&gt;Py_ssize_t&lt;/span&gt; &lt;span class="n"&gt;ma_used&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;  &lt;span class="cm"&gt;/* # Active */&lt;/span&gt;
+
+    &lt;span class="cm"&gt;/* The table contains ma_mask + 1 slots, and that's a power of 2.&lt;/span&gt;
+&lt;span class="cm"&gt;     * We store the mask instead of the size because the mask is more&lt;/span&gt;
+&lt;span class="cm"&gt;     * frequently needed.&lt;/span&gt;
+&lt;span class="cm"&gt;     */&lt;/span&gt;
+    &lt;span class="n"&gt;Py_ssize_t&lt;/span&gt; &lt;span class="n"&gt;ma_mask&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="cm"&gt;/* ma_table points to ma_smalltable for small tables, else to&lt;/span&gt;
+&lt;span class="cm"&gt;     * additional malloc'ed memory.  ma_table is never NULL!  This rule&lt;/span&gt;
+&lt;span class="cm"&gt;     * saves repeated runtime null-tests in the workhorse getitem and&lt;/span&gt;
+&lt;span class="cm"&gt;     * setitem calls.&lt;/span&gt;
+&lt;span class="cm"&gt;     */&lt;/span&gt;
+    &lt;span class="n"&gt;PyDictEntry&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;ma_table&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;PyDictEntry&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;ma_lookup&lt;/span&gt;&lt;span class="p"&gt;)(&lt;/span&gt;&lt;span class="n"&gt;PyDictObject&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;mp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;PyObject&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;long&lt;/span&gt; &lt;span class="n"&gt;hash&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;PyDictEntry&lt;/span&gt; &lt;span class="n"&gt;ma_smalltable&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;PyDict_MINSIZE&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;&lt;code&gt;ma_fill&lt;/code&gt; değişkeni
+toplam aktif ve dummy slotlarının sayısını tutarken, &lt;code&gt;ma_used&lt;/code&gt; değişkeni ise, aktif kayıtların sayısını tutuyor. &lt;code&gt;ma_mask&lt;/code&gt; değişkeni
+hash tablosunun kapasitesinin bir eksiğini tutuyor. Bunun neden gerekli olduğunu da ekleme ve arama bölümlerinde açıklanacak, şimdilik
+bu haliyle kabul edin. &lt;code&gt;ma_table&lt;/code&gt; değişkeni ise, tablo için ayrılmış alana işaret eden bir pointer. Sözlük objesi ilk oluşturulduğunda,
+&lt;code&gt;ma_table = &amp;amp;(ma_smalltable[0])&lt;/code&gt; oluyor. Böylece, küçük tablolar için (5 elemana kadar) ayrıca bir &lt;code&gt;malloc&lt;/code&gt; çağrısı yapmaya gerek kalmıyor.
+&lt;code&gt;PyObject_HEAD&lt;/code&gt; makrosu ve &lt;code&gt;ma_lookup&lt;/code&gt; fonksiyonu birebir konumuzla alakalı değil. &lt;/p&gt;
+&lt;h3&gt;Arama ve Ekleme&lt;/h3&gt;
+&lt;p&gt;Tüm hash tabloları gibi, Python'daki sözlükler de, Python objelerinin hash değerini hesaplayıp, bu değeri aranılan
+nesneyi tablo için bulmak için kullanıyor. Ancak, Python sözlüklerinde kullanılan hash tablolarında bazı nüanslar var.
+Öncelikle, yaygın kullanılan hash fonksiyonları, hash değerlerini rastgele-gibi dağıtır. Python hash fonksiyonları
+bunun aksine gayet düzenlidir. Örneğin;&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&amp;gt;&amp;gt;&amp;gt; map(hash, range(10))
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+&amp;gt;&amp;gt;&amp;gt; map(hash, ("aaa","aab","aac","aad"))
+[-1599925404, -1599925401, -1599925402, -1599925407]
+&lt;/pre&gt;
+
+
+&lt;p&gt;Buradan anlaşılacağı üzere, her bir tam sayının hash değeri kendisine eşittir. Sıralı giden &lt;code&gt;string&lt;/code&gt; objelerinin hash
+değerleri ise, birbirine yaklaşık olur. Hash fonksiyonlarının bu özelliğini, şu şekilde gerekçelendirmişler;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This isn't necessarily bad!  To the contrary, in a table of size 2**i, taking
+the low-order i bits as the initial table index is extremely fast, and there
+are no collisions at all for dicts indexed by a contiguous range of ints.
+The same is approximately true when keys are "consecutive" strings.  So this
+gives better-than-random behavior in common cases, and that's very desirable.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Açıklamayı kısaca özetlemek gerekirse; ardışık sayı veya metinlerin sözlük
+indeksi olarak kullanılması yaygın olduğundan, ardışık hash değerlerinde
+herhangi bir çakışma olması söz konusu değildir. Neticede, yaygın kullanımlar
+için, rastgeleden-iyi performans sergileriz.&lt;/p&gt;
+&lt;p&gt;Hash değerlerini tablo indekslerine çevirme konusu ise, bit maskeleme
+yöntemi ile yapılıyor. Bunun için, tablo kapasitesi her zaman 2'nin
+kuvveti şeklinde tutuluyor. Maske olarak kullanılan değer ise, tablo
+kapasitesinin bir eksiği oluyor. Örneğin, tablo kapasitesi 8 olduğunda,
+maske değeri 7 ( binary olarak 00000111 ) oluyor. İndeks ise, &lt;code&gt;hash&amp;amp;mask&lt;/code&gt;
+şeklinde hesaplanıyor. Diğer bir deyişle, &lt;code&gt;2**i&lt;/code&gt; büyüklüğünde bir tablo için,
+hash değerinin alttan &lt;code&gt;i&lt;/code&gt; biti tablo indeksi oluyor.&lt;/p&gt;
+&lt;p&gt;Genel olarak hash tablolarında, çakışma çözümlemek için iki yöntem vardır. Bunlardan biri,
+hash tablosunun her bir slotunda, linked list (tr. bağlı liste) veri yapısı
+bulundurmakır (en. seperate chaining). Bu yöntemde, aynı hash değerini
+taşıyan elemanlar, bir liste içinde tutulur. Diğer bir yöntem ise, eğer
+birden fazla eleman aynı hash değerine sahipse, eleman hash
+tablosunda farklı boş bir yerde tutulur (en. open addressing). Python sözlükleri,
+bu ikinci bahsettiğim metodu tercih ediyor. Bunun gerekçesi ise, liste
+yöntemini performans açısından maliyetli bulmaları.&lt;/p&gt;
+&lt;p&gt;Hash tablosunda boş yer bulmak için de kullanılabilecek çeşitli yöntemler var.
+Örneğin, İlk bulunan indeksten itibaren sırayla tablo taranabilir, veya ikinci bir
+hash fonksiyonu kullanılabilir. Python sözlükleri biraz daha kendine özgü
+bir yöntem kullanıyor. Bu yöntemin çekirdeğini oluşturan formül şu şekilde;&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;j = ((5*j) + 1) mod 2**i
+&lt;/pre&gt;
+
+
+&lt;p&gt;Örneğin, kapasitesi 8 olan bir tabloda, çakışan indeks 5 olsun. Bu durumda,
+boş yer arama sırası aşağıdaki gibi oluyor;&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;5 -&amp;gt; 2 -&amp;gt; 3 -&amp;gt; 0 -&amp;gt; 1 -&amp;gt; 6 -&amp;gt; 7 -&amp;gt; 4 -&amp;gt; 5 (burada tekrar başa sarıyor)
+&lt;/pre&gt;
+
+
+&lt;p&gt;Bu formülün özelliği, kendini tekrar etmeden önce tablodaki bütün slotları geziyor olması.
+Bununla ilgili detaylı bilgi için, &lt;a href="https://www.google.com.tr/search?q=Linear+Congruential+Method"&gt;Linear Congruential Method&lt;/a&gt;
+Google aramasına bakabilirsiniz. &lt;a href="https://www.google.com.tr/search?q=do%C4%9Frusal+sondalama"&gt;Doğrusal Sondalama&lt;/a&gt;
+yerine bu yöntemin seçilmesinin önemli nedenlerinden biri, Python hash değerlerinin
+ardışık olmaya meyilli olması. Rastgele misali bir sırada ilerlenmesi halinde, hızlı
+bir şekilde boş yer bulunması ihtimali yükseliyor. Python, tabloda boş yer ararken
+bu yöntemin yanında başka şeyler de kullanıyor. Tam algoritma şu şekilde;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;perturb&lt;/code&gt; değişkenini &lt;code&gt;hash&lt;/code&gt; olarak ata. (Buradaki &lt;code&gt;hash&lt;/code&gt; maskelenmeden önceki hali)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;j = ((5*j) + perturb + 1) mod 2**i&lt;/code&gt; olsun.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;perturb&lt;/code&gt; değikenini PERTURB_SHIFT sabiti kadar (optimum değeri 5 olarak belirlenmiş) sağa kaydır. (&lt;code&gt;perturb &amp;gt;&amp;gt;= PERTURB_SHIFT&lt;/code&gt;)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Buradaki &lt;code&gt;perturb&lt;/code&gt; değişkeninin amacı, orjinal hash değerinin üst bitlerini de hesaba katmak.
+Böylece, orjinal &lt;code&gt;j = ((5*j) + 1) mod 2**i&lt;/code&gt; dizisinin doğrusal sondalama (en. linear probing)
+yöntemine dönüşmesinin önüne geçiliyor. Örneğin, kapasitesi 8 olan bir tabloya, sırasıyla
+hash değerleri 16, 32 ve 64 olan elemanlar ekleneceğini düşünelim. Bu durumda, hepsinin
+alt 3 biti 0 olacağından, &lt;code&gt;j = ((5*j) + 1) mod 2**i&lt;/code&gt; formülüne göre aynı sırada
+boş yer aranacak. Ancak, üst bitler de hesaba dahil edilirse, daha erken boş yer bulma
+ihtimalimiz oluşuyor. Eğer döngü yeterince uzun çalışırsa, &lt;code&gt;perturb&lt;/code&gt; değeri sıfırda sabitleneceği için,
+döngü tekrar &lt;code&gt;j = ((5*j) + 1) mod 2**i&lt;/code&gt; haline dönüşüyor. Böylece, tablodaki tüm slotların taranacağı
+garanti altına alınmış oluyor.&lt;/p&gt;
+&lt;p&gt;Peki, ya boş yer kalmamışsa? Boş yer arama sırasında, böyle bir endişe gereksiz, çünkü, tablo
+kapasitesi 2/3'e ulaştığında, Python tablonun kapasitesini yükseltiyor. Böylece, tabloda boş
+yer olmaması ihtimali ortadan kalkıyor. Tablonun kapasitesini yükseltmek için, geçerli kapasitenin
+dört katı (tablo büyükse iki katı) büyüklüğünde hafıza ayrılıp, eski tablodaki bütün girdiler yeni tabloya taşınıyor. Bunun
+sıradan bir &lt;code&gt;realloc&lt;/code&gt; veya &lt;code&gt;memcpy&lt;/code&gt; işlemi olmadığına dikkat edin. Tüm elemanların yeni tablodaki
+yerleri &lt;code&gt;hash&amp;amp;mask&lt;/code&gt; yöntemiyle hesaplanıp, hash çakışmaları yukarıdaki bahsi geçen yöntemle gideriliyor.&lt;/p&gt;
+&lt;p&gt;Tabloya yeni anahtar eklemek ve eklenmiş değerleri bulmak için yukarıda bahsedilen yöntem kullanıyor, ancak,
+aramanın sona erdirilmesi kriteri farklı. Tabloya yeni anahtar eklenmek isteniyor ise, yazının başında
+bahsedilen, kullanılmamış veya dummy slot bulununcaya kadar arama devam ediyor. Bulunan slot, aktif slot
+haline getiriliyor ve eğer gerekli görülürse tablo kapasitesi artırılıyor. Eğer, verilen bir anahtarın
+tabloda karşılığı aranıyorsa, önce anahtarın hash değeri bulunuyor. Sonra, yukarıdaki arama yöntemiyle,
+hash değeri eşleşen bir slot veya kullanılmamış bir slot bulunana kadar arama sürdürülüyor. Eğer arama
+sırasında bir dummy slot bulunursa, bu slot dikkate alınmadan arama sürdürülüyor. dummy slotun amacı,
+silinen slotların aramayı erken sonlandırılmasını önlemek. Tablodan
+herhangi bir slot silineceği zaman ise, &lt;code&gt;ma_key = dummy&lt;/code&gt;, &lt;code&gt;ma_value = NULL&lt;/code&gt; olarak atanıyor.&lt;/p&gt;
+&lt;p&gt;Peki ya tabloya milyonlarca değer ekleyip, sonra geri silerseniz ne olur? Python tablo boyutu ayarlamasını
+sadece yeni anahtar eklendikten sonra yaptığı için, sözlüğünüzün hafızada tuttuğu yer azalmaz. Ancak, anahtarları
+sildikten sonra, yeni bir anahtar eklemeye kalktığınızda, Python sözlük kapasitesini düşürmeye karar verecektir.&lt;/p&gt;
+&lt;p&gt;Daha detaylı bilgi almak için, orjinal &lt;a href="https://github.com/python/cpython/blob/2.7/Objects/dictobject.c"&gt;dictobject.c&lt;/a&gt;
+ve &lt;a href="https://github.com/python/cpython/blob/2.7/Include/dictobject.h"&gt;dictobject.h&lt;/a&gt; dosyaları incelenebilir. Python'un
+iç işleyişine dair kodlar göz korkutucu olsa da, yorumlardaki açıklamalar oldukça faydalı. Ayrıca, 2015 yılında
+Python sözlüklerinden esinlenerek, anahtar ve değerleri string olabilen bir benzer bir veri yapısı yazmıştım. Temel
+fikirleri anlatmak açısından faydalı olabileceği düşüncesi ile, &lt;a href="https://github.com/yasar11732/ylib/blob/master/src/dict.c"&gt;kodları GitHub'a yükledim.&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Konuyu toplamak gerekirse, sözlük objeleri, Python'un en sık kullanılan veri yapılarından biri olduğu için, üzerine
+ciddi kafa yorulmuş. Böyle ustaca tasarlanmış ve optimize edilmiş programları okumak, programlama öğrencileri için
+faydalı olacaktır. Python kodlarının geri kalanı, her ne kadar sözlükler kadar iyi belgelendirilmemiş olsa da, github
+deposundan ulaşılabiliyor. Biraz göz atılmasını tavsiye ederim.&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/python/kamera-arkasi-sozlukler.html</guid><pubDate>Sun, 02 Sep 2018 17:43:00 GMT</pubDate></item><item><title>(Euler 17) Sayıların Harf Sayısı</title><link>http://ysar.net/euler/euler-17.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;(Problemin orjinali İngilizce kelimeler üzerine kurulu, ben çevirirken Türkçeleştirdim.)&lt;/p&gt;
 &lt;p&gt;1'den 5'e kadar olan sayılar yazıyla bir, iki, üç, dört ve beş olur ve toplamda 3 + 3 + 2 + 4 + 3 = 15 harften oluşur.&lt;/p&gt;
 &lt;p&gt;Eğer birden bine kadar (bin dahil) sayılar yazılırsa, kaç harf kullanılır.&lt;/p&gt;
 &lt;p&gt;(Not: Boşlukları saymayın. Örneğin, yüz yirmi üç 10 harften oluşur) &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/euler/euler-17.html"&gt;Devamını oku…&lt;/a&gt; (2 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/euler/euler-17.html</guid><pubDate>Sat, 01 Sep 2018 17:40:00 GMT</pubDate></item><item><title>(Euler 16) Büyük Üslü Sayının Haneleri Toplamı</title><link>http://ysar.net/euler/euler-16.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;\(2^{15} = 32768\) ve rakamları toplamı \(3 + 2 + 7 + 6 + 8 = 26\).&lt;/p&gt;
@@ -68,5 +233,4 @@ problemine geçmeden önce, son yazdığım asal sayı bulma fonksiyonunu payla�
 
 &lt;p&gt;Bu sayıların çarpımı 26 × 63 × 78 × 14 = 1788696 yapar.&lt;/p&gt;
 &lt;p&gt;Bu sayıların içerisinde, yatay, dikey veya çapraz olarak ardışık
-4 sayının çarpımı en fazla kaçtır? &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/euler/euler-11.html"&gt;Devamını oku…&lt;/a&gt; (8 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/euler/euler-11.html</guid><pubDate>Mon, 20 Aug 2018 18:59:00 GMT</pubDate></item><item><title>(Euler 10) Asal Sayılar Toplamı</title><link>http://ysar.net/euler/euler-10.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;10'dan küçük asal sayıların toplamı \(2 + 3 + 5 + 7 = 17\) dir.&lt;/p&gt;
-&lt;p&gt;İki milyondan küçük asal sayıların toplamını bulunuz. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/euler/euler-10.html"&gt;Devamını oku…&lt;/a&gt; (5 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/euler/euler-10.html</guid><pubDate>Sun, 19 Aug 2018 21:57:00 GMT</pubDate></item></channel></rss>
+4 sayının çarpımı en fazla kaçtır? &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/euler/euler-11.html"&gt;Devamını oku…&lt;/a&gt; (8 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/euler/euler-11.html</guid><pubDate>Mon, 20 Aug 2018 18:59:00 GMT</pubDate></item></channel></rss>
