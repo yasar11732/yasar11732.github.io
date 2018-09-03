@@ -1,7 +1,7 @@
 <!--
 .. date: 2018/09/02 20:43:00
-.. slug: kamera-arkasi-sozlukler
-.. title: Kamera Arkası: Python Sözlükler
+.. slug: sozlukler-nasil-calisir
+.. title: Python Sözlükleri Çalışma Prensibi
 .. description: Python sözlükleri kaynak kodu incelemesi
 .. tags: mathjax
 -->
