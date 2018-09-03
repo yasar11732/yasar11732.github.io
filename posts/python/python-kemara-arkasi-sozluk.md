@@ -1,5 +1,5 @@
 <!--
-.. date: 2018/09/02 20:43:00
+.. date: 2018/09/4 20:43:00
 .. slug: sozlukler-nasil-calisir
 .. title: Python Sözlükleri Çalışma Prensibi
 .. description: Python sözlükleri kaynak kodu incelemesi
