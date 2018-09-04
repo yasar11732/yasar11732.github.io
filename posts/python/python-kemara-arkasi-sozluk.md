@@ -2,7 +2,7 @@
 .. date: 2018/09/4 20:12:00
 .. slug: sozluk-algoritmasi
 .. title: Python Sözlüklerindeki Hash Tablosu Yapısı
-.. description: Python sözlerini için kullanılan Hash tablolarının yapısıyla ilgili bir inceleme.
+.. description: Python sözleri için kullanılan Hash tablolarının yapısıyla ilgili bir inceleme.
 -->
 
 Programlama öğrenmek için kullanılabilecek birçok yöntem var. Referans belge okumak, küçük projeler yapmak, soru sormak, soru cevaplamak, blog yazmak ve
