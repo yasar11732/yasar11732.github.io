@@ -1,18 +1,16 @@
 <!--
-.. date: 2018/09/4 20:43:00
-.. slug: sozlukler-nasil-calisir
-.. title: Python Sözlükleri Çalışma Prensibi
-.. description: Python sözlükleri kaynak kodu incelemesi
-.. tags: mathjax
+.. date: 2018/09/4 20:12:00
+.. slug: sozluk-algoritmasi
+.. title: Python Sözlüklerindeki Hash Tablosu Yapısı
+.. description: Python sözlerini için kullanılan Hash tablolarının yapısıyla ilgili bir inceleme.
 -->
 
-10 yılı aşkın süredir programlama öğreniyorum. Bu uzun zaman zarfı içerisinde, [glibc belgelerinin](https://www.gnu.org/software/libc/manual/html_mono/libc.html) çoğunu
-okumak, [referans kitaplar okumak](http://www.dipmat.univpm.it/~demeio/public/the_c_programming_language_2.pdf), [soru sormak](https://stackoverflow.com/users/886669/yasar?tab=questions&sort=votes),
-[soru cevaplamak](/soru-cevap.html), [belge çevirmek](/https://github.com/yasar11732/CodeIgniter-Belge-Cevirisi) ve [blog yazmak](/) gibi envai çeşit aktivitenin içerisinde
-bulundum. Bunca aktivitenin içinde hiçbiri, kendimden daha deneyimli ve becerikli programcılar tarafından yazılan kodları okumak kadar hızlı fayda vermedi. Bu demek değil
-ki, saydığım onca şeyin bir faydasını görmedim. Onlar olmadan, okuduğum kodları anlayabilecek ve kendi kodlarıma tatbik edebilecek temel bilgilere sahip olamazdım. Ancak,
-temel bilgiler öğrenmenin ve standart programlar yazmanın eğitsel katkısı kaybolmaya başladığında, profesyonel programcılar tarafından yazılmış, birçok kişi tarafından
-kullanılan kodlar, yeni veya daha rafine fikirler edinmeme yardımcı oldu. Bu şekilde faydalandığım kaynaklardan biri de, [Python sözlük objesi kaynak kodları](https://github.com/python/cpython/blob/2.7/Objects/dictobject.c). Dinamik array ve Hash Table (Tr. Komut Çizelgesi)
+Programlama öğrenmek için kullanılabilecek birçok yöntem var. Referans belge okumak, küçük projeler yapmak, soru sormak, soru cevaplamak, blog yazmak ve
+belge çevirmek, programlama öğrenirken kullanılabilecek yöntemlerden bazıları. Bunlara ek olarak, profesyonel kişi veya gruplarca yazılmış programların
+kaynak kodlarını okumanın çok faydalı olduğunu düşünüyorum. Temel bilgiler öğrenmenin ve başlangıç-orta seviyede programlar yazmanın eğitsel katkısı
+giderek azaldığında, kod incelemesi yapmak, öğrenme konusunda yeni bir ivme kazandırabilir. Kişinin yeni fikirlerle veya eski fikirlerin daha rafine
+halleriyle karşılaşmasına olanak sağlar. Bu gözle incelenebilecek kodlara örnek olarak, [Python sözlük objesini](https://github.com/python/cpython/blob/2.7/Objects/dictobject.c) verebiliriz.
+Dinamik array ve Hash Table (Tr. Komut Çizelgesi)
 özelliklerine sahip bu ilginç veri yapısı, _keyword_ argümanları, sınıfların metodları, global ve gömülü değişkenler gibi, bir anahtarla veriyi
 eşlemek gereken her yerde kullanılıyor. Bu yüzden Python için önemli bir yeri var. 
 
