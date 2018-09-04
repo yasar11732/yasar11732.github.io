@@ -27,7 +27,7 @@
  </url>
  <url>
   <loc>http://ysar.net/2018/index.html</loc>
-  <lastmod>2018-09-03T23:41:00Z</lastmod>
+  <lastmod>2018-09-04T17:14:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/algoritma/4-renk-teoremi-ve-harita-boyama.html</loc>
@@ -75,7 +75,7 @@
  </url>
  <url>
   <loc>http://ysar.net/archive.html</loc>
-  <lastmod>2018-09-03T23:41:00Z</lastmod>
+  <lastmod>2018-09-04T17:12:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/categories/index.html</loc>
@@ -139,7 +139,7 @@
  </url>
  <url>
   <loc>http://ysar.net/euler/euler-17.html</loc>
-  <lastmod>2018-09-03T23:41:00Z</lastmod>
+  <lastmod>2018-09-04T17:12:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/euler/euler-2.html</loc>
@@ -195,7 +195,7 @@
  </url>
  <url>
   <loc>http://ysar.net/index.html</loc>
-  <lastmod>2018-09-03T23:41:00Z</lastmod>
+  <lastmod>2018-09-04T17:14:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/primes.html</loc>
@@ -331,7 +331,7 @@
  </url>
  <url>
   <loc>http://ysar.net/python/index.html</loc>
-  <lastmod>2018-09-03T23:41:00Z</lastmod>
+  <lastmod>2018-09-04T17:14:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/python/kayit-log-dosyalari.html</loc>
@@ -476,6 +476,10 @@
  <url>
   <loc>http://ysar.net/python/soket-socket.html</loc>
   <lastmod>2018-08-27T15:11:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://ysar.net/python/sozluk-algoritmasi.html</loc>
+  <lastmod>2018-09-04T17:14:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/python/str-objesini-genisletmek.html</loc>
