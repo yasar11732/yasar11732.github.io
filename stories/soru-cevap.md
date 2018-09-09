@@ -7,7 +7,7 @@
 
 Siz de bana soru sormak istiyorsanız, sorularınızı yasar11732@gmail.com adresine mail olarak gönderebilirsiniz.
 
-## [Asal Sayılar](#asal) {#asal}
+## Asal Sayılar
 
 > Hocam, ben Süha Türköz. Asal sayıların bulunmasında hangi
 > algoritmayı kullandığınızı öğrenebilir miyim?
@@ -15,7 +15,7 @@ Siz de bana soru sormak istiyorsanız, sorularınızı yasar11732@gmail.com adre
 En çok tercih ettiğim algoritma [Eratosten kalburu][]. Ayrıca, [Asal sayı algorimaları] yazımı
 da okuyabilirsin.
 
-## [__asm yönergesi ve Python decorator](#asm-ve-decorator) {#asm-ve-decorator}
+## __asm yönergesi ve Python decorator
 
 > Hocam merhabalar. Benim python üzerinde merak ettiğim bir kaç
 > konu var. Öncelikle c++ dilindeki gibi `__asm` tarzı bir fonksiyon
@@ -31,7 +31,7 @@ olarak derleyip, [ctypes][] ile çağırabilirsin. İkinci sorun için ise,
 
 Kolay Gelsin.
 
-## [Python'da sınıflar](#siniflar) {#siniflar}
+## Python'da sınıflar
 
 > Sınıflar hakkında detaylı bilgi verirmisiniz?
 
@@ -42,9 +42,9 @@ sorabilirsin;
  * [belgeler.org](http://www.belgeler.org/uygulamalar/python-tutorial_siniflar.html)
  * [istihza.com](http://www.istihza.com/py2/nesne.html)
 
-## [Oyun programcılığı için C++](#oyuncpp) {#oyuncpp}
+## Oyun programcılığı için C++
 
-[takipdelisi](http://takipdelisi.tumblr.com/){: rel="nofollow"}:
+[takipdelisi](http://takipdelisi.tumblr.com/):
 > Oyun programcılığına dair pek
 > bilgisi olmayan biri olarak C++ programlama dilini örenmelimiyim sence?
 
@@ -60,7 +60,7 @@ Bu arada, SDL eklentisinden kastım PyGame idi. PyGame ile ilgili bolca
 kaynak internette mevcut. <del>Türkçe kaynak için [metehan.us][] adresinde
 güzel anlatımlar vardı diye hatırlıyorum.</del>
 
-## [Uzaktan eğitim](#uzaktan) {#uzaktan}
+## Uzaktan eğitim
 
 > hocam selam django ve python konusunda uzaktan eğitim almak
 > istiyoruz bize nasıl yardımcıolabilirsiniz
@@ -74,9 +74,9 @@ programlama mail listesi](http://liste.linux.org.tr/listeler.php) var, oradan da
 almayı deneyebilirsin. Kusura bakma daha fazla yardımcı
 olamayacağım.
 
-## [BeautifulSoup ile tag içindeki tanımlamaları alma](#BeaufitulTag) {#BeautifulTag}
+## BeautifulSoup ile tag içindeki tanımlamaları alma
 
-[eraygezer](http://eraygezer.tumblr.com/){: rel="nofollow"}:
+[eraygezer](http://eraygezer.tumblr.com/):
 > Merhabalar. Blogunuzda BeautifulSoup
 > kullanımını göstermişsiniz ve çok güzel de bir ders olmuş. Benim sormak
 > istediğim `<img src="kaynak"></img>` kodundaki kaynağı nasıl alabileceğim olacaktı.
@@ -93,7 +93,7 @@ olamayacağım.
 	for img in imgs:
 		print img["src"]
 
-## [Django modelleri](#django-model) {#django-model}		
+## Django modelleri
 
 > hocam selam , üç modeli öncelikle formlar aracılı ile view ve
 > oradan da temp e taşıyorum sıkıntım şu .... örneğin dersler modelimde
@@ -107,9 +107,9 @@ Sorunu bu şekilde anlamak biraz zor. İstersen örnek kodlarla birlikte
 www.istihza.com/forum adresine sorabilirsin. Yarın okul başlıyor ama
 vakit bulabilirsem ben de cevap vermeye çalışırım.
 
-## [Dosyaları neden kapatıyoruz?](#dosya-neden-kapatmak) {#dosya-neden-kapatmak}
+## Dosyaları neden kapatıyoruz?
 
-[eraygezer](http://eraygezer.tumblr.com/){: rel="nofollow"}:
+[eraygezer](http://eraygezer.tumblr.com/):
 > Merhaba hocam, iyi günler. Aslında
 > sorumu bir örnekle açıklayacaktım ama soru sorma bölümünde alt satıra
 > geçemediğim ve kodları yazınca link uyarısı aldığım için anlatarak
@@ -175,15 +175,14 @@ Bu arada, `open()` fonksiyonuna tekrar bir göz attım. `open()`fonksiyonu
 arabellek modunu belirlemene izin veriyor. Bunun için üçüncü argümanı
 kullanıyorsun.
 
-<pre>
-open("a.txt","w",0) # arabellek kullanma (sadece işlemin kendi arabelleğini etkiler, işletim sisteminin arabelleğini etkilemez)
-open("a.txt","w",1) # yeni satır arabellek modu
-open("a.txt","w",4096) # boyutu belirtilen değer kadar olan bir arabellek kullan. Her 4096 bayt yazıldığında işletim sistemine yazım için istek gidecek
-</pre>
+    open("a.txt","w",0) # arabellek kullanma (sadece işlemin kendi arabelleğini etkiler, işletim sisteminin arabelleğini etkilemez)
+    open("a.txt","w",1) # yeni satır arabellek modu
+    open("a.txt","w",4096) # boyutu belirtilen değer kadar olan bir arabellek kullan. Her 4096 bayt yazıldığında işletim sistemine yazım için istek gidecek
 
-## [GNU Lisansı ve versiyonlama](#lisans-versiyon) {#lisans-versiyon}
 
-[eraygezer](http://eraygezer.tumblr.com/){: rel="nofollow"}
+## GNU Lisansı ve versiyonlama
+
+[eraygezer](http://eraygezer.tumblr.com/)
 
 > Merhabalar hocam. Benim sorum sürümler
 > ve GNU GPL lisansı olacaktı. İlk önce sürümlerden başlayacağım. Sürüm
@@ -216,7 +215,9 @@ bazı konular netleştirildi vs.
 Evet, o ifadeyi ekleyerek programı lisanslamış oluyoruz, ancak bunun
 Türkiye'de hukuki bir geçerliliği var mı bilmiyorum.
 
-## [Hangi sürümle başlamalı?](#hangi-surum) {#hangi-surum}
+## Hangi sürümle başlamalı?
+
+**Önemli!** Bu sorunun cevabı zaman içinde değişti. Uygun forumlardan tekrar bilgi almanız faydalı olur.
 
 > Bakıyorum da hep tartışılmış ve konuşulmuş. Sizin fikrinizi
 > merak ettim. Bu gün itibarıyla sizce Python 2.X mi Python 3.X'mi

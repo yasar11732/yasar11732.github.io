@@ -7,9 +7,9 @@
 
 
 Geçen gün blog'da L-System çizmek için yazdığım bir programı tanıtmıştım. Bazı geliştirmeler yaptım, onlardan da bahsedeyim istedim.
-Arayüzün şu anki görüntüsü şu şekilde
+Arayüzün şu anki görüntüsü şu şekilde (Büyük Hali İçin Tıklayınız)
 
-![Screenshot](/images/myKGvC6.png)<!-- TEASER_END -->
+[ ![Screenshot](/images/myKGvC6.png) ](/images/myKGvC6.png)<!-- TEASER_END -->
 
 Öncelikle, geçen gün paylaştığım versiyonu, sadece PIL ile çizim yapıyordum. Artık PIL kütüphanesini bulamıyorsa, doğrudan tkinter
 Canvas'ı üzerine çizim yapıyor. Ancak, bunun birkaç dezavantajı var. Öncelikle, canvas'a yapılan çizimleri resim dosyası olarak

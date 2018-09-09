@@ -18,7 +18,7 @@ import time
 
 # Data about this site
 BLOG_AUTHOR = "Ya\u015far Arabac\u0131"  # (translatable)
-BLOG_TITLE = "Python, Yazılım, ve Programlama"  # (translatable)
+BLOG_TITLE = "YSAR.NET"  # (translatable)
 # This is the main URL for your site. It will be used
 # in a prominent link
 SITE_URL = "http://ysar.net/"
@@ -109,12 +109,14 @@ TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"
 NAVIGATION_LINKS = {
     DEFAULT_LANG: (
         ("/yasar-arabaci.html", "Hakkımda"),
-        ("/rss.xml", "RSS kaynağı"),
+        ("https://github.com/yasar11732/", "GitHub"),
+        ("/soru-cevap.html", "Soru-Cevap"),
+        ("/rss.xml", "RSS"),
     ),
 }
 
 # Name of the theme to use.
-THEME = "ysarnet"
+THEME = "ysarnet2"
 
 # Below this point, everything is optional
 
@@ -134,7 +136,7 @@ TIMEZONE = "Europe/Istanbul"
 
 # Date format used to display post dates.
 # (str used by datetime.datetime.strftime)
-# DATE_FORMAT = '%Y-%m-%d %H:%M'
+DATE_FORMAT = '%Y-%m-%d'
 
 # While nikola can select a sensible locale for each language,
 # sometimes explicit control can come handy.
@@ -813,5 +815,5 @@ GLOBAL_CONTEXT = {}
 FRONT_INDEX_HEADER = """
 <p style="font-size: 18px; font-family: Georgia; margin-bottom:30px;">Hoşgeldiniz. Ya\u015far Arabac\u0131'nın internet günlüğüne ulaştınız. 2011 yılından bu yana, ilgimi çeken konular ve
 yaptığım küçük çalışmalarla ilgili yazılar yazıyorum. Yazdığım tüm yazılara buradan ulaşabilirsiniz. Ayrıca, bana yöneltilen programlama
-sorularıyla ilgili <a style="color:red; text-decoration: none" href="/soru-cevap.html">Soru-Cevap</a> sayfasına göz atın.</p>
+sorularıyla ilgili <a href="/soru-cevap.html">Soru-Cevap</a> sayfasına göz atın.</p>
 """

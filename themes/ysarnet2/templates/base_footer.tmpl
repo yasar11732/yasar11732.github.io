@@ -1,0 +1,13 @@
+## -*- coding: utf-8 -*-
+
+<%def name="html_footer()">
+    %if content_footer:
+        <footer class="fixed-bottom">
+        <div class="container>
+            <p>${content_footer}</p>
+            ${template_hooks['page_footer']()}
+        </div>
+
+        </footer>
+    %endif
+</%def>

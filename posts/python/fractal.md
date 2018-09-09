@@ -311,8 +311,8 @@ Buradaki ana fikirden yola çıkarak, farklı fraktallar çizmek için kullanıl
 			
 		wn.exitonclick()
 
-Bunlar da sonuçlarımız;
+Bunlar da sonuçlarımız (Büyük Hali İçin Tıklayınız);
 
-![Sonuçlar](/images/4hyocnt.png)
+[ ![Sonuçlar](/images/4hyocnt.png) ](/images/4hyocnt.png)
 
 Peki ya bundan sonra? Daha farklı fraktal şekiller çizmek için yeni L-sistemi kuralları araştırılabilir. Eğer yeni şekiller eklersem, onları da daha sonra paylaşırım.
