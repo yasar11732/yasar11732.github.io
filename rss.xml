@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Python, Yazılım, ve Programlama</title><link>http://ysar.net/</link><description>Yaşar Arabacı İnternet Günlüğü</description><atom:link href="http://ysar.net/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Tue, 04 Sep 2018 17:26:13 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Python Sözlüklerindeki Hash Tablosu Yapısı</title><link>http://ysar.net/python/sozluk-algoritmasi.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Programlama öğrenmek için kullanılabilecek birçok yöntem var. Referans belge okumak, küçük projeler yapmak, soru sormak, soru cevaplamak, blog yazmak ve
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET</title><link>http://ysar.net/</link><description>Yaşar Arabacı İnternet Günlüğü</description><atom:link href="http://ysar.net/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Sun, 09 Sep 2018 22:25:08 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Blog Tasarımım Yenilendi</title><link>http://ysar.net/diger/yeni-tasarim.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;p&gt;Blogun görüntüsü bir süredir beni rahatsız ediyordu. Bootstrap stilinin yerine, daha okunaklı ve sade
+bir görünüm tasarladım. Blogun yeni görüntüsü ile ilgili, öngöremediğim sorunlar olursa, e-posta yoluyla
+beni bilgilendirebilirsiniz.&lt;/p&gt;</description><guid>http://ysar.net/diger/yeni-tasarim.html</guid><pubDate>Sun, 09 Sep 2018 22:22:00 GMT</pubDate></item><item><title>Python Sözlüklerindeki Hash Tablosu Yapısı</title><link>http://ysar.net/python/sozluk-algoritmasi.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Programlama öğrenmek için kullanılabilecek birçok yöntem var. Referans belge okumak, küçük projeler yapmak, soru sormak, soru cevaplamak, blog yazmak ve
 belge çevirmek, programlama öğrenirken kullanılabilecek yöntemlerden bazıları. Bunlara ek olarak, profesyonel kişi veya gruplarca yazılmış programların
 kaynak kodlarını okumanın çok faydalı olduğunu düşünüyorum. Temel bilgiler öğrenmenin ve başlangıç-orta seviyede programlar yazmanın eğitsel katkısı
 giderek azaldığında, kod incelemesi yapmak, öğrenme konusunda yeni bir ivme kazandırabilir. Kişinin yeni fikirlerle veya eski fikirlerin daha rafine
@@ -564,19 +566,4 @@ yasar arabaci test1 ./command_expand
 
 &lt;p&gt;&lt;a href="http://ysar.net/euler/euler-13.html"&gt;Devamını oku…&lt;/a&gt; (4 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/euler/euler-13.html</guid><pubDate>Thu, 23 Aug 2018 13:36:00 GMT</pubDate></item><item><title>SageMath</title><link>http://ysar.net/yazilim-dunyasi/sage-math.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Eğer bloğumu takip ediyorsanız, son birkaç haftadır Euler problemi çözümlerimi paylaştığımı biliyorsunuz. Euler Problemleri,
 programcılık problemleri olduğu kadar, matematik problemleri de sayılabilir. Bu yazıda, bu problemlerin çözümünde sıklıkla faydalandığım
-&lt;a href="http://www.sagemath.org/"&gt;SageMath&lt;/a&gt; programından bahsedeceğim. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/sage-math.html"&gt;Devamını oku…&lt;/a&gt; (6 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/yazilim-dunyasi/sage-math.html</guid><pubDate>Wed, 22 Aug 2018 22:01:00 GMT</pubDate></item><item><title>(Euler 12) Üçgen Sayılar ve Bölenlerinin Sayısı</title><link>http://ysar.net/euler/euler-12.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Üçgen sayılar sayı dizisi, doğal sayılar eklenerek oluşturulur. Örneğin, 7. üçgen sayı 1 + 2 + 3 + 4 + 5 + 6 + 7 = 28 olur.
-İlk 10 terim şu şekildedir.&lt;/p&gt;
-&lt;p&gt;1, 3, 6, 10, 15, 21, 28, 36, 45, 55, ...&lt;/p&gt;
-&lt;p&gt;İlk 7 üçgen sayının bölenlerine bakalım;&lt;/p&gt;
-&lt;pre&gt;
- 1: 1
- 3: 1,3
- 6: 1,2,3,6
-10: 1,2,5,10
-15: 1,3,5,15
-21: 1,3,7,21
-28: 1,2,4,7,14,28
-&lt;/pre&gt;
-
-&lt;p&gt;5'den fazla böleni olan ilk üçgen sayının 28 olduğunu görüyoruz.&lt;/p&gt;
-&lt;p&gt;500'den fazla böleni olan ilk üçgen sayı kaçtır? &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/euler/euler-12.html"&gt;Devamını oku…&lt;/a&gt; (10 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/euler/euler-12.html</guid><pubDate>Wed, 22 Aug 2018 15:06:00 GMT</pubDate></item></channel></rss>
+&lt;a href="http://www.sagemath.org/"&gt;SageMath&lt;/a&gt; programından bahsedeceğim. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/sage-math.html"&gt;Devamını oku…&lt;/a&gt; (6 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/yazilim-dunyasi/sage-math.html</guid><pubDate>Wed, 22 Aug 2018 22:01:00 GMT</pubDate></item></channel></rss>
