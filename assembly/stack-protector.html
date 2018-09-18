@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="GCC'nin -fstack-protector özelliği nasıl çalışır?">
+<meta name="viewport" content="width=device-width">
+<title>GCC'nin Stack Koruması | YSAR.NET</title>
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900%7CUbuntu:300,400,500,700" rel="stylesheet">
+<link href="../assets/icons/foundation-icons.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/style.css" rel="stylesheet" type="text/css">
+<script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/assembly/stack-protector.html">
+<!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="../diger/yeni-tasarim.html" title="Blog Tasarımım Yenilendi" type="text/html">
+<meta property="og:site_name" content="YSAR.NET">
+<meta property="og:title" content="GCC'nin Stack Koruması">
+<meta property="og:url" content="http://ysar.net/assembly/stack-protector.html">
+<meta property="og:description" content="GCC'nin -fstack-protector özelliği nasıl çalışır?">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-09-18T22:30:56+03:00">
+</head>
+<body>
+
+         
+    <header class="fixed-top"><div class="container">
+        <a href="http://ysar.net">
+            <img class="logo" src="../assets/img/Logo.svg"></a>
+        <div class="subtitle">Python, Yazılım ve Programlama</div>
+    <nav id="menu"><ul>
+<li class="fi-info"><a href="../yasar-arabaci.html">Hakkımda</a></li>
+            <li class="fi-social-github"><a href="https://github.com/yasar11732/">GitHub</a></li>
+            <li class="question"><a href="../soru-cevap.html">Soru-Cevap</a></li>
+            <li class="fi-rss"><a href="../rss.xml">RSS</a></li>
+        </ul></nav>
+</div>
+        
+    </header><main class="main-content"><article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 itemprop="headline name">GCC'nin Stack Koruması</h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>C dilinde, fonksiyon argümanları, yerel değişkenler (statik olmayan) ve fonksiyon çağrısı bittiğinde
+programın çalışmaya devam edeceği dönüş adresi stack'de tutuluyor. Program hafızasının LIFO mantığıyla
+çalışan bu bölümü, fonksiyonların birbiriyle iletişimi ve program
+akışının sağlanması açısından önemli. Stack'in kötü niyetli kullanım veya programlama hatası nedeniyle bozulması, programın hatalı
+sonuç üretmesi, çökmesi veya yetkisiz işleme izin vermesi gibi çeşitli olumsuzluklara neden olabilir.
+Modern C derleyicileri, bu tip olumsuzlukları kontrol altında tutmak için bir yöntem kullanıyor.</p>
+<p>Öncelikle sorunu görmek açısından, aşağıdaki programı gcc'nin bu özelliğini
+kapatarak (-fno-stack-protector seçeneği ile) derleyip, programın assembly koduna bakalım.</p>
+<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="nf">return_input</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">char</span> <span class="n">buffer</span><span class="p">[</span><span class="mi">12</span><span class="p">];</span>
+    <span class="n">gets</span><span class="p">(</span><span class="n">buffer</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">buffer</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+    <span class="n">return_input</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Yukarıdaki fonksiyonda, <code>gets</code> fonksiyonu komut satırından bir metin alıp, <code>buffer</code> içine kaydedecek. Eğer,
+okunan metin 11 haneden daha fazla ise, buffer için ayrılan hafızanın dışına yazmaya devam edecek. fno-stack-protector ile
+derlenmiş programdaki, <code>return_input</code> fonksiyonu nasıl derlenmiş bir göz atalım.</p>
+<pre class="code literal-block"><span></span>Dump of assembler code for function return_input:
+   0x08048404 &lt;+0&gt;:     push   ebp
+   0x08048405 &lt;+1&gt;:     mov    ebp,esp
+   0x08048407 &lt;+3&gt;:     sub    esp,0x28
+   0x0804840a &lt;+6&gt;:     lea    eax,[ebp-0x14]
+   0x0804840d &lt;+9&gt;:     mov    DWORD PTR [esp],eax
+   0x08048410 &lt;+12&gt;:    call   0x8048310 &lt;gets@plt&gt;
+   0x08048415 &lt;+17&gt;:    lea    eax,[ebp-0x14]
+   0x08048418 &lt;+20&gt;:    mov    DWORD PTR [esp],eax
+   0x0804841b &lt;+23&gt;:    call   0x8048320 &lt;puts@plt&gt;
+   0x08048420 &lt;+28&gt;:    leave
+   0x08048421 &lt;+29&gt;:    ret
+End of assembler dump.
+</pre>
+
+
+<p>Burada herşey normal. İlk iki satır C'deki standart fonksiyon çağırma geleneğine göre <code>ebp</code> register'ını ayarlıyor
+. Daha sonra stack üzerinde 0x28 (40) byte yer ayrılıyor. Devamı ise,
+<code>gets</code> ve <code>puts</code> fonksiyon çağrıları ve geri dönüş. Programı gdb ile çalıştırıp, buffer ve frame pointer
+adreslerine bakabiliriz. Bende, <code>buffer</code>, <code>0xffffd704</code> adresinde, <code>ebp</code> ise, <code>0xffffd718</code> adresinde çıktı. Bu durumda,
+<code>buffer</code> üzerine 0x14 (20) byte yazılması haline, <code>return_input</code> fonksiyonu için ayrılmış alanın dışına çıkılacak. Eğer
+fonksiyonda başka yerel değişkenler olsaydı, bu değişkenlerin üzerine yazılması ihtimali de ortaya çıkacaktı. Peki,
+fonksiyon için ayrılmış alanın dışında ne var? Öncelikle, bu fonksiyonu çağıran fonksiyonun (bu örnekte main) frame pointer'ı ve 
+<code>return_input</code>'un dönüş adresi (main fonksiyonunda, <code>return_input</code> çağrısından sonraki adres), daha sonra, çağıran fonksiyonun yerel değişkenleri veya fonksiyon
+çağrısından önce kaydettiği register değerleri olabilir. Bunların üzerine yazılması halinde, en iyi ihtimalle programın geçersiz
+bir adrese zıplamaya çalışıp çökmesini umabiliriz. Kötü ihtimal ise, programa verilen kötü niyetle tasarlanmış bir metin yüzünden,
+programın yetkisiz/zararlı işlemler yapması.</p>
+<p>Aynı fonksiyonun <em>stack protector</em> aktif olarak derlenmiş hali aşağıdaki gibi;</p>
+<pre class="code literal-block"><span></span>Dump of assembler code for function return_input:
+   0x08048464 &lt;+0&gt;:     push   ebp
+   0x08048465 &lt;+1&gt;:     mov    ebp,esp
+   0x08048467 &lt;+3&gt;:     sub    esp,0x28
+   0x0804846a &lt;+6&gt;:     mov    eax,gs:0x14
+   0x08048470 &lt;+12&gt;:    mov    DWORD PTR [ebp-0xc],eax
+   0x08048473 &lt;+15&gt;:    xor    eax,eax
+   0x08048475 &lt;+17&gt;:    lea    eax,[ebp-0x18]
+   0x08048478 &lt;+20&gt;:    mov    DWORD PTR [esp],eax
+   0x0804847b &lt;+23&gt;:    call   0x8048360 &lt;gets@plt&gt;
+   0x08048480 &lt;+28&gt;:    lea    eax,[ebp-0x18]
+   0x08048483 &lt;+31&gt;:    mov    DWORD PTR [esp],eax
+   0x08048486 &lt;+34&gt;:    call   0x8048380 &lt;puts@plt&gt;
+   0x0804848b &lt;+39&gt;:    mov    eax,DWORD PTR [ebp-0xc]
+   0x0804848e &lt;+42&gt;:    xor    eax,DWORD PTR gs:0x14
+   0x08048495 &lt;+49&gt;:    je     0x804849c &lt;return_input+56&gt;
+   0x08048497 &lt;+51&gt;:    call   0x8048370 &lt;__stack_chk_fail@plt&gt;
+   0x0804849c &lt;+56&gt;:    leave
+   0x0804849d &lt;+57&gt;:    ret
+End of assembler dump.
+</pre>
+
+
+<p>Burada fonksiyon ilkine göre biraz daha uzun görünüyor. Anlaşılmasına yardımcı olması için, bunun bir
+benzeri C ile yazabiliriz.</p>
+<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;time.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="n">canary</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="n">BoundArray</span> <span class="p">{</span>
+    <span class="kt">char</span> <span class="n">array</span><span class="p">[</span><span class="mi">12</span><span class="p">];</span>
+    <span class="kt">int</span>  <span class="n">boundary</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">void</span> <span class="nf">return_input</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">struct</span> <span class="n">BoundArray</span> <span class="n">buffer</span><span class="p">;</span>
+    <span class="n">buffer</span><span class="p">.</span><span class="n">boundary</span> <span class="o">=</span> <span class="n">canary</span><span class="p">;</span>
+    <span class="n">gets</span><span class="p">(</span><span class="n">buffer</span><span class="p">.</span><span class="n">array</span><span class="p">);</span>
+    <span class="n">puts</span><span class="p">(</span><span class="n">buffer</span><span class="p">.</span><span class="n">array</span><span class="p">);</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">buffer</span><span class="p">.</span><span class="n">boundary</span> <span class="o">==</span> <span class="n">canary</span><span class="p">)</span>
+        <span class="k">return</span><span class="p">;</span>
+
+    <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"==== BUFFER OVERFLOW ===="</span><span class="p">);</span>
+    <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+    <span class="n">srand</span><span class="p">(</span><span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">));</span>
+    <span class="n">canary</span> <span class="o">=</span> <span class="n">rand</span><span class="p">();</span>
+    <span class="n">return_input</span><span class="p">();</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"return_input sonrasi main</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Yukarıdaki program fno-stack-protector ile derlendiğinde (kendi stack protector mantığımızı yazdığımız için)
+eğer komut satırından okunan metin 12 haneden daha az ise, <code>return_input</code> fonksiyonundan dönülecek. Eğer alınan
+metin array sınırları dışına çıkarsa, <code>return_input</code> fonksiyonu asla dönmeyecek ve hata mesajı gösterilip program
+sonlandırılacak. Bunu sağlamak için array'in hemen arkasına rastgele bir değer atıyoruz. Fonksiyondan dönmeden önce,
+bu değerin aynı kaldığını test ediyoruz. Eğer bu değer değiştiyse, programın güvenilmez olduğuna karar verip,
+çalışmayı durduruyoruz.</p>
+<p>Yukarıdaki C programına bakarak, assembly çıktısını daha rahat inceleyebiliriz. Assembly çıktısındaki <code>mov eax,gs:0x14</code>
+satırı, glibc'nin program başlangıcında, <code>main</code> çağırılmadan önce ayarladığı rastgele sayıyı (canary) alıyor ve <code>mov DWORD PTR [ebp-0xc],eax</code>
+satırı bunu array'in sınırına kaydediyor. <code>gets</code> ve <code>puts</code> çağrısından sonra ise, <code>mov eax,DWORD PTR [ebp-0xc]</code> satırı, array
+sınırındaki değeri okuyor ve <code>xor eax,DWORD PTR gs:0x14</code> satırı bu değerin değişmediğini teyit ediyor. Eğer bir değişme varsa,
+glibc tarafından sağlanan <code>__stack_chk_fail</code> fonksiyonuna atlıyoruz. Bu fonksiyonun amacı, detaylı hata mesajı yazdırıp, programı
+sonlandırmak.</p>
+<p>Yukarıdaki örneği, bir de Visual Studio ile derleyip (Visual Studio 14, 32bit cl.exe -Z7 ile)
+gcc ile karşılaştırabilriz.</p>
+<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">return_input</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="mo">011</span><span class="n">C6B30</span>  <span class="n">push</span>        <span class="n">ebp</span>  
+<span class="mo">011</span><span class="n">C6B31</span>  <span class="n">mov</span>         <span class="n">ebp</span><span class="p">,</span><span class="n">esp</span>  
+<span class="mo">011</span><span class="n">C6B33</span>  <span class="n">sub</span>         <span class="n">esp</span><span class="p">,</span><span class="mi">10</span><span class="n">h</span>  
+<span class="mo">011</span><span class="n">C6B36</span>  <span class="n">mov</span>         <span class="n">eax</span><span class="p">,</span><span class="n">dword</span> <span class="n">ptr</span> <span class="p">[</span><span class="n">__security_cookie</span> <span class="p">(</span><span class="mf">0121E008</span><span class="n">h</span><span class="p">)]</span>  
+<span class="mo">011</span><span class="n">C6B3B</span>  <span class="n">xor</span>         <span class="n">eax</span><span class="p">,</span><span class="n">ebp</span>  
+<span class="mo">011</span><span class="n">C6B3D</span>  <span class="n">mov</span>         <span class="n">dword</span> <span class="n">ptr</span> <span class="p">[</span><span class="n">ebp</span><span class="o">-</span><span class="mi">4</span><span class="p">],</span><span class="n">eax</span>  
+    <span class="kt">char</span> <span class="n">buffer</span><span class="p">[</span><span class="mi">12</span><span class="p">];</span>
+    <span class="n">gets</span><span class="p">(</span><span class="n">buffer</span><span class="p">);</span>
+<span class="mo">011</span><span class="n">C6B40</span>  <span class="n">lea</span>         <span class="n">eax</span><span class="p">,[</span><span class="n">buffer</span><span class="p">]</span>  
+<span class="mo">011</span><span class="n">C6B43</span>  <span class="n">push</span>        <span class="n">eax</span>  
+<span class="mo">011</span><span class="n">C6B44</span>  <span class="n">call</span>        <span class="n">_gets</span> <span class="p">(</span><span class="mo">011</span><span class="n">C3508h</span><span class="p">)</span>  
+<span class="mo">011</span><span class="n">C6B49</span>  <span class="n">add</span>         <span class="n">esp</span><span class="p">,</span><span class="mi">4</span>  
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">buffer</span><span class="p">);</span>
+<span class="mo">011</span><span class="n">C6B4C</span>  <span class="n">lea</span>         <span class="n">ecx</span><span class="p">,[</span><span class="n">buffer</span><span class="p">]</span>  
+<span class="mo">011</span><span class="n">C6B4F</span>  <span class="n">push</span>        <span class="n">ecx</span>  
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">buffer</span><span class="p">);</span>
+<span class="mo">011</span><span class="n">C6B50</span>  <span class="n">push</span>        <span class="mf">121E000</span><span class="n">h</span>  
+<span class="mo">011</span><span class="n">C6B55</span>  <span class="n">call</span>        <span class="n">_printf</span> <span class="p">(</span><span class="mo">011</span><span class="n">C3990h</span><span class="p">)</span>  
+<span class="mo">011</span><span class="n">C6B5A</span>  <span class="n">add</span>         <span class="n">esp</span><span class="p">,</span><span class="mi">8</span>  
+<span class="p">}</span>
+<span class="mo">011</span><span class="n">C6B5D</span>  <span class="n">mov</span>         <span class="n">ecx</span><span class="p">,</span><span class="n">dword</span> <span class="n">ptr</span> <span class="p">[</span><span class="n">ebp</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>  
+<span class="mo">011</span><span class="n">C6B60</span>  <span class="n">xor</span>         <span class="n">ecx</span><span class="p">,</span><span class="n">ebp</span>  
+<span class="mo">011</span><span class="n">C6B62</span>  <span class="n">call</span>        <span class="p">@</span><span class="n">__security_check_cookie</span><span class="mi">@4</span> <span class="p">(</span><span class="mo">011</span><span class="n">C30FDh</span><span class="p">)</span>  
+<span class="mo">011</span><span class="n">C6B67</span>  <span class="n">mov</span>         <span class="n">esp</span><span class="p">,</span><span class="n">ebp</span>  
+<span class="mo">011</span><span class="n">C6B69</span>  <span class="n">pop</span>         <span class="n">ebp</span>  
+<span class="mo">011</span><span class="n">C6B6A</span>  <span class="n">ret</span>
+</pre>
+
+
+<p>Visual Studio da gcc gibi, stack üzerinde buffer overflow kontrolü yapıyor.</p>
+<p>Toparlamak gerekirse, GCC ve Visual Studio (ve muhtemel diğer modern C derleyicileri)
+stack üzerindeki buffer overflow'ların yan etkilerini kontrol altında tutmak için
+ekstra kod üretiyorlar. Burada akılda kalması gereken husus, bu yöntemlerin
+buffer overflow'u önlemek amaçlı değil, buffer overflow sonucunda programın yanlış
+noktaya zıplamasını önlemek. Böylece, en klasik exploit yöntemlerinden birinin uygulanması
+bir hayli zorlaşmış oluyor. Yine de, özellikle kritik programlarda, derleyiciden medet ummak yerine, programın
+overflow'a izin vermeyecek şekilde tasarlanması veya, C#, Java, Python gibi hafıza
+yönetimini kendi yapan bir dilde yazılması çok daha akıllıca bir seçim olacaktır diye düşünüyorum.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><div class="pager">
+                <a href="../diger/yeni-tasarim.html" rel="prev" title="Blog Tasarımım Yenilendi">Önceki yazı</a>
+        </div>
+
+    </nav></aside></article></main><script>
+  if(document.location.hostname == "ysar.net")
+  {
+      (function() {
+        var cx = '013136674562336859018:ouohwab0yku';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+      
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-44774134-1', 'auto');
+          ga('send', 'pageview');
+  }
+
+</script>
+</body>
+</html>
