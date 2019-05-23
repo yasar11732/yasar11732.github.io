@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Windows)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/windows/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Thu, 23 May 2019 20:21:26 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Windows Api İle Ekran Görüntüsü Yakalamak</title><link>http://ysar.net/windows/windows-api-ile-ekran-goruntusu.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Merhabalar,&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Windows)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/windows/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Thu, 23 May 2019 20:23:57 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Windows Api İle Ekran Görüntüsü Yakalamak</title><link>http://ysar.net/windows/windows-api-ile-ekran-goruntusu.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Merhabalar,&lt;/p&gt;
 &lt;p&gt;Bu mecrada uzun süredir genel olarak yazılımla ilgili yazılar paylaşıyorum. Uzun süredir bu blogu takip edenlerinizin
 tasdik edeceği üzere, blog yazılarım genellikle seçtiğim bir konu hakkındaki detaylı anlatımlardan oluşuyor. Aynı zamanda,
 son birkaç yılda, blogumda yayınladığım yazıların sayısının da bir hayli azaldığını da farketmişsinizdir. Bunun nedeni,
@@ -15,7 +15,10 @@ ekran görüntüsü kaydeden küçük bir program yazdım.&lt;/p&gt;
 &lt;li&gt;WIC (Windows Imaging Component) ile JPEG dosyası kaydetme&lt;/li&gt;
 &lt;li&gt;Akıllı Pointer Örneği&lt;/li&gt;
 &lt;li&gt;COM objesi oluşturma ve kullanma örneği&lt;/li&gt;
-&lt;li&gt;Windows'da C++ ile ekran boyutu tespit etme&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#define WIN32_LEAN_AND_MEAN&lt;/span&gt;
+&lt;li&gt;Windows'da C++ ile ekran boyutu tespit etme&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#define WIN32_LEAN_AND_MEAN&lt;/span&gt;
 &lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;windows.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
 &lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;winuser.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
 &lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;objbase.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
@@ -47,6 +50,8 @@ ekran görüntüsü kaydeden küçük bir program yazdım.&lt;/p&gt;
     &lt;span class="p"&gt;{&lt;/span&gt;
         &lt;span class="n"&gt;hr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pFactory&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;CreateBitmapFromHBITMAP&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bitmap&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;WICBitmapIgnoreAlpha&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;wicbitmap&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;
+
+
 
     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SUCCEEDED&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hr&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
     &lt;span class="p"&gt;{&lt;/span&gt;
@@ -119,6 +124,8 @@ ekran görüntüsü kaydeden küçük bir program yazdım.&lt;/p&gt;
     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;EnumDisplaySettings&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ENUM_CURRENT_SETTINGS&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
     &lt;span class="p"&gt;{&lt;/span&gt;
 
+
+
         &lt;span class="n"&gt;HWND&lt;/span&gt; &lt;span class="n"&gt;desktop&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;GetDesktopWindow&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
         &lt;span class="n"&gt;HDC&lt;/span&gt; &lt;span class="n"&gt;desktopDC&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;GetDC&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;desktop&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
         &lt;span class="n"&gt;HDC&lt;/span&gt; &lt;span class="n"&gt;captureDC&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;CreateCompatibleDC&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;desktopDC&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
@@ -134,13 +141,10 @@ ekran görüntüsü kaydeden küçük bir program yazdım.&lt;/p&gt;
         &lt;span class="n"&gt;DeleteDC&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;captureDC&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
         &lt;span class="n"&gt;DeleteObject&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hCaptureBitmap&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
+
     &lt;span class="p"&gt;}&lt;/span&gt;
 
     &lt;span class="n"&gt;CoUninitialize&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;/li&gt;
-&lt;/ul&gt;&lt;/div&gt;</description><guid>http://ysar.net/windows/windows-api-ile-ekran-goruntusu.html</guid><pubDate>Thu, 23 May 2019 19:16:00 GMT</pubDate></item></channel></rss>
+&lt;/pre&gt;&lt;/div&gt;</description><guid>http://ysar.net/windows/windows-api-ile-ekran-goruntusu.html</guid><pubDate>Thu, 23 May 2019 19:16:00 GMT</pubDate></item></channel></rss>

@@ -59,7 +59,10 @@ ekran görüntüsü kaydeden küçük bir program yazdım.</p>
 <li>WIC (Windows Imaging Component) ile JPEG dosyası kaydetme</li>
 <li>Akıllı Pointer Örneği</li>
 <li>COM objesi oluşturma ve kullanma örneği</li>
-<li>Windows'da C++ ile ekran boyutu tespit etme<pre class="code literal-block"><span></span><span class="cp">#define WIN32_LEAN_AND_MEAN</span>
+<li>Windows'da C++ ile ekran boyutu tespit etme</li>
+</ul>
+<p> </p>
+<pre class="code literal-block"><span></span><span class="cp">#define WIN32_LEAN_AND_MEAN</span>
 <span class="cp">#include</span> <span class="cpf">&lt;windows.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;winuser.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;objbase.h&gt;</span><span class="cp"></span>
@@ -91,6 +94,8 @@ ekran görüntüsü kaydeden küçük bir program yazdım.</p>
     <span class="p">{</span>
         <span class="n">hr</span> <span class="o">=</span> <span class="n">pFactory</span><span class="o">-&gt;</span><span class="n">CreateBitmapFromHBITMAP</span><span class="p">(</span><span class="n">bitmap</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">WICBitmapIgnoreAlpha</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">wicbitmap</span><span class="p">);</span>
     <span class="p">}</span>
+
+
 
     <span class="k">if</span> <span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
     <span class="p">{</span>
@@ -163,6 +168,8 @@ ekran görüntüsü kaydeden küçük bir program yazdım.</p>
     <span class="k">if</span> <span class="p">(</span><span class="n">EnumDisplaySettings</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">ENUM_CURRENT_SETTINGS</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">d</span><span class="p">))</span>
     <span class="p">{</span>
 
+
+
         <span class="n">HWND</span> <span class="n">desktop</span> <span class="o">=</span> <span class="n">GetDesktopWindow</span><span class="p">();</span>
         <span class="n">HDC</span> <span class="n">desktopDC</span> <span class="o">=</span> <span class="n">GetDC</span><span class="p">(</span><span class="n">desktop</span><span class="p">);</span>
         <span class="n">HDC</span> <span class="n">captureDC</span> <span class="o">=</span> <span class="n">CreateCompatibleDC</span><span class="p">(</span><span class="n">desktopDC</span><span class="p">);</span>
@@ -178,16 +185,13 @@ ekran görüntüsü kaydeden küçük bir program yazdım.</p>
         <span class="n">DeleteDC</span><span class="p">(</span><span class="n">captureDC</span><span class="p">);</span>
         <span class="n">DeleteObject</span><span class="p">(</span><span class="n">hCaptureBitmap</span><span class="p">);</span>
 
+
     <span class="p">}</span>
 
     <span class="n">CoUninitialize</span><span class="p">();</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
 </pre>
-
-
-</li>
-</ul>
 </div>
     </div>
     <aside class="postpromonav"><nav><div class="pager">
