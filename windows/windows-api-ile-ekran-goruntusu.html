@@ -87,15 +87,15 @@ ekran görüntüsü kaydeden küçük bir program yazdım.</p>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
     <span class="p">{</span>
-        <span class="n">hr</span> <span class="o">=</span> <span class="n">CoCreateInstance</span><span class="p">(</span><span class="n">CLSID_WICImagingFactory</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">CLSCTX_INPROC_SERVER</span><span class="p">,</span> <span class="n">IID_PPV_ARGS</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pFactory</span><span class="p">));</span>
+        <span class="n">hr</span> <span class="o">=</span> <span class="n">CoCreateInstance</span><span class="p">(</span><span class="n">CLSID_WICImagingFactory</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span>
+                <span class="n">CLSCTX_INPROC_SERVER</span><span class="p">,</span> <span class="n">IID_PPV_ARGS</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pFactory</span><span class="p">));</span>
     <span class="p">}</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
     <span class="p">{</span>
-        <span class="n">hr</span> <span class="o">=</span> <span class="n">pFactory</span><span class="o">-&gt;</span><span class="n">CreateBitmapFromHBITMAP</span><span class="p">(</span><span class="n">bitmap</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">WICBitmapIgnoreAlpha</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">wicbitmap</span><span class="p">);</span>
+        <span class="n">hr</span> <span class="o">=</span> <span class="n">pFactory</span><span class="o">-&gt;</span><span class="n">CreateBitmapFromHBITMAP</span><span class="p">(</span><span class="n">bitmap</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span>
+                                <span class="n">WICBitmapIgnoreAlpha</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">wicbitmap</span><span class="p">);</span>
     <span class="p">}</span>
-
-
 
     <span class="k">if</span> <span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
     <span class="p">{</span>
@@ -109,7 +109,8 @@ ekran görüntüsü kaydeden küçük bir program yazdım.</p>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
     <span class="p">{</span>
-        <span class="n">hr</span> <span class="o">=</span> <span class="n">pFactory</span><span class="o">-&gt;</span><span class="n">CreateEncoder</span><span class="p">(</span><span class="n">GUID_ContainerFormatJpeg</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">encoder</span><span class="p">);</span>
+        <span class="n">hr</span> <span class="o">=</span> <span class="n">pFactory</span><span class="o">-&gt;</span><span class="n">CreateEncoder</span><span class="p">(</span><span class="n">GUID_ContainerFormatJpeg</span><span class="p">,</span>
+                                                    <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">encoder</span><span class="p">);</span>
     <span class="p">}</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
@@ -156,10 +157,13 @@ ekran görüntüsü kaydeden küçük bir program yazdım.</p>
     <span class="k">return</span> <span class="n">hr</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="kt">int</span> <span class="n">WINAPI</span> <span class="nf">wWinMain</span><span class="p">(</span><span class="n">HINSTANCE</span> <span class="n">hInstance</span><span class="p">,</span> <span class="n">HINSTANCE</span> <span class="n">hPrevInstance</span><span class="p">,</span> <span class="n">PWSTR</span> <span class="n">pCmdLine</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nCmdShow</span><span class="p">)</span>
+<span class="kt">int</span> <span class="n">WINAPI</span> <span class="nf">wWinMain</span><span class="p">(</span><span class="n">HINSTANCE</span> <span class="n">hInstance</span><span class="p">,</span> <span class="n">HINSTANCE</span> <span class="n">hPrevInstance</span><span class="p">,</span>
+                                        <span class="n">PWSTR</span> <span class="n">pCmdLine</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nCmdShow</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="n">HRESULT</span> <span class="n">hr</span> <span class="o">=</span> <span class="n">S_OK</span><span class="p">;</span>
-    <span class="n">hr</span> <span class="o">=</span> <span class="n">CoInitializeEx</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">COINIT_APARTMENTTHREADED</span> <span class="o">|</span> <span class="n">COINIT_DISABLE_OLE1DDE</span><span class="p">);</span>
+    <span class="n">hr</span> <span class="o">=</span> <span class="n">CoInitializeEx</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span>
+        <span class="n">COINIT_APARTMENTTHREADED</span> <span class="o">|</span> <span class="n">COINIT_DISABLE_OLE1DDE</span><span class="p">);</span>
+
     <span class="k">if</span> <span class="p">(</span><span class="n">FAILED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
         <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 
@@ -167,17 +171,16 @@ ekran görüntüsü kaydeden küçük bir program yazdım.</p>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">EnumDisplaySettings</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">ENUM_CURRENT_SETTINGS</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">d</span><span class="p">))</span>
     <span class="p">{</span>
-
-
-
         <span class="n">HWND</span> <span class="n">desktop</span> <span class="o">=</span> <span class="n">GetDesktopWindow</span><span class="p">();</span>
         <span class="n">HDC</span> <span class="n">desktopDC</span> <span class="o">=</span> <span class="n">GetDC</span><span class="p">(</span><span class="n">desktop</span><span class="p">);</span>
         <span class="n">HDC</span> <span class="n">captureDC</span> <span class="o">=</span> <span class="n">CreateCompatibleDC</span><span class="p">(</span><span class="n">desktopDC</span><span class="p">);</span>
-        <span class="n">HBITMAP</span> <span class="n">hCaptureBitmap</span> <span class="o">=</span> <span class="n">CreateCompatibleBitmap</span><span class="p">(</span><span class="n">desktopDC</span><span class="p">,</span> <span class="n">d</span><span class="p">.</span><span class="n">dmPelsWidth</span><span class="p">,</span> <span class="n">d</span><span class="p">.</span><span class="n">dmPelsHeight</span><span class="p">);</span>
+        <span class="n">HBITMAP</span> <span class="n">hCaptureBitmap</span> <span class="o">=</span>
+            <span class="n">CreateCompatibleBitmap</span><span class="p">(</span><span class="n">desktopDC</span><span class="p">,</span> <span class="n">d</span><span class="p">.</span><span class="n">dmPelsWidth</span><span class="p">,</span> <span class="n">d</span><span class="p">.</span><span class="n">dmPelsHeight</span><span class="p">);</span>
 
         <span class="n">SelectObject</span><span class="p">(</span><span class="n">captureDC</span><span class="p">,</span> <span class="n">hCaptureBitmap</span><span class="p">);</span>
 
-        <span class="n">BitBlt</span><span class="p">(</span><span class="n">captureDC</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">d</span><span class="p">.</span><span class="n">dmPelsWidth</span><span class="p">,</span> <span class="n">d</span><span class="p">.</span><span class="n">dmPelsHeight</span><span class="p">,</span> <span class="n">desktopDC</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SRCCOPY</span> <span class="o">|</span> <span class="n">CAPTUREBLT</span><span class="p">);</span>
+        <span class="n">BitBlt</span><span class="p">(</span><span class="n">captureDC</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">d</span><span class="p">.</span><span class="n">dmPelsWidth</span><span class="p">,</span> <span class="n">d</span><span class="p">.</span><span class="n">dmPelsHeight</span><span class="p">,</span>
+                                    <span class="n">desktopDC</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SRCCOPY</span> <span class="o">|</span> <span class="n">CAPTUREBLT</span><span class="p">);</span>
 
         <span class="n">SaveHBITMAP</span><span class="p">(</span><span class="n">hCaptureBitmap</span><span class="p">,</span> <span class="sa">L</span><span class="s">"My New ScreenShot.jpg"</span><span class="p">);</span>
 
