@@ -30,6 +30,7 @@ Anahtar Kelimeler
 &nbsp;
 
     :::c++
+
     #define WIN32_LEAN_AND_MEAN
     #include <windows.h>
     #include <winuser.h>
@@ -55,15 +56,15 @@ Anahtar Kelimeler
 
         if (SUCCEEDED(hr))
         {
-            hr = CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pFactory));
+            hr = CoCreateInstance(CLSID_WICImagingFactory, NULL,
+                    CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pFactory));
         }
 
         if (SUCCEEDED(hr))
         {
-            hr = pFactory->CreateBitmapFromHBITMAP(bitmap, NULL, WICBitmapIgnoreAlpha, &wicbitmap);
+            hr = pFactory->CreateBitmapFromHBITMAP(bitmap, NULL,
+                                    WICBitmapIgnoreAlpha, &wicbitmap);
         }
-
-
 
         if (SUCCEEDED(hr))
         {
@@ -77,7 +78,8 @@ Anahtar Kelimeler
 
         if (SUCCEEDED(hr))
         {
-            hr = pFactory->CreateEncoder(GUID_ContainerFormatJpeg, NULL, &encoder);
+            hr = pFactory->CreateEncoder(GUID_ContainerFormatJpeg,
+                                                        NULL, &encoder);
         }
 
         if (SUCCEEDED(hr))
@@ -124,10 +126,13 @@ Anahtar Kelimeler
         return hr;
     }
 
-    int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+    int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                                            PWSTR pCmdLine, int nCmdShow)
     {
         HRESULT hr = S_OK;
-        hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+        hr = CoInitializeEx(NULL,
+            COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+        
         if (FAILED(hr))
             return 0;
 
@@ -135,17 +140,16 @@ Anahtar Kelimeler
 
         if (EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &d))
         {
-
-
-
             HWND desktop = GetDesktopWindow();
             HDC desktopDC = GetDC(desktop);
             HDC captureDC = CreateCompatibleDC(desktopDC);
-            HBITMAP hCaptureBitmap = CreateCompatibleBitmap(desktopDC, d.dmPelsWidth, d.dmPelsHeight);
+            HBITMAP hCaptureBitmap =
+                CreateCompatibleBitmap(desktopDC, d.dmPelsWidth, d.dmPelsHeight);
 
             SelectObject(captureDC, hCaptureBitmap);
 
-            BitBlt(captureDC, 0, 0, d.dmPelsWidth, d.dmPelsHeight, desktopDC, 0, 0, SRCCOPY | CAPTUREBLT);
+            BitBlt(captureDC, 0, 0, d.dmPelsWidth, d.dmPelsHeight,
+                                        desktopDC, 0, 0, SRCCOPY | CAPTUREBLT);
 
             SaveHBITMAP(hCaptureBitmap, L"My New ScreenShot.jpg");
 
@@ -159,4 +163,5 @@ Anahtar Kelimeler
         CoUninitialize();
         return 0;
     }
+
     
