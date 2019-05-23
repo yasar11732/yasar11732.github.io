@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Win32/C++ uygulaması ile, ekran görüntüsü kaydediyoruz.">
+<meta name="viewport" content="width=device-width">
+<title>Windows Api İle Ekran Görüntüsü Yakalamak | YSAR.NET</title>
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900%7CUbuntu:300,400,500,700" rel="stylesheet">
+<link href="../assets/icons/foundation-icons.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/style.css" rel="stylesheet" type="text/css">
+<script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/windows/windows-api-ile-ekran-goruntusu.html">
+<!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="../assembly/stack-protector.html" title="GCC'nin Stack Koruması" type="text/html">
+<meta property="og:site_name" content="YSAR.NET">
+<meta property="og:title" content="Windows Api İle Ekran Görüntüsü Yakalamak">
+<meta property="og:url" content="http://ysar.net/windows/windows-api-ile-ekran-goruntusu.html">
+<meta property="og:description" content="Win32/C++ uygulaması ile, ekran görüntüsü kaydediyoruz.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2019-05-23T22:16:00+03:00">
+</head>
+<body>
+
+         
+    <header class="fixed-top"><div class="container">
+        <a href="http://ysar.net">
+            <img class="logo" src="../assets/img/Logo.svg"></a>
+        <div class="subtitle">Python, Yazılım ve Programlama</div>
+    <nav id="menu"><ul>
+<li class="fi-info"><a href="../yasar-arabaci.html">Hakkımda</a></li>
+            <li class="fi-social-github"><a href="https://github.com/yasar11732/">GitHub</a></li>
+            <li class="question"><a href="../soru-cevap.html">Soru-Cevap</a></li>
+            <li class="fi-rss"><a href="../rss.xml">RSS</a></li>
+        </ul></nav>
+</div>
+        
+    </header><main class="main-content"><article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 itemprop="headline name">Windows Api İle Ekran Görüntüsü Yakalamak</h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Merhabalar,</p>
+<p>Bu mecrada uzun süredir genel olarak yazılımla ilgili yazılar paylaşıyorum. Uzun süredir bu blogu takip edenlerinizin
+tasdik edeceği üzere, blog yazılarım genellikle seçtiğim bir konu hakkındaki detaylı anlatımlardan oluşuyor. Aynı zamanda,
+son birkaç yılda, blogumda yayınladığım yazıların sayısının da bir hayli azaldığını da farketmişsinizdir. Bunun nedeni,
+artık yazılımla uğraşmıyor olmam değil, detaylı ve açıklayıcı yazılar yazmaya vakit ayıramıyor olmam. Blog konusunda
+alıştığım tarzda devam etmeye çalışmanın artık beyhude bir heves olduğuna kanaat getirdim. Bu nedenle, artık blog
+yazılarımı makale formatında değil, son zamanlarda uğraştığım konularda kısa günlük yazıları şeklinde yazmayı düşünüyorum.
+Bu yazı, bahsettiğim türden yazıların ilki olacak.</p>
+<p>Son birkaç gündür, Win32 API'siyle ilgili kendimi geliştirmeye çalışıyorum. C++ ile Win32 API fonksiyonlarını kullanarak,
+ekran görüntüsü kaydeden küçük bir program yazdım.</p>
+<h2>Anahtar Kelimeler</h2>
+<ul>
+<li>C++ ile ekran görüntüsü kaydetme</li>
+<li>WIC (Windows Imaging Component) ile JPEG dosyası kaydetme</li>
+<li>Akıllı Pointer Örneği</li>
+<li>COM objesi oluşturma ve kullanma örneği</li>
+<li>
+<p>Windows'da C++ ile ekran boyutu tespit etme</p>
+<p>:::C++</p>
+<h2>define WIN32_LEAN_AND_MEAN</h2>
+<h2>include <windows.h></windows.h>
+</h2>
+<h2>include <winuser.h></winuser.h>
+</h2>
+<h2>include <objbase.h></objbase.h>
+</h2>
+<h2>include <combaseapi.h></combaseapi.h>
+</h2>
+<h2>include <wincodec.h></wincodec.h>
+</h2>
+<h2>include <wincodecsdk.h></wincodecsdk.h>
+</h2>
+<h2>include <atlbase.h></atlbase.h>
+</h2>
+<p>HRESULT SaveHBITMAP(HBITMAP bitmap, LPCWSTR filename)
+{</p>
+<pre class="code literal-block"><span></span>HRESULT hr = S_OK;
+BITMAP _b;
+
+GetObject(bitmap, sizeof(BITMAP), &amp;_b);
+
+CComPtr&lt;IWICImagingFactory&gt; pFactory;
+CComPtr&lt;IWICBitmap&gt; wicbitmap;
+CComPtr&lt;IWICStream&gt; stream;
+CComPtr&lt;IWICBitmapEncoder&gt; encoder;
+CComPtr&lt;IWICBitmapFrameEncode&gt; frame;
+
+if (SUCCEEDED(hr))
+{
+    hr = CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&amp;pFactory));
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = pFactory-&gt;CreateBitmapFromHBITMAP(bitmap, NULL, WICBitmapIgnoreAlpha, &amp;wicbitmap);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = pFactory-&gt;CreateStream(&amp;stream);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = stream-&gt;InitializeFromFilename(filename, GENERIC_WRITE);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = pFactory-&gt;CreateEncoder(GUID_ContainerFormatJpeg, NULL, &amp;encoder);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = encoder-&gt;Initialize(stream, WICBitmapEncoderNoCache);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = encoder-&gt;CreateNewFrame(&amp;frame, NULL);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = frame-&gt;Initialize(NULL);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = frame-&gt;SetSize(_b.bmWidth, _b.bmHeight);
+}
+
+if (SUCCEEDED(hr))
+{
+    GUID pixel_format = GUID_WICPixelFormat24bppRGB;
+    hr = frame-&gt;SetPixelFormat(&amp;pixel_format);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = frame-&gt;WriteSource(wicbitmap, NULL);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = frame-&gt;Commit();
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = encoder-&gt;Commit();
+}
+
+return hr;
+</pre>
+
+
+<p>}</p>
+<p>int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+{
+    HRESULT hr = S_OK;
+    hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+    if (FAILED(hr))
+        return 0;</p>
+<pre class="code literal-block"><span></span>DEVMODE d;
+
+if (EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &amp;d))
+{
+
+    HWND desktop = GetDesktopWindow();
+    HDC desktopDC = GetDC(desktop);
+    HDC captureDC = CreateCompatibleDC(desktopDC);
+    HBITMAP hCaptureBitmap = CreateCompatibleBitmap(desktopDC, d.dmPelsWidth, d.dmPelsHeight);
+
+    SelectObject(captureDC, hCaptureBitmap);
+
+    BitBlt(captureDC, 0, 0, d.dmPelsWidth, d.dmPelsHeight, desktopDC, 0, 0, SRCCOPY | CAPTUREBLT);
+
+    SaveHBITMAP(hCaptureBitmap, L"My New ScreenShot.jpg");
+
+    ReleaseDC(desktop, desktopDC);
+    DeleteDC(captureDC);
+    DeleteObject(hCaptureBitmap);
+
+}
+
+CoUninitialize();
+return 0;
+</pre>
+
+
+<p>}</p>
+</li>
+</ul>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><div class="pager">
+                <a href="../assembly/stack-protector.html" rel="prev" title="GCC'nin Stack Koruması">Önceki yazı</a>
+        </div>
+
+    </nav></aside></article></main><script>
+  if(document.location.hostname == "ysar.net")
+  {
+      (function() {
+        var cx = '013136674562336859018:ouohwab0yku';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+      
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-44774134-1', 'auto');
+          ga('send', 'pageview');
+  }
+
+</script>
+</body>
+</html>

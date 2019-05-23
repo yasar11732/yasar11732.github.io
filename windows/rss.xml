@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Windows)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/windows/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Thu, 23 May 2019 20:13:26 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Windows Api İle Ekran Görüntüsü Yakalamak</title><link>http://ysar.net/windows/windows-api-ile-ekran-goruntusu.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Merhabalar,&lt;/p&gt;
+&lt;p&gt;Bu mecrada uzun süredir genel olarak yazılımla ilgili yazılar paylaşıyorum. Uzun süredir bu blogu takip edenlerinizin
+tasdik edeceği üzere, blog yazılarım genellikle seçtiğim bir konu hakkındaki detaylı anlatımlardan oluşuyor. Aynı zamanda,
+son birkaç yılda, blogumda yayınladığım yazıların sayısının da bir hayli azaldığını da farketmişsinizdir. Bunun nedeni,
+artık yazılımla uğraşmıyor olmam değil, detaylı ve açıklayıcı yazılar yazmaya vakit ayıramıyor olmam. Blog konusunda
+alıştığım tarzda devam etmeye çalışmanın artık beyhude bir heves olduğuna kanaat getirdim. Bu nedenle, artık blog
+yazılarımı makale formatında değil, son zamanlarda uğraştığım konularda kısa günlük yazıları şeklinde yazmayı düşünüyorum.
+Bu yazı, bahsettiğim türden yazıların ilki olacak.&lt;/p&gt;
+&lt;p&gt;Son birkaç gündür, Win32 API'siyle ilgili kendimi geliştirmeye çalışıyorum. C++ ile Win32 API fonksiyonlarını kullanarak,
+ekran görüntüsü kaydeden küçük bir program yazdım.&lt;/p&gt;
+&lt;h2&gt;Anahtar Kelimeler&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;C++ ile ekran görüntüsü kaydetme&lt;/li&gt;
+&lt;li&gt;WIC (Windows Imaging Component) ile JPEG dosyası kaydetme&lt;/li&gt;
+&lt;li&gt;Akıllı Pointer Örneği&lt;/li&gt;
+&lt;li&gt;COM objesi oluşturma ve kullanma örneği&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows'da C++ ile ekran boyutu tespit etme&lt;/p&gt;
+&lt;p&gt;:::C++&lt;/p&gt;
+&lt;h2&gt;define WIN32_LEAN_AND_MEAN&lt;/h2&gt;
+&lt;h2&gt;include &lt;windows.h&gt;&lt;/windows.h&gt;&lt;/h2&gt;
+&lt;h2&gt;include &lt;winuser.h&gt;&lt;/winuser.h&gt;&lt;/h2&gt;
+&lt;h2&gt;include &lt;objbase.h&gt;&lt;/objbase.h&gt;&lt;/h2&gt;
+&lt;h2&gt;include &lt;combaseapi.h&gt;&lt;/combaseapi.h&gt;&lt;/h2&gt;
+&lt;h2&gt;include &lt;wincodec.h&gt;&lt;/wincodec.h&gt;&lt;/h2&gt;
+&lt;h2&gt;include &lt;wincodecsdk.h&gt;&lt;/wincodecsdk.h&gt;&lt;/h2&gt;
+&lt;h2&gt;include &lt;atlbase.h&gt;&lt;/atlbase.h&gt;&lt;/h2&gt;
+&lt;p&gt;HRESULT SaveHBITMAP(HBITMAP bitmap, LPCWSTR filename)
+{&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;HRESULT hr = S_OK;
+BITMAP _b;
+
+GetObject(bitmap, sizeof(BITMAP), &amp;amp;_b);
+
+CComPtr&amp;lt;IWICImagingFactory&amp;gt; pFactory;
+CComPtr&amp;lt;IWICBitmap&amp;gt; wicbitmap;
+CComPtr&amp;lt;IWICStream&amp;gt; stream;
+CComPtr&amp;lt;IWICBitmapEncoder&amp;gt; encoder;
+CComPtr&amp;lt;IWICBitmapFrameEncode&amp;gt; frame;
+
+if (SUCCEEDED(hr))
+{
+    hr = CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&amp;amp;pFactory));
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = pFactory-&amp;gt;CreateBitmapFromHBITMAP(bitmap, NULL, WICBitmapIgnoreAlpha, &amp;amp;wicbitmap);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = pFactory-&amp;gt;CreateStream(&amp;amp;stream);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = stream-&amp;gt;InitializeFromFilename(filename, GENERIC_WRITE);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = pFactory-&amp;gt;CreateEncoder(GUID_ContainerFormatJpeg, NULL, &amp;amp;encoder);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = encoder-&amp;gt;Initialize(stream, WICBitmapEncoderNoCache);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = encoder-&amp;gt;CreateNewFrame(&amp;amp;frame, NULL);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = frame-&amp;gt;Initialize(NULL);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = frame-&amp;gt;SetSize(_b.bmWidth, _b.bmHeight);
+}
+
+if (SUCCEEDED(hr))
+{
+    GUID pixel_format = GUID_WICPixelFormat24bppRGB;
+    hr = frame-&amp;gt;SetPixelFormat(&amp;amp;pixel_format);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = frame-&amp;gt;WriteSource(wicbitmap, NULL);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = frame-&amp;gt;Commit();
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = encoder-&amp;gt;Commit();
+}
+
+return hr;
+&lt;/pre&gt;
+
+
+&lt;p&gt;}&lt;/p&gt;
+&lt;p&gt;int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+{
+    HRESULT hr = S_OK;
+    hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+    if (FAILED(hr))
+        return 0;&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;DEVMODE d;
+
+if (EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &amp;amp;d))
+{
+
+    HWND desktop = GetDesktopWindow();
+    HDC desktopDC = GetDC(desktop);
+    HDC captureDC = CreateCompatibleDC(desktopDC);
+    HBITMAP hCaptureBitmap = CreateCompatibleBitmap(desktopDC, d.dmPelsWidth, d.dmPelsHeight);
+
+    SelectObject(captureDC, hCaptureBitmap);
+
+    BitBlt(captureDC, 0, 0, d.dmPelsWidth, d.dmPelsHeight, desktopDC, 0, 0, SRCCOPY | CAPTUREBLT);
+
+    SaveHBITMAP(hCaptureBitmap, L"My New ScreenShot.jpg");
+
+    ReleaseDC(desktop, desktopDC);
+    DeleteDC(captureDC);
+    DeleteObject(hCaptureBitmap);
+
+}
+
+CoUninitialize();
+return 0;
+&lt;/pre&gt;
+
+
+&lt;p&gt;}&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;&lt;/div&gt;</description><guid>http://ysar.net/windows/windows-api-ile-ekran-goruntusu.html</guid><pubDate>Thu, 23 May 2019 19:16:00 GMT</pubDate></item></channel></rss>

@@ -1,5 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET</title><link>http://ysar.net/</link><description>Yaşar Arabacı İnternet Günlüğü</description><atom:link href="http://ysar.net/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Tue, 18 Sep 2018 19:31:28 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>GCC'nin Stack Koruması</title><link>http://ysar.net/assembly/stack-protector.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;C dilinde, fonksiyon argümanları, yerel değişkenler (statik olmayan) ve fonksiyon çağrısı bittiğinde
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET</title><link>http://ysar.net/</link><description>Yaşar Arabacı İnternet Günlüğü</description><atom:link href="http://ysar.net/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Thu, 23 May 2019 20:13:26 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Windows Api İle Ekran Görüntüsü Yakalamak</title><link>http://ysar.net/windows/windows-api-ile-ekran-goruntusu.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Merhabalar,&lt;/p&gt;
+&lt;p&gt;Bu mecrada uzun süredir genel olarak yazılımla ilgili yazılar paylaşıyorum. Uzun süredir bu blogu takip edenlerinizin
+tasdik edeceği üzere, blog yazılarım genellikle seçtiğim bir konu hakkındaki detaylı anlatımlardan oluşuyor. Aynı zamanda,
+son birkaç yılda, blogumda yayınladığım yazıların sayısının da bir hayli azaldığını da farketmişsinizdir. Bunun nedeni,
+artık yazılımla uğraşmıyor olmam değil, detaylı ve açıklayıcı yazılar yazmaya vakit ayıramıyor olmam. Blog konusunda
+alıştığım tarzda devam etmeye çalışmanın artık beyhude bir heves olduğuna kanaat getirdim. Bu nedenle, artık blog
+yazılarımı makale formatında değil, son zamanlarda uğraştığım konularda kısa günlük yazıları şeklinde yazmayı düşünüyorum.
+Bu yazı, bahsettiğim türden yazıların ilki olacak.&lt;/p&gt;
+&lt;p&gt;Son birkaç gündür, Win32 API'siyle ilgili kendimi geliştirmeye çalışıyorum. C++ ile Win32 API fonksiyonlarını kullanarak,
+ekran görüntüsü kaydeden küçük bir program yazdım.&lt;/p&gt;
+&lt;h2&gt;Anahtar Kelimeler&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;C++ ile ekran görüntüsü kaydetme&lt;/li&gt;
+&lt;li&gt;WIC (Windows Imaging Component) ile JPEG dosyası kaydetme&lt;/li&gt;
+&lt;li&gt;Akıllı Pointer Örneği&lt;/li&gt;
+&lt;li&gt;COM objesi oluşturma ve kullanma örneği&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Windows'da C++ ile ekran boyutu tespit etme&lt;/p&gt;
+&lt;p&gt;:::C++&lt;/p&gt;
+&lt;h2&gt;define WIN32_LEAN_AND_MEAN&lt;/h2&gt;
+&lt;h2&gt;include &lt;windows.h&gt;&lt;/windows.h&gt;&lt;/h2&gt;
+&lt;h2&gt;include &lt;winuser.h&gt;&lt;/winuser.h&gt;&lt;/h2&gt;
+&lt;h2&gt;include &lt;objbase.h&gt;&lt;/objbase.h&gt;&lt;/h2&gt;
+&lt;h2&gt;include &lt;combaseapi.h&gt;&lt;/combaseapi.h&gt;&lt;/h2&gt;
+&lt;h2&gt;include &lt;wincodec.h&gt;&lt;/wincodec.h&gt;&lt;/h2&gt;
+&lt;h2&gt;include &lt;wincodecsdk.h&gt;&lt;/wincodecsdk.h&gt;&lt;/h2&gt;
+&lt;h2&gt;include &lt;atlbase.h&gt;&lt;/atlbase.h&gt;&lt;/h2&gt;
+&lt;p&gt;HRESULT SaveHBITMAP(HBITMAP bitmap, LPCWSTR filename)
+{&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;HRESULT hr = S_OK;
+BITMAP _b;
+
+GetObject(bitmap, sizeof(BITMAP), &amp;amp;_b);
+
+CComPtr&amp;lt;IWICImagingFactory&amp;gt; pFactory;
+CComPtr&amp;lt;IWICBitmap&amp;gt; wicbitmap;
+CComPtr&amp;lt;IWICStream&amp;gt; stream;
+CComPtr&amp;lt;IWICBitmapEncoder&amp;gt; encoder;
+CComPtr&amp;lt;IWICBitmapFrameEncode&amp;gt; frame;
+
+if (SUCCEEDED(hr))
+{
+    hr = CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&amp;amp;pFactory));
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = pFactory-&amp;gt;CreateBitmapFromHBITMAP(bitmap, NULL, WICBitmapIgnoreAlpha, &amp;amp;wicbitmap);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = pFactory-&amp;gt;CreateStream(&amp;amp;stream);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = stream-&amp;gt;InitializeFromFilename(filename, GENERIC_WRITE);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = pFactory-&amp;gt;CreateEncoder(GUID_ContainerFormatJpeg, NULL, &amp;amp;encoder);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = encoder-&amp;gt;Initialize(stream, WICBitmapEncoderNoCache);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = encoder-&amp;gt;CreateNewFrame(&amp;amp;frame, NULL);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = frame-&amp;gt;Initialize(NULL);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = frame-&amp;gt;SetSize(_b.bmWidth, _b.bmHeight);
+}
+
+if (SUCCEEDED(hr))
+{
+    GUID pixel_format = GUID_WICPixelFormat24bppRGB;
+    hr = frame-&amp;gt;SetPixelFormat(&amp;amp;pixel_format);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = frame-&amp;gt;WriteSource(wicbitmap, NULL);
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = frame-&amp;gt;Commit();
+}
+
+if (SUCCEEDED(hr))
+{
+    hr = encoder-&amp;gt;Commit();
+}
+
+return hr;
+&lt;/pre&gt;
+
+
+&lt;p&gt;}&lt;/p&gt;
+&lt;p&gt;int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+{
+    HRESULT hr = S_OK;
+    hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+    if (FAILED(hr))
+        return 0;&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;DEVMODE d;
+
+if (EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &amp;amp;d))
+{
+
+    HWND desktop = GetDesktopWindow();
+    HDC desktopDC = GetDC(desktop);
+    HDC captureDC = CreateCompatibleDC(desktopDC);
+    HBITMAP hCaptureBitmap = CreateCompatibleBitmap(desktopDC, d.dmPelsWidth, d.dmPelsHeight);
+
+    SelectObject(captureDC, hCaptureBitmap);
+
+    BitBlt(captureDC, 0, 0, d.dmPelsWidth, d.dmPelsHeight, desktopDC, 0, 0, SRCCOPY | CAPTUREBLT);
+
+    SaveHBITMAP(hCaptureBitmap, L"My New ScreenShot.jpg");
+
+    ReleaseDC(desktop, desktopDC);
+    DeleteDC(captureDC);
+    DeleteObject(hCaptureBitmap);
+
+}
+
+CoUninitialize();
+return 0;
+&lt;/pre&gt;
+
+
+&lt;p&gt;}&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;&lt;/div&gt;</description><guid>http://ysar.net/windows/windows-api-ile-ekran-goruntusu.html</guid><pubDate>Thu, 23 May 2019 19:16:00 GMT</pubDate></item><item><title>GCC'nin Stack Koruması</title><link>http://ysar.net/assembly/stack-protector.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;C dilinde, fonksiyon argümanları, yerel değişkenler (statik olmayan) ve fonksiyon çağrısı bittiğinde
 programın çalışmaya devam edeceği dönüş adresi stack'de tutuluyor. Program hafızasının LIFO mantığıyla
 çalışan bu bölümü, fonksiyonların birbiriyle iletişimi ve program
 akışının sağlanması açısından önemli. Stack'in kötü niyetli kullanım veya programlama hatası nedeniyle bozulması, programın hatalı
@@ -724,14 +870,4 @@ yasar arabaci test1 ./command_expand
 &lt;div style="text-align:center;"&gt;13 → 40 → 20 → 10 → 5 → 16 → 8 → 4 → 2 → 1&lt;/div&gt;
 
 &lt;p&gt;13 ile başlayıp 1 ile biten bu dizinin 10 elemanlı olduğu görünüyor. Henüz kanıtlanamamış olsa da, tüm başlangıç sayılarının 1 sayısına ulaştığı düşünülüyor.&lt;/p&gt;
-&lt;p&gt;Bir milyonun altındaki hangi başlangıç sayısı ile en uzun dizi elde edilir? &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/euler/euler-14.html"&gt;Devamını oku…&lt;/a&gt; (3 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/euler/euler-14.html</guid><pubDate>Thu, 23 Aug 2018 23:21:00 GMT</pubDate></item><item><title>(Euler 13) C Programlama Dilinde Büyük Sayıları Toplama</title><link>http://ysar.net/euler/euler-13.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Aşağıdaki 100 adet 50 haneli sayının toplamının ilk 10 hanesini bulunuz.&lt;/p&gt;
-&lt;div style="font-family:'courier new';font-size:10pt;text-align:center;"&gt;
-37107287533902102798797998220837590246510135740250&lt;br&gt;
-46376937677490009712648124896970078050417018260538&lt;br&gt;
-74324986199524741059474233309513058123726617309629&lt;br&gt;
-91942213363574161572522430563301811072406154908250&lt;br&gt;
-23067588207539346171171980310421047513778063246676&lt;br&gt;
-89261670696623633820136378418383684178734361726757&lt;br&gt;
-28112879812849979408065481931592621691275889832738&lt;br&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;a href="http://ysar.net/euler/euler-13.html"&gt;Devamını oku…&lt;/a&gt; (4 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/euler/euler-13.html</guid><pubDate>Thu, 23 Aug 2018 13:36:00 GMT</pubDate></item></channel></rss>
+&lt;p&gt;Bir milyonun altındaki hangi başlangıç sayısı ile en uzun dizi elde edilir? &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/euler/euler-14.html"&gt;Devamını oku…&lt;/a&gt; (3 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/euler/euler-14.html</guid><pubDate>Thu, 23 Aug 2018 23:21:00 GMT</pubDate></item></channel></rss>
