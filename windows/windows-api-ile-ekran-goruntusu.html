@@ -59,142 +59,133 @@ ekran görüntüsü kaydeden küçük bir program yazdım.</p>
 <li>WIC (Windows Imaging Component) ile JPEG dosyası kaydetme</li>
 <li>Akıllı Pointer Örneği</li>
 <li>COM objesi oluşturma ve kullanma örneği</li>
-<li>
-<p>Windows'da C++ ile ekran boyutu tespit etme</p>
-<p>:::C++</p>
-<h2>define WIN32_LEAN_AND_MEAN</h2>
-<h2>include <windows.h></windows.h>
-</h2>
-<h2>include <winuser.h></winuser.h>
-</h2>
-<h2>include <objbase.h></objbase.h>
-</h2>
-<h2>include <combaseapi.h></combaseapi.h>
-</h2>
-<h2>include <wincodec.h></wincodec.h>
-</h2>
-<h2>include <wincodecsdk.h></wincodecsdk.h>
-</h2>
-<h2>include <atlbase.h></atlbase.h>
-</h2>
-<p>HRESULT SaveHBITMAP(HBITMAP bitmap, LPCWSTR filename)
-{</p>
-<pre class="code literal-block"><span></span>HRESULT hr = S_OK;
-BITMAP _b;
+<li>Windows'da C++ ile ekran boyutu tespit etme<pre class="code literal-block"><span></span><span class="cp">#define WIN32_LEAN_AND_MEAN</span>
+<span class="cp">#include</span> <span class="cpf">&lt;windows.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;winuser.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;objbase.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;combaseapi.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;wincodec.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;wincodecsdk.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;atlbase.h&gt;</span><span class="cp"></span>
 
-GetObject(bitmap, sizeof(BITMAP), &amp;_b);
+<span class="n">HRESULT</span> <span class="nf">SaveHBITMAP</span><span class="p">(</span><span class="n">HBITMAP</span> <span class="n">bitmap</span><span class="p">,</span> <span class="n">LPCWSTR</span> <span class="n">filename</span><span class="p">)</span>
+<span class="p">{</span>
 
-CComPtr&lt;IWICImagingFactory&gt; pFactory;
-CComPtr&lt;IWICBitmap&gt; wicbitmap;
-CComPtr&lt;IWICStream&gt; stream;
-CComPtr&lt;IWICBitmapEncoder&gt; encoder;
-CComPtr&lt;IWICBitmapFrameEncode&gt; frame;
+    <span class="n">HRESULT</span> <span class="n">hr</span> <span class="o">=</span> <span class="n">S_OK</span><span class="p">;</span>
+    <span class="n">BITMAP</span> <span class="n">_b</span><span class="p">;</span>
 
-if (SUCCEEDED(hr))
-{
-    hr = CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&amp;pFactory));
-}
+    <span class="n">GetObject</span><span class="p">(</span><span class="n">bitmap</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">BITMAP</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">_b</span><span class="p">);</span>
 
-if (SUCCEEDED(hr))
-{
-    hr = pFactory-&gt;CreateBitmapFromHBITMAP(bitmap, NULL, WICBitmapIgnoreAlpha, &amp;wicbitmap);
-}
+    <span class="n">CComPtr</span><span class="o">&lt;</span><span class="n">IWICImagingFactory</span><span class="o">&gt;</span> <span class="n">pFactory</span><span class="p">;</span>
+    <span class="n">CComPtr</span><span class="o">&lt;</span><span class="n">IWICBitmap</span><span class="o">&gt;</span> <span class="n">wicbitmap</span><span class="p">;</span>
+    <span class="n">CComPtr</span><span class="o">&lt;</span><span class="n">IWICStream</span><span class="o">&gt;</span> <span class="n">stream</span><span class="p">;</span>
+    <span class="n">CComPtr</span><span class="o">&lt;</span><span class="n">IWICBitmapEncoder</span><span class="o">&gt;</span> <span class="n">encoder</span><span class="p">;</span>
+    <span class="n">CComPtr</span><span class="o">&lt;</span><span class="n">IWICBitmapFrameEncode</span><span class="o">&gt;</span> <span class="n">frame</span><span class="p">;</span>
 
-if (SUCCEEDED(hr))
-{
-    hr = pFactory-&gt;CreateStream(&amp;stream);
-}
+    <span class="k">if</span> <span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">hr</span> <span class="o">=</span> <span class="n">CoCreateInstance</span><span class="p">(</span><span class="n">CLSID_WICImagingFactory</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">CLSCTX_INPROC_SERVER</span><span class="p">,</span> <span class="n">IID_PPV_ARGS</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pFactory</span><span class="p">));</span>
+    <span class="p">}</span>
 
-if (SUCCEEDED(hr))
-{
-    hr = stream-&gt;InitializeFromFilename(filename, GENERIC_WRITE);
-}
+    <span class="k">if</span> <span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">hr</span> <span class="o">=</span> <span class="n">pFactory</span><span class="o">-&gt;</span><span class="n">CreateBitmapFromHBITMAP</span><span class="p">(</span><span class="n">bitmap</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">WICBitmapIgnoreAlpha</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">wicbitmap</span><span class="p">);</span>
+    <span class="p">}</span>
 
-if (SUCCEEDED(hr))
-{
-    hr = pFactory-&gt;CreateEncoder(GUID_ContainerFormatJpeg, NULL, &amp;encoder);
-}
+    <span class="k">if</span> <span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">hr</span> <span class="o">=</span> <span class="n">pFactory</span><span class="o">-&gt;</span><span class="n">CreateStream</span><span class="p">(</span><span class="o">&amp;</span><span class="n">stream</span><span class="p">);</span>
+    <span class="p">}</span>
 
-if (SUCCEEDED(hr))
-{
-    hr = encoder-&gt;Initialize(stream, WICBitmapEncoderNoCache);
-}
+    <span class="k">if</span> <span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">hr</span> <span class="o">=</span> <span class="n">stream</span><span class="o">-&gt;</span><span class="n">InitializeFromFilename</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">GENERIC_WRITE</span><span class="p">);</span>
+    <span class="p">}</span>
 
-if (SUCCEEDED(hr))
-{
-    hr = encoder-&gt;CreateNewFrame(&amp;frame, NULL);
-}
+    <span class="k">if</span> <span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">hr</span> <span class="o">=</span> <span class="n">pFactory</span><span class="o">-&gt;</span><span class="n">CreateEncoder</span><span class="p">(</span><span class="n">GUID_ContainerFormatJpeg</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">encoder</span><span class="p">);</span>
+    <span class="p">}</span>
 
-if (SUCCEEDED(hr))
-{
-    hr = frame-&gt;Initialize(NULL);
-}
+    <span class="k">if</span> <span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">hr</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">-&gt;</span><span class="n">Initialize</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">WICBitmapEncoderNoCache</span><span class="p">);</span>
+    <span class="p">}</span>
 
-if (SUCCEEDED(hr))
-{
-    hr = frame-&gt;SetSize(_b.bmWidth, _b.bmHeight);
-}
+    <span class="k">if</span> <span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">hr</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">-&gt;</span><span class="n">CreateNewFrame</span><span class="p">(</span><span class="o">&amp;</span><span class="n">frame</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="p">}</span>
 
-if (SUCCEEDED(hr))
-{
-    GUID pixel_format = GUID_WICPixelFormat24bppRGB;
-    hr = frame-&gt;SetPixelFormat(&amp;pixel_format);
-}
+    <span class="k">if</span> <span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">hr</span> <span class="o">=</span> <span class="n">frame</span><span class="o">-&gt;</span><span class="n">Initialize</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+    <span class="p">}</span>
 
-if (SUCCEEDED(hr))
-{
-    hr = frame-&gt;WriteSource(wicbitmap, NULL);
-}
+    <span class="k">if</span> <span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">hr</span> <span class="o">=</span> <span class="n">frame</span><span class="o">-&gt;</span><span class="n">SetSize</span><span class="p">(</span><span class="n">_b</span><span class="p">.</span><span class="n">bmWidth</span><span class="p">,</span> <span class="n">_b</span><span class="p">.</span><span class="n">bmHeight</span><span class="p">);</span>
+    <span class="p">}</span>
 
-if (SUCCEEDED(hr))
-{
-    hr = frame-&gt;Commit();
-}
+    <span class="k">if</span> <span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">GUID</span> <span class="n">pixel_format</span> <span class="o">=</span> <span class="n">GUID_WICPixelFormat24bppRGB</span><span class="p">;</span>
+        <span class="n">hr</span> <span class="o">=</span> <span class="n">frame</span><span class="o">-&gt;</span><span class="n">SetPixelFormat</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pixel_format</span><span class="p">);</span>
+    <span class="p">}</span>
 
-if (SUCCEEDED(hr))
-{
-    hr = encoder-&gt;Commit();
-}
+    <span class="k">if</span> <span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">hr</span> <span class="o">=</span> <span class="n">frame</span><span class="o">-&gt;</span><span class="n">WriteSource</span><span class="p">(</span><span class="n">wicbitmap</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="p">}</span>
 
-return hr;
+    <span class="k">if</span> <span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">hr</span> <span class="o">=</span> <span class="n">frame</span><span class="o">-&gt;</span><span class="n">Commit</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">hr</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">-&gt;</span><span class="n">Commit</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">hr</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">WINAPI</span> <span class="nf">wWinMain</span><span class="p">(</span><span class="n">HINSTANCE</span> <span class="n">hInstance</span><span class="p">,</span> <span class="n">HINSTANCE</span> <span class="n">hPrevInstance</span><span class="p">,</span> <span class="n">PWSTR</span> <span class="n">pCmdLine</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nCmdShow</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">HRESULT</span> <span class="n">hr</span> <span class="o">=</span> <span class="n">S_OK</span><span class="p">;</span>
+    <span class="n">hr</span> <span class="o">=</span> <span class="n">CoInitializeEx</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">COINIT_APARTMENTTHREADED</span> <span class="o">|</span> <span class="n">COINIT_DISABLE_OLE1DDE</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">FAILED</span><span class="p">(</span><span class="n">hr</span><span class="p">))</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">DEVMODE</span> <span class="n">d</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">EnumDisplaySettings</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">ENUM_CURRENT_SETTINGS</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">d</span><span class="p">))</span>
+    <span class="p">{</span>
+
+        <span class="n">HWND</span> <span class="n">desktop</span> <span class="o">=</span> <span class="n">GetDesktopWindow</span><span class="p">();</span>
+        <span class="n">HDC</span> <span class="n">desktopDC</span> <span class="o">=</span> <span class="n">GetDC</span><span class="p">(</span><span class="n">desktop</span><span class="p">);</span>
+        <span class="n">HDC</span> <span class="n">captureDC</span> <span class="o">=</span> <span class="n">CreateCompatibleDC</span><span class="p">(</span><span class="n">desktopDC</span><span class="p">);</span>
+        <span class="n">HBITMAP</span> <span class="n">hCaptureBitmap</span> <span class="o">=</span> <span class="n">CreateCompatibleBitmap</span><span class="p">(</span><span class="n">desktopDC</span><span class="p">,</span> <span class="n">d</span><span class="p">.</span><span class="n">dmPelsWidth</span><span class="p">,</span> <span class="n">d</span><span class="p">.</span><span class="n">dmPelsHeight</span><span class="p">);</span>
+
+        <span class="n">SelectObject</span><span class="p">(</span><span class="n">captureDC</span><span class="p">,</span> <span class="n">hCaptureBitmap</span><span class="p">);</span>
+
+        <span class="n">BitBlt</span><span class="p">(</span><span class="n">captureDC</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">d</span><span class="p">.</span><span class="n">dmPelsWidth</span><span class="p">,</span> <span class="n">d</span><span class="p">.</span><span class="n">dmPelsHeight</span><span class="p">,</span> <span class="n">desktopDC</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SRCCOPY</span> <span class="o">|</span> <span class="n">CAPTUREBLT</span><span class="p">);</span>
+
+        <span class="n">SaveHBITMAP</span><span class="p">(</span><span class="n">hCaptureBitmap</span><span class="p">,</span> <span class="sa">L</span><span class="s">"My New ScreenShot.jpg"</span><span class="p">);</span>
+
+        <span class="n">ReleaseDC</span><span class="p">(</span><span class="n">desktop</span><span class="p">,</span> <span class="n">desktopDC</span><span class="p">);</span>
+        <span class="n">DeleteDC</span><span class="p">(</span><span class="n">captureDC</span><span class="p">);</span>
+        <span class="n">DeleteObject</span><span class="p">(</span><span class="n">hCaptureBitmap</span><span class="p">);</span>
+
+    <span class="p">}</span>
+
+    <span class="n">CoUninitialize</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
 </pre>
 
 
-<p>}</p>
-<p>int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
-{
-    HRESULT hr = S_OK;
-    hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
-    if (FAILED(hr))
-        return 0;</p>
-<pre class="code literal-block"><span></span>DEVMODE d;
-
-if (EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &amp;d))
-{
-
-    HWND desktop = GetDesktopWindow();
-    HDC desktopDC = GetDC(desktop);
-    HDC captureDC = CreateCompatibleDC(desktopDC);
-    HBITMAP hCaptureBitmap = CreateCompatibleBitmap(desktopDC, d.dmPelsWidth, d.dmPelsHeight);
-
-    SelectObject(captureDC, hCaptureBitmap);
-
-    BitBlt(captureDC, 0, 0, d.dmPelsWidth, d.dmPelsHeight, desktopDC, 0, 0, SRCCOPY | CAPTUREBLT);
-
-    SaveHBITMAP(hCaptureBitmap, L"My New ScreenShot.jpg");
-
-    ReleaseDC(desktop, desktopDC);
-    DeleteDC(captureDC);
-    DeleteObject(hCaptureBitmap);
-
-}
-
-CoUninitialize();
-return 0;
-</pre>
-
-
-<p>}</p>
 </li>
 </ul>
 </div>
