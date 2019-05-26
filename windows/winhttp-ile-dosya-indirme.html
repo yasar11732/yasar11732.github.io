@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>WinHTTP İle İnternetten Dosya İndirme | YSAR.NET</title>
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900%7CUbuntu:300,400,500,700" rel="stylesheet">
+<link href="../assets/icons/foundation-icons.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/style.css" rel="stylesheet" type="text/css">
+<script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/windows/winhttp-ile-dosya-indirme.html">
+<!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="clipboard.html" title="Windows Api İle Clipboard'dan Metin Okuma" type="text/html">
+<meta property="og:site_name" content="YSAR.NET">
+<meta property="og:title" content="WinHTTP İle İnternetten Dosya İndirme">
+<meta property="og:url" content="http://ysar.net/windows/winhttp-ile-dosya-indirme.html">
+<meta property="og:description" content="Merhabalar,
+Son günlerde olduğu gibi, windows platformuna özgü küçük programlar paylaşmaya devam ediyorum. Aşağıdaki örnekte, winhttp ile kullanarak
+internetten dosya indirme örneği bulabilirsiniz. Bi">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2019-05-26T22:45:00+03:00">
+</head>
+<body>
+
+         
+    <header class="fixed-top"><div class="container">
+        <a href="http://ysar.net">
+            <img class="logo" src="../assets/img/Logo.svg"></a>
+        <div class="subtitle">Python, Yazılım ve Programlama</div>
+    <nav id="menu"><ul>
+<li class="fi-info"><a href="../yasar-arabaci.html">Hakkımda</a></li>
+            <li class="fi-social-github"><a href="https://github.com/yasar11732/">GitHub</a></li>
+            <li class="question"><a href="../soru-cevap.html">Soru-Cevap</a></li>
+            <li class="fi-rss"><a href="../rss.xml">RSS</a></li>
+        </ul></nav>
+</div>
+        
+    </header><main class="main-content"><article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 itemprop="headline name">WinHTTP İle İnternetten Dosya İndirme</h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Merhabalar,</p>
+<p>Son günlerde olduğu gibi, windows platformuna özgü küçük programlar paylaşmaya devam ediyorum. Aşağıdaki örnekte, winhttp ile kullanarak
+internetten dosya indirme örneği bulabilirsiniz. Bir sonraki yazıda, multipart-formdata türünde bir istek göndermeyi deneyeceğim.</p>
+<p>Örneğe geçmeden önce, neden winhttp kullanmaya yöneldiğimden de bahsetmek istiyorum. Windows'da çalışacak minimalist bir
+arkaplan uygulaması yapacağım. Bunun için, C#/.NET kullanmak yerine, windows 7/8/10 da halihazırda mevcut olan apilerini
+kullamak istiyorum. Böylece, hem windows'un apisini daha yakından tanıma fırsatım olacak, hem de belirli bir .NET runtime'a
+bağlı kalmadan, programı çeşitli windows sürümlerine taşıyabileceğimi umut ediyorum.</p>
+<h2>Anahtar Kelimeler</h2>
+<ul>
+<li>WinHttpOpen</li>
+<li>WinHttpConnect</li>
+<li>WinHttpOpenRequest</li>
+<li>WinHttpSendRequest</li>
+<li>WinHttpRecieveResponse</li>
+<li>WinHttpReadData</li>
+<li>WinHttpCrackUrl nasıl çalışır</li>
+</ul>
+<p> </p>
+<pre class="code literal-block"><span></span><span class="cp">#define WINDOWS_LEAN_AND_MEAN</span>
+<span class="cp">#include</span> <span class="cpf">&lt;windows.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt; // fopen, fclose</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;winhttp.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;wchar.h&gt; // _wcsicmp</span><span class="cp"></span>
+
+<span class="cp">#pragma comment(lib,"winhttp")</span>
+
+
+<span class="kt">void</span> <span class="o">*</span><span class="nf">winhttp_download</span><span class="p">(</span><span class="n">HINTERNET</span> <span class="n">hSession</span><span class="p">,</span> <span class="n">LPCWSTR</span> <span class="n">url</span><span class="p">,</span> <span class="n">LPDWORD</span> <span class="n">cbDownloaded</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">hSession</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span> <span class="n">url</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+
+    <span class="cm">/*</span>
+<span class="cm">    Öncelikle, url'i parçalara ayırarak, scheme</span>
+<span class="cm">    ve hostname ve path değerlerini elde etmemiz gerekiyor</span>
+<span class="cm">    bunun için WinHttpCrackUrl fonksiyonunu kullanacağız</span>
+<span class="cm">    */</span>
+    <span class="n">URL_COMPONENTS</span> <span class="n">urlComp</span><span class="p">;</span>
+    <span class="n">WCHAR</span> <span class="n">scheme</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+    <span class="n">WCHAR</span> <span class="n">host</span><span class="p">[</span><span class="mi">256</span><span class="p">];</span>
+
+    <span class="c1">// kullanmadan önce, urlComp'u sıfırlamamız gerekiyor</span>
+    <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">urlComp</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">urlComp</span><span class="p">));</span>
+
+    <span class="c1">// bunu yapmak mecburi</span>
+    <span class="n">urlComp</span><span class="p">.</span><span class="n">dwStructSize</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">urlComp</span><span class="p">);</span>
+
+    <span class="c1">// protokol bilgisini tutacak buffer'ın</span>
+    <span class="c1">// adresini ve büyüklüğünü belirtiyoruz.</span>
+    <span class="n">urlComp</span><span class="p">.</span><span class="n">lpszScheme</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">scheme</span><span class="p">;</span>
+    <span class="n">urlComp</span><span class="p">.</span><span class="n">dwSchemeLength</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+
+    <span class="c1">// hostname bilgisini tutacak buffer'ın</span>
+    <span class="c1">// adresini ve büyüklüğünü belirtiyoruz.</span>
+    <span class="n">urlComp</span><span class="p">.</span><span class="n">lpszHostName</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">host</span><span class="p">;</span>
+    <span class="n">urlComp</span><span class="p">.</span><span class="n">dwHostNameLength</span> <span class="o">=</span> <span class="mi">256</span><span class="p">;</span>
+
+    <span class="c1">// path bilgisi için ekstra bir buffer</span>
+    <span class="c1">// kullanmayacağız. WinHttp crack url</span>
+    <span class="c1">// bize bir pointer sağlaması için,</span>
+    <span class="c1">// dwUrlPathLength elemanına 0'dan farklı</span>
+    <span class="c1">// bir değer vermek gerekiyor</span>
+    <span class="n">urlComp</span><span class="p">.</span><span class="n">dwUrlPathLength</span> <span class="o">=</span> <span class="p">(</span><span class="n">DWORD</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">WinHttpCrackUrl</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">wcslen</span><span class="p">(</span><span class="n">url</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">urlComp</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+
+    <span class="n">INTERNET_PORT</span> <span class="n">port</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">DWORD</span> <span class="n">flags</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">_wcsicmp</span><span class="p">(</span><span class="sa">L</span><span class="s">"HTTPS"</span><span class="p">,</span><span class="n">scheme</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">port</span> <span class="o">=</span> <span class="n">INTERNET_DEFAULT_HTTPS_PORT</span><span class="p">;</span>
+        <span class="n">flags</span> <span class="o">=</span> <span class="n">WINHTTP_FLAG_SECURE</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">_wcsicmp</span><span class="p">(</span><span class="sa">L</span><span class="s">"HTTP"</span><span class="p">,</span> <span class="n">scheme</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">port</span> <span class="o">=</span> <span class="n">INTERNET_DEFAULT_HTTP_PORT</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">port</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+
+    <span class="n">HANDLE</span> <span class="n">hConnect</span> <span class="o">=</span> <span class="n">WinHttpConnect</span><span class="p">(</span><span class="n">hSession</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">hConnect</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">WCHAR</span> <span class="o">*</span><span class="n">accept_types</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="s">"*/*"</span><span class="p">,</span> <span class="nb">NULL</span> <span class="p">};</span>
+
+        <span class="n">HANDLE</span> <span class="n">hRequest</span> <span class="o">=</span> <span class="n">WinHttpOpenRequest</span><span class="p">(</span>
+            <span class="n">hConnect</span><span class="p">,</span> <span class="sa">L</span><span class="s">"GET"</span><span class="p">,</span> <span class="n">urlComp</span><span class="p">.</span><span class="n">lpszUrlPath</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span>
+            <span class="n">WINHTTP_NO_REFERER</span><span class="p">,</span> <span class="n">accept_types</span><span class="p">,</span> <span class="n">flags</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">hRequest</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">BOOL</span> <span class="n">bResult</span> <span class="o">=</span> <span class="n">WinHttpSendRequest</span><span class="p">(</span><span class="n">hRequest</span><span class="p">,</span>
+                <span class="n">WINHTTP_NO_ADDITIONAL_HEADERS</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="n">WINHTTP_NO_REQUEST_DATA</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">bResult</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">bResult</span> <span class="o">=</span> <span class="n">WinHttpReceiveResponse</span><span class="p">(</span><span class="n">hRequest</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">bResult</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">DWORD</span> <span class="n">cap</span> <span class="o">=</span> <span class="mi">4096</span><span class="p">;</span>
+                    <span class="kt">char</span> <span class="o">*</span><span class="n">downloaded_data</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">cap</span><span class="p">);</span>
+                    <span class="n">DWORD</span> <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+                    <span class="n">DWORD</span> <span class="n">dbDownloaded</span><span class="p">;</span>
+                    <span class="k">while</span> <span class="p">(</span><span class="n">WinHttpReadData</span><span class="p">(</span><span class="n">hRequest</span><span class="p">,</span>
+                        <span class="n">downloaded_data</span> <span class="o">+</span> <span class="n">pos</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">dbDownloaded</span><span class="p">))</span>
+                    <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">dbDownloaded</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+                            <span class="k">break</span><span class="p">;</span>
+
+                        <span class="n">pos</span> <span class="o">+=</span> <span class="n">dbDownloaded</span><span class="p">;</span>
+
+                        <span class="k">if</span> <span class="p">(</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">4097</span> <span class="o">&gt;</span> <span class="n">cap</span><span class="p">)</span>
+                        <span class="p">{</span>
+                            <span class="n">cap</span> <span class="o">=</span> <span class="n">cap</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+                            <span class="n">downloaded_data</span> <span class="o">=</span> <span class="n">realloc</span><span class="p">(</span><span class="n">downloaded_data</span><span class="p">,</span> <span class="n">cap</span><span class="p">);</span>
+                        <span class="p">}</span>
+
+                    <span class="p">}</span>
+                    <span class="o">*</span><span class="n">cbDownloaded</span> <span class="o">=</span> <span class="n">pos</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">downloaded_data</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+
+            <span class="n">WinHttpCloseHandle</span><span class="p">(</span><span class="n">hRequest</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="n">WinHttpCloseHandle</span><span class="p">(</span><span class="n">hConnect</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+
+<span class="p">}</span>
+<span class="kt">int</span> <span class="n">WINAPI</span> <span class="nf">wWinMain</span><span class="p">(</span><span class="n">HINSTANCE</span> <span class="n">hInstance</span><span class="p">,</span> <span class="n">HINSTANCE</span> <span class="n">hPrevInstance</span><span class="p">,</span>
+    <span class="n">PWSTR</span> <span class="n">pCmdLine</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nCmdShow</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">HINTERNET</span> <span class="n">hSession</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">,</span>
+        <span class="n">hConnect</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">,</span>
+        <span class="n">hRequest</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+    <span class="n">hSession</span> <span class="o">=</span> <span class="n">WinHttpOpen</span><span class="p">(</span><span class="sa">L</span><span class="s">"Agent Smith"</span><span class="p">,</span>
+        <span class="n">WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY</span><span class="p">,</span>
+        <span class="n">WINHTTP_NO_PROXY_NAME</span><span class="p">,</span>
+        <span class="n">WINHTTP_NO_PROXY_BYPASS</span><span class="p">,</span>
+        <span class="mi">0</span><span class="p">);</span>
+
+    <span class="n">WCHAR</span> <span class="o">*</span><span class="n">url</span> <span class="o">=</span>
+        <span class="sa">L</span><span class="s">"https://ysar.net/windows/windows-api-ile-ekran-goruntusu.html"</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">hSession</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">FILE</span> <span class="o">*</span><span class="n">fpOutput</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"test.html"</span><span class="p">,</span> <span class="s">"w"</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">fpOutput</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">DWORD</span> <span class="n">downloaded</span><span class="p">;</span>
+            <span class="kt">void</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="n">winhttp_download</span><span class="p">(</span><span class="n">hSession</span><span class="p">,</span>
+                <span class="n">url</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">downloaded</span><span class="p">);</span>
+            <span class="n">fwrite</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">downloaded</span><span class="p">,</span> <span class="n">fpOutput</span><span class="p">);</span>
+            <span class="n">free</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
+            <span class="n">fclose</span><span class="p">(</span><span class="n">fpOutput</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="n">WinHttpCloseHandle</span><span class="p">(</span><span class="n">hSession</span><span class="p">);</span>
+    <span class="p">}</span>
+
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="p">}</span>
+</pre>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><div class="pager">
+                <a href="clipboard.html" rel="prev" title="Windows Api İle Clipboard'dan Metin Okuma">Önceki yazı</a>
+        </div>
+
+    </nav></aside></article></main><script>
+  if(document.location.hostname == "ysar.net")
+  {
+      (function() {
+        var cx = '013136674562336859018:ouohwab0yku';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+      
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-44774134-1', 'auto');
+          ga('send', 'pageview');
+  }
+
+</script>
+</body>
+</html>
