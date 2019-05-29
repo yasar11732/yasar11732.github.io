@@ -75,6 +75,7 @@
     <span class="c1">// buffer'ı oluştur</span>
     <span class="kt">char</span> <span class="o">*</span><span class="n">utf8data</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">buffersize</span><span class="p">);</span>
 
+
     <span class="n">WideCharToMultiByte</span><span class="p">(</span><span class="mi">65001</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">utf8data</span><span class="p">,</span> <span class="n">buffersize</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
 
     <span class="c1">// url kodlama için gerekli buffer büyüklüğünü</span>
@@ -82,14 +83,19 @@
     <span class="kt">char</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
     <span class="n">buffersize</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    <span class="k">for</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">utf8data</span><span class="p">;</span> <span class="o">*</span><span class="n">p</span> <span class="o">!=</span> <span class="sc">'\0'</span><span class="p">;</span> <span class="n">p</span><span class="o">++</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">p</span> <span class="o">=</span> <span class="n">utf8data</span><span class="p">;</span> <span class="o">*</span><span class="n">p</span> <span class="o">!=</span> <span class="sc">'\0'</span><span class="p">;</span> <span class="n">p</span><span class="o">++</span><span class="p">)</span>
     <span class="p">{</span>
-        <span class="c1">// 33'den küçük karakterler</span>
-        <span class="c1">// % kodlaması ile kodlanacak</span>
-        <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">p</span> <span class="o">&lt;</span> <span class="mi">33</span><span class="p">)</span>
-            <span class="n">buffersize</span> <span class="o">+=</span> <span class="mi">3</span><span class="p">;</span>
-        <span class="k">else</span>
+        <span class="c1">// [0-9a-zA-Z] olduğu gibi kalacak,</span>
+        <span class="c1">// diger karakterleri % kodlayacağız.</span>
+        <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span>
+            <span class="o">||</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'a'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'z'</span><span class="p">)</span>
+            <span class="o">||</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'A'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'Z'</span><span class="p">))</span> <span class="p">{</span>
             <span class="n">buffersize</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="p">{</span>
+            <span class="n">buffersize</span> <span class="o">+=</span> <span class="mi">3</span><span class="p">;</span>
+        <span class="p">}</span>
     <span class="p">}</span>
 
     <span class="c1">// url kodlama için gerekli buffer</span>
@@ -99,15 +105,18 @@
     <span class="kt">char</span> <span class="o">*</span><span class="n">p2</span> <span class="o">=</span> <span class="n">encodedutf8data</span><span class="p">;</span>
     <span class="k">for</span> <span class="p">(</span><span class="n">p</span> <span class="o">=</span> <span class="n">utf8data</span><span class="p">;</span> <span class="o">*</span><span class="n">p</span> <span class="o">!=</span> <span class="sc">'\0'</span><span class="p">;</span> <span class="n">p</span><span class="o">++</span><span class="p">)</span>
     <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">p</span> <span class="o">&lt;</span> <span class="mi">33</span><span class="p">)</span> <span class="p">{</span>
-            <span class="c1">// (-128)-32 arası değerleri % işareti ile kodla </span>
+        <span class="c1">// [0-9a-zA-Z] olduğu gibi kalacak,</span>
+        <span class="c1">// diger karakterleri % kodlayacağız.</span>
+        <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span>
+            <span class="o">||</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'a'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'z'</span><span class="p">)</span>
+            <span class="o">||</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'A'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'Z'</span><span class="p">))</span> <span class="p">{</span>
+            <span class="o">*</span><span class="n">p2</span><span class="o">++</span> <span class="o">=</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="p">{</span>
             <span class="o">*</span><span class="n">p2</span><span class="o">++</span> <span class="o">=</span> <span class="sc">'%'</span><span class="p">;</span>
             <span class="o">*</span><span class="n">p2</span><span class="o">++</span> <span class="o">=</span> <span class="n">base16</span><span class="p">[(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)(</span><span class="o">*</span><span class="n">p</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">];</span>
             <span class="o">*</span><span class="n">p2</span><span class="o">++</span> <span class="o">=</span> <span class="n">base16</span><span class="p">[(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)(</span><span class="o">*</span><span class="n">p</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xF</span><span class="p">];</span>
-        <span class="p">}</span>
-        <span class="k">else</span> <span class="p">{</span>
-            <span class="c1">// 33-127 arası karakterleri olduğu gibi kodla</span>
-            <span class="o">*</span><span class="n">p2</span><span class="o">++</span> <span class="o">=</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
         <span class="p">}</span>
     <span class="p">}</span>
 
