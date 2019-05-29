@@ -36,10 +36,11 @@ Anahtar Kelimeler
         // Gerekli buffer büyüklüğünü öğrenmek için
         // dördüncü parametreye -1 veriyoruz.
         int buffersize = WideCharToMultiByte(65001, 0, s, -1, NULL, 0, NULL, NULL);
-        
+
         // utf8 olarak veriyi tutmak için gerekli
         // buffer'ı oluştur
         char *utf8data = malloc(buffersize);
+
 
         WideCharToMultiByte(65001, 0, s, -1, utf8data, buffersize, NULL, NULL);
 
@@ -48,38 +49,46 @@ Anahtar Kelimeler
         char *p;
         buffersize = 0;
 
-        for(p=utf8data; *p != '\0'; p++)
+        for (p = utf8data; *p != '\0'; p++)
         {
-            // 33'den küçük karakterler
-            // % kodlaması ile kodlanacak
-            if (*p < 33)
-                buffersize += 3;
-            else
+            // [0-9a-zA-Z] olduğu gibi kalacak,
+            // diger karakterleri % kodlayacağız.
+            char c = *p;
+            if ((c >= '0' && c <= '9')
+                || (c >= 'a' && c <= 'z')
+                || (c >= 'A' && c <= 'Z')) {
                 buffersize++;
+            }
+            else {
+                buffersize += 3;
+            }
         }
 
         // url kodlama için gerekli buffer
         char *encodedutf8data = malloc(buffersize);
-        
+
         // url kodlama
         char *p2 = encodedutf8data;
         for (p = utf8data; *p != '\0'; p++)
         {
-            if (*p < 33) {
-                // (-128)-32 arası değerleri % işareti ile kodla 
+            // [0-9a-zA-Z] olduğu gibi kalacak,
+            // diger karakterleri % kodlayacağız.
+            char c = *p;
+            if ((c >= '0' && c <= '9')
+                || (c >= 'a' && c <= 'z')
+                || (c >= 'A' && c <= 'Z')) {
+                *p2++ = *p;
+            }
+            else {
                 *p2++ = '%';
                 *p2++ = base16[(unsigned char)(*p) >> 4];
                 *p2++ = base16[(unsigned char)(*p) & 0xF];
-            }
-            else {
-                // 33-127 arası karakterleri olduğu gibi kodla
-                *p2++ = *p;
             }
         }
 
         // kodlanmış datanın büyüklüğü
         *len = buffersize;
-        
+
         free(utf8data);
 
         return encodedutf8data;
