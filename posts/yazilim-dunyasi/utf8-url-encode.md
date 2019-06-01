@@ -5,7 +5,7 @@
 .. title: C Programlama Dilinde UTF8 Veriyi URL Kodlama
 -->
 
-Açıklamalar yorumda.
+Not: Bu yazıda birtakım eksiklikler olduğu için, yeniden yazma ihtiyacı hissetim. Yazının güncel versiyonuna [buradan](rfc2231.html) ulaşabilirsiniz.
 
 Anahtar Kelimeler
 =================
