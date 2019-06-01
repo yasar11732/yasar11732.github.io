@@ -1,5 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Yazilim Dunyasi)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/yazilim-dunyasi/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Wed, 29 May 2019 21:06:48 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>C Programlama Dilinde UTF8 Veriyi URL Kodlama</title><link>http://ysar.net/yazilim-dunyasi/urlencode-utf8-data.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Açıklamalar yorumda.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Yazilim Dunyasi)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/yazilim-dunyasi/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Sat, 01 Jun 2019 18:32:49 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>RFC2231 Kodlaması</title><link>http://ysar.net/yazilim-dunyasi/rfc2231.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Aşağıda &lt;a href="https://tools.ietf.org/html/rfc2231"&gt;RFC 2231&lt;/a&gt; içinde
+belirtilen kodlamanın C dilinde yazılmış bir örneğini aşağıda
+bulabilirsiniz. &lt;code&gt;wchar_t&lt;/code&gt; türünüdeki bir string'i utf8 kodlamak
+için WIN32 API içindeki &lt;code&gt;WideCharToMultiByte&lt;/code&gt; fonksiyonunu
+kullandım. POSIX sistemlerde bunun yerine &lt;code&gt;iconv&lt;/code&gt; kullanılabilir.&lt;/p&gt;
+&lt;h2&gt;Anahtar Kelimeler&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;WideCharToMultiByte&lt;/li&gt;
+&lt;li&gt;RFC2231&lt;/li&gt;
+&lt;li&gt;UTF-8&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;base16&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="sc"&gt;'0'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'1'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'2'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'3'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'4'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'5'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'6'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'7'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'8'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'9'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'A'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'B'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'C'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'E'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'F'&lt;/span&gt; &lt;span class="p"&gt;};&lt;/span&gt;
+
+&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;special_chars&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="sc"&gt;' '&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="sc"&gt;'*'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="sc"&gt;'\''&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="sc"&gt;'%'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="sc"&gt;'('&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;')'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'&amp;lt;'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'&amp;gt;'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'@'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;','&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="sc"&gt;';'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;':'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'\\'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'"'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'/'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'['&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;']'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'?'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'='&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;should_encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="c1"&gt;// bir utf8 byte'ı % ile kodlanmalı mı?&lt;/span&gt;
+    &lt;span class="c1"&gt;// evet  -&amp;gt; 1&lt;/span&gt;
+    &lt;span class="c1"&gt;// hayir -&amp;gt; 0&lt;/span&gt;
+
+    &lt;span class="c1"&gt;// 7 bit üzeri ascii&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="c1"&gt;// kontrol karakterleri&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="sc"&gt;' '&lt;/span&gt; &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;127&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;special_chars&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;special_chars&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;long&lt;/span&gt; &lt;span class="nf"&gt;encoded_size&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;utf8data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;long&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;utf8data&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="sc"&gt;'\0'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;utf8data&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;should_encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;utf8data&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+            &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;else&lt;/span&gt;
+            &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;// NULL için&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;utf8Encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;LPWSTR&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;encoded&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;cchInputLength&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;wcslen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;// +1 null için&lt;/span&gt;
+
+    &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;WideCharToMultiByte&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;65001&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cchInputLength&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;encoded&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;malloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;WideCharToMultiByte&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;65001&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cchInputLength&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;encoded&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;encoded&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;rfc2231_utf8_encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;LPWSTR&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;_hdr&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"utf-8&lt;/span&gt;&lt;span class="se"&gt;\'\'&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;utf8encoded&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;utf8Encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;encoded_size&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;utf8encoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;param_encoded&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;malloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_hdr&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="n"&gt;memcpy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;param_encoded&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;_hdr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_hdr&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;temp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;param_encoded&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_hdr&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;temp2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;utf8encoded&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;temp2&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="sc"&gt;'\0'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;temp2&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;should_encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;temp2&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+        &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;temp&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sc"&gt;'%'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;temp&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;base16&lt;/span&gt;&lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="p"&gt;)(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;temp2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+            &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;temp&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;base16&lt;/span&gt;&lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="p"&gt;)(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;temp2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mh"&gt;0xF&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;temp&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;temp2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;temp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sc"&gt;'\0'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="n"&gt;free&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;utf8encoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;param_encoded&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;WINAPI&lt;/span&gt; &lt;span class="nf"&gt;wWinMain&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;HINSTANCE&lt;/span&gt; &lt;span class="n"&gt;hInstance&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;HINSTANCE&lt;/span&gt; &lt;span class="n"&gt;hPrevInstance&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="n"&gt;PWSTR&lt;/span&gt; &lt;span class="n"&gt;pCmdLine&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;nCmdShow&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;   
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;buffersize&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;encoded&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rfc2231_utf8_encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;L&lt;/span&gt;&lt;span class="s"&gt;"Yaşar Arabacı.png"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;buffersize&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="kt"&gt;FILE&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fopen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"encodelen.txt"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"wb"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="n"&gt;fwrite&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;encoded&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;buffersize&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; &lt;span class="c1"&gt;// -1 NULL için&lt;/span&gt;
+
+    &lt;span class="n"&gt;fclose&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/rfc2231.html</guid><pubDate>Sat, 01 Jun 2019 18:10:00 GMT</pubDate></item><item><title>C Programlama Dilinde UTF8 Veriyi URL Kodlama</title><link>http://ysar.net/yazilim-dunyasi/urlencode-utf8-data.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Not: Bu yazıda birtakım eksiklikler olduğu için, yeniden yazma ihtiyacı hissetim. Yazının güncel versiyonuna &lt;a href="http://ysar.net/yazilim-dunyasi/rfc2231.html"&gt;buradan&lt;/a&gt; ulaşabilirsiniz.&lt;/p&gt;
 &lt;h2&gt;Anahtar Kelimeler&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;C ile UTF8 kodlama&lt;/li&gt;
@@ -513,16 +632,4 @@ site meydana gelir. Bu şekilde hazırlanmış sitelerin, alışılagelmiş blog
 &lt;li&gt;&lt;strong&gt;Güvenlik:&lt;/strong&gt; Statik siteler, güvenlik açığı bulundurmaz. Çünkü, dinamik olarak sunulan kısımları yoktur.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Verimli Kaynak Kullanımı:&lt;/strong&gt; Statik siteler çok az server kaynağı kullanırlar.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Platform bağımsızlığı:&lt;/strong&gt; Statik siteler, herhangi bir sunucuda rahatlıkla barındırılabilir. Belli bir php, python sürümü veya belli bir işletim sistemi ihtiyacı yoktur.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Ücretsiz Server İmkanı:&lt;/strong&gt; &lt;a href="http://pages.github.com/"&gt;GitHub Pages&lt;/a&gt; statik siteler için ücretsiz hosting sağlıyor. Üstelik, bununla birlikte kendi domain adınızı kullanabilirsiniz. &lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/python-nikola-static-site-generator.html"&gt;Devamını oku…&lt;/a&gt; (3 dakikalık okuma)&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/python-nikola-static-site-generator.html</guid><pubDate>Mon, 07 Oct 2013 17:26:00 GMT</pubDate></item><item><title>Java izlenimleri 2</title><link>http://ysar.net/yazilim-dunyasi/java-izlenimleri-2.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Yaklaşık 1 haftadır (belki daha fazla da olabilir, tam emin değilim) az
-çok Java'yla uğraşıyorum, az çok birşeyler yazdım;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/yasar11732/yas"&gt;yas&lt;/a&gt; git benzeri versiyon kontrol sistemi (gibi birşey)&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/yasar11732/HttpTools"&gt;HttpTools&lt;/a&gt; Http araçları kütüphanesi olacak, şimdilik sadece
-    sitelerin durum kodların topluca almaya yarayan bir class var.&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/yasar11732/MathTools"&gt;MathTools&lt;/a&gt; Asal sayı, narsist sayı bulma ve labirent oluşturma
-    class'ları&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/yasar11732/wikicategory"&gt;wikicategory&lt;/a&gt; WikiPedia'a bir kategorideki makaleleri komple
-    almak için bir class &lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Java'nın ve NYP'nin mantığını biraz daha iyi kavramaya başladığımı
-hissediyorum. Ancak, halen alışamadığım şeyler var. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/java-izlenimleri-2.html"&gt;Devamını oku…&lt;/a&gt; (1 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/java-izlenimleri-2.html</guid><pubDate>Wed, 14 Aug 2013 00:13:20 GMT</pubDate></item></channel></rss>
+&lt;li&gt;&lt;strong&gt;Ücretsiz Server İmkanı:&lt;/strong&gt; &lt;a href="http://pages.github.com/"&gt;GitHub Pages&lt;/a&gt; statik siteler için ücretsiz hosting sağlıyor. Üstelik, bununla birlikte kendi domain adınızı kullanabilirsiniz. &lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/python-nikola-static-site-generator.html"&gt;Devamını oku…&lt;/a&gt; (3 dakikalık okuma)&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/python-nikola-static-site-generator.html</guid><pubDate>Mon, 07 Oct 2013 17:26:00 GMT</pubDate></item></channel></rss>

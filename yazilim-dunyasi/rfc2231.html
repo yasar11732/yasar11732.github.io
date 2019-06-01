@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="RFC2231'de Gösterilen Kodlamanın C Dilinde Uygulanması">
+<meta name="viewport" content="width=device-width">
+<title>RFC2231 Kodlaması | YSAR.NET</title>
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900%7CUbuntu:300,400,500,700" rel="stylesheet">
+<link href="../assets/icons/foundation-icons.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/style.css" rel="stylesheet" type="text/css">
+<script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/yazilim-dunyasi/rfc2231.html">
+<!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="urlencode-utf8-data.html" title="C Programlama Dilinde UTF8 Veriyi URL Kodlama" type="text/html">
+<meta property="og:site_name" content="YSAR.NET">
+<meta property="og:title" content="RFC2231 Kodlaması">
+<meta property="og:url" content="http://ysar.net/yazilim-dunyasi/rfc2231.html">
+<meta property="og:description" content="RFC2231'de Gösterilen Kodlamanın C Dilinde Uygulanması">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2019-06-01T21:10:00+03:00">
+</head>
+<body>
+
+         
+    <header class="fixed-top"><div class="container">
+        <a href="http://ysar.net">
+            <img class="logo" src="../assets/img/Logo.svg"></a>
+        <div class="subtitle">Python, Yazılım ve Programlama</div>
+    <nav id="menu"><ul>
+<li class="fi-info"><a href="../yasar-arabaci.html">Hakkımda</a></li>
+            <li class="fi-social-github"><a href="https://github.com/yasar11732/">GitHub</a></li>
+            <li class="question"><a href="../soru-cevap.html">Soru-Cevap</a></li>
+            <li class="fi-rss"><a href="../rss.xml">RSS</a></li>
+        </ul></nav>
+</div>
+        
+    </header><main class="main-content"><article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 itemprop="headline name">RFC2231 Kodlaması</h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Aşağıda <a href="https://tools.ietf.org/html/rfc2231">RFC 2231</a> içinde
+belirtilen kodlamanın C dilinde yazılmış bir örneğini aşağıda
+bulabilirsiniz. <code>wchar_t</code> türünüdeki bir string'i utf8 kodlamak
+için WIN32 API içindeki <code>WideCharToMultiByte</code> fonksiyonunu
+kullandım. POSIX sistemlerde bunun yerine <code>iconv</code> kullanılabilir.</p>
+<h2>Anahtar Kelimeler</h2>
+<ul>
+<li>WideCharToMultiByte</li>
+<li>RFC2231</li>
+<li>UTF-8</li>
+</ul>
+<p> </p>
+<pre class="code literal-block"><span></span><span class="kt">char</span> <span class="n">base16</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="sc">'0'</span><span class="p">,</span><span class="sc">'1'</span><span class="p">,</span><span class="sc">'2'</span><span class="p">,</span><span class="sc">'3'</span><span class="p">,</span><span class="sc">'4'</span><span class="p">,</span><span class="sc">'5'</span><span class="p">,</span><span class="sc">'6'</span><span class="p">,</span><span class="sc">'7'</span><span class="p">,</span><span class="sc">'8'</span><span class="p">,</span><span class="sc">'9'</span><span class="p">,</span><span class="sc">'A'</span><span class="p">,</span><span class="sc">'B'</span><span class="p">,</span><span class="sc">'C'</span><span class="p">,</span><span class="sc">'D'</span><span class="p">,</span><span class="sc">'E'</span><span class="p">,</span><span class="sc">'F'</span> <span class="p">};</span>
+
+<span class="kt">char</span> <span class="n">special_chars</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="sc">' '</span><span class="p">,</span> <span class="sc">'*'</span><span class="p">,</span> <span class="sc">'\''</span><span class="p">,</span> <span class="sc">'%'</span><span class="p">,</span> <span class="sc">'('</span><span class="p">,</span><span class="sc">')'</span><span class="p">,</span><span class="sc">'&lt;'</span><span class="p">,</span><span class="sc">'&gt;'</span><span class="p">,</span><span class="sc">'@'</span><span class="p">,</span><span class="sc">','</span><span class="p">,</span>
+    <span class="sc">';'</span><span class="p">,</span><span class="sc">':'</span><span class="p">,</span><span class="sc">'\\'</span><span class="p">,</span><span class="sc">'"'</span><span class="p">,</span><span class="sc">'/'</span><span class="p">,</span><span class="sc">'['</span><span class="p">,</span><span class="sc">']'</span><span class="p">,</span><span class="sc">'?'</span><span class="p">,</span><span class="sc">'='</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">should_encode</span><span class="p">(</span><span class="kt">char</span> <span class="n">c</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// bir utf8 byte'ı % ile kodlanmalı mı?</span>
+    <span class="c1">// evet  -&gt; 1</span>
+    <span class="c1">// hayir -&gt; 0</span>
+
+    <span class="c1">// 7 bit üzeri ascii</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="c1">// kontrol karakterleri</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&lt;</span> <span class="sc">' '</span> <span class="o">||</span> <span class="n">c</span> <span class="o">==</span> <span class="mi">127</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">special_chars</span><span class="p">);</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">special_chars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">c</span><span class="p">)</span>
+            <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">unsigned</span> <span class="kt">long</span> <span class="nf">encoded_size</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">utf8data</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span> <span class="p">;</span> <span class="o">*</span><span class="n">utf8data</span> <span class="o">!=</span> <span class="sc">'\0'</span><span class="p">;</span> <span class="n">utf8data</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">should_encode</span><span class="p">(</span><span class="o">*</span><span class="n">utf8data</span><span class="p">))</span>
+            <span class="n">size</span> <span class="o">+=</span> <span class="mi">3</span><span class="p">;</span>
+        <span class="k">else</span>
+            <span class="n">size</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">size</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// NULL için</span>
+
+    <span class="k">return</span> <span class="n">size</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">char</span> <span class="o">*</span><span class="nf">utf8Encode</span><span class="p">(</span><span class="n">LPWSTR</span> <span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">len</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">encoded</span><span class="p">;</span>
+    <span class="kt">size_t</span> <span class="n">cchInputLength</span> <span class="o">=</span> <span class="n">wcslen</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// +1 null için</span>
+
+    <span class="o">*</span><span class="n">len</span> <span class="o">=</span> <span class="n">WideCharToMultiByte</span><span class="p">(</span><span class="mi">65001</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">cchInputLength</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">encoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="o">*</span><span class="n">len</span><span class="p">);</span>
+    <span class="n">WideCharToMultiByte</span><span class="p">(</span><span class="mi">65001</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">cchInputLength</span><span class="p">,</span> <span class="n">encoded</span><span class="p">,</span> <span class="o">*</span><span class="n">len</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="n">encoded</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">char</span> <span class="o">*</span><span class="nf">rfc2231_utf8_encode</span><span class="p">(</span><span class="n">LPWSTR</span> <span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">len</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="kt">char</span> <span class="n">_hdr</span><span class="p">[]</span> <span class="o">=</span> <span class="s">"utf-8</span><span class="se">\'\'</span><span class="s">"</span><span class="p">;</span>
+
+    <span class="kt">char</span> <span class="o">*</span><span class="n">utf8encoded</span> <span class="o">=</span> <span class="n">utf8Encode</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">len</span><span class="p">);</span>
+    <span class="o">*</span><span class="n">len</span> <span class="o">=</span> <span class="n">encoded_size</span><span class="p">(</span><span class="n">utf8encoded</span><span class="p">);</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">param_encoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="o">*</span><span class="n">len</span> <span class="o">+</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">_hdr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+
+    <span class="n">memcpy</span><span class="p">(</span><span class="n">param_encoded</span><span class="p">,</span> <span class="n">_hdr</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">_hdr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+
+    <span class="kt">char</span> <span class="o">*</span><span class="n">temp</span> <span class="o">=</span> <span class="n">param_encoded</span> <span class="o">+</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">_hdr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="kt">char</span> <span class="o">*</span><span class="n">temp2</span> <span class="o">=</span> <span class="n">utf8encoded</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(;</span> <span class="o">*</span><span class="n">temp2</span> <span class="o">!=</span> <span class="sc">'\0'</span><span class="p">;</span> <span class="n">temp2</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">should_encode</span><span class="p">(</span><span class="o">*</span><span class="n">temp2</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="o">*</span><span class="n">temp</span><span class="o">++</span> <span class="o">=</span> <span class="sc">'%'</span><span class="p">;</span>
+            <span class="o">*</span><span class="n">temp</span><span class="o">++</span> <span class="o">=</span> <span class="n">base16</span><span class="p">[(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)(</span><span class="o">*</span><span class="n">temp2</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">];</span>
+            <span class="o">*</span><span class="n">temp</span><span class="o">++</span> <span class="o">=</span> <span class="n">base16</span><span class="p">[(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)(</span><span class="o">*</span><span class="n">temp2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xF</span><span class="p">];</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="o">*</span><span class="n">temp</span><span class="o">++</span> <span class="o">=</span> <span class="o">*</span><span class="n">temp2</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="o">*</span><span class="n">temp</span> <span class="o">=</span> <span class="sc">'\0'</span><span class="p">;</span>
+
+    <span class="n">free</span><span class="p">(</span><span class="n">utf8encoded</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="n">param_encoded</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">WINAPI</span> <span class="nf">wWinMain</span><span class="p">(</span><span class="n">HINSTANCE</span> <span class="n">hInstance</span><span class="p">,</span> <span class="n">HINSTANCE</span> <span class="n">hPrevInstance</span><span class="p">,</span>
+    <span class="n">PWSTR</span> <span class="n">pCmdLine</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nCmdShow</span><span class="p">)</span>
+<span class="p">{</span>   
+    <span class="kt">int</span> <span class="n">buffersize</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">encoded</span> <span class="o">=</span> <span class="n">rfc2231_utf8_encode</span><span class="p">(</span><span class="sa">L</span><span class="s">"Yaşar Arabacı.png"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">buffersize</span><span class="p">);</span>
+    <span class="kt">FILE</span> <span class="o">*</span><span class="n">f</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"encodelen.txt"</span><span class="p">,</span> <span class="s">"wb"</span><span class="p">);</span>
+
+    <span class="n">fwrite</span><span class="p">(</span><span class="n">encoded</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">buffersize</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">f</span><span class="p">);</span> <span class="c1">// -1 NULL için</span>
+
+    <span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><div class="pager">
+                <a href="urlencode-utf8-data.html" rel="prev" title="C Programlama Dilinde UTF8 Veriyi URL Kodlama">Önceki yazı</a>
+        </div>
+
+    </nav></aside></article></main><script>
+  if(document.location.hostname == "ysar.net")
+  {
+      (function() {
+        var cx = '013136674562336859018:ouohwab0yku';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+      
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-44774134-1', 'auto');
+          ga('send', 'pageview');
+  }
+
+</script>
+</body>
+</html>
