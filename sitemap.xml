@@ -31,7 +31,7 @@
  </url>
  <url>
   <loc>http://ysar.net/2019/index.html</loc>
-  <lastmod>2019-06-01T18:32:00Z</lastmod>
+  <lastmod>2019-06-02T09:20:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/algoritma/4-renk-teoremi-ve-harita-boyama.html</loc>
@@ -79,7 +79,7 @@
  </url>
  <url>
   <loc>http://ysar.net/archive.html</loc>
-  <lastmod>2019-06-01T14:05:00Z</lastmod>
+  <lastmod>2019-06-01T19:42:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/assembly/index.html</loc>
@@ -211,7 +211,7 @@
  </url>
  <url>
   <loc>http://ysar.net/index.html</loc>
-  <lastmod>2019-06-01T18:32:00Z</lastmod>
+  <lastmod>2019-06-02T09:20:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/primes.html</loc>
@@ -614,6 +614,10 @@
   <lastmod>2019-05-23T20:11:00Z</lastmod>
  </url>
  <url>
+  <loc>http://ysar.net/yazilim-dunyasi/content-disposition-satirinda-us-ascii-harici-karakterler.html</loc>
+  <lastmod>2019-06-02T09:20:00Z</lastmod>
+ </url>
+ <url>
   <loc>http://ysar.net/yazilim-dunyasi/git-deposunu-bolme.html</loc>
   <lastmod>2019-05-23T20:11:00Z</lastmod>
  </url>
@@ -631,7 +635,7 @@
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/index.html</loc>
-  <lastmod>2019-06-01T18:32:00Z</lastmod>
+  <lastmod>2019-06-02T09:20:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/iyi-programci-yazilimci-nasil-olunur.html</loc>
@@ -644,6 +648,10 @@
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/javada-ilk-izlenimlerim.html</loc>
   <lastmod>2019-05-23T20:11:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://ysar.net/yazilim-dunyasi/multipart-form-data-icinde-ascii-olmayan-veri-gonderme.html</loc>
+  <lastmod>2019-06-02T07:56:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/neden-isletim-sistemi-gelistirmemeliyiz-ekleme.html</loc>
@@ -667,7 +675,7 @@
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/rfc2231.html</loc>
-  <lastmod>2019-06-01T18:32:00Z</lastmod>
+  <lastmod>2019-06-02T08:57:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/sablon-doldurucu.html</loc>
@@ -687,7 +695,7 @@
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/urlencode-utf8-data.html</loc>
-  <lastmod>2019-06-01T18:21:00Z</lastmod>
+  <lastmod>2019-06-02T08:57:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/windowsda-gnu-linux-tadi-cygwin.html</loc>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="HTTP Multipart/Form-Data isteği gönderirken, ascii dışındaki isimlerin gönderimi konusunda sabit bir standart olmadığı anlaşılıyor.">
+<meta name="viewport" content="width=device-width">
+<title>Content-Disposition Satırında US-ASCII Harici Karakterler Nasıl Kodlanmalı | YSAR.NET</title>
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900%7CUbuntu:300,400,500,700" rel="stylesheet">
+<link href="../assets/icons/foundation-icons.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/style.css" rel="stylesheet" type="text/css">
+<script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/yazilim-dunyasi/content-disposition-satirinda-us-ascii-harici-karakterler.html">
+<!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="rfc2231.html" title="RFC2231 Kodlaması" type="text/html">
+<meta property="og:site_name" content="YSAR.NET">
+<meta property="og:title" content="Content-Disposition Satırında US-ASCII Harici Karakterler Nasıl Kodlan">
+<meta property="og:url" content="http://ysar.net/yazilim-dunyasi/content-disposition-satirinda-us-ascii-harici-karakterler.html">
+<meta property="og:description" content="HTTP Multipart/Form-Data isteği gönderirken, ascii dışındaki isimlerin gönderimi konusunda sabit bir standart olmadığı anlaşılıyor.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2019-06-02T12:20:00+03:00">
+</head>
+<body>
+
+         
+    <header class="fixed-top"><div class="container">
+        <a href="http://ysar.net">
+            <img class="logo" src="../assets/img/Logo.svg"></a>
+        <div class="subtitle">Python, Yazılım ve Programlama</div>
+    <nav id="menu"><ul>
+<li class="fi-info"><a href="../yasar-arabaci.html">Hakkımda</a></li>
+            <li class="fi-social-github"><a href="https://github.com/yasar11732/">GitHub</a></li>
+            <li class="question"><a href="../soru-cevap.html">Soru-Cevap</a></li>
+            <li class="fi-rss"><a href="../rss.xml">RSS</a></li>
+        </ul></nav>
+</div>
+        
+    </header><main class="main-content"><article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 itemprop="headline name">Content-Disposition Satırında US-ASCII Harici Karakterler Nasıl Kodlanmalı</h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Aşağıdaki sıradan dosya yükleme formuna bir göz atalım.</p>
+<pre class="code literal-block"><span></span><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">"utf-8"</span> <span class="p">/&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">form</span> <span class="na">method</span><span class="o">=</span><span class="s">"POST"</span> <span class="na">action</span><span class="o">=</span><span class="s">"upload.php"</span> <span class="na">enctype</span><span class="o">=</span><span class="s">"multipart/form-data"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">"file"</span> <span class="na">name</span><span class="o">=</span><span class="s">"dosya"</span> <span class="p">/&gt;</span>
+        <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">"submit"</span> <span class="na">value</span><span class="o">=</span><span class="s">"Gönder"</span><span class="p">&gt;</span>
+     <span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</pre>
+
+
+<p>Bu formu doldurup, Gönder'e bastığımızda, multipart/form-data formatında oluşturulmuş bir
+HTTP isteği sunucuya gönderilir. Aşağıda, bu formu Google Chrome ile gönderdiğimde,
+tarayıcı tarafından oluşturulan isteğin, wireshark ile yakalanmış bir örneğini bulabilirsiniz.</p>
+<pre class="code literal-block"><span></span><span class="nf">POST</span> <span class="nn">/upload.php</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">develserver.site</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">231</span>
+<span class="na">Cache-Control</span><span class="o">:</span> <span class="l">max-age=0</span>
+<span class="na">Origin</span><span class="o">:</span> <span class="l">http://develserver.site</span>
+<span class="na">Upgrade-Insecure-Requests</span><span class="o">:</span> <span class="l">1</span>
+<span class="na">DNT</span><span class="o">:</span> <span class="l">1</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">multipart/form-data; boundary=----WebKitFormBoundaryAGtIBnrsMB1w90XW</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3</span>
+<span class="na">Referer</span><span class="o">:</span> <span class="l">http://develserver.site/test.html</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept-Language</span><span class="o">:</span> <span class="l">tr,en;q=0.9</span>
+
+------WebKitFormBoundaryAGtIBnrsMB1w90XW
+Content-Disposition: form-data; name="dosya"; filename="post-test.txt"
+Content-Type: text/plain
+
+
+Bu dosya örnek olarak oluşturulmuştur.
+------WebKitFormBoundaryAGtIBnrsMB1w90XW--
+</pre>
+
+
+<p>Buraya kadar herşey normal, ama, yüklenen dosyanın adında, us-ascii ile kodlanamayacak
+karakterlerin olduğu durumlarda, <code>filename</code> parametresinin nasıl kodlanması gerektiği,
+ilk bakışta çok aşikar değil. Yakın geçmişte, Multipart/Form-Data türünde bir HTTP
+isteğini oluşturan küçük bir C kütüphanesi yazmayı denediğimden, bu konuyu araştırmaya
+koyuldum.</p>
+<p>Bu konu ile ilgili çeşitli RFC'ler okumama rağmen, en net cevabı <a href="https://tools.ietf.org/html/rfc2231">RFC 2231</a>
+veriyor gibi görünüyor. Bu RFC'ye göre, karakter kodlaması ve içerik dili bilgisi içeren Content-Disposition ve Content-Type
+alanları aşağıdaki şekilde kodlanmalı.</p>
+<pre class="code literal-block"><span></span><span class="nt">Content-Disposition</span><span class="o">:</span> <span class="nt">form-data</span><span class="o">;</span> <span class="nt">name</span><span class="o">=</span><span class="s2">"dosya"</span><span class="o">;</span> <span class="nt">filename</span><span class="o">*=</span><span class="nt">utf-8</span><span class="s1">''</span><span class="nt">Ya</span><span class="o">%</span><span class="nt">C5</span><span class="o">%</span><span class="nt">9Far</span><span class="o">%</span><span class="nt">20Arabac</span><span class="o">%</span><span class="nt">C4</span><span class="o">%</span><span class="nt">B1</span>
+</pre>
+
+
+<p>Bu formatı kısaca incelemek gerekirse, <code>*=</code> ile tanımlanan parametreler, opsiyonel olarak
+karakter kodlama bilgisi, ve metin dili bilgisi içerebiliyor. Bu parametreler, birbirinden
+tek tırnak işareti ile ayrılmış 3 kısımdan oluşuyor. Birinci kısımda, karakter kodlaması,
+ikinci kısımda metin dili, üçüncü kısımda ise kodlanmış parametre değeri bulunuyor. Yukarıdaki
+örnekte, metin dili ile ilgili kısım boş bırakılmış. Herhangi bir kısım boş bırakılsa dahi,
+ayraç olarak kullanılan tek tırnak karakterlerini eksik bırakamıyoruz. İkinci tek tırnak
+karakterinden sonra, parametre değeri geliyor. Parametre değeri içerisindeki
+aşağıdaki karakterler kodlanmak zorunda.</p>
+<ul>
+<li>7 bit ascii (us-ascii) dışındaki karakterler</li>
+<li>Boşluk</li>
+<li>Kontrol Karakterleri (ASCII tablosundaki boşluk karakterinden önceki tüm karakterler ve DEL karakteri)</li>
+<li>Asteriks (*)</li>
+<li>Tek Tırnak (')</li>
+<li>Yüzde İşareti (%)</li>
+<li>Şu karaterlerin hepsi: <code>()&lt;&gt;@,;:\"/[]?=</code> (Bu karakterler RFC'de tspecials olarak geçiyor)</li>
+</ul>
+<p>Bu karakterleri kodlamak için, % (yüzde) karakterinin ardından, kodlanacak byte'ın hex gösterimi
+2 karakterden oluşacak şekilde yazılıyor. Bunu yapan bir mini bir C kütüphanesini <a href="rfc2231.html">başka bir yazıda</a>
+paylaşmıştım.</p>
+<p>RFC bu konuda oldukça net olmakla birlikte, ne tüm HTTP istemcileri bunu uyguluyor, ne de
+tüm HTTP server'lar bu formattaki bir isteği doğru bir biçimde yorumlayabiliyor.</p>
+<p>Bunu test etmek için, yukarıdaki örnek form ile `yaşar arabacı.txt' isimli bir
+dosyayı, farklı istemcilerden yükledim. Content-Disposition satırları şu şekilde
+oluştu:</p>
+<pre class="code literal-block"><span></span><span class="nt">Google</span> <span class="nt">Chrome</span><span class="o">:</span> <span class="o">(</span><span class="nt">parametre</span> <span class="nt">de</span><span class="err">ğ</span><span class="nt">eri</span> <span class="nt">utf8</span> <span class="nt">olarak</span> <span class="nt">kodlanm</span><span class="err">ış</span><span class="nt">t</span><span class="err">ı</span><span class="o">)</span>
+<span class="nt">Content-Disposition</span><span class="o">:</span> <span class="nt">form-data</span><span class="o">;</span> <span class="nt">name</span><span class="o">=</span><span class="s2">"dosya"</span><span class="o">;</span> <span class="nt">filename</span><span class="o">=</span><span class="s2">"ya..ar arabac...txt"</span>
+
+<span class="nt">Firefox</span><span class="o">:</span> <span class="o">(</span><span class="nt">parametre</span> <span class="nt">de</span><span class="err">ğ</span><span class="nt">eri</span> <span class="nt">utf8</span> <span class="nt">olarak</span> <span class="nt">kodlanm</span><span class="err">ış</span><span class="nt">t</span><span class="err">ı</span><span class="o">)</span>
+<span class="nt">Content-Disposition</span><span class="o">:</span> <span class="nt">form-data</span><span class="o">;</span> <span class="nt">name</span><span class="o">=</span><span class="s2">"dosya"</span><span class="o">;</span> <span class="nt">filename</span><span class="o">=</span><span class="s2">"ya..ar arabac...txt"</span>
+
+<span class="err">İ</span><span class="nt">nternet</span> <span class="nt">Explorer</span><span class="o">:</span> <span class="o">(</span><span class="nt">parametre</span> <span class="nt">de</span><span class="err">ğ</span><span class="nt">eri</span> <span class="nt">utf8</span> <span class="nt">olarak</span> <span class="nt">kodlanm</span><span class="err">ış</span><span class="nt">t</span><span class="err">ı</span><span class="o">)</span>
+<span class="nt">Content-Disposition</span><span class="o">:</span> <span class="nt">form-data</span><span class="o">;</span> <span class="nt">name</span><span class="o">=</span><span class="s2">"dosya"</span><span class="o">;</span> <span class="nt">filename</span><span class="o">=</span><span class="s2">"yaşar arabacı.txt"</span>
+
+<span class="p">.</span><span class="nc">NET</span> <span class="nt">HttpClient</span>
+<span class="nt">Content-Disposition</span><span class="o">:</span> <span class="nt">form-data</span><span class="o">;</span> <span class="nt">name</span><span class="o">=</span><span class="nt">dosya</span><span class="o">;</span> <span class="nt">filename</span><span class="o">=</span><span class="s2">"=?utf-8?B?eWHFn2FyIGFyYWJhY8SxLnR4dA==?="</span><span class="o">;</span> <span class="nt">filename</span><span class="o">*=</span><span class="nt">utf-8</span><span class="s1">''</span><span class="nt">ya</span><span class="o">%</span><span class="nt">C5</span><span class="o">%</span><span class="nt">9Far</span><span class="o">%</span><span class="nt">20arabac</span><span class="o">%</span><span class="nt">C4</span><span class="o">%</span><span class="nt">B1</span><span class="p">.</span><span class="nc">txt</span>
+
+<span class="nt">Windows</span> <span class="nt">i</span><span class="err">ç</span><span class="nt">in</span> <span class="nt">curl</span> <span class="o">(</span><span class="nt">parametre</span> <span class="nt">de</span><span class="err">ğ</span><span class="nt">eri</span> <span class="nt">latin-5</span> <span class="nt">olarak</span> <span class="nt">kodlanm</span><span class="err">ış</span><span class="nt">t</span><span class="err">ı</span><span class="o">)</span>
+<span class="nt">Content-Disposition</span><span class="o">:</span> <span class="nt">form-data</span><span class="o">;</span> <span class="nt">name</span><span class="o">=</span><span class="s2">"dosya"</span><span class="o">;</span> <span class="nt">filename</span><span class="o">=</span><span class="s2">"ya.ar arabac..txt"</span>
+</pre>
+
+
+<p>Örnek formu içeren html belgesinden
+<code>&lt;meta charset='utf-8'&gt;</code> etiketini kaldırırsam, oluşan HTTP isteğinin de
+değiştiğini gördüm. Örneğin, Google Chrome ve Firefox'da bu etiketi kaldırıp, formu gönderirsem
+Content-Disposition satırı şu şekilde oluştu:</p>
+<pre class="code literal-block"><span></span><span class="nt">Content-Disposition</span><span class="o">:</span> <span class="nt">form-data</span><span class="o">;</span> <span class="nt">name</span><span class="o">=</span><span class="s2">"dosya"</span><span class="o">;</span> <span class="nt">filename</span><span class="o">=</span><span class="s2">"ya&amp;#351;ar arabac&amp;#305;.txt"</span>
+</pre>
+
+
+<p>Bu iki tarayıcı, filename kısmını kodlarken, html belgesinin kodlamasını kullanıyor. Eğer
+HTML belgesinin kodlamasını tespit edemezse, fallback olarak html-entity kodlaması
+kullanıyor. Diğer yandan internet explorer, meta etiketini kaldırsam dahi, utf8
+kodlaması kullanmaya devam etti.</p>
+<p>Denediğim client'lar içinde, bir tek .NET HttpClient RFC2231'de anlatılan şekilde
+HTTP isteği gönderdi. Ancak, diğer yandan, Content-Disposition içindeki 
+<code>filename="=?utf-8?B?eWHFn2FyIGFyYWJhY8SxLnR4dA==?="</code> kısmı problemli. Bu kısım,
+<a href="https://tools.ietf.org/html/rfc2047">RFC 2047</a>'de bahsedilen, encoded-word betimlemesine
+göre yazılmış. Ancak, bu kullanım aynı RFC içinde geçen aşağıdaki 2 kuralı birden ihlal ediyor.</p>
+<ul>
+<li>An 'encoded-word' MUST NOT appear within a 'quoted-string'.</li>
+<li>An 'encoded-word' MUST NOT be used in parameter of a MIME Content-Type or Content-Disposition field, or in any structured field body except within a 'comment' or 'phrase'.</li>
+</ul>
+<p>Parametre değerini bu şekilde kullanmak, hem yaygın kullanıma, hem de RFC standardına aykırı
+olduğu için, çoğu server bu .NET HttpClient ile gönderilen ve ASCII ile kodlanamayan
+dosya isimlerini yanlış değerlendirecektir (malesef bunu çok acı bir şekilde tecrübe ettim).
+Örnek vermek gerekirse, sunucu tarafında çalışan en yaygın dillerden biri olan PHP ile
+yazılmış basit bir dosya yükleme betiği aşağıdaki şekilde olabilir.</p>
+<pre class="code literal-block"><span></span><span class="cp">&lt;?php</span>
+
+<span class="nv">$uploaddir</span> <span class="o">=</span> <span class="s2">"uploads/"</span><span class="p">;</span>
+<span class="nv">$targetfile</span> <span class="o">=</span> <span class="nv">$uploaddir</span> <span class="o">.</span> <span class="nb">basename</span><span class="p">(</span><span class="nv">$_FILES</span><span class="p">[</span><span class="s2">"dosya"</span><span class="p">][</span><span class="s2">"name"</span><span class="p">]);</span>
+
+<span class="nb">move_uploaded_file</span><span class="p">(</span><span class="nv">$_FILES</span><span class="p">[</span><span class="s2">"dosya"</span><span class="p">][</span><span class="s2">"tmp_name"</span><span class="p">],</span> <span class="nv">$targetfile</span><span class="p">);</span>
+</pre>
+
+
+<p>Bu kodu .NET HttpClient ile test ettiğimde, <code>$_FILES["dosya"]["name"]</code>
+değeri <code>=?utf-8?B?eWHFn2FyIGFyYWJhY8SxLnR4dA==?=</code> olarak görünüyordu.
+Sonuç olarak, test dosyası, adı ve dosya uzantısı kaybolmuş bir şekilde
+kaydedilmiş oldu.</p>
+<p>Toparlamak gerekirse, RFC2231 Content-Disposition ve Content-Type
+HTTP başlıklarında us-ascii ile kodlanamayacak karakterlerin
+nasıl kodlanması gerektiği hakkında bir görüş belirtmiş olsa da,
+bu uygulamada pek yaygınlaşmış görünmüyor. Bu nedenle, yeni yazılacak
+programların, günümüzün HTTP ekosistemiyle uyumlu çalışabilmesi
+için, Content-Type ve Content-Disposition satırlarındaki us-ascii
+dışındaki karakterlerin, tırnak içinde, HTML formunun karakter
+kodlaması ile kodlanması gerektiğini, HTML formunun olmadığı
+veya karakter kodlamasının tespit edilemediği durumlarda ise,
+içinde NULL byte barındırmadığı ve neredeyse tüm sunucular
+tarafından doğru anlaşılacağı için, utf8 ile kodlanması gerektiğini
+düşünüyorum.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><div class="pager">
+                <a href="rfc2231.html" rel="prev" title="RFC2231 Kodlaması">Önceki yazı</a>
+        </div>
+
+    </nav></aside></article></main><script>
+  if(document.location.hostname == "ysar.net")
+  {
+      (function() {
+        var cx = '013136674562336859018:ouohwab0yku';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+      
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-44774134-1', 'auto');
+          ga('send', 'pageview');
+  }
+
+</script>
+</body>
+</html>
