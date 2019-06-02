@@ -1,11 +1,11 @@
 <!--
-.. date: 2019-06-03 17:05
+.. date: 2019-06-02 12:20
 .. description: HTTP Multipart/Form-Data isteği gönderirken, ascii dışındaki isimlerin gönderimi konusunda sabit bir standart olmadığı anlaşılıyor.
-.. slug: multipart-form-data-icinde-ascii-olmayan-veri-gonderme
-.. title: Multipart/Form-Data ile ASCII Dışındaki Karakterleri Nasıl Kodlarız
+.. slug: content-disposition-satirinda-us-ascii-harici-karakterler
+.. title: Content-Disposition Satırında US-ASCII Harici Karakterler Nasıl Kodlanmalı
 -->
 
-Aşağıda, bir server'a dosya göndermek için gerekli HTML formunun asgari bir örneği var;
+Aşağıdaki sıradan dosya yükleme formuna bir göz atalım.
 
     :::html
     <!DOCTYPE html>
@@ -16,15 +16,14 @@ Aşağıda, bir server'a dosya göndermek için gerekli HTML formunun asgari bir
     <body>
         <form method="POST" action="upload.php" enctype="multipart/form-data">
             <input type="file" name="dosya" />
-            <input type="submit" value="Submit">
+            <input type="submit" value="Gönder">
          </form>
     </body>
     </html>
     
-Bu formu doldurup, sunucuya gönderdiğinizde, multipart/form-data formatında oluşturulmuş bir
-HTTP isteği sunucuya gönderilir. Gönderilen isteğin detayları, isteği oluşturan yazılıma
-göre değişebilir. Aşağıda, bu formu Google Chrome ile gönderdiğimde, tarayıcı tarafından
-oluşturulan isteğin, wireshark ile yakalanmış bir örneğini bulabilirsiniz.
+Bu formu doldurup, Gönder'e bastığımızda, multipart/form-data formatında oluşturulmuş bir
+HTTP isteği sunucuya gönderilir. Aşağıda, bu formu Google Chrome ile gönderdiğimde,
+tarayıcı tarafından oluşturulan isteğin, wireshark ile yakalanmış bir örneğini bulabilirsiniz.
 
 
     POST /upload.php HTTP/1.1
@@ -50,45 +49,110 @@ oluşturulan isteğin, wireshark ile yakalanmış bir örneğini bulabilirsiniz.
     Bu dosya örnek olarak oluşturulmuştur.
     ------WebKitFormBoundaryAGtIBnrsMB1w90XW--
     
-Buraya kadar ilginç birşey yok. Ben buraya kopyalaması kolay olması için, sıradan metin
-belgesi ile deneme yaptım. Ancak, ofis belgesi, resim dosyası gibi bir dosyayı göndermiş
-olsaydık, dosya içeriği herhangi bir değişiklik yapılmadan http isteği içeriğine kopyalanacaktı.
+Buraya kadar herşey normal, ama, yüklenen dosyanın adında, us-ascii ile kodlanamayacak
+karakterlerin olduğu durumlarda, `filename` parametresinin nasıl kodlanması gerektiği,
+ilk bakışta çok aşikar değil. Yakın geçmişte, Multipart/Form-Data türünde bir HTTP
+isteğini oluşturan küçük bir C kütüphanesi yazmayı denediğimden, bu konuyu araştırmaya
+koyuldum.
 
-Peki, diyelim ki dosya adı içerisinde 7 bit ascii ile kodlanamayacak karakterler var. Öyle olsaydı,
-Content-Disposition satırını nasıl kodlamak gerekecekti? Bu sorunun cevabını önce RFC'ler içinde,
-daha sonra farklı yazılımların uygulamalarına göre inceleyeceğiz.
-
-Bu konunun etrafında dolanan farklı RFC'ler okumama rağmen, konuyla en ilgili olan [RFC 2231](https://tools.ietf.org/html/rfc2231)
-gibi görünüyor. Bu RFC'ye göre, karakter kodlaması ve içerik dili bilgisi içeren Content-Disposition ve Content-Type
+Bu konu ile ilgili çeşitli RFC'ler okumama rağmen, en net cevabı [RFC 2231](https://tools.ietf.org/html/rfc2231)
+veriyor gibi görünüyor. Bu RFC'ye göre, karakter kodlaması ve içerik dili bilgisi içeren Content-Disposition ve Content-Type
 alanları aşağıdaki şekilde kodlanmalı.
 
     Content-Disposition: form-data; name="dosya"; filename*=utf-8''Ya%C5%9Far%20Arabac%C4%B1
 
-Bu formatı kısaca incelemek gerekirse, karakter kodlaması ve içerik dili bilgisi kullanan
-anahtar/değer çiftlerini eşittir karakteri yerine, *= karakterleri ile birleştiriyoruz. Anahtardan
-sonra gelen değer 3 parçadan oluşuyor. Birinci kısımda, karakter kodlaması, ikinci kısımda içeriğin
-dili, üçüncü kısımda ise kodlanmış değer bulunuyor. Bu üç alan, tek tırnak karakteri ile
-birbirinden ayrılıyor. Yukarıdaki örnekte, içerik dili kısmı boş bırakılmış. Karakter seti
-ve dil ile ilgili bilgilerin gereksiz olduğu durumlarda, bu kısımlar boş bırakılabiliyor.
-Bu durumda, kısımları ayıran tırnak işaretleri yine de bulunmak zorunda. İçerik kısmında,
-7 bit ascii dışındaki tüm karakter ile, aşağıda belirtilen karakterler % formatında kodlanması gerekiyor.
-Kodlanması gereken karakterler şunlardır:
+Bu formatı kısaca incelemek gerekirse, `*=` ile tanımlanan parametreler, opsiyonel olarak
+karakter kodlama bilgisi, ve metin dili bilgisi içerebiliyor. Bu parametreler, birbirinden
+tek tırnak işareti ile ayrılmış 3 kısımdan oluşuyor. Birinci kısımda, karakter kodlaması,
+ikinci kısımda metin dili, üçüncü kısımda ise kodlanmış parametre değeri bulunuyor. Yukarıdaki
+örnekte, metin dili ile ilgili kısım boş bırakılmış. Herhangi bir kısım boş bırakılsa dahi,
+ayraç olarak kullanılan tek tırnak karakterlerini eksik bırakamıyoruz. İkinci tek tırnak
+karakterinden sonra, parametre değeri geliyor. Parametre değeri içerisindeki
+aşağıdaki karakterler kodlanmak zorunda.
 
+ - 7 bit ascii (us-ascii) dışındaki karakterler
  - Boşluk
  - Kontrol Karakterleri (ASCII tablosundaki boşluk karakterinden önceki tüm karakterler ve DEL karakteri)
  - Asteriks (*)
  - Tek Tırnak (')
  - Yüzde İşareti (%)
- - Şu karaterlerin hepsi -> ()<>@,;:\"/[]?= (Bu karakterler RFC'de tspecials olarak geçiyor)
- 
-% formatında kodlamaya yapmak için, kodlanacak her bir byte için önce % işareti, daha sonra
-kodlanacak byte'ın hex gösterimini yazıyoruz. Bunu yapan bir mini bir C kütüphanesini [başka bir yazıda](urlencode-utf8-data.html)
+ - Şu karaterlerin hepsi: `()<>@,;:\"/[]?=` (Bu karakterler RFC'de tspecials olarak geçiyor)
+
+Bu karakterleri kodlamak için, % (yüzde) karakterinin ardından, kodlanacak byte'ın hex gösterimi
+2 karakterden oluşacak şekilde yazılıyor. Bunu yapan bir mini bir C kütüphanesini [başka bir yazıda](rfc2231.html)
 paylaşmıştım.
 
 RFC bu konuda oldukça net olmakla birlikte, ne tüm HTTP istemcileri bunu uyguluyor, ne de
 tüm HTTP server'lar bu formattaki bir isteği doğru bir biçimde yorumlayabiliyor.
 
+Bunu test etmek için, yukarıdaki örnek form ile `yaşar arabacı.txt' isimli bir
+dosyayı, farklı istemcilerden yükledim. Content-Disposition satırları şu şekilde
+oluştu:
 
+    Google Chrome: (parametre değeri utf8 olarak kodlanmıştı)
+    Content-Disposition: form-data; name="dosya"; filename="ya..ar arabac...txt"
 
+    Firefox: (parametre değeri utf8 olarak kodlanmıştı)
+    Content-Disposition: form-data; name="dosya"; filename="ya..ar arabac...txt"
 
+    İnternet Explorer: (parametre değeri utf8 olarak kodlanmıştı)
+    Content-Disposition: form-data; name="dosya"; filename="yaşar arabacı.txt"
+
+    .NET HttpClient
+    Content-Disposition: form-data; name=dosya; filename="=?utf-8?B?eWHFn2FyIGFyYWJhY8SxLnR4dA==?="; filename*=utf-8''ya%C5%9Far%20arabac%C4%B1.txt
+
+    Windows için curl (parametre değeri latin-5 olarak kodlanmıştı)
+    Content-Disposition: form-data; name="dosya"; filename="ya.ar arabac..txt"
+
+Örnek formu içeren html belgesinden
+`<meta charset='utf-8'>` etiketini kaldırırsam, oluşan HTTP isteğinin de
+değiştiğini gördüm. Örneğin, Google Chrome ve Firefox'da bu etiketi kaldırıp, formu gönderirsem
+Content-Disposition satırı şu şekilde oluştu:
+
+    Content-Disposition: form-data; name="dosya"; filename="ya&#351;ar arabac&#305;.txt"
+    
+Bu iki tarayıcı, filename kısmını kodlarken, html belgesinin kodlamasını kullanıyor. Eğer
+HTML belgesinin kodlamasını tespit edemezse, fallback olarak html-entity kodlaması
+kullanıyor. Diğer yandan internet explorer, meta etiketini kaldırsam dahi, utf8
+kodlaması kullanmaya devam etti.
+
+Denediğim client'lar içinde, bir tek .NET HttpClient RFC2231'de anlatılan şekilde
+HTTP isteği gönderdi. Ancak, diğer yandan, Content-Disposition içindeki 
+`filename="=?utf-8?B?eWHFn2FyIGFyYWJhY8SxLnR4dA==?="` kısmı problemli. Bu kısım,
+[RFC 2047](https://tools.ietf.org/html/rfc2047)'de bahsedilen, encoded-word betimlemesine
+göre yazılmış. Ancak, bu kullanım aynı RFC içinde geçen aşağıdaki 2 kuralı birden ihlal ediyor.
+
+ - An 'encoded-word' MUST NOT appear within a 'quoted-string'.
+ - An 'encoded-word' MUST NOT be used in parameter of a MIME Content-Type or Content-Disposition field, or in any structured field body except within a 'comment' or 'phrase'.
  
+Parametre değerini bu şekilde kullanmak, hem yaygın kullanıma, hem de RFC standardına aykırı
+olduğu için, çoğu server bu .NET HttpClient ile gönderilen ve ASCII ile kodlanamayan
+dosya isimlerini yanlış değerlendirecektir (malesef bunu çok acı bir şekilde tecrübe ettim).
+Örnek vermek gerekirse, sunucu tarafında çalışan en yaygın dillerden biri olan PHP ile
+yazılmış basit bir dosya yükleme betiği aşağıdaki şekilde olabilir.
+
+    :::php
+    <?php
+
+    $uploaddir = "uploads/";
+    $targetfile = $uploaddir . basename($_FILES["dosya"]["name"]);
+
+    move_uploaded_file($_FILES["dosya"]["tmp_name"], $targetfile);
+    
+Bu kodu .NET HttpClient ile test ettiğimde, `$_FILES["dosya"]["name"]`
+değeri `=?utf-8?B?eWHFn2FyIGFyYWJhY8SxLnR4dA==?=` olarak görünüyordu.
+Sonuç olarak, test dosyası, adı ve dosya uzantısı kaybolmuş bir şekilde
+kaydedilmiş oldu.
+
+Toparlamak gerekirse, RFC2231 Content-Disposition ve Content-Type
+HTTP başlıklarında us-ascii ile kodlanamayacak karakterlerin
+nasıl kodlanması gerektiği hakkında bir görüş belirtmiş olsa da,
+bu uygulamada pek yaygınlaşmış görünmüyor. Bu nedenle, yeni yazılacak
+programların, günümüzün HTTP ekosistemiyle uyumlu çalışabilmesi
+için, Content-Type ve Content-Disposition satırlarındaki us-ascii
+dışındaki karakterlerin, tırnak içinde, HTML formunun karakter
+kodlaması ile kodlanması gerektiğini, HTML formunun olmadığı
+veya karakter kodlamasının tespit edilemediği durumlarda ise,
+içinde NULL byte barındırmadığı ve neredeyse tüm sunucular
+tarafından doğru anlaşılacağı için, utf8 ile kodlanması gerektiğini
+düşünüyorum.
