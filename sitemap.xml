@@ -31,7 +31,7 @@
  </url>
  <url>
   <loc>http://ysar.net/2019/index.html</loc>
-  <lastmod>2019-06-02T09:20:00Z</lastmod>
+  <lastmod>2019-06-04T18:03:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/algoritma/4-renk-teoremi-ve-harita-boyama.html</loc>
@@ -79,7 +79,7 @@
  </url>
  <url>
   <loc>http://ysar.net/archive.html</loc>
-  <lastmod>2019-06-01T19:42:00Z</lastmod>
+  <lastmod>2019-06-04T17:23:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/assembly/index.html</loc>
@@ -211,7 +211,7 @@
  </url>
  <url>
   <loc>http://ysar.net/index.html</loc>
-  <lastmod>2019-06-02T09:20:00Z</lastmod>
+  <lastmod>2019-06-04T18:03:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/primes.html</loc>
@@ -347,7 +347,7 @@
  </url>
  <url>
   <loc>http://ysar.net/python/index.html</loc>
-  <lastmod>2019-05-23T20:11:00Z</lastmod>
+  <lastmod>2019-06-04T18:03:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/python/kayit-log-dosyalari.html</loc>
@@ -468,6 +468,10 @@
  <url>
   <loc>http://ysar.net/python/resources-kaynaklar.html</loc>
   <lastmod>2019-05-23T20:11:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://ysar.net/python/senkronizasyon-araci-olarak-dosyalar.html</loc>
+  <lastmod>2019-06-04T18:03:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/python/sha256-ftputil.html</loc>
@@ -615,7 +619,7 @@
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/content-disposition-satirinda-us-ascii-harici-karakterler.html</loc>
-  <lastmod>2019-06-02T09:20:00Z</lastmod>
+  <lastmod>2019-06-04T17:23:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/git-deposunu-bolme.html</loc>
@@ -648,10 +652,6 @@
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/javada-ilk-izlenimlerim.html</loc>
   <lastmod>2019-05-23T20:11:00Z</lastmod>
- </url>
- <url>
-  <loc>http://ysar.net/yazilim-dunyasi/multipart-form-data-icinde-ascii-olmayan-veri-gonderme.html</loc>
-  <lastmod>2019-06-02T07:56:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/neden-isletim-sistemi-gelistirmemeliyiz-ekleme.html</loc>
