@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>UTF-8 Kodlama Algoritması | YSAR.NET</title>
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900%7CUbuntu:300,400,500,700" rel="stylesheet">
+<link href="../assets/icons/foundation-icons.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/style.css" rel="stylesheet" type="text/css">
+<script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/algoritma/utf8-kodlama.html">
+<!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="../python/senkronizasyon-araci-olarak-dosyalar.html" title="Senkronizasyon Aracı Olarak Dosyalar" type="text/html">
+<meta property="og:site_name" content="YSAR.NET">
+<meta property="og:title" content="UTF-8 Kodlama Algoritması">
+<meta property="og:url" content="http://ysar.net/algoritma/utf8-kodlama.html">
+<meta property="og:description" content="RFC2231 Kodlaması başlıklı yazıda, wchar_t türündeki
+bir string'i utf8 olarak kodlamak için işletim sisteminin sağladığı fonksiyonları kullanmıştım. Ancak,
+daha sonra, kodlama egzersizi olarak wchar_t">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2019-06-07T19:51:00+03:00">
+</head>
+<body>
+
+         
+    <header class="fixed-top"><div class="container">
+        <a href="http://ysar.net">
+            <img class="logo" src="../assets/img/Logo.svg"></a>
+        <div class="subtitle">Python, Yazılım ve Programlama</div>
+    <nav id="menu"><ul>
+<li class="fi-info"><a href="../yasar-arabaci.html">Hakkımda</a></li>
+            <li class="fi-social-github"><a href="https://github.com/yasar11732/">GitHub</a></li>
+            <li class="question"><a href="../soru-cevap.html">Soru-Cevap</a></li>
+            <li class="fi-rss"><a href="../rss.xml">RSS</a></li>
+        </ul></nav>
+</div>
+        
+    </header><main class="main-content"><article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 itemprop="headline name">UTF-8 Kodlama Algoritması</h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p><a href="https://ysar.net/yazilim-dunyasi/rfc2231.html">RFC2231 Kodlaması</a> başlıklı yazıda, <code>wchar_t</code> türündeki
+bir string'i utf8 olarak kodlamak için işletim sisteminin sağladığı fonksiyonları kullanmıştım. Ancak,
+daha sonra, kodlama egzersizi olarak <code>wchar_t</code> türündeki bir string'i utf8 olarak kodlayan fonksiyonu kendim
+yazmak istedim. Referans olarak, <a href="https://tools.ietf.org/html/rfc3629">RFC 3629</a>'daki tanımlamaları kullandım.
+Bu yazıda, geniş karakter (<code>wchar_t</code>) türündeki veriyi, nasıl utf8 olarak kodlayabileceğimizden bahsedeceğim.</p>
+<p>Bahsettiğim RFC'nin 3. başlığı altında, UTF-8'in tanımı yapılmış. Buna göre, <code>0x0</code> ile <code>0x10FFFF</code> arasındaki
+unicode karakterler, 1-4 byte dizilimle kodlanıyor. Kodlamada kullanılan her bir byte'a octet (eng. sekizli)
+deniyor. Tek bir octet'den oluşan dizilimde üst bit (MSB) 0 olmak zorunda, kalan 7 bit ile karakterimizi
+kodluyoruz. Dolayısıyla, karakter kodu 127 ve altı için, UTF8 kodlama ile us-ascii kodlama eşdeğer oluyor.
+<code>n</code> octetli'li (<code>n &gt; 1</code>) dizilimlerde iste, ilk octet'in üst <code>n</code> biti 1 olarak, bunları takip eden ilk bit
+ise 0 olarak ayarlanıp, kalan bitler kodlama amaçlı kullanılıyor. Devamında gelen octetlerin ise, hepsinin
+en üst biti 1, onu takip eden bit ise 0 olarak ayarlanıp, kalan bitler kodlama amaçlı kullanılıyor.
+RFC'deki örnek tabloyu buraya kopyalıyorum.</p>
+<pre class="code literal-block"><span></span>   Karakter Kodu Aralığı  |        UTF-8 octet dizilimi
+         (hexadecimal)    |              (binary)
+      --------------------+---------------------------------------------
+      0000 0000-0000 007F | 0xxxxxxx
+      0000 0080-0000 07FF | 110xxxxx 10xxxxxx
+      0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx
+      0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+</pre>
+
+
+<p>Şimdi adım adım, UTF8 kodlama algoritmasının aşamalarına geçeceğiz. Aşamalara geçmeden
+önce, işimizi daha anlaşılır yapabilmek için, tanımlamalarımızı yapalım.</p>
+<pre class="code literal-block"><span></span><span class="cp">#define UTF8_OCTET1_MAX 0x7F</span>
+<span class="cp">#define UTF8_OCTET2_MAX 0x7FF</span>
+<span class="cp">#define UTF8_OCTET3_MAX 0xFFFF</span>
+<span class="cp">#define UTF8_OCTET4_MAX 0x10FFFF</span>
+
+<span class="cp">#define UTF8_SEQUENCE1_START 0x00</span>
+<span class="cp">#define UTF8_SEQUENCE2_START 0xC0</span>
+<span class="cp">#define UTF8_SEQUENCE3_START 0xE0</span>
+<span class="cp">#define UTF8_SEQUENCE4_START 0xF0</span>
+
+<span class="cp">#define UTF8_CONTINUATION_BYTE 0x80</span>
+<span class="cp">#define UTF8_CONTINUATION_BYTE_MASK 0x3F</span>
+</pre>
+
+
+<p>İlk 4 tanım, sırasıyla 1 octet, 2 octet, 3 octet ve 4 octet ile kodlanabilecek karakter
+kodlarının üst sınırını belirtiyor. Bu sayılarını doğrudan örnek tablodan kopyaladım.
+Daha sonra gelen 4 tanım ise, yine sırasıyla 1 octet, 2 octet, 3 octet ve 4 octet dizilimlerinde
+ilk octet'in üst bitlerinde olması gereken değeri belirtiyor. Bu sayıları
+elde etmek için, örnek tabloda binary olarak gösterilen birinci octet'leri (<code>b00000000</code>,<code>b11000000</code>,<code>b11100000</code>,<code>b11110000</code>), hex gösterimine
+çevirdim. <code>UTF8_CONTINUATION_BYTE</code> tanımı, çoklu octet dizilimlerinde, her bir octet'in
+üst bitlerinin alması gerektiği değeri gösteriyor. Bunu da aynı şekilde
+örnek tablodan hex'e çevirdim. Son olarak, <code>UTF8_CONTINUATION_BYTE_MASK</code> ile
+tanımlanan değeri, bir sayının en alttaki 6 bitini maskelemek için kullanacağım.</p>
+<p>Şimdi adım adım, algoritmayı inceleyelim. Birinci adım olarak, karakterin kaç octet
+ile kodlanacağını hesaplayacağız. Bunun için mümkün olan en düşük octet sayının
+kullanacağız.  </p>
+<pre class="code literal-block"><span></span><span class="c1">// 1. Gerekli Octet Sayısını Hesapla</span>
+<span class="kt">size_t</span> <span class="n">cbOctet</span> <span class="o">=</span> <span class="mi">1</span>  
+               <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET1_MAX</span><span class="p">)</span>
+               <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET2_MAX</span><span class="p">)</span>
+               <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET3_MAX</span><span class="p">)</span>
+               <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET4_MAX</span><span class="p">);</span>
+</pre>
+
+
+<p>Yukarıdaki örnekte, eğer <code>UTF8_OCTET4_MAX</code>'dan büyük bir karakter kodu
+ile karşılaşırsak, <code>cbOctet</code> 5 olacak. En fazla 4 octet kullanabileceğimiz
+için, bu durumu hata durumu olarak değerlendireceğiz. İkinci adımda ise,
+kullanılacak octet'lerin, üst bitleri tabloda gösterildiği şekilde ayarlayacağız.</p>
+<pre class="code literal-block"><span></span><span class="c1">// 2a. Başlangıç octet'inin üst bitlerini ayala</span>
+<span class="k">switch</span> <span class="p">(</span><span class="n">cbOctet</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+        <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE1_START</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+        <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE2_START</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
+        <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE3_START</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="mi">4</span><span class="o">:</span>
+        <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE4_START</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">default</span><span class="o">:</span> <span class="c1">// utf8 ile kodlanamayacak bir karakter varsa, 0 döndür</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 2b. devam octetlerinin üst bitlerini ayarla</span>
+<span class="kt">size_t</span> <span class="n">i</span><span class="p">;</span>
+<span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">cbOctet</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_CONTINUATION_BYTE</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>İkinci adımda çok ilginç birşey yok. Her bir octet'in üst bitlerini
+olması gerektiği gibi ayarlayıp, kalan bitlerini sıfırladık. Üçüncü
+adımda, karakter kodundaki bitleri, octet'lerdeki kullanılabilir bitlere
+kopyalacağız. Bunun için, karakter kodunun en alttaki bitlerini
+en sondaki octet'e kopyalarak, yukarı doğru devam edeceğiz. Bunu
+yapmak için, en baştaki octet dışında, <code>UTF8_CONTINUATION_BYTE_MASK</code> maskesi
+ile alttaki 6 biti seçip, karakter kodunu 6 bit sağa kaydıracağız.
+En baştaki octet'e gelindiğinde, sadece ihtiyacımız olan bitler
+kaldığı için, herhangi bir maskeleme yapmamıza gerek yok.</p>
+<pre class="code literal-block"><span></span><span class="c1">// 3. Son octetten başa doğru, bitleri</span>
+<span class="c1">// doldur. Her devam octet'inde 6'şar</span>
+<span class="c1">// bit kullanacağız. Geriye kalan bitler</span>
+<span class="c1">// teknik olarak başlangıç octet'ine</span>
+<span class="c1">// sığmak zorunda</span>
+<span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">cbOctet</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">|=</span> <span class="n">c</span> <span class="o">&amp;</span> <span class="n">UTF8_CONTINUATION_BYTE_MASK</span><span class="p">;</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">|=</span> <span class="n">c</span><span class="p">;</span>
+</pre>
+
+
+<p>Böylece, tek bir unicode karakteri, utf8 olarak kodlamış olduk. Bu işlemi
+bir string üzerinde gerçekleştirmek için, sırayla tüm karakleri yukarıdaki
+şekilde kodlamak yeterli. Örnek programın son hali aşağıdaki gibi olacak.</p>
+<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt; // malloc</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string.h&gt; // memcpy</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;  // fopen, fwrite, fclose</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;wchar.h&gt;  // wchar_t</span><span class="cp"></span>
+
+<span class="cp">#define UTF8_OCTET1_MAX 0x7F</span>
+<span class="cp">#define UTF8_OCTET2_MAX 0x7FF</span>
+<span class="cp">#define UTF8_OCTET3_MAX 0xFFFF</span>
+<span class="cp">#define UTF8_OCTET4_MAX 0x10FFFF</span>
+
+<span class="cp">#define UTF8_SEQUENCE1_START 0x00</span>
+<span class="cp">#define UTF8_SEQUENCE2_START 0xC0</span>
+<span class="cp">#define UTF8_SEQUENCE3_START 0xE0</span>
+<span class="cp">#define UTF8_SEQUENCE4_START 0xF0</span>
+
+<span class="cp">#define UTF8_CONTINUATION_BYTE 0x80</span>
+<span class="cp">#define UTF8_CONTINUATION_BYTE_MASK 0x3F</span>
+
+<span class="kt">size_t</span> <span class="nf">utf8_encode_char</span><span class="p">(</span><span class="kt">wchar_t</span> <span class="n">c</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">result</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+<span class="p">{</span>
+    <span class="c1">// 1. Gerekli Octet Sayısını Hesapla</span>
+    <span class="kt">size_t</span> <span class="n">cbOctet</span> <span class="o">=</span> <span class="mi">1</span>  
+                   <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET1_MAX</span><span class="p">)</span>
+                   <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET2_MAX</span><span class="p">)</span>
+                   <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET3_MAX</span><span class="p">)</span>
+                   <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET4_MAX</span><span class="p">);</span>
+
+
+    <span class="c1">// 2a. Başlangıç octet'inin üst bitlerini ayala</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">cbOctet</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+            <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE1_START</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+            <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE2_START</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
+            <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE3_START</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">4</span><span class="o">:</span>
+            <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE4_START</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">default</span><span class="o">:</span> <span class="c1">// utf8 ile kodlanamayacak bir karakter varsa, 0 döndür</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 2b. devam octetlerinin üst bitlerini ayarla</span>
+    <span class="kt">size_t</span> <span class="n">i</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">cbOctet</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_CONTINUATION_BYTE</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 3. Son octetten başa doğru, bitleri</span>
+    <span class="c1">// doldur. Her devam octet'inde 6'şar</span>
+    <span class="c1">// bit kullanacağız. Geriye kalan bitler</span>
+    <span class="c1">// teknik olarak başlangıç octet'ine</span>
+    <span class="c1">// sığmak zorunda</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">cbOctet</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">|=</span> <span class="n">c</span> <span class="o">&amp;</span> <span class="n">UTF8_CONTINUATION_BYTE_MASK</span><span class="p">;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">|=</span> <span class="n">c</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">cbOctet</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/*</span>
+<span class="cm">    IN: wchar_t *pwszWide: NULL ile biten, wchar_t stringi</span>
+<span class="cm">    OUT: size_t *cbEncoded : Kodlamış string'in boyutu</span>
+
+<span class="cm">    RETURN: utf8 ile kodlanmış, NULL ile biten array</span>
+<span class="cm">*/</span>
+<span class="kt">char</span> <span class="o">*</span><span class="nf">utf8_encode</span><span class="p">(</span><span class="kt">wchar_t</span> <span class="o">*</span><span class="n">pwszWide</span><span class="p">,</span> <span class="kt">size_t</span> <span class="o">*</span><span class="n">cbEncoded</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="o">*</span><span class="n">cbEncoded</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">size_t</span> <span class="n">cbTemp</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">encoded_char</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+    <span class="kt">wchar_t</span> <span class="o">*</span><span class="n">pwcTemp</span><span class="p">;</span>
+    <span class="kt">char</span>    <span class="o">*</span><span class="n">pcTemp2</span><span class="p">;</span>
+
+    <span class="c1">// realloc yapmak zorunda kalmamak için</span>
+    <span class="c1">// pwszWide üzerinden 1 tur geçip, kodlanmış</span>
+    <span class="c1">// veri için gerekli hafızayı hesaplayacağız.</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">pwcTemp</span> <span class="o">=</span> <span class="n">pwszWide</span><span class="p">;</span> <span class="o">*</span><span class="n">pwcTemp</span><span class="p">;</span> <span class="n">pwcTemp</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="o">*</span><span class="n">cbEncoded</span> <span class="o">+=</span> <span class="n">utf8_encode_char</span><span class="p">(</span><span class="o">*</span><span class="n">pwcTemp</span><span class="p">,</span> <span class="n">encoded_char</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kt">char</span> <span class="o">*</span><span class="n">pszEncoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="o">*</span><span class="n">cbEncoded</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span> <span class="c1">// +1 null</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="n">pwcTemp</span> <span class="o">=</span> <span class="n">pwszWide</span><span class="p">,</span> <span class="n">pcTemp2</span> <span class="o">=</span> <span class="n">pszEncoded</span><span class="p">;</span> <span class="o">*</span><span class="n">pwcTemp</span><span class="p">;</span> <span class="n">pwcTemp</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">cbTemp</span> <span class="o">=</span> <span class="n">utf8_encode_char</span><span class="p">(</span><span class="o">*</span><span class="n">pwcTemp</span><span class="p">,</span> <span class="n">encoded_char</span><span class="p">);</span>
+        <span class="n">memcpy</span><span class="p">(</span><span class="n">pcTemp2</span><span class="p">,</span> <span class="n">encoded_char</span><span class="p">,</span> <span class="n">cbTemp</span><span class="p">);</span>
+        <span class="n">pcTemp2</span> <span class="o">+=</span> <span class="n">cbTemp</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="o">*</span><span class="n">pcTemp2</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// NULL terminator</span>
+
+    <span class="k">return</span> <span class="n">pszEncoded</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+
+    <span class="kt">wchar_t</span> <span class="n">example1</span><span class="p">[]</span> <span class="o">=</span> <span class="sa">L</span><span class="s">"İŞTE BUNLAR HEP TÜRKÇE KARAKTERLER: ÜĞİŞÇÖ"</span><span class="p">;</span>
+    <span class="kt">wchar_t</span> <span class="n">example2</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0xD55C</span><span class="p">,</span> <span class="mh">0xAD6D</span><span class="p">,</span> <span class="mh">0xC5B4</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">};</span> <span class="c1">// korece korece</span>
+    <span class="kt">wchar_t</span> <span class="n">example3</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x65E5</span><span class="p">,</span> <span class="mh">0x672C</span><span class="p">,</span> <span class="mh">0x8A9E</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">};</span> <span class="c1">// japonca japon</span>
+    <span class="kt">wchar_t</span> <span class="n">example4</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x233B4</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">};</span>                <span class="c1">// çince bir karater</span>
+
+    <span class="kt">FILE</span> <span class="o">*</span><span class="n">f</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"examples.txt"</span><span class="p">,</span><span class="s">"wb"</span><span class="p">);</span>
+
+    <span class="kt">size_t</span> <span class="n">cbEncoded</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">pszEncoded</span> <span class="o">=</span> <span class="n">utf8_encode</span><span class="p">(</span><span class="n">example1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cbEncoded</span><span class="p">);</span>
+    <span class="n">fprintf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pszEncoded</span><span class="p">);</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">pszEncoded</span><span class="p">);</span>
+
+    <span class="n">pszEncoded</span> <span class="o">=</span> <span class="n">utf8_encode</span><span class="p">(</span><span class="n">example2</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cbEncoded</span><span class="p">);</span>
+    <span class="n">fprintf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pszEncoded</span><span class="p">);</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">pszEncoded</span><span class="p">);</span>
+
+    <span class="n">pszEncoded</span> <span class="o">=</span> <span class="n">utf8_encode</span><span class="p">(</span><span class="n">example3</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cbEncoded</span><span class="p">);</span>
+    <span class="n">fprintf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pszEncoded</span><span class="p">);</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">pszEncoded</span><span class="p">);</span>
+
+    <span class="n">pszEncoded</span> <span class="o">=</span> <span class="n">utf8_encode</span><span class="p">(</span><span class="n">example4</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cbEncoded</span><span class="p">);</span>
+    <span class="n">fprintf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pszEncoded</span><span class="p">);</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">pszEncoded</span><span class="p">);</span>
+
+    <span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+
+
+<span class="p">}</span>
+</pre>
+
+
+<p>Öyle sanıyorum ki, yukarıdaki kodlarda optimize edilebilecek kısımlar vardır. Ancak,
+kolayca anlaşılabilr olması açısından, yapılabilecek optimizasyonlara dikkat etmedim.
+Faydalı bir yazı olmuştur diye ümit ediyorum.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><div class="pager">
+                <a href="../python/senkronizasyon-araci-olarak-dosyalar.html" rel="prev" title="Senkronizasyon Aracı Olarak Dosyalar">Önceki yazı</a>
+        </div>
+
+    </nav></aside></article></main><script>
+  if(document.location.hostname == "ysar.net")
+  {
+      (function() {
+        var cx = '013136674562336859018:ouohwab0yku';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+      
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-44774134-1', 'auto');
+          ga('send', 'pageview');
+  }
+
+</script>
+</body>
+</html>
