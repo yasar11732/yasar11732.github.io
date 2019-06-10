@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Huffman Kodlaması | YSAR.NET</title>
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900%7CUbuntu:300,400,500,700" rel="stylesheet">
+<link href="../assets/icons/foundation-icons.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/style.css" rel="stylesheet" type="text/css">
+<script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/algoritma/huffman-kodlamasi.html">
+<!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="utf8-kodlama.html" title="UTF-8 Kodlama Algoritması" type="text/html">
+<meta property="og:site_name" content="YSAR.NET">
+<meta property="og:title" content="Huffman Kodlaması">
+<meta property="og:url" content="http://ysar.net/algoritma/huffman-kodlamasi.html">
+<meta property="og:description" content="Bir mesajı, rakamları kullanarak kodlayacak olsanız, en az rakam kullanarak nasıl
+kodlarsınız? David Huffman 1952 yılında A Method for the Construction of Minimum-Redundancy Codes
+başlıklı makalede bu">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2019-06-10T21:29:00+03:00">
+</head>
+<body>
+
+         
+    <header class="fixed-top"><div class="container">
+        <a href="http://ysar.net">
+            <img class="logo" src="../assets/img/Logo.svg"></a>
+        <div class="subtitle">Python, Yazılım ve Programlama</div>
+    <nav id="menu"><ul>
+<li class="fi-info"><a href="../yasar-arabaci.html">Hakkımda</a></li>
+            <li class="fi-social-github"><a href="https://github.com/yasar11732/">GitHub</a></li>
+            <li class="question"><a href="../soru-cevap.html">Soru-Cevap</a></li>
+            <li class="fi-rss"><a href="../rss.xml">RSS</a></li>
+        </ul></nav>
+</div>
+        
+    </header><main class="main-content"><article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 itemprop="headline name">Huffman Kodlaması</h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Bir mesajı, rakamları kullanarak kodlayacak olsanız, en az rakam kullanarak nasıl
+kodlarsınız? David Huffman 1952 yılında <a href="http://compression.ru/download/articles/huff/huffman_1952_minimum-redundancy-codes.pdf">A Method for the Construction of Minimum-Redundancy Codes</a>
+başlıklı makalede bu soruya cevap aramış, ve bir metot ortaya atmış. Bu metot
+insanların çok etkilemiş olacak ki, png, jpeg, mp3 gibi dosya formatlarında,
+ayrıca HTTP'nin standard sıkıştırma metotlarından deflate veri formatında, deflate
+formatı da gzip ve zlib kütüphanelerinde kullanılmış. Ben de merak edip, Huffman
+Kodlaması nasıl yapılır öğrenmek istedim.</p>
+<p>Huffman kodlaması temelinde bir prefix kodlamadır. Prefix kodlamaya örnek olarak,
+aşağıdaki örneği inceleyelim.</p>
+<pre class="code literal-block"><span></span>       / \             d: 000
+      0   1            b: 001
+    /   \   \          c: 01
+   0     1   a         a: 1
+  / \    /
+ 0   1   c
+/    \
+d     b
+</pre>
+
+
+<p>Prefix kodlamada, kodlanmak istenen her karaktere, bir veya daha çok
+rakamdan oluşan kodlar atanır. Bu kodlar atanırken, herhangi bir kodun,
+kendinden uzun başka bir kodun başlangıcı olmaması gerekiyor. Böylece, bu kodlar
+arka arkaya dizildiğinde, mükemmel şekilde geri ayrıştırılabiliyor. Yukarıdaki
+tabloda, en kısa kod, a karakterine atanmış. a karakterine atanan kod
+1 olduğu için, diğer kodların hiçbiri 1 ile başlayamıyor. Aynı şekilde,
+c karakterine kod olarak 01 atandığı için, diğer kodların hiçbiri 01 ile
+başlayamıyor. Bu özelliklere sahip kodlar oluşturmak için, yukarıdaki
+gibi bir ağaç oluşturarak, ağacın yapraklarına kodlanacak karakterler
+yerleştirip, her yol ayrımında bir yöne 0, diğerine 1 atayabilirsiniz.
+Tepeden başlayıp, istediğiniz karaktere gelene kadar geçtiğiniz rakamlar,
+o karakterin kodunu verir.</p>
+<p>Huffman kodlamasının amacı, prefix ağacını, sıkıştıracağımız metinde
+en çok kullanılan karakterlere, (veya sıkıştıracağımız veride en çok kullanılan byte'lara)
+en kısa kodu verecek şekilde oluşturmaktır. Bunun için kullanılacak algoritma
+şu şekilde.</p>
+<ol>
+<li>Karakterleri, metin içinde görünme sıklığına göre sırala.</li>
+<li>En küçük iki karakteri grupla, bunları görülme sıklıklarını toplayarak, sıraya tekrar dahil et.</li>
+<li>Tek bir grup kalana dek, gruplamaya devam et.</li>
+</ol>
+<p>Bu algoritmayı uygulamak için, bir BST ve bir dinamik array veri yapısı kullanacağım.
+Dinamik array yerine, Heap daha iyi bir tercih olabilir. Ben daha kolay anlaşılacağını
+düşündüğüm için, array kullandım. Algoritmaya geçmeden önce, veri yapılarına bir göz
+atalım.</p>
+<pre class="code literal-block"><span></span><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_huffman</span>
+<span class="p">{</span>
+    <span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">freq</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">_huffman</span> <span class="o">*</span><span class="n">left</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">_huffman</span> <span class="o">*</span><span class="n">right</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">HUFFMANTREE</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">_huffman_array</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">cap</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">size</span><span class="p">;</span>
+    <span class="n">HUFFMANTREE</span> <span class="o">**</span><span class="n">items</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">HUFFMANARRAY</span><span class="p">;</span>
+</pre>
+
+
+<p>HUFFMANTREE veri yapısını, gruplamaları yapmak için, HUFFMANARRAY veri yapısını ise, gruplamaları
+sıralamak için kullanacağım. Sıralama algoritması olarak, klasik "selection sort" yöntemini tercih ettim.
+Bu algoritmanın nasıl çalıştığını anlamadıysanız, bir listedeki elemanları, büyükten küçüğe
+sıraladığını bilmeniz yeterli.</p>
+<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">huffman_array_sort</span><span class="p">(</span><span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">max_index</span><span class="p">,</span> <span class="n">max_value</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">max_index</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="n">max_value</span> <span class="o">=</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">freq</span><span class="p">;</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">&gt;</span> <span class="n">max_value</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">max_value</span> <span class="o">=</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">freq</span><span class="p">;</span>
+                <span class="n">max_index</span> <span class="o">=</span> <span class="n">k</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">max_index</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">max_index</span><span class="p">];</span>
+            <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">max_index</span><span class="p">]</span> <span class="o">^=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">max_index</span><span class="p">];</span>
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Büyükten küçüğe sıralanmış bir array'in en küçük elemanı sonda olduğu için, en
+küçük elemanı kolayca array'den çıkarabiliriz.</p>
+<pre class="code literal-block"><span></span><span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="nf">huffman_array_pop</span><span class="p">(</span><span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="o">--</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">];</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Şimdi algoritmanın uygulamasına geçelim. Öncelikle metinde geçen karakterlerin
+görülme sıklıklarını hesaplamamız gerekiyor.</p>
+<pre class="code literal-block"><span></span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">frequencies</span><span class="p">[</span><span class="mh">0xFF</span><span class="p">];</span>
+<span class="kt">char</span> <span class="n">metin</span><span class="p">[]</span> <span class="o">=</span> <span class="s">"bu oylesine uzun, oylesine girift bir metin ki, muhakkak gereksiz bitlerini temizlemek gerekir."</span><span class="p">;</span>
+<span class="kt">char</span> <span class="o">*</span><span class="n">pcTemp</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+
+<span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">frequencies</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">frequencies</span><span class="p">));</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="n">pcTemp</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">metin</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="o">*</span><span class="n">pcTemp</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">pcTemp</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">frequencies</span><span class="p">[(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">pcTemp</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+
+<span class="p">}</span>
+</pre>
+
+
+<p>Metnin üstünden bir kez geçerek, karakterleri saydım. Şimdi, sıfırdan büyük
+karakleri array'imize ekleyelim.</p>
+<pre class="code literal-block"><span></span><span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span> <span class="o">=</span> <span class="n">huffman_array_new</span><span class="p">();</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">255</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">frequencies</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">huffman_array_add</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">huffmantree_new</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Son olarak, sadece tek bir grup kalana kadar, küçükten büyüğe
+gruplamak kaldı.</p>
+<pre class="code literal-block"><span></span><span class="k">while</span> <span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">huffman_array_sort</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
+    <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t1</span> <span class="o">=</span> <span class="n">huffman_array_pop</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
+    <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t2</span> <span class="o">=</span> <span class="n">huffman_array_pop</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
+    <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t3</span> <span class="o">=</span> <span class="n">calloc</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">HUFFMANTREE</span><span class="p">));</span>
+    <span class="n">t3</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="n">t1</span><span class="p">;</span>
+    <span class="n">t3</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="n">t2</span><span class="p">;</span>
+    <span class="n">t3</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">=</span> <span class="n">t1</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">+</span> <span class="n">t2</span><span class="o">-&gt;</span><span class="n">freq</span><span class="p">;</span>
+    <span class="n">huffman_array_add</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">t3</span><span class="p">);</span>
+
+<span class="p">}</span>
+</pre>
+
+
+<p>Bu noktada, prefix ağacımız hazır oldu. Karakterlere atanan kodları görebilmek için,
+küçük bir yardımcı fonksiyon yazdım.</p>
+<pre class="code literal-block"><span></span><span class="c1">// huffmantree_print(t, "", 0) şeklinde çağrılacak.</span>
+<span class="c1">// prefix en uzun kodu alabilecek kadar büyük bir</span>
+<span class="c1">// buffer olmalı.</span>
+<span class="kt">void</span> <span class="nf">huffmantree_print</span><span class="p">(</span><span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">prefix</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size_prefix</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">&amp;&amp;</span> <span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">prefix</span><span class="p">[</span><span class="n">size_prefix</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"%c: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">t</span><span class="o">-&gt;</span><span class="n">c</span><span class="p">,</span> <span class="n">prefix</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">prefix</span><span class="p">[</span><span class="n">size_prefix</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'0'</span><span class="p">;</span>
+        <span class="n">huffmantree_print</span><span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">size_prefix</span><span class="p">);</span>
+        <span class="n">size_prefix</span><span class="o">--</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">prefix</span><span class="p">[</span><span class="n">size_prefix</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'1'</span><span class="p">;</span>
+        <span class="n">huffmantree_print</span><span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">size_prefix</span><span class="p">);</span>
+        <span class="n">size_prefix</span><span class="o">--</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</pre>
+
+
+<p>Şimdi sonuçlara bir göz atalım.</p>
+<pre class="code literal-block"><span></span><span class="n">u</span><span class="o">:</span> <span class="mi">0000</span>
+<span class="n">a</span><span class="o">:</span> <span class="mi">00010</span>
+<span class="o">,:</span> <span class="mi">00011</span>
+<span class="n">o</span><span class="o">:</span> <span class="mi">00100</span>
+<span class="n">y</span><span class="o">:</span> <span class="mi">00101</span>
+<span class="n">n</span><span class="o">:</span> <span class="mi">0011</span>
+ <span class="o">:</span> <span class="mi">010</span>
+<span class="n">r</span><span class="o">:</span> <span class="mi">0110</span>
+<span class="n">s</span><span class="o">:</span> <span class="mi">01110</span>
+<span class="n">f</span><span class="o">:</span> <span class="mi">011110</span>
+<span class="o">.:</span> <span class="mi">0111110</span>
+<span class="n">h</span><span class="o">:</span> <span class="mi">0111111</span>
+<span class="n">b</span><span class="o">:</span> <span class="mi">10000</span>
+<span class="n">g</span><span class="o">:</span> <span class="mi">10001</span>
+<span class="n">z</span><span class="o">:</span> <span class="mi">10010</span>
+<span class="n">m</span><span class="o">:</span> <span class="mi">10011</span>
+<span class="n">i</span><span class="o">:</span> <span class="mi">101</span>
+<span class="n">e</span><span class="o">:</span> <span class="mi">110</span>
+<span class="n">k</span><span class="o">:</span> <span class="mi">1110</span>
+<span class="n">t</span><span class="o">:</span> <span class="mi">11110</span>
+<span class="n">l</span><span class="o">:</span> <span class="mi">11111</span>
+</pre>
+
+
+<p>Yukarıdaki tabloda görüleceği üzere, en kısa kodlar boşluk, i ve e karakterlerine, en uzun kodlar ise
+nokta ve h karakterlerine verilmiş. Ayrıca kısa kodların hiçbiri, uzun kodlardan birinin başlangıcı
+değil.</p>
+<p>Huffman kodlaması ile kodlanmış bir metni veya veriyi, transfer ve depolama amacıyla kullandıktan sonra,
+eski haline getirebilmek için, her bir kodun karşılığını, veri ile birlikte saklamanız
+gerekiyor. Bunun için çeşitli yöntemler kullanılabilir, ancak, konuyu dağıtmamak adına, bu yazıyı
+burada bitiriyorum.</p>
+<p>Kodların tamamını aşağıda paylaşıyorum. Genel yöntemi kavradığınıza göre, daha optimize
+veri yapıları ve algoritmalar kullanarak aynı kodlamayı yapmayı deneyebilirsiniz. Burada
+verilen metni bit array'ine dönüştürme işlemini ve bit array'ini tekrar orjinal metne dönüştürme
+işlemini de yapmadık. Bunları da denemek isteyebilirsiniz. İyi kodlamalar.</p>
+<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stddef.h&gt; // NULL</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt; // calloc</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string.h&gt; // memset</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">_huffman</span>
+<span class="p">{</span>
+    <span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">freq</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">_huffman</span> <span class="o">*</span><span class="n">left</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">_huffman</span> <span class="o">*</span><span class="n">right</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">HUFFMANTREE</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">_huffman_array</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">cap</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">size</span><span class="p">;</span>
+    <span class="n">HUFFMANTREE</span> <span class="o">**</span><span class="n">items</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">HUFFMANARRAY</span><span class="p">;</span>
+
+<span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="nf">huffmantree_new</span><span class="p">(</span><span class="kt">char</span> <span class="n">c</span><span class="p">,</span> <span class="kt">int</span> <span class="n">freq</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">HUFFMANTREE</span><span class="p">));</span>
+    <span class="n">t</span><span class="o">-&gt;</span><span class="n">c</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+    <span class="n">t</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">=</span> <span class="n">freq</span><span class="p">;</span>
+    <span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">t</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/*</span>
+<span class="cm">* Selection sort, büyükten küçüğe</span>
+<span class="cm">*/</span>
+<span class="kt">void</span> <span class="nf">huffman_array_sort</span><span class="p">(</span><span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">max_index</span><span class="p">,</span> <span class="n">max_value</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">max_index</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="n">max_value</span> <span class="o">=</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">freq</span><span class="p">;</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">&gt;</span> <span class="n">max_value</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">max_value</span> <span class="o">=</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">freq</span><span class="p">;</span>
+                <span class="n">max_index</span> <span class="o">=</span> <span class="n">k</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">max_index</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">max_index</span><span class="p">];</span>
+            <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">max_index</span><span class="p">]</span> <span class="o">^=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">max_index</span><span class="p">];</span>
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="nf">huffman_array_pop</span><span class="p">(</span><span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="o">--</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="o">*</span><span class="nf">huffman_array_add</span><span class="p">(</span><span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span><span class="p">,</span> <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">cap</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">arr</span><span class="o">-&gt;</span><span class="n">cap</span> <span class="o">*=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span> <span class="o">=</span> <span class="n">realloc</span><span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">,</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">cap</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="nf">huffman_array_new</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">HUFFMANARRAY</span><span class="p">));</span>
+    <span class="n">arr</span><span class="o">-&gt;</span><span class="n">cap</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">cap</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="p">)</span> <span class="p">);</span>
+    <span class="k">return</span> <span class="n">arr</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">huffmantree_print</span><span class="p">(</span><span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">prefix</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size_prefix</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">&amp;&amp;</span> <span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">prefix</span><span class="p">[</span><span class="n">size_prefix</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"%c: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">t</span><span class="o">-&gt;</span><span class="n">c</span><span class="p">,</span> <span class="n">prefix</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">prefix</span><span class="p">[</span><span class="n">size_prefix</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'0'</span><span class="p">;</span>
+        <span class="n">huffmantree_print</span><span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">size_prefix</span><span class="p">);</span>
+        <span class="n">size_prefix</span><span class="o">--</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">prefix</span><span class="p">[</span><span class="n">size_prefix</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'1'</span><span class="p">;</span>
+        <span class="n">huffmantree_print</span><span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">size_prefix</span><span class="p">);</span>
+        <span class="n">size_prefix</span><span class="o">--</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">frequencies</span><span class="p">[</span><span class="mh">0xFF</span><span class="p">];</span>
+    <span class="kt">char</span> <span class="n">metin</span><span class="p">[]</span> <span class="o">=</span> <span class="s">"bu oylesine uzun, oylesine girift bir metin ki, muhakkak gereksiz bitlerini temizlemek gerekir."</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">pcTemp</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+
+    <span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span> <span class="o">=</span> <span class="n">huffman_array_new</span><span class="p">();</span>
+
+    <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">frequencies</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">frequencies</span><span class="p">));</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">pcTemp</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">metin</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="o">*</span><span class="n">pcTemp</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">pcTemp</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">frequencies</span><span class="p">[(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">pcTemp</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">255</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">frequencies</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">huffman_array_add</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">huffmantree_new</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">huffman_array_sort</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
+        <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t1</span> <span class="o">=</span> <span class="n">huffman_array_pop</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
+        <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t2</span> <span class="o">=</span> <span class="n">huffman_array_pop</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
+        <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t3</span> <span class="o">=</span> <span class="n">calloc</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">HUFFMANTREE</span><span class="p">));</span>
+        <span class="n">t3</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="n">t1</span><span class="p">;</span>
+        <span class="n">t3</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="n">t2</span><span class="p">;</span>
+        <span class="n">t3</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">=</span> <span class="n">t1</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">+</span> <span class="n">t2</span><span class="o">-&gt;</span><span class="n">freq</span><span class="p">;</span>
+        <span class="n">huffman_array_add</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">t3</span><span class="p">);</span>
+
+    <span class="p">}</span>
+
+    <span class="kt">char</span> <span class="o">*</span><span class="n">buffer</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">256</span><span class="p">);</span>
+    <span class="n">huffmantree_print</span><span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">buffer</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><div class="pager">
+                <a href="utf8-kodlama.html" rel="prev" title="UTF-8 Kodlama Algoritması">Önceki yazı</a>
+        </div>
+
+    </nav></aside></article></main><script>
+  if(document.location.hostname == "ysar.net")
+  {
+      (function() {
+        var cx = '013136674562336859018:ouohwab0yku';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+      
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-44774134-1', 'auto');
+          ga('send', 'pageview');
+  }
+
+</script>
+</body>
+</html>
