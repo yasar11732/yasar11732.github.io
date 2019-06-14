@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>LZ77 Sıkıştırma Algoritması | YSAR.NET</title>
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900%7CUbuntu:300,400,500,700" rel="stylesheet">
+<link href="../assets/icons/foundation-icons.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/style.css" rel="stylesheet" type="text/css">
+<script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/algoritma/lz77.html">
+<!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="huffman-kodlamasi.html" title="Huffman Kodlaması" type="text/html">
+<meta property="og:site_name" content="YSAR.NET">
+<meta property="og:title" content="LZ77 Sıkıştırma Algoritması">
+<meta property="og:url" content="http://ysar.net/algoritma/lz77.html">
+<meta property="og:description" content="Bu aralar sıkıştırma algoritmalarına merak sardım. Geçen yazıda, Huffman Kodlaması
+üzerine birşeyler yazmıştım. Bu yazıda, bir diğer efsane sıkıştırma algoritması olan LZ77'den bahsedeceğim.
+LZ77 algo">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2019-06-14T21:23:00+03:00">
+</head>
+<body>
+
+         
+    <header class="fixed-top"><div class="container">
+        <a href="http://ysar.net">
+            <img class="logo" src="../assets/img/Logo.svg"></a>
+        <div class="subtitle">Python, Yazılım ve Programlama</div>
+    <nav id="menu"><ul>
+<li class="fi-info"><a href="../yasar-arabaci.html">Hakkımda</a></li>
+            <li class="fi-social-github"><a href="https://github.com/yasar11732/">GitHub</a></li>
+            <li class="question"><a href="../soru-cevap.html">Soru-Cevap</a></li>
+            <li class="fi-rss"><a href="../rss.xml">RSS</a></li>
+        </ul></nav>
+</div>
+        
+    </header><main class="main-content"><article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 itemprop="headline name">LZ77 Sıkıştırma Algoritması</h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Bu aralar sıkıştırma algoritmalarına merak sardım. Geçen yazıda, <a href="huffman-kodlamasi.html">Huffman Kodlaması</a>
+üzerine birşeyler yazmıştım. Bu yazıda, bir diğer efsane sıkıştırma algoritması olan LZ77'den bahsedeceğim.
+LZ77 algoritması, Abraham <u>L</u>embel ve Jacob <u>Z</u>iv tarafından 19<u>77</u> yılında yazdıkları <a href="https://www2.cs.duke.edu/courses/spring03/cps296.5/papers/ziv_lempel_1977_universal_algorithm.pdf">A Universal Algorithm for
+Sequential Data Compression</a>
+başlıklı makale ile ortaya atılmıştır. Daha sonra, LZ78, LZSS, BTLZ, LZW, LZMA gibi çeşitli türevleri ortaya çıkmış, ayrıca,
+DEFLATE sıkıştırma metodunda, LZ77 ve Huffman kodlaması bir arada kullanılmıştır.</p>
+<p>Metin belgelerinde, kendini tekrar eden kısımlar olur. Özellikle bağlaç ve zamirler
+ile, diğer kelimelerin başına ve sonuna gelen ekler, metinlerin içinde sık sık
+tekrar edebilirler. LZ77 algoritması, metin belgelerindeki tekrar eden bölümleri ortadan
+kaldırarak, sıkıştırma yapmayı amaçlar. Bunu nasıl yaptığını anlamaya çalışmak için,
+aşağıdaki örneği inceleyelim:</p>
+<pre class="code literal-block"><span></span>Bu köşe yaz köşesi, bu köşe kış köşesi, ortada su şişesi.
+</pre>
+
+
+<p>Bu metinde, <em>köşe</em> kelimesinin 4 defa kullanıldığını hemen dikkat çekiyor. İlk bakışta dikkat
+çekmeyen başka tekrarlar da var. Mesela, 7 karakterden oluşan "u köşe " metin parçası 2 kez
+tekrar ediyor. 9 karakterden oluşan " köşesi, " metin parçası yine 2 kere tekrar ediyor vs.
+Eğer bu tekrarları göstermek için kendimize yeni bir notasyon geliştirirsek, yukarıdaki metni
+aşağıdaki şekilde de ifade edebiliriz.</p>
+<pre class="code literal-block"><span></span>Bu köşe yaz<span class="o">&lt;-</span><span class="m">9</span><span class="p">,</span><span class="m">5</span><span class="o">&gt;</span>si<span class="p">,</span> b<span class="o">&lt;-</span><span class="m">20</span><span class="p">,</span><span class="m">7</span><span class="o">&gt;</span>kış<span class="o">&lt;-</span><span class="m">20</span><span class="p">,</span><span class="m">9</span><span class="o">&gt;</span>ortada su şi<span class="o">&lt;-</span><span class="m">18</span><span class="p">,</span><span class="m">4</span><span class="o">&gt;</span><span class="m">.</span>
+</pre>
+
+
+<p>Yukarıdaki örnekte, tekrar eden kısımları "&lt;" ve "&gt;" işaretleri
+arasında gösterdim. Bu işaretler arasında virgülle ayrılmış iki sayı var. Bunlardan
+ilki, tekrar eden kısmın, metnin neresinde olduğunu gösteriyor. Bu sayı, metnin
+içindeki o anki pozisyonu 0 pozisyonu sayıyor. Mesela, &lt;-9,5&gt; notasyonundaki -9,
+buraya kopyalanacak karakteri bulmak için, 9 karakter geri gitmemiz gerektiğini
+belirtiyor. Orjinal terminolojiye bağlı kalmak için, bu
+sayıya <em>offset</em> diyeceğiz. Virgülden sonra gelen sayı ise, ilk sayı ile
+gösterilen pozisyondan kaç karakter kopyalamamız gerektiğine işaret ediyor. Yani,
+&lt;-9,5&gt; notasyonunu kullandığımızda, 9 karakter geriden 5 karakter kopyalamamız
+gerektiğini anlıyoruz. Yine orjinal terminolojiye sadık kalmak adına, bu ikinci
+sayıya <em>length</em> diyeceğiz. &lt;-9,5&gt; şeklinde gösterimin tamamına ise <em>token</em> diyeceğiz.</p>
+<p>Yukarıdaki örnekte, yöntemin temelini daha rahat ifade edebilmek adına, karakterleri
+ve tokenleri iç içe kullandık. Ancak, algoritmanın aslında, sıkıştırılmış veriyi
+sadece tokenler kullanarak ifade ediyoruz. Bir diğer deyişle, örneğin şu şekilde
+verilmiş olması aslına daha uygun olur.</p>
+<pre class="code literal-block"><span></span>&lt;0,0,B&gt;&lt;0,0,u&gt;&lt;0,0, &gt;&lt;0,0,k&gt;&lt;0,0,ö&gt; ...
+</pre>
+
+
+<p>Bu yeni gösterimde, offset ve length her zaman belirtilmek zorunda. Eğer, herhangi
+bir eşleşme yoksa, offset ve length'in ikisini de 0 olarak gösteriyoruz. Offset ve
+length'in arkasında, eşleşmenin ardından gelen ilk karakteri de, tokenin içine dahil
+etmemiz gerekiyor.</p>
+<p>Programlama dilinde tokenleri nasıl ifade etmemiz gerektiği konusunda, herhangi
+bir standart yok. Bu tokenler sabit genişlikli olabildiği gibi, bazen sıkıştırma
+oranını artırmak için, değişken genişlikli de tasarlanabiliyor. Ben kolay
+uygulanabilir olacağı için, sabit genişlikli tokenler kullanacağım.</p>
+<pre class="code literal-block"><span></span><span class="cp">#define OFFSETBITS 5</span>
+<span class="cp">#define LENGTHBITS (8-OFFSETBITS)</span>
+
+<span class="cp">#define OFFSETMASK ((1 &lt;&lt; (OFFSETBITS)) - 1)</span>
+<span class="cp">#define LENGTHMASK ((1 &lt;&lt; (LENGTHBITS)) - 1)</span>
+
+<span class="cp">#define GETOFFSET(x) (x &gt;&gt; LENGTHBITS)</span>
+<span class="cp">#define GETLENGTH(x) (x &amp; LENGTHMASK)</span>
+<span class="cp">#define OFFSETLENGTH(x,y) (x &lt;&lt; LENGTHBITS | y)</span>
+
+<span class="k">struct</span> <span class="n">token</span> <span class="p">{</span>
+    <span class="kt">uint8_t</span> <span class="n">offset_len</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+
+
+<p>Her bir tokenim 5 offset biti, 3 length biti ve 8 karakter biti olmak üzere
+toplam 16bit (2 byte) genişliğinde olacak. Dolayısıyla, offset maksimum 31,
+length ise maksimum 7 olabilecek. Yukarıda bazı yardımcı makrolar da tanımladım.</p>
+<p>Tokenleri oluşturmak için, metni iki parça olarak düşüneceğiz. Bu parçalardan biri,
+metnin henüz işlenmemiş kısmı olacak. Bu kısma, lookahead buffer diyeceğiz. Bu parçalardan
+diğeri ise, search buffer. Search buffer içerisinde eşleşme arayacağız. Örneğin:</p>
+<pre class="code literal-block"><span></span>|Bu köşe yaz köşesi, bu köşe |kış köşesi, ortada su şişesi.
+|^                           |^
+|Search Buffer               |Lookahead Buffer
+</pre>
+
+
+<p>Yukarıdaki tabloda, sıkıştırma algoritması, kış kelimesinin başına kadar
+ilerlediğinde, lookahead ve search buffer'larının olabileceği durumu görüyoruz.
+Böyle bir durumda algoritma, search buffer'ın içinde lookahead buffer'in önü ile
+eşleşen en uzun parçayı arayıp, oluşacak token'nin offset ve length değerlerini
+tespit edecek. Token tespit edildikten sonra, lookahead ve search buffer'ları
+ileriye doğru kaydırılacak.</p>
+<p>Bu iki buffer'ın genişliği, tokenime uygun olarak, search buffer için 31 karakter,
+lookahead buffer için 7 karakter olarak seçilecek. Aşağıda, tokenleri
+oluşturmak için kullandığım fonksiyonu inceleyebilirsiniz.</p>
+<pre class="code literal-block"><span></span><span class="cm">/*</span>
+<span class="cm">* LZ77 ile sıkıştırılacak bir metin alır.</span>
+<span class="cm">* token array'i döndürür.</span>
+<span class="cm">* Eğer numTokens NULL değilse, token sayısını</span>
+<span class="cm">* numTokens ile gösterilen yere kaydeder.</span>
+<span class="cm">* char *text =&gt; sıkıştırılacak metin</span>
+<span class="cm">* int limit  =&gt; Kaç karakter sıkıştıracağımız.</span>
+<span class="cm">* int *numTokens =&gt; Kullanılan token sayısının yerini gösterir pointer</span>
+<span class="cm">*</span>
+<span class="cm">*/</span>
+<span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="nf">encode</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">text</span><span class="p">,</span> <span class="kt">int</span> <span class="n">limit</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">numTokens</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// cap (kapasite) hafızada kaç tokenlik yer ayırdığımız.</span>
+    <span class="kt">int</span> <span class="n">cap</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">;</span>
+
+    <span class="c1">// kaç token oluşturduğumuz.</span>
+    <span class="kt">int</span> <span class="n">_numTokens</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// oluşturulacak token</span>
+    <span class="k">struct</span> <span class="n">token</span> <span class="n">t</span><span class="p">;</span>
+
+    <span class="c1">// lookahead ve search buffer'larının başlangıç pozisyonları</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">lookahead</span><span class="p">,</span> <span class="o">*</span><span class="n">search</span><span class="p">;</span>
+
+    <span class="c1">// tokenler için yer ayır.</span>
+    <span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="n">encoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">cap</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span><span class="p">));</span>
+
+    <span class="c1">// token oluşturma döngüsü</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">lookahead</span> <span class="o">=</span> <span class="n">text</span><span class="p">;</span> <span class="n">lookahead</span> <span class="o">&lt;</span> <span class="n">text</span> <span class="o">+</span> <span class="n">limit</span><span class="p">;</span> <span class="n">lookahead</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// search buffer'ı lookahead buffer'ın 31 (OFFSETMASK) karakter</span>
+        <span class="c1">// gerisine koyuyoruz.</span>
+        <span class="n">search</span> <span class="o">=</span> <span class="n">lookahead</span> <span class="o">-</span> <span class="n">OFFSETMASK</span><span class="p">;</span>
+
+        <span class="c1">// search buffer'ın metnin dışına çıkmasına engel ol.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">search</span> <span class="o">&lt;</span> <span class="n">text</span><span class="p">)</span>
+            <span class="n">search</span> <span class="o">=</span> <span class="n">text</span><span class="p">;</span>
+
+        <span class="c1">// search bufferda bulunan en uzun eşleşmenin</span>
+        <span class="c1">// boyutu</span>
+        <span class="kt">int</span> <span class="n">max_len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+        <span class="c1">// search bufferda bulunan en uzun eşleşmenin</span>
+        <span class="c1">// pozisyonu</span>
+        <span class="kt">char</span> <span class="o">*</span><span class="n">max_match</span> <span class="o">=</span> <span class="n">lookahead</span><span class="p">;</span>
+
+        <span class="c1">// search buffer içinde arama yap.</span>
+        <span class="k">for</span> <span class="p">(;</span> <span class="n">search</span> <span class="o">&lt;</span> <span class="n">lookahead</span><span class="p">;</span> <span class="n">search</span><span class="o">++</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">prefix_match_length</span><span class="p">(</span><span class="n">search</span><span class="p">,</span> <span class="n">lookahead</span><span class="p">,</span> <span class="n">LENGTHMASK</span><span class="p">);</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">len</span> <span class="o">&gt;</span> <span class="n">max_len</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">max_len</span> <span class="o">=</span> <span class="n">len</span><span class="p">;</span>
+                <span class="n">max_match</span> <span class="o">=</span> <span class="n">search</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="cm">/*</span>
+<span class="cm">        * ! ÖNEMLİ !</span>
+<span class="cm">        * Eğer eşleşmenin içine metnin son karakteri de dahil olmuşsa,</span>
+<span class="cm">        * tokenin içine bir karakter koyabilmek için, eşleşmeyi kısaltmamız</span>
+<span class="cm">        * gerekiyor.</span>
+<span class="cm">        */</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">lookahead</span> <span class="o">+</span> <span class="n">max_len</span> <span class="o">&gt;=</span> <span class="n">text</span> <span class="o">+</span> <span class="n">limit</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">max_len</span> <span class="o">=</span> <span class="n">text</span> <span class="o">+</span> <span class="n">limit</span> <span class="o">-</span> <span class="n">lookahead</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+
+
+        <span class="c1">// bulunan eşleşmeye göre token oluştur.</span>
+        <span class="n">t</span><span class="p">.</span><span class="n">offset_len</span> <span class="o">=</span> <span class="n">OFFSETLENGTH</span><span class="p">(</span><span class="n">lookahead</span> <span class="o">-</span> <span class="n">max_match</span><span class="p">,</span> <span class="n">max_len</span><span class="p">);</span>
+        <span class="n">lookahead</span> <span class="o">+=</span> <span class="n">max_len</span><span class="p">;</span>
+        <span class="n">t</span><span class="p">.</span><span class="n">c</span> <span class="o">=</span> <span class="o">*</span><span class="n">lookahead</span><span class="p">;</span>
+
+        <span class="c1">// gerekirse, hafızada yer aç</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">_numTokens</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">cap</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">cap</span> <span class="o">=</span> <span class="n">cap</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="n">encoded</span> <span class="o">=</span> <span class="n">realloc</span><span class="p">(</span><span class="n">encoded</span><span class="p">,</span> <span class="n">cap</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="c1">// oluşturulan tokeni, array'e kaydet.</span>
+        <span class="n">encoded</span><span class="p">[</span><span class="n">_numTokens</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">numTokens</span><span class="p">)</span>
+        <span class="o">*</span><span class="n">numTokens</span> <span class="o">=</span> <span class="n">_numTokens</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">encoded</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Gerekli açıklamaları yorum satırlarında yaptım. Burada kullandığım <code>prefix_match_length</code>
+fonksiyonu, iki metnin başından kaç karakter eşleştiğini hesaplıyor. Onu da şu şekilde yazdım.</p>
+<pre class="code literal-block"><span></span><span class="cm">/*</span>
+<span class="cm">* iki string'in ilk kaç karakteri özdeş?</span>
+<span class="cm">* en fazla limit'e kadar kontrol yapar.</span>
+<span class="cm">*/</span>
+<span class="kr">inline</span> <span class="kt">int</span> <span class="nf">prefix_match_length</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s1</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">limit</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">s1</span><span class="o">++</span> <span class="o">==</span> <span class="o">*</span><span class="n">s2</span><span class="o">++</span> <span class="o">&amp;&amp;</span> <span class="n">len</span> <span class="o">&lt;</span> <span class="n">limit</span><span class="p">)</span>
+        <span class="n">len</span><span class="o">++</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">len</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Sıkıştırma işleminin hepsi bu. Oluşturulan token array'ini depolama veya transfer amacıyla
+kullanbilirsiniz. Sıkıştırılan metni eski haline döndürmek, sıkıştırmaya nazaran daha basit.</p>
+<pre class="code literal-block"><span></span><span class="cm">/*</span>
+<span class="cm">* token array'ini, karakter array'ine dönüştürür.</span>
+<span class="cm">*/</span>
+<span class="kt">char</span> <span class="o">*</span><span class="nf">decode</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="n">tokens</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numTokens</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">pcbDecoded</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// hafızada ayırdığımız kapasite</span>
+    <span class="kt">int</span> <span class="n">cap</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">;</span>
+
+    <span class="c1">// kullanılan byte sayısı</span>
+    <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// hafızada yer ayır</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">decoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">cap</span><span class="p">);</span>
+
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numTokens</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// token'in içinden offset, length ve char</span>
+        <span class="c1">// değerlerini oku</span>
+        <span class="kt">int</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">GETOFFSET</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">offset_len</span><span class="p">);</span>
+        <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">GETLENGTH</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">offset_len</span><span class="p">);</span>
+        <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">c</span><span class="p">;</span>
+
+        <span class="c1">// gerekirse kapasite artır.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">+</span> <span class="n">len</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">cap</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">cap</span> <span class="o">=</span> <span class="n">cap</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="n">decoded</span> <span class="o">=</span> <span class="n">realloc</span><span class="p">(</span><span class="n">decoded</span><span class="p">,</span> <span class="n">cap</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="c1">// eğer length 0 değilse, gösterilen karakteleri</span>
+        <span class="c1">// kopyala</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">len</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">lz77memcpy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">decoded</span><span class="p">[</span><span class="o">*</span><span class="n">pcbDecoded</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">decoded</span><span class="p">[</span><span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">-</span> <span class="n">offset</span><span class="p">],</span> <span class="n">len</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="c1">// kopyalanan karakter kadar ileri sar</span>
+        <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">+=</span> <span class="n">len</span><span class="p">;</span>
+
+        <span class="c1">// tokenin içindeki karateri ekle.</span>
+        <span class="n">decoded</span><span class="p">[</span><span class="o">*</span><span class="n">pcbDecoded</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+
+        <span class="c1">// 1 adım daha ileri sar.</span>
+        <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">=</span> <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">decoded</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Gerekli açıklamalar, yorum satırlarında mevcut. Burada tek ilginç olan nokta <code>lz77memcpy</code>
+fonksiyonu. Buna neden gerek duyulduğuna geçmeden önce, aşağıdaki tokenlerin nasıl bir
+metin oluşturması gerektiğine bakalım.</p>
+<pre class="code literal-block"><span></span>&lt;0,0,a&gt;&lt;-1,7,a&gt;
+</pre>
+
+
+<p>İkinci tokene dikkat ederseniz, 1 karakter geri gidip, 7 karakter kopyalamamız gerekiyor, ancak,
+gösterilen yerde 7 karakter yok. LZ77 algoritmasında bu şekilde henüz olmayan metne referans
+verebiliyoruz. Aşağıdaki tabloda ikinci token oluşturulmaya başlamadan önceki metnin haline bakalım.</p>
+<pre class="code literal-block"><span></span>|1|2|3|4|5|6|7|8|
+|a|?|?|?|?|?|?|?|
+</pre>
+
+
+<p>Bu noktada kopyalamanın hedefi ikinci karakter, kaynağı ise birinci karakter. Bu aşamada, 1 karakter
+kopyalarsak, aşağıdaki duruma geçiyoruz.</p>
+<pre class="code literal-block"><span></span>|1|2|3|4|5|6|7|8|
+|a|a|?|?|?|?|?|?|
+</pre>
+
+
+<p>Bu aşamada, kopyalamanın hedefi üçüncü karakter, kaynağı ise ikinci karakter. Örnek tabloda gördüğünüz
+gibi, ilk karakteri kopyaladıktan sonra, kopyalanacak ikinci karakter oluşmuş oldu. Bu şekilde devam
+ederek, gerekli 7 karakteri kopyalayabiliriz. <code>lz77memcpy</code> fonksiyonu da bu işe yarıyor.</p>
+<pre class="code literal-block"><span></span><span class="cm">/*</span>
+<span class="cm">* memcpy fonksiyonu ile benzer. Byte düzeyinde</span>
+<span class="cm">* kopyalama yapma garantisi olduğu için, bu</span>
+<span class="cm">* versiyonu kullanıyoruz.</span>
+<span class="cm">*/</span>
+<span class="kr">inline</span> <span class="kt">void</span> <span class="nf">lz77memcpy</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s1</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">size</span><span class="o">--</span><span class="p">)</span>
+        <span class="o">*</span><span class="n">s1</span><span class="o">++</span> <span class="o">=</span> <span class="o">*</span><span class="n">s2</span><span class="o">++</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Kaynak ve hedefin örtüştüğü durumlarda, standart <code>memcpy</code> fonksiyonu her zaman doğru çalışmayacaktır.
+Bunun için, kendi versiyonumuzu yazmamız gerekti.</p>
+<p>Programın tamamı aşağıdaki şekilde. Farklı özellikteki metinlerle ve parametleri
+değiştirerek denemenizi tavsiye ederim. <code>offset</code> ve <code>length</code> değişkenlerini tutmak için daha
+büyük bir veri yapısı (<code>uint16_t</code> gibi) deneyerek, daha iyi sıkıştırma oranları elde etmeniz mümkün.
+<code>offset</code> için ayırdığınız yerin, <code>length</code>'den büyük olması çoğu zaman daha avantajlı olur.</p>
+<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp"></span>
+
+<span class="cp">#define OFFSETBITS 5</span>
+<span class="cp">#define LENGTHBITS (8-OFFSETBITS)</span>
+
+<span class="cp">#define OFFSETMASK ((1 &lt;&lt; (OFFSETBITS)) - 1)</span>
+<span class="cp">#define LENGTHMASK ((1 &lt;&lt; (LENGTHBITS)) - 1)</span>
+
+<span class="cp">#define GETOFFSET(x) (x &gt;&gt; LENGTHBITS)</span>
+<span class="cp">#define GETLENGTH(x) (x &amp; LENGTHMASK)</span>
+<span class="cp">#define OFFSETLENGTH(x,y) (x &lt;&lt; LENGTHBITS | y)</span>
+
+<span class="k">struct</span> <span class="n">token</span> <span class="p">{</span>
+    <span class="kt">uint8_t</span> <span class="n">offset_len</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+<span class="cm">/*</span>
+<span class="cm">* iki string'in ilk kaç karakteri özdeş?</span>
+<span class="cm">* maksimum limit sayısı kadar kontrol yapar.</span>
+<span class="cm">*/</span>
+<span class="kr">inline</span> <span class="kt">int</span> <span class="nf">prefix_match_length</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s1</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">limit</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">s1</span><span class="o">++</span> <span class="o">==</span> <span class="o">*</span><span class="n">s2</span><span class="o">++</span> <span class="o">&amp;&amp;</span> <span class="n">len</span> <span class="o">&lt;</span> <span class="n">limit</span><span class="p">)</span>
+        <span class="n">len</span><span class="o">++</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">len</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/*</span>
+<span class="cm">* memcpy fonksiyonu ile benzer. Byte düzeyinde</span>
+<span class="cm">* kopyalama yapma garantisi olduğu için, bu</span>
+<span class="cm">* versiyonu kullanıyoruz.</span>
+<span class="cm">*/</span>
+<span class="kr">inline</span> <span class="kt">void</span> <span class="nf">lz77memcpy</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s1</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">size</span><span class="o">--</span><span class="p">)</span>
+        <span class="o">*</span><span class="n">s1</span><span class="o">++</span> <span class="o">=</span> <span class="o">*</span><span class="n">s2</span><span class="o">++</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/*</span>
+<span class="cm">* token array'ini, karakter array'ine dönüştürür.</span>
+<span class="cm">*/</span>
+<span class="kt">char</span> <span class="o">*</span><span class="nf">decode</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="n">tokens</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numTokens</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">pcbDecoded</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// hafızada ayırdığımız kapasite</span>
+    <span class="kt">int</span> <span class="n">cap</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">;</span>
+
+    <span class="c1">// kullanılan byte sayısı</span>
+    <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// hafızada yer ayır</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">decoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">cap</span><span class="p">);</span>
+
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numTokens</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// token'in içinden offset, length ve char</span>
+        <span class="c1">// değerlerini oku</span>
+        <span class="kt">int</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">GETOFFSET</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">offset_len</span><span class="p">);</span>
+        <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">GETLENGTH</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">offset_len</span><span class="p">);</span>
+        <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">c</span><span class="p">;</span>
+
+        <span class="c1">// gerekirse kapasite artır.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">+</span> <span class="n">len</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">cap</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">cap</span> <span class="o">=</span> <span class="n">cap</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="n">decoded</span> <span class="o">=</span> <span class="n">realloc</span><span class="p">(</span><span class="n">decoded</span><span class="p">,</span> <span class="n">cap</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="c1">// eğer length 0 değilse, gösterilen karakteleri</span>
+        <span class="c1">// kopyala</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">len</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">lz77memcpy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">decoded</span><span class="p">[</span><span class="o">*</span><span class="n">pcbDecoded</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">decoded</span><span class="p">[</span><span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">-</span> <span class="n">offset</span><span class="p">],</span> <span class="n">len</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="c1">// kopyalanan karakter kadar ileri sar</span>
+        <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">+=</span> <span class="n">len</span><span class="p">;</span>
+
+        <span class="c1">// tokenin içindeki karateri ekle.</span>
+        <span class="n">decoded</span><span class="p">[</span><span class="o">*</span><span class="n">pcbDecoded</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+
+        <span class="c1">// 1 adım daha ileri sar.</span>
+        <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">=</span> <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">decoded</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cm">/*</span>
+<span class="cm">* LZ77 ile sıkıştırılacak bir metin alır.</span>
+<span class="cm">* token array'i döndürür.</span>
+<span class="cm">* Eğer numTokens NULL değilse, token sayısını</span>
+<span class="cm">* numTokens ile gösterilen yere kaydeder.</span>
+<span class="cm">*/</span>
+<span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="nf">encode</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">text</span><span class="p">,</span> <span class="kt">int</span> <span class="n">limit</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">numTokens</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// cap (kapasite) hafızada kaç tokenlik yer ayırdığımız.</span>
+    <span class="kt">int</span> <span class="n">cap</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">;</span>
+
+    <span class="c1">// kaç token oluşturduğumuz.</span>
+    <span class="kt">int</span> <span class="n">_numTokens</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// oluşturulacak token</span>
+    <span class="k">struct</span> <span class="n">token</span> <span class="n">t</span><span class="p">;</span>
+
+    <span class="c1">// lookahead ve search buffer'larının başlangıç pozisyonları</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">lookahead</span><span class="p">,</span> <span class="o">*</span><span class="n">search</span><span class="p">;</span>
+
+    <span class="c1">// tokenler için yer ayır.</span>
+    <span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="n">encoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">cap</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span><span class="p">));</span>
+
+    <span class="c1">// token oluşturma döngüsü</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">lookahead</span> <span class="o">=</span> <span class="n">text</span><span class="p">;</span> <span class="n">lookahead</span> <span class="o">&lt;</span> <span class="n">text</span> <span class="o">+</span> <span class="n">limit</span><span class="p">;</span> <span class="n">lookahead</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// search buffer'ı lookahead buffer'ın 31 (OFFSETMASK) karakter</span>
+        <span class="c1">// gerisine koyuyoruz.</span>
+        <span class="n">search</span> <span class="o">=</span> <span class="n">lookahead</span> <span class="o">-</span> <span class="n">OFFSETMASK</span><span class="p">;</span>
+
+        <span class="c1">// search buffer'ın metnin dışına çıkmasına engel ol.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">search</span> <span class="o">&lt;</span> <span class="n">text</span><span class="p">)</span>
+            <span class="n">search</span> <span class="o">=</span> <span class="n">text</span><span class="p">;</span>
+
+        <span class="c1">// search bufferda bulunan en uzun eşleşmenin</span>
+        <span class="c1">// boyutu</span>
+        <span class="kt">int</span> <span class="n">max_len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+        <span class="c1">// search bufferda bulunan en uzun eşleşmenin</span>
+        <span class="c1">// pozisyonu</span>
+        <span class="kt">char</span> <span class="o">*</span><span class="n">max_match</span> <span class="o">=</span> <span class="n">lookahead</span><span class="p">;</span>
+
+        <span class="c1">// search buffer içinde arama yap.</span>
+        <span class="k">for</span> <span class="p">(;</span> <span class="n">search</span> <span class="o">&lt;</span> <span class="n">lookahead</span><span class="p">;</span> <span class="n">search</span><span class="o">++</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">prefix_match_length</span><span class="p">(</span><span class="n">search</span><span class="p">,</span> <span class="n">lookahead</span><span class="p">,</span> <span class="n">LENGTHMASK</span><span class="p">);</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">len</span> <span class="o">&gt;</span> <span class="n">max_len</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">max_len</span> <span class="o">=</span> <span class="n">len</span><span class="p">;</span>
+                <span class="n">max_match</span> <span class="o">=</span> <span class="n">search</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="cm">/*</span>
+<span class="cm">        * ! ÖNEMLİ !</span>
+<span class="cm">        * Eğer eşleşmenin içine metnin son karakteri de dahil olmuşsa,</span>
+<span class="cm">        * tokenin içine bir karakter koyabilmek için, eşleşmeyi kısaltmamız</span>
+<span class="cm">        * gerekiyor.</span>
+<span class="cm">        */</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">lookahead</span> <span class="o">+</span> <span class="n">max_len</span> <span class="o">&gt;=</span> <span class="n">text</span> <span class="o">+</span> <span class="n">limit</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">max_len</span> <span class="o">=</span> <span class="n">text</span> <span class="o">+</span> <span class="n">limit</span> <span class="o">-</span> <span class="n">lookahead</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+
+
+        <span class="c1">// bulunan eşleşmeye göre token oluştur.</span>
+        <span class="n">t</span><span class="p">.</span><span class="n">offset_len</span> <span class="o">=</span> <span class="n">OFFSETLENGTH</span><span class="p">(</span><span class="n">lookahead</span> <span class="o">-</span> <span class="n">max_match</span><span class="p">,</span> <span class="n">max_len</span><span class="p">);</span>
+        <span class="n">lookahead</span> <span class="o">+=</span> <span class="n">max_len</span><span class="p">;</span>
+        <span class="n">t</span><span class="p">.</span><span class="n">c</span> <span class="o">=</span> <span class="o">*</span><span class="n">lookahead</span><span class="p">;</span>
+
+        <span class="c1">// gerekirse, hafızada yer aç</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">_numTokens</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">cap</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">cap</span> <span class="o">=</span> <span class="n">cap</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="n">encoded</span> <span class="o">=</span> <span class="n">realloc</span><span class="p">(</span><span class="n">encoded</span><span class="p">,</span> <span class="n">cap</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="c1">// oluşturulan tokeni, array'e kaydet.</span>
+        <span class="n">encoded</span><span class="p">[</span><span class="n">_numTokens</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">numTokens</span><span class="p">)</span>
+        <span class="o">*</span><span class="n">numTokens</span> <span class="o">=</span> <span class="n">_numTokens</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">encoded</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// bir dosyanın tamamını tek seferde</span>
+<span class="c1">// okur. Büyük dosyaları okumak için uygun</span>
+<span class="c1">// değildir.</span>
+<span class="kt">char</span> <span class="o">*</span><span class="nf">file_read</span><span class="p">(</span><span class="kt">FILE</span> <span class="o">*</span><span class="n">f</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">size</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">content</span><span class="p">;</span>
+    <span class="n">fseek</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SEEK_END</span><span class="p">);</span>
+    <span class="o">*</span><span class="n">size</span> <span class="o">=</span> <span class="n">ftell</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="o">*</span><span class="n">size</span><span class="p">);</span>
+    <span class="n">fseek</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SEEK_SET</span><span class="p">);</span>
+    <span class="n">fread</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">size</span><span class="p">,</span> <span class="n">f</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">content</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">FILE</span> <span class="o">*</span><span class="n">f</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">metin_boyutu</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">token_sayisi</span><span class="p">,</span> <span class="n">decode_boyutu</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">kaynak_metin</span> <span class="o">=</span> <span class="s">"aaaaaaaa"</span><span class="p">,</span> <span class="o">*</span><span class="n">decoded_metin</span> <span class="o">=</span> <span class="s">""</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="n">encoded_metin</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">f</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"source.txt"</span><span class="p">,</span> <span class="s">"rb"</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">kaynak_metin</span> <span class="o">=</span> <span class="n">file_read</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">metin_boyutu</span><span class="p">);</span>
+        <span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+    <span class="p">}</span>
+
+
+
+    <span class="n">encoded_metin</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">kaynak_metin</span><span class="p">,</span> <span class="n">metin_boyutu</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">token_sayisi</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">f</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"encoded.txt"</span><span class="p">,</span> <span class="s">"wb"</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">fwrite</span><span class="p">(</span><span class="n">encoded_metin</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span><span class="p">),</span> <span class="n">token_sayisi</span><span class="p">,</span> <span class="n">f</span><span class="p">);</span>
+        <span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">decoded_metin</span> <span class="o">=</span> <span class="n">decode</span><span class="p">(</span><span class="n">encoded_metin</span><span class="p">,</span> <span class="n">token_sayisi</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">decode_boyutu</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">f</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"decoded.txt"</span><span class="p">,</span> <span class="s">"wb"</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">fwrite</span><span class="p">(</span><span class="n">decoded_metin</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">decode_boyutu</span><span class="p">,</span> <span class="n">f</span><span class="p">);</span>
+        <span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">"Orjinal Boyut: %d, Encode Boyutu: %d, Decode Boyutu: %d"</span><span class="p">,</span> <span class="n">metin_boyutu</span><span class="p">,</span> <span class="n">token_sayisi</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span><span class="p">),</span> <span class="n">decode_boyutu</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><div class="pager">
+                <a href="huffman-kodlamasi.html" rel="prev" title="Huffman Kodlaması">Önceki yazı</a>
+        </div>
+
+    </nav></aside></article></main><script>
+  if(document.location.hostname == "ysar.net")
+  {
+      (function() {
+        var cx = '013136674562336859018:ouohwab0yku';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+      
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-44774134-1', 'auto');
+          ga('send', 'pageview');
+  }
+
+</script>
+</body>
+</html>
