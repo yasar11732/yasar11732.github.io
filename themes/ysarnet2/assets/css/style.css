@@ -54,7 +54,8 @@ blockquote {
 }
 
 .main-content {
-    max-width: 33rem;
+    min-width: 33rem;
+	max-width: 45rem;
     margin: auto;
     vertical-align: baseline;
     line-height: 1.75;
