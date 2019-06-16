@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Canonical Huffman Kodlaması | YSAR.NET</title>
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900%7CUbuntu:300,400,500,700" rel="stylesheet">
+<link href="../assets/icons/foundation-icons.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/style.css" rel="stylesheet" type="text/css">
+<script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/algoritma/canonical-huffman-kodlamasi.html">
+<!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="lz77.html" title="LZ77 Sıkıştırma Algoritması" type="text/html">
+<meta property="og:site_name" content="YSAR.NET">
+<meta property="og:title" content="Canonical Huffman Kodlaması">
+<meta property="og:url" content="http://ysar.net/algoritma/canonical-huffman-kodlamasi.html">
+<meta property="og:description" content="Deflate formatını anlama konusunda sonlara yaklaştığımı hissediyorum. Huffman Kodlaması
+ve lz77 konusunu genel çerçevesiyle kavradım. Huffman kodlaması yapan ilk programı yazdığımda,
+oluşan kodların d">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2019-06-15T20:30:00+03:00">
+</head>
+<body>
+
+         
+    <header class="fixed-top"><div class="container">
+        <a href="http://ysar.net">
+            <img class="logo" src="../assets/img/Logo.svg"></a>
+        <div class="subtitle">Python, Yazılım ve Programlama</div>
+    <nav id="menu"><ul>
+<li class="fi-info"><a href="../yasar-arabaci.html">Hakkımda</a></li>
+            <li class="fi-social-github"><a href="https://github.com/yasar11732/">GitHub</a></li>
+            <li class="question"><a href="../soru-cevap.html">Soru-Cevap</a></li>
+            <li class="fi-rss"><a href="../rss.xml">RSS</a></li>
+        </ul></nav>
+</div>
+        
+    </header><main class="main-content"><article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 itemprop="headline name">Canonical Huffman Kodlaması</h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Deflate formatını anlama konusunda sonlara yaklaştığımı hissediyorum. <a href="huffman-kodlamasi.html">Huffman Kodlaması</a>
+ve <a href="lz77.html">lz77</a> konusunu genel çerçevesiyle kavradım. Huffman kodlaması yapan ilk programı yazdığımda,
+oluşan kodların dosyaya hangi biçimde yazılması gerektiği konusunda net bir fikrim yoktu. <a href="https://www.ietf.org/rfc/rfc1951.txt">RFC 1951</a>
+içindeki örnekleri takip ederek, yöntemi anlamaya çalışıyorum.</p>
+<p>Deflate formatı içinde kullanılan Huffman Kodlamasına ait kodların aşağıdaki iki şartı taşıması gerekiyor.</p>
+<ul>
+<li>Aynı bit genişliğine sahip tüm kodların, temsil ettiği karakterlerle aynı sırada ve
+   ardışık kod değerlerine sahip olması.</li>
+<li>Dar kodların, alfabetik sırada geniş kodlardan önce gelmesi.</li>
+</ul>
+<p>Daha sonra harici kaynaklardan öğrendiğim kadarıyla, bu özellikleri taşıyan kodlamaya Canonical Huffman kodlaması
+deniyor. Bu yöntem kodlama ağacını kompakt bir şekilde depolamaya yarıyor, çünkü, her karakterin kodunun kaç bit
+genişliğinde olduğunu bildiğiniz zaman, kodları baştan oluşturabiliyorsunuz. Bu nedenle, sadece karakteri ve bit genişliğini
+depoluyorsunuz.</p>
+<p>RFC bu konuda biraz kriptik konuştuğu (ya da pek kafam çalışmadığı) için, işin aslını anlamak gayesiyle, farklı kaynaklardan
+araştırma yaptım. Yapılan işlem sadece, tüm kodlara sırasıyla numara atamakmış. Bir önceki yazıdaki prefix kodlama örneğine
+tekrar bakalım.</p>
+<pre class="code literal-block"><span></span>       / \             d: 000 (3 bit)
+      0   1            b: 001 (3 bit)
+    /   \   \          c: 01  (2 bit)
+   0     1   a         a: 1   (1 bit)
+  / \    /
+ 0   1   c
+/    \
+d     b
+</pre>
+
+
+<p>Bunu canonical kodlamaya çevirmek için, önce bit genişliğine göre, bit genişliği aynı olanları da alfabetik sıraya göre
+sıralıyoruz.</p>
+<pre class="code literal-block"><span></span><span class="n">a</span> <span class="o">:</span> <span class="mi">1</span>
+<span class="n">c</span> <span class="o">:</span> <span class="mi">2</span>
+<span class="n">b</span> <span class="o">:</span> <span class="mi">3</span>
+<span class="n">d</span> <span class="o">:</span> <span class="mi">3</span>
+</pre>
+
+
+<p>Daha sonra, ilk sıradaki koda, bit genişliği kadar 0 yazıyoruz. Onu takip eden
+her bir kod için, bir önceki kodu 1 artırıp, eğer gerekiyorsa, bit genişliğini
+ayarlamak için kod değerini 1 bit sola kaydırıyoruz.</p>
+<pre class="code literal-block"><span></span>+----------+--------------+---------------------------------------+
+| Karakter | Huffman Kodu | Açıklama                              | 
++----------+------------------------------------------------------+
+|   a      |        0     | İlk koda 1 bit genişliğinde 0 atadık. |
++----------+--------------+---------------------------------------+
+|   c      |        10    | Kodu 1 artırıp, 1 kez sola kaydırdık. |
++----------+--------------+---------------------------------------+
+|   b      |        110   | Kodu 1 artırıp, 1 kez sola kaydırdık. |
++----------+--------------+---------------------------------------+
+|   d      |        111   | Kodu 1 artırdık, kaydırmaya gerek yok.|
++----------+--------------+---------------------------------------+
+</pre>
+
+
+<p>Kağıt/Kalem ile canonical huffman kodlaması oluşturmak bu kadar basit. Ben tabii ki bunu bir programa
+yaptırmayı tercih ederim. Neyse ki, RFC'de bunun yazılmışı var :)</p>
+<p>Önce veri yapılarını konuşalım.</p>
+<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+
+<span class="cm">/*</span>
+<span class="cm">* Deflate formatına uygun olması için,</span>
+<span class="cm">* bir kodun en fazla 15 bit olmasına izin vereceğiz.</span>
+<span class="cm">* Bu nedenle code için 16 bit veri yapısı yeterli.</span>
+<span class="cm">*/</span>
+<span class="k">struct</span> <span class="n">huffmancode</span> <span class="p">{</span>
+    <span class="kt">uint8_t</span> <span class="n">len</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">code</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// her bir code için uzunluk ve kod değerlerini</span>
+<span class="c1">// tuttuğumuz array</span>
+<span class="k">struct</span> <span class="n">huffmancode</span> <span class="n">tree</span><span class="p">[</span><span class="mi">0</span><span class="n">XFF</span><span class="p">];</span>
+
+<span class="c1">// her uzunlukta kaç adet kod</span>
+<span class="c1">// olduğunu saymak için</span>
+<span class="kt">uint8_t</span> <span class="n">bl_count</span><span class="p">[</span><span class="mh">0x10</span><span class="p">];</span>
+
+<span class="c1">// her uzunluktaki kodlama için</span>
+<span class="c1">// atanacak kodu tutar</span>
+<span class="kt">uint16_t</span> <span class="n">next_code</span><span class="p">[</span><span class="mh">0x10</span><span class="p">];</span>
+</pre>
+
+
+<p>Veri yapıları bakımından, bu ikisi yeterli olacaktır. Tabii öncelikle <code>tree</code> array'ini,
+her karakterin kaç bitle kodlanması gerektiği bilgisi ile doldurmak gerekiyor.
+Bunun için, önce Huffman ağacını oluşturmamız gerekiyor. Gerçi <a href="huffman-kodlamasi.html">burada</a>
+oluşmuşu var.</p>
+<p>Algoritmanın sonraki adımında, her bit genişliğine kaç kodlama düştüğünü saymamız gerekiyor.</p>
+<pre class="code literal-block"><span></span><span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mh">0xFF</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="n">bl_count</span><span class="p">[</span><span class="n">tree</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">len</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+</pre>
+
+
+<p>Her bit genişliğine kaç adet kodlama düştüğünü bilmek, her bit genişliğinin ilk kodlamasını
+hesaplamamızı sağlayacak.</p>
+<pre class="code literal-block"><span></span><span class="n">code</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">bl_count</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mh">0x10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="p">(</span><span class="n">code</span> <span class="o">+</span> <span class="n">bl_counts</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">next_code</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">code</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p><code>code</code> değişkeni, döngünün girişinde, bir önceki bit genişliğindeki kodlamanın başlangıç değerine
+eşit oluyor. Bu <code>code</code> değerine, önceki bit genişliğindeki kod sayısını ekleyip, 1 sola kaydırdığımızda,
+o döngüde hesaplanan bit genişliğinin ilk kodu ortaya çıkıyor.</p>
+<p>Son olarak, <code>tree</code> array'inin üzerinden bir tur daha geçerek, bir önceki adımda hesaplanan kod başlangıç
+değerlerini birer artırarak, her karakterin kodunu oluşturuyoruz. Bu aşamada, <code>len</code> değeri 0 olan, yani
+kodlanan metinde hiç geçmeyen karakterlere herhangi bir kod atamamamız gerekiyor.</p>
+<pre class="code literal-block"><span></span><span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mh">0xFF</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">uint8_t</span> <span class="n">len</span> <span class="o">=</span> <span class="n">tree</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">len</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">tree</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">code</span> <span class="o">=</span> <span class="n">next_code</span><span class="p">[</span><span class="n">len</span><span class="p">];</span>
+        <span class="n">next_code</span><span class="p">[</span><span class="n">len</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Canonical kodlama ile ilgili anlatılması gereken herşey bu kadar. Deflate formatını tamamlamaya ramak kaldı.</p>
+<p>Burayı kalabalık göstermemesi için, <a href="https://gist.github.com/yasar11732/30d2fc9c1c404d776218424e5e3ca795">kodların tamamını</a> gist olarak yükledim:</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><div class="pager">
+                <a href="lz77.html" rel="prev" title="LZ77 Sıkıştırma Algoritması">Önceki yazı</a>
+        </div>
+
+    </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
+	</script></article></main><script>
+  if(document.location.hostname == "ysar.net")
+  {
+      (function() {
+        var cx = '013136674562336859018:ouohwab0yku';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+      
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-44774134-1', 'auto');
+          ga('send', 'pageview');
+  }
+
+</script>
+</body>
+</html>

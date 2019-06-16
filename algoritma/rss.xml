@@ -1,5 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Algoritma)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/algoritma/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Fri, 14 Jun 2019 18:24:16 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>LZ77 Sıkıştırma Algoritması</title><link>http://ysar.net/algoritma/lz77.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Bu aralar sıkıştırma algoritmalarına merak sardım. Geçen yazıda, &lt;a href="http://ysar.net/algoritma/huffman-kodlamasi.html"&gt;Huffman Kodlaması&lt;/a&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Algoritma)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/algoritma/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Sun, 16 Jun 2019 16:06:34 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Canonical Huffman Kodlaması</title><link>http://ysar.net/algoritma/canonical-huffman-kodlamasi.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Deflate formatını anlama konusunda sonlara yaklaştığımı hissediyorum. &lt;a href="http://ysar.net/algoritma/huffman-kodlamasi.html"&gt;Huffman Kodlaması&lt;/a&gt;
+ve &lt;a href="http://ysar.net/algoritma/lz77.html"&gt;lz77&lt;/a&gt; konusunu genel çerçevesiyle kavradım. Huffman kodlaması yapan ilk programı yazdığımda,
+oluşan kodların dosyaya hangi biçimde yazılması gerektiği konusunda net bir fikrim yoktu. &lt;a href="https://www.ietf.org/rfc/rfc1951.txt"&gt;RFC 1951&lt;/a&gt;
+içindeki örnekleri takip ederek, yöntemi anlamaya çalışıyorum.&lt;/p&gt;
+&lt;p&gt;Deflate formatı içinde kullanılan Huffman Kodlamasına ait kodların aşağıdaki iki şartı taşıması gerekiyor.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Aynı bit genişliğine sahip tüm kodların, temsil ettiği karakterlerle aynı sırada ve
+   ardışık kod değerlerine sahip olması.&lt;/li&gt;
+&lt;li&gt;Dar kodların, alfabetik sırada geniş kodlardan önce gelmesi.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Daha sonra harici kaynaklardan öğrendiğim kadarıyla, bu özellikleri taşıyan kodlamaya Canonical Huffman kodlaması
+deniyor. Bu yöntem kodlama ağacını kompakt bir şekilde depolamaya yarıyor, çünkü, her karakterin kodunun kaç bit
+genişliğinde olduğunu bildiğiniz zaman, kodları baştan oluşturabiliyorsunuz. Bu nedenle, sadece karakteri ve bit genişliğini
+depoluyorsunuz.&lt;/p&gt;
+&lt;p&gt;RFC bu konuda biraz kriptik konuştuğu (ya da pek kafam çalışmadığı) için, işin aslını anlamak gayesiyle, farklı kaynaklardan
+araştırma yaptım. Yapılan işlem sadece, tüm kodlara sırasıyla numara atamakmış. Bir önceki yazıdaki prefix kodlama örneğine
+tekrar bakalım.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;       / \             d: 000 (3 bit)
+      0   1            b: 001 (3 bit)
+    /   \   \          c: 01  (2 bit)
+   0     1   a         a: 1   (1 bit)
+  / \    /
+ 0   1   c
+/    \
+d     b
+&lt;/pre&gt;
+
+
+&lt;p&gt;Bunu canonical kodlamaya çevirmek için, önce bit genişliğine göre, bit genişliği aynı olanları da alfabetik sıraya göre
+sıralıyoruz.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
+&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;
+&lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Daha sonra, ilk sıradaki koda, bit genişliği kadar 0 yazıyoruz. Onu takip eden
+her bir kod için, bir önceki kodu 1 artırıp, eğer gerekiyorsa, bit genişliğini
+ayarlamak için kod değerini 1 bit sola kaydırıyoruz.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;+----------+--------------+---------------------------------------+
+| Karakter | Huffman Kodu | Açıklama                              | 
++----------+------------------------------------------------------+
+|   a      |        0     | İlk koda 1 bit genişliğinde 0 atadık. |
++----------+--------------+---------------------------------------+
+|   c      |        10    | Kodu 1 artırıp, 1 kez sola kaydırdık. |
++----------+--------------+---------------------------------------+
+|   b      |        110   | Kodu 1 artırıp, 1 kez sola kaydırdık. |
++----------+--------------+---------------------------------------+
+|   d      |        111   | Kodu 1 artırdık, kaydırmaya gerek yok.|
++----------+--------------+---------------------------------------+
+&lt;/pre&gt;
+
+
+&lt;p&gt;Kağıt/Kalem ile canonical huffman kodlaması oluşturmak bu kadar basit. Ben tabii ki bunu bir programa
+yaptırmayı tercih ederim. Neyse ki, RFC'de bunun yazılmışı var :)&lt;/p&gt;
+&lt;p&gt;Önce veri yapılarını konuşalım.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdint.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+
+&lt;span class="cm"&gt;/*&lt;/span&gt;
+&lt;span class="cm"&gt;* Deflate formatına uygun olması için,&lt;/span&gt;
+&lt;span class="cm"&gt;* bir kodun en fazla 15 bit olmasına izin vereceğiz.&lt;/span&gt;
+&lt;span class="cm"&gt;* Bu nedenle code için 16 bit veri yapısı yeterli.&lt;/span&gt;
+&lt;span class="cm"&gt;*/&lt;/span&gt;
+&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;huffmancode&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;uint8_t&lt;/span&gt; &lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="kt"&gt;uint16_t&lt;/span&gt; &lt;span class="n"&gt;code&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+
+&lt;span class="c1"&gt;// her bir code için uzunluk ve kod değerlerini&lt;/span&gt;
+&lt;span class="c1"&gt;// tuttuğumuz array&lt;/span&gt;
+&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;huffmancode&lt;/span&gt; &lt;span class="n"&gt;tree&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="n"&gt;XFF&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+
+&lt;span class="c1"&gt;// her uzunlukta kaç adet kod&lt;/span&gt;
+&lt;span class="c1"&gt;// olduğunu saymak için&lt;/span&gt;
+&lt;span class="kt"&gt;uint8_t&lt;/span&gt; &lt;span class="n"&gt;bl_count&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mh"&gt;0x10&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+
+&lt;span class="c1"&gt;// her uzunluktaki kodlama için&lt;/span&gt;
+&lt;span class="c1"&gt;// atanacak kodu tutar&lt;/span&gt;
+&lt;span class="kt"&gt;uint16_t&lt;/span&gt; &lt;span class="n"&gt;next_code&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mh"&gt;0x10&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Veri yapıları bakımından, bu ikisi yeterli olacaktır. Tabii öncelikle &lt;code&gt;tree&lt;/code&gt; array'ini,
+her karakterin kaç bitle kodlanması gerektiği bilgisi ile doldurmak gerekiyor.
+Bunun için, önce Huffman ağacını oluşturmamız gerekiyor. Gerçi &lt;a href="http://ysar.net/algoritma/huffman-kodlamasi.html"&gt;burada&lt;/a&gt;
+oluşmuşu var.&lt;/p&gt;
+&lt;p&gt;Algoritmanın sonraki adımında, her bit genişliğine kaç kodlama düştüğünü saymamız gerekiyor.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mh"&gt;0xFF&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;bl_count&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;tree&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;].&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Her bit genişliğine kaç adet kodlama düştüğünü bilmek, her bit genişliğinin ilk kodlamasını
+hesaplamamızı sağlayacak.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;code&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="n"&gt;bl_count&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mh"&gt;0x10&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;code&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;code&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;bl_counts&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;next_code&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;code&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;&lt;code&gt;code&lt;/code&gt; değişkeni, döngünün girişinde, bir önceki bit genişliğindeki kodlamanın başlangıç değerine
+eşit oluyor. Bu &lt;code&gt;code&lt;/code&gt; değerine, önceki bit genişliğindeki kod sayısını ekleyip, 1 sola kaydırdığımızda,
+o döngüde hesaplanan bit genişliğinin ilk kodu ortaya çıkıyor.&lt;/p&gt;
+&lt;p&gt;Son olarak, &lt;code&gt;tree&lt;/code&gt; array'inin üzerinden bir tur daha geçerek, bir önceki adımda hesaplanan kod başlangıç
+değerlerini birer artırarak, her karakterin kodunu oluşturuyoruz. Bu aşamada, &lt;code&gt;len&lt;/code&gt; değeri 0 olan, yani
+kodlanan metinde hiç geçmeyen karakterlere herhangi bir kod atamamamız gerekiyor.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mh"&gt;0xFF&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;uint8_t&lt;/span&gt; &lt;span class="n"&gt;len&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;tree&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;].&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;tree&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;].&lt;/span&gt;&lt;span class="n"&gt;code&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;next_code&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+        &lt;span class="n"&gt;next_code&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Canonical kodlama ile ilgili anlatılması gereken herşey bu kadar. Deflate formatını tamamlamaya ramak kaldı.&lt;/p&gt;
+&lt;p&gt;Burayı kalabalık göstermemesi için, &lt;a href="https://gist.github.com/yasar11732/30d2fc9c1c404d776218424e5e3ca795"&gt;kodların tamamını&lt;/a&gt; gist olarak yükledim:&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/canonical-huffman-kodlamasi.html</guid><pubDate>Sat, 15 Jun 2019 17:30:00 GMT</pubDate></item><item><title>LZ77 Sıkıştırma Algoritması</title><link>http://ysar.net/algoritma/lz77.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Bu aralar sıkıştırma algoritmalarına merak sardım. Geçen yazıda, &lt;a href="http://ysar.net/algoritma/huffman-kodlamasi.html"&gt;Huffman Kodlaması&lt;/a&gt;
 üzerine birşeyler yazmıştım. Bu yazıda, bir diğer efsane sıkıştırma algoritması olan LZ77'den bahsedeceğim.
 LZ77 algoritması, Abraham &lt;u&gt;L&lt;/u&gt;embel ve Jacob &lt;u&gt;Z&lt;/u&gt;iv tarafından 19&lt;u&gt;77&lt;/u&gt; yılında yazdıkları &lt;a href="https://www2.cs.duke.edu/courses/spring03/cps296.5/papers/ziv_lempel_1977_universal_algorithm.pdf"&gt;A Universal Algorithm for
 Sequential Data Compression&lt;/a&gt;
@@ -1205,5 +1328,4 @@ fonksiyon yazdım. İlgilenenler aşağıda bulabilir.&lt;/p&gt;
 &lt;span class="k"&gt;end&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/matlab-sieve-of-erastosthenes.html</guid><pubDate>Mon, 26 Nov 2012 14:54:48 GMT</pubDate></item><item><title>İki bilinmeyenli denklem çözümleri</title><link>http://ysar.net/algoritma/iki-bilinmeyenli-denklem-cozumleri.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Dün Python ile, iki bilinmeyenli denklem çözümleriyle ile birşeyler
 yazdım. Paylaşayım dedim. Sonuncusunun biraz daha elden geçmesi lazım,
-ama aşağı yukarı çalışıyor. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/algoritma/iki-bilinmeyenli-denklem-cozumleri.html"&gt;Devamını oku…&lt;/a&gt; (1 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/iki-bilinmeyenli-denklem-cozumleri.html</guid><pubDate>Fri, 20 Jan 2012 23:17:00 GMT</pubDate></item><item><title>Kimya formülü ayrıştırıcısı</title><link>http://ysar.net/algoritma/kimya-formula-parser.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;a href="http://www.istihza.com/forum/viewtopic.php?f=25&amp;amp;t=538"&gt;Şurada&lt;/a&gt; yazmıştım, buraya da kopyalayayım dedim. Yoksa yaptığım
-şeylerin takibini yapmak zor oluyor. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/algoritma/kimya-formula-parser.html"&gt;Devamını oku…&lt;/a&gt; (1 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/kimya-formula-parser.html</guid><pubDate>Fri, 30 Dec 2011 08:52:00 GMT</pubDate></item></channel></rss>
+ama aşağı yukarı çalışıyor. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/algoritma/iki-bilinmeyenli-denklem-cozumleri.html"&gt;Devamını oku…&lt;/a&gt; (1 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/iki-bilinmeyenli-denklem-cozumleri.html</guid><pubDate>Fri, 20 Jan 2012 23:17:00 GMT</pubDate></item></channel></rss>
