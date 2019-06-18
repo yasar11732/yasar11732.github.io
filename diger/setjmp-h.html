@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>&lt;setjmp.h&gt; Ne İşe Yarar | YSAR.NET</title>
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900%7CUbuntu:300,400,500,700" rel="stylesheet">
+<link href="../assets/icons/foundation-icons.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/style.css" rel="stylesheet" type="text/css">
+<script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/diger/setjmp-h.html">
+<!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="../algoritma/canonical-huffman-kodlamasi.html" title="Canonical Huffman Kodlaması" type="text/html">
+<meta property="og:site_name" content="YSAR.NET">
+<meta property="og:title" content="&lt;setjmp.h&gt; Ne İşe Yarar">
+<meta property="og:url" content="http://ysar.net/diger/setjmp-h.html">
+<meta property="og:description" content="Son bir hafta, veya biraz daha uzun bir süre boyunca, akademik bir merak neticesinde deflate formatında sıkıştırma/açma
+yapan bir programın nasıl yazılabileceğini araştıyordum. Zlib kütüphanesinin içi">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2019-06-18T09:53:00+03:00">
+</head>
+<body>
+
+         
+    <header class="fixed-top"><div class="container">
+        <a href="http://ysar.net">
+            <img class="logo" src="../assets/img/Logo.svg"></a>
+        <div class="subtitle">Python, Yazılım ve Programlama</div>
+    <nav id="menu"><ul>
+<li class="fi-info"><a href="../yasar-arabaci.html">Hakkımda</a></li>
+            <li class="fi-social-github"><a href="https://github.com/yasar11732/">GitHub</a></li>
+            <li class="question"><a href="../soru-cevap.html">Soru-Cevap</a></li>
+            <li class="fi-rss"><a href="../rss.xml">RSS</a></li>
+        </ul></nav>
+</div>
+        
+    </header><main class="main-content"><article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 itemprop="headline name">&lt;setjmp.h&gt; Ne İşe Yarar</h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Son bir hafta, veya biraz daha uzun bir süre boyunca, akademik bir merak neticesinde deflate formatında sıkıştırma/açma
+yapan bir programın nasıl yazılabileceğini araştıyordum. Zlib kütüphanesinin içinde, deflate formatını açmaya yarayan
+referans niteliğinde yazılmış, <a href="https://github.com/madler/zlib/blob/master/contrib/puff/puff.c">puff.c</a> adında bir C
+programı var. Bu programı incelerken, içinde <code>setjmp()</code> ve <code>longjmp()</code> fonksiyonlarını gördüm. Kodlarda, bu fonksiyonların
+tanımının <code>setjmp.h</code> içerisinde yapıldığı yazıyordu. Zlib kaynak kodları içerisinde bu header dosyasını bir süre aradıktan
+sonra, <code>setjmp.h</code>'nin C standardı içinde olduğunu öğrendim. Şimdiye kadar C dilini iyi kullandığını
+vehmetmiş biri olarak, hiç duymadığım bir header dosyasıyla karşılaşmak beni heyecanlandırdı. Hemen internetten araştırmaya
+koyuldum.</p>
+<p><code>setjmp.h</code> header dosyası, 3 şey tanımlıyor; <code>setjmp()</code>, <code>longjmp()</code> ve <code>jmp_buf</code>. Bu üçü sayesinde, normal fonksiyon çağırma
+ve fonksiyondan değer döndürme mekanizmasının dışına çıkıp, programın başka bir yerine zıplayabiliyoruz. Bunu fonksiyon sınırlarını
+aşan <code>goto</code> gibi düşünebiliriz. Okuduğum kaynaklarda 2 çeşit kullanımı var. Birincisi, daha üst seviye dillerde bulunan özel durum (exception)
+yönetimini gerçekleştirme, ikincisi de coroutine oluşturmak. Bu yazı özel durumlar üzerine kurulu olacak ama, C dilinde coroutine yazma
+konusunda da çok heyecanlıyım, ilerleyen günlerde bu konuda da denemeler yapmak istiyorum.</p>
+<p>Uygulamaya geçmeden önce, teorik bilgiyle başlamak istiyorum. <code>setjmp</code> makrosu, argüman olarak <code>jmp_buf</code> adında bir <code>struct</code>
+alıyor. İleride <code>longjmp</code> tarafından kullanılmak üzere, geçerli yürütme bağlamını (execution context) <code>jmp_buf</code> tipindeki
+değişkene kaydediyor. Geçerli yürütme bağlamından kasıt, <code>setjmp</code> makrosu çalıştırıldığı andaki genel amaçlı register'larla
+birlikte, Instruction Pointer, Stack Pointer, EFLAGS gibi register'ların değerleri. Bunun detayları haliyle işlemci
+mimarisine göre değişebilir. Bu makronun kullanıcısı olarak bizi ilgilendiren, bu makronun bir zıplama noktası kaydettiği.
+Bu makronun dönüş değeri, yürütme bağlamını kaydettiği anda 0, <code>longjmp</code> ile dönüldüğü anda ise, <code>longjmp</code> tarafından ayarlanan
+değere eşit oluyor. Bunu anlamak için, bir örneğe başvurmakta fayda var.</p>
+<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;setjmp.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+
+<span class="k">typedef</span> <span class="k">struct</span><span class="p">{</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">size</span><span class="p">;</span>
+    <span class="kt">jmp_buf</span> <span class="n">env</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">String</span><span class="p">;</span>
+
+
+<span class="kt">void</span> <span class="nf">smemset</span><span class="p">(</span><span class="n">String</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="n">val</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">size</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">size</span> <span class="o">&gt;</span> <span class="n">s</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">longjmp</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">env</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+
+    <span class="n">memset</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">String</span> <span class="n">s</span><span class="p">;</span>
+    <span class="n">s</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+    <span class="n">s</span><span class="p">.</span><span class="n">size</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">setjmp</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">env</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"String uzunlugu yeterli degil."</span><span class="p">);</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+        <span class="n">smemset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Yukarıdaki örneği incelerseniz, <code>setjmp</code> kullanımı daha anlaşılır olur diye düşünüyorum. Dikkat etmeniz gereken
+en önemli kısım, <code>setjmp</code> makrosundan birden fazla kez dönüldüğü. İlk çağırıldığında, dönüş değeri 0 olacağı için,
+<code>if</code> blogu içerisine girilmeyecek, ve program <code>while</code> döngüsüne girecek. <code>while</code> döngüsü sonsuz bir döngü gibi görünse
+de, aslında öyle değil. <code>smemset</code> fonksiyonu, özel durumlarda (bunu exception gibi düşünebiliriz) <code>longjmp</code> fonksiyonunu
+kullandığı için, sanki <code>setjmp</code> fonksiyonundan yeni dönülüyormuş gibi, <code>main</code> fonksiyonu içindeki <code>if</code> koşuluna zıplayacak.
+Ancak bu sefer, <code>setjmp</code>'nin dönüş değeri <code>longjmp</code> tarafından 1 olarak ayarlandığı için, <code>if</code>in koşulu sağlanacak ve <code>main</code>
+fonksiyonu hata mesajı yazdırıp dönecek. Gözünüzü kısıp, kafanızı biraz eğerek bakarsanız, tıpkı daha yüksek seviye dillerdeki
+throw/catch veya raise/catch benzeri bir program davranışı ile karşı karşıyayız.</p>
+<pre class="code literal-block"><span></span>1
+2
+3
+4
+5
+6
+String uzunlugu yeterli degil.
+</pre>
+
+
+<p>Yukarıdaki kadar küçük bir programda, <code>setjmp</code> ve <code>longjmp</code> kullanımını anlatmak mümkün olsa da, bu ikisinin
+faydasını göstermek pek muhtemel görünmüyor. Ancak, fonksiyon çağrı hiyerarşisinin derinliklerinde oluşan özel
+durumların, üst seviye bir fonksiyonda merkezi bir şekilde yönetilmesine imkan sağlaması açısından faydalı görünüyor.
+Ayrıca, embedded programlama için de, thread benzeri bir program akışı sağlamanın tek yolu bu olabilir. Bu yazıda
+söylemek istediklerim bu kadar, ama, <code>setjmp</code> ile coroutine oluşturma konusunda da ileride birşeyler yazmak istiyorum.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><div class="pager">
+                <a href="../algoritma/canonical-huffman-kodlamasi.html" rel="prev" title="Canonical Huffman Kodlaması">Önceki yazı</a>
+        </div>
+
+    </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
+	</script></article></main><script>
+  if(document.location.hostname == "ysar.net")
+  {
+      (function() {
+        var cx = '013136674562336859018:ouohwab0yku';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+      
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-44774134-1', 'auto');
+          ga('send', 'pageview');
+  }
+
+</script>
+</body>
+</html>

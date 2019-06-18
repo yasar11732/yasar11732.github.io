@@ -1,5 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET</title><link>http://ysar.net/</link><description>Yaşar Arabacı İnternet Günlüğü</description><atom:link href="http://ysar.net/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Sun, 16 Jun 2019 16:09:23 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Canonical Huffman Kodlaması</title><link>http://ysar.net/algoritma/canonical-huffman-kodlamasi.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Deflate formatını anlama konusunda sonlara yaklaştığımı hissediyorum. &lt;a href="http://ysar.net/algoritma/huffman-kodlamasi.html"&gt;Huffman Kodlaması&lt;/a&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET</title><link>http://ysar.net/</link><description>Yaşar Arabacı İnternet Günlüğü</description><atom:link href="http://ysar.net/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Tue, 18 Jun 2019 18:29:29 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>&lt;setjmp.h&gt; Ne İşe Yarar</title><link>http://ysar.net/diger/setjmp-h.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Son bir hafta, veya biraz daha uzun bir süre boyunca, akademik bir merak neticesinde deflate formatında sıkıştırma/açma
+yapan bir programın nasıl yazılabileceğini araştıyordum. Zlib kütüphanesinin içinde, deflate formatını açmaya yarayan
+referans niteliğinde yazılmış, &lt;a href="https://github.com/madler/zlib/blob/master/contrib/puff/puff.c"&gt;puff.c&lt;/a&gt; adında bir C
+programı var. Bu programı incelerken, içinde &lt;code&gt;setjmp()&lt;/code&gt; ve &lt;code&gt;longjmp()&lt;/code&gt; fonksiyonlarını gördüm. Kodlarda, bu fonksiyonların
+tanımının &lt;code&gt;setjmp.h&lt;/code&gt; içerisinde yapıldığı yazıyordu. Zlib kaynak kodları içerisinde bu header dosyasını bir süre aradıktan
+sonra, &lt;code&gt;setjmp.h&lt;/code&gt;'nin C standardı içinde olduğunu öğrendim. Şimdiye kadar C dilini iyi kullandığını
+vehmetmiş biri olarak, hiç duymadığım bir header dosyasıyla karşılaşmak beni heyecanlandırdı. Hemen internetten araştırmaya
+koyuldum.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;setjmp.h&lt;/code&gt; header dosyası, 3 şey tanımlıyor; &lt;code&gt;setjmp()&lt;/code&gt;, &lt;code&gt;longjmp()&lt;/code&gt; ve &lt;code&gt;jmp_buf&lt;/code&gt;. Bu üçü sayesinde, normal fonksiyon çağırma
+ve fonksiyondan değer döndürme mekanizmasının dışına çıkıp, programın başka bir yerine zıplayabiliyoruz. Bunu fonksiyon sınırlarını
+aşan &lt;code&gt;goto&lt;/code&gt; gibi düşünebiliriz. Okuduğum kaynaklarda 2 çeşit kullanımı var. Birincisi, daha üst seviye dillerde bulunan özel durum (exception)
+yönetimini gerçekleştirme, ikincisi de coroutine oluşturmak. Bu yazı özel durumlar üzerine kurulu olacak ama, C dilinde coroutine yazma
+konusunda da çok heyecanlıyım, ilerleyen günlerde bu konuda da denemeler yapmak istiyorum.&lt;/p&gt;
+&lt;p&gt;Uygulamaya geçmeden önce, teorik bilgiyle başlamak istiyorum. &lt;code&gt;setjmp&lt;/code&gt; makrosu, argüman olarak &lt;code&gt;jmp_buf&lt;/code&gt; adında bir &lt;code&gt;struct&lt;/code&gt;
+alıyor. İleride &lt;code&gt;longjmp&lt;/code&gt; tarafından kullanılmak üzere, geçerli yürütme bağlamını (execution context) &lt;code&gt;jmp_buf&lt;/code&gt; tipindeki
+değişkene kaydediyor. Geçerli yürütme bağlamından kasıt, &lt;code&gt;setjmp&lt;/code&gt; makrosu çalıştırıldığı andaki genel amaçlı register'larla
+birlikte, Instruction Pointer, Stack Pointer, EFLAGS gibi register'ların değerleri. Bunun detayları haliyle işlemci
+mimarisine göre değişebilir. Bu makronun kullanıcısı olarak bizi ilgilendiren, bu makronun bir zıplama noktası kaydettiği.
+Bu makronun dönüş değeri, yürütme bağlamını kaydettiği anda 0, &lt;code&gt;longjmp&lt;/code&gt; ile dönüldüğü anda ise, &lt;code&gt;longjmp&lt;/code&gt; tarafından ayarlanan
+değere eşit oluyor. Bunu anlamak için, bir örneğe başvurmakta fayda var.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;setjmp.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;string.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+
+&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="k"&gt;struct&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="kt"&gt;jmp_buf&lt;/span&gt; &lt;span class="n"&gt;env&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+
+&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;smemset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;val&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;longjmp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;env&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="n"&gt;memset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;val&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;malloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;setjmp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;env&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"String uzunlugu yeterli degil."&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"%d&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;smemset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Yukarıdaki örneği incelerseniz, &lt;code&gt;setjmp&lt;/code&gt; kullanımı daha anlaşılır olur diye düşünüyorum. Dikkat etmeniz gereken
+en önemli kısım, &lt;code&gt;setjmp&lt;/code&gt; makrosundan birden fazla kez dönüldüğü. İlk çağırıldığında, dönüş değeri 0 olacağı için,
+&lt;code&gt;if&lt;/code&gt; blogu içerisine girilmeyecek, ve program &lt;code&gt;while&lt;/code&gt; döngüsüne girecek. &lt;code&gt;while&lt;/code&gt; döngüsü sonsuz bir döngü gibi görünse
+de, aslında öyle değil. &lt;code&gt;smemset&lt;/code&gt; fonksiyonu, özel durumlarda (bunu exception gibi düşünebiliriz) &lt;code&gt;longjmp&lt;/code&gt; fonksiyonunu
+kullandığı için, sanki &lt;code&gt;setjmp&lt;/code&gt; fonksiyonundan yeni dönülüyormuş gibi, &lt;code&gt;main&lt;/code&gt; fonksiyonu içindeki &lt;code&gt;if&lt;/code&gt; koşuluna zıplayacak.
+Ancak bu sefer, &lt;code&gt;setjmp&lt;/code&gt;'nin dönüş değeri &lt;code&gt;longjmp&lt;/code&gt; tarafından 1 olarak ayarlandığı için, &lt;code&gt;if&lt;/code&gt;in koşulu sağlanacak ve &lt;code&gt;main&lt;/code&gt;
+fonksiyonu hata mesajı yazdırıp dönecek. Gözünüzü kısıp, kafanızı biraz eğerek bakarsanız, tıpkı daha yüksek seviye dillerdeki
+throw/catch veya raise/catch benzeri bir program davranışı ile karşı karşıyayız.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;1
+2
+3
+4
+5
+6
+String uzunlugu yeterli degil.
+&lt;/pre&gt;
+
+
+&lt;p&gt;Yukarıdaki kadar küçük bir programda, &lt;code&gt;setjmp&lt;/code&gt; ve &lt;code&gt;longjmp&lt;/code&gt; kullanımını anlatmak mümkün olsa da, bu ikisinin
+faydasını göstermek pek muhtemel görünmüyor. Ancak, fonksiyon çağrı hiyerarşisinin derinliklerinde oluşan özel
+durumların, üst seviye bir fonksiyonda merkezi bir şekilde yönetilmesine imkan sağlaması açısından faydalı görünüyor.
+Ayrıca, embedded programlama için de, thread benzeri bir program akışı sağlamanın tek yolu bu olabilir. Bu yazıda
+söylemek istediklerim bu kadar, ama, &lt;code&gt;setjmp&lt;/code&gt; ile coroutine oluşturma konusunda da ileride birşeyler yazmak istiyorum.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/diger/setjmp-h.html</guid><pubDate>Tue, 18 Jun 2019 06:53:00 GMT</pubDate></item><item><title>Canonical Huffman Kodlaması</title><link>http://ysar.net/algoritma/canonical-huffman-kodlamasi.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Deflate formatını anlama konusunda sonlara yaklaştığımı hissediyorum. &lt;a href="http://ysar.net/algoritma/huffman-kodlamasi.html"&gt;Huffman Kodlaması&lt;/a&gt;
 ve &lt;a href="http://ysar.net/algoritma/lz77.html"&gt;lz77&lt;/a&gt; konusunu genel çerçevesiyle kavradım. Huffman kodlaması yapan ilk programı yazdığımda,
 oluşan kodların dosyaya hangi biçimde yazılması gerektiği konusunda net bir fikrim yoktu. &lt;a href="https://www.ietf.org/rfc/rfc1951.txt"&gt;RFC 1951&lt;/a&gt;
 içindeki örnekleri takip ederek, yöntemi anlamaya çalışıyorum.&lt;/p&gt;
@@ -1921,90 +2007,4 @@ bağlı kalmadan, programı çeşitli windows sürümlerine taşıyabileceğimi 
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</description><guid>http://ysar.net/windows/winhttp-ile-dosya-indirme.html</guid><pubDate>Sun, 26 May 2019 19:45:00 GMT</pubDate></item><item><title>Windows Api İle Clipboard'dan Metin Okuma</title><link>http://ysar.net/windows/clipboard.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Aşağıda Windows API ile Clipboard'dan metin okuyan küçük bir program bulabilirsiniz.&lt;/p&gt;
-&lt;h2&gt;Anahtar Kelimeler&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;Win32 API ile dosyaya yazma&lt;/li&gt;
-&lt;li&gt;Windowsda Clipboard'dan metin okuma&lt;/li&gt;
-&lt;li&gt;WideCharToMultiByte ile utf8 kodlama&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt; &lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;WINAPI&lt;/span&gt; &lt;span class="nf"&gt;wWinMain&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;HINSTANCE&lt;/span&gt; &lt;span class="n"&gt;hInstance&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;HINSTANCE&lt;/span&gt; &lt;span class="n"&gt;hPrevInstance&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="n"&gt;PWSTR&lt;/span&gt; &lt;span class="n"&gt;pCmdLine&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;nCmdShow&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;
-
-    &lt;span class="n"&gt;HANDLE&lt;/span&gt; &lt;span class="n"&gt;hOutputFile&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;CreateFile&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;L&lt;/span&gt;&lt;span class="s"&gt;"ClipBoard.txt"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-        &lt;span class="n"&gt;GENERIC_WRITE&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-        &lt;span class="n"&gt;FILE_SHARE_READ&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-        &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-        &lt;span class="n"&gt;CREATE_NEW&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-        &lt;span class="n"&gt;FILE_ATTRIBUTE_NORMAL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-        &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hOutputFile&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;INVALID_HANDLE_VALUE&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="p"&gt;{&lt;/span&gt;
-
-        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;OpenClipboard&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-        &lt;span class="p"&gt;{&lt;/span&gt;
-            &lt;span class="c1"&gt;// clipboard'daki unicode text'e ulaşmak için handle oluşturuyoruz. &lt;/span&gt;
-            &lt;span class="n"&gt;HANDLE&lt;/span&gt; &lt;span class="n"&gt;hData&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;GetClipboardData&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;CF_UNICODETEXT&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hData&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="k"&gt;nullptr&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-            &lt;span class="p"&gt;{&lt;/span&gt;
-                &lt;span class="cm"&gt;/*&lt;/span&gt;
-&lt;span class="cm"&gt;                Clipboard'daki verileri okumak için, GlobalLock ile kilitlememiz&lt;/span&gt;
-&lt;span class="cm"&gt;                gerekiyor. Böylece, verileri okuabileceğimiz bir pointer elde&lt;/span&gt;
-&lt;span class="cm"&gt;                ediyoruz.&lt;/span&gt;
-&lt;span class="cm"&gt;                */&lt;/span&gt;
-                &lt;span class="n"&gt;WCHAR&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;static_cast&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;WCHAR&lt;/span&gt; &lt;span class="o"&gt;*&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;GlobalLock&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hData&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
-
-                &lt;span class="c1"&gt;// veriyi wchar olarak tutacak buffer&lt;/span&gt;
-                &lt;span class="n"&gt;WCHAR&lt;/span&gt; &lt;span class="n"&gt;wbuffer&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1024&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
-
-                &lt;span class="c1"&gt;// veriyi utf-8 olarak tutacak buffer&lt;/span&gt;
-                &lt;span class="kt"&gt;char&lt;/span&gt;  &lt;span class="n"&gt;utf8&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;4096&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
-
-                &lt;span class="c1"&gt;// veriyi sonuna kadar okuyup okumadığımz&lt;/span&gt;
-                &lt;span class="n"&gt;BOOL&lt;/span&gt; &lt;span class="n"&gt;done&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;false&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-                &lt;span class="c1"&gt;// kaçıncı karakteri okuduğumuz&lt;/span&gt;
-                &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;k&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-                &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="n"&gt;done&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-                &lt;span class="p"&gt;{&lt;/span&gt;
-                    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-                    &lt;span class="c1"&gt;// buffer doluncaya veya okunacak veri bitinceye kadar buffer'ı dolduruyoruz.&lt;/span&gt;
-                    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;1024&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-                    &lt;span class="p"&gt;{&lt;/span&gt;
-                        &lt;span class="n"&gt;WCHAR&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
-                        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="sc"&gt;'\0'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-                        &lt;span class="p"&gt;{&lt;/span&gt;
-                            &lt;span class="n"&gt;done&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;true&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-                            &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-                        &lt;span class="p"&gt;}&lt;/span&gt;
-
-                        &lt;span class="n"&gt;wbuffer&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-                    &lt;span class="p"&gt;}&lt;/span&gt;
-
-                    &lt;span class="c1"&gt;// wchar turundeki karakterleri, utf8 olarak kodlamak için&lt;/span&gt;
-                    &lt;span class="n"&gt;DWORD&lt;/span&gt; &lt;span class="n"&gt;cbUtf8&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;WideCharToMultiByte&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;CP_UTF8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;wbuffer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;utf8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;4096&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-                    &lt;span class="c1"&gt;// utf8 olarak kodlanan veriyi dosyaya yazmak için&lt;/span&gt;
-                    &lt;span class="n"&gt;DWORD&lt;/span&gt; &lt;span class="n"&gt;cbWritten&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-                    &lt;span class="n"&gt;WriteFile&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hOutputFile&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;utf8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cbUtf8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;cbWritten&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-                &lt;span class="p"&gt;}&lt;/span&gt;
-
-                &lt;span class="c1"&gt;// kilitlediğimiz handle'ı işimiz bitince bırakıyoruz.&lt;/span&gt;
-                &lt;span class="n"&gt;GlobalUnlock&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hData&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-            &lt;span class="p"&gt;}&lt;/span&gt;
-
-            &lt;span class="c1"&gt;// Açtığımız clipboard'u kapatıyoruz.&lt;/span&gt;
-            &lt;span class="n"&gt;CloseClipboard&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-        &lt;span class="p"&gt;}&lt;/span&gt;
-
-        &lt;span class="c1"&gt;// açtığımız dosyayı kapatıyoruz.&lt;/span&gt;
-        &lt;span class="n"&gt;CloseHandle&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hOutputFile&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</description><guid>http://ysar.net/windows/clipboard.html</guid><pubDate>Sat, 25 May 2019 19:48:00 GMT</pubDate></item></channel></rss>
+&lt;/pre&gt;&lt;/div&gt;</description><guid>http://ysar.net/windows/winhttp-ile-dosya-indirme.html</guid><pubDate>Sun, 26 May 2019 19:45:00 GMT</pubDate></item></channel></rss>

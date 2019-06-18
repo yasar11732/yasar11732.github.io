@@ -31,7 +31,7 @@
  </url>
  <url>
   <loc>http://ysar.net/2019/index.html</loc>
-  <lastmod>2019-06-16T16:09:00Z</lastmod>
+  <lastmod>2019-06-18T18:29:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/algoritma/4-renk-teoremi-ve-harita-boyama.html</loc>
@@ -47,7 +47,7 @@
  </url>
  <url>
   <loc>http://ysar.net/algoritma/canonical-huffman-kodlamasi.html</loc>
-  <lastmod>2019-06-16T16:09:00Z</lastmod>
+  <lastmod>2019-06-18T08:55:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/algoritma/evrimsel-algoritmalar.html</loc>
@@ -95,7 +95,7 @@
  </url>
  <url>
   <loc>http://ysar.net/archive.html</loc>
-  <lastmod>2019-06-15T19:01:00Z</lastmod>
+  <lastmod>2019-06-18T08:55:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/assembly/index.html</loc>
@@ -119,7 +119,11 @@
  </url>
  <url>
   <loc>http://ysar.net/diger/index.html</loc>
-  <lastmod>2019-05-23T20:11:00Z</lastmod>
+  <lastmod>2019-06-18T18:29:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://ysar.net/diger/setjmp-h.html</loc>
+  <lastmod>2019-06-18T18:29:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/diger/yeni-blog.html</loc>
@@ -227,7 +231,7 @@
  </url>
  <url>
   <loc>http://ysar.net/index.html</loc>
-  <lastmod>2019-06-16T16:09:00Z</lastmod>
+  <lastmod>2019-06-18T18:29:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/primes.html</loc>

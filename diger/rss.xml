@@ -1,5 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Diger)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/diger/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Sun, 09 Sep 2018 22:25:08 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Blog Tasarımım Yenilendi</title><link>http://ysar.net/diger/yeni-tasarim.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;p&gt;Blogun görüntüsü bir süredir beni rahatsız ediyordu. Bootstrap stilinin yerine, daha okunaklı ve sade
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Diger)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/diger/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Tue, 18 Jun 2019 18:29:28 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>&lt;setjmp.h&gt; Ne İşe Yarar</title><link>http://ysar.net/diger/setjmp-h.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Son bir hafta, veya biraz daha uzun bir süre boyunca, akademik bir merak neticesinde deflate formatında sıkıştırma/açma
+yapan bir programın nasıl yazılabileceğini araştıyordum. Zlib kütüphanesinin içinde, deflate formatını açmaya yarayan
+referans niteliğinde yazılmış, &lt;a href="https://github.com/madler/zlib/blob/master/contrib/puff/puff.c"&gt;puff.c&lt;/a&gt; adında bir C
+programı var. Bu programı incelerken, içinde &lt;code&gt;setjmp()&lt;/code&gt; ve &lt;code&gt;longjmp()&lt;/code&gt; fonksiyonlarını gördüm. Kodlarda, bu fonksiyonların
+tanımının &lt;code&gt;setjmp.h&lt;/code&gt; içerisinde yapıldığı yazıyordu. Zlib kaynak kodları içerisinde bu header dosyasını bir süre aradıktan
+sonra, &lt;code&gt;setjmp.h&lt;/code&gt;'nin C standardı içinde olduğunu öğrendim. Şimdiye kadar C dilini iyi kullandığını
+vehmetmiş biri olarak, hiç duymadığım bir header dosyasıyla karşılaşmak beni heyecanlandırdı. Hemen internetten araştırmaya
+koyuldum.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;setjmp.h&lt;/code&gt; header dosyası, 3 şey tanımlıyor; &lt;code&gt;setjmp()&lt;/code&gt;, &lt;code&gt;longjmp()&lt;/code&gt; ve &lt;code&gt;jmp_buf&lt;/code&gt;. Bu üçü sayesinde, normal fonksiyon çağırma
+ve fonksiyondan değer döndürme mekanizmasının dışına çıkıp, programın başka bir yerine zıplayabiliyoruz. Bunu fonksiyon sınırlarını
+aşan &lt;code&gt;goto&lt;/code&gt; gibi düşünebiliriz. Okuduğum kaynaklarda 2 çeşit kullanımı var. Birincisi, daha üst seviye dillerde bulunan özel durum (exception)
+yönetimini gerçekleştirme, ikincisi de coroutine oluşturmak. Bu yazı özel durumlar üzerine kurulu olacak ama, C dilinde coroutine yazma
+konusunda da çok heyecanlıyım, ilerleyen günlerde bu konuda da denemeler yapmak istiyorum.&lt;/p&gt;
+&lt;p&gt;Uygulamaya geçmeden önce, teorik bilgiyle başlamak istiyorum. &lt;code&gt;setjmp&lt;/code&gt; makrosu, argüman olarak &lt;code&gt;jmp_buf&lt;/code&gt; adında bir &lt;code&gt;struct&lt;/code&gt;
+alıyor. İleride &lt;code&gt;longjmp&lt;/code&gt; tarafından kullanılmak üzere, geçerli yürütme bağlamını (execution context) &lt;code&gt;jmp_buf&lt;/code&gt; tipindeki
+değişkene kaydediyor. Geçerli yürütme bağlamından kasıt, &lt;code&gt;setjmp&lt;/code&gt; makrosu çalıştırıldığı andaki genel amaçlı register'larla
+birlikte, Instruction Pointer, Stack Pointer, EFLAGS gibi register'ların değerleri. Bunun detayları haliyle işlemci
+mimarisine göre değişebilir. Bu makronun kullanıcısı olarak bizi ilgilendiren, bu makronun bir zıplama noktası kaydettiği.
+Bu makronun dönüş değeri, yürütme bağlamını kaydettiği anda 0, &lt;code&gt;longjmp&lt;/code&gt; ile dönüldüğü anda ise, &lt;code&gt;longjmp&lt;/code&gt; tarafından ayarlanan
+değere eşit oluyor. Bunu anlamak için, bir örneğe başvurmakta fayda var.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;setjmp.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;string.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+
+&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="k"&gt;struct&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="kt"&gt;jmp_buf&lt;/span&gt; &lt;span class="n"&gt;env&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+
+&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;smemset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;val&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;longjmp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;env&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="n"&gt;memset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;val&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;malloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;setjmp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;env&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"String uzunlugu yeterli degil."&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"%d&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;smemset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Yukarıdaki örneği incelerseniz, &lt;code&gt;setjmp&lt;/code&gt; kullanımı daha anlaşılır olur diye düşünüyorum. Dikkat etmeniz gereken
+en önemli kısım, &lt;code&gt;setjmp&lt;/code&gt; makrosundan birden fazla kez dönüldüğü. İlk çağırıldığında, dönüş değeri 0 olacağı için,
+&lt;code&gt;if&lt;/code&gt; blogu içerisine girilmeyecek, ve program &lt;code&gt;while&lt;/code&gt; döngüsüne girecek. &lt;code&gt;while&lt;/code&gt; döngüsü sonsuz bir döngü gibi görünse
+de, aslında öyle değil. &lt;code&gt;smemset&lt;/code&gt; fonksiyonu, özel durumlarda (bunu exception gibi düşünebiliriz) &lt;code&gt;longjmp&lt;/code&gt; fonksiyonunu
+kullandığı için, sanki &lt;code&gt;setjmp&lt;/code&gt; fonksiyonundan yeni dönülüyormuş gibi, &lt;code&gt;main&lt;/code&gt; fonksiyonu içindeki &lt;code&gt;if&lt;/code&gt; koşuluna zıplayacak.
+Ancak bu sefer, &lt;code&gt;setjmp&lt;/code&gt;'nin dönüş değeri &lt;code&gt;longjmp&lt;/code&gt; tarafından 1 olarak ayarlandığı için, &lt;code&gt;if&lt;/code&gt;in koşulu sağlanacak ve &lt;code&gt;main&lt;/code&gt;
+fonksiyonu hata mesajı yazdırıp dönecek. Gözünüzü kısıp, kafanızı biraz eğerek bakarsanız, tıpkı daha yüksek seviye dillerdeki
+throw/catch veya raise/catch benzeri bir program davranışı ile karşı karşıyayız.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;1
+2
+3
+4
+5
+6
+String uzunlugu yeterli degil.
+&lt;/pre&gt;
+
+
+&lt;p&gt;Yukarıdaki kadar küçük bir programda, &lt;code&gt;setjmp&lt;/code&gt; ve &lt;code&gt;longjmp&lt;/code&gt; kullanımını anlatmak mümkün olsa da, bu ikisinin
+faydasını göstermek pek muhtemel görünmüyor. Ancak, fonksiyon çağrı hiyerarşisinin derinliklerinde oluşan özel
+durumların, üst seviye bir fonksiyonda merkezi bir şekilde yönetilmesine imkan sağlaması açısından faydalı görünüyor.
+Ayrıca, embedded programlama için de, thread benzeri bir program akışı sağlamanın tek yolu bu olabilir. Bu yazıda
+söylemek istediklerim bu kadar, ama, &lt;code&gt;setjmp&lt;/code&gt; ile coroutine oluşturma konusunda da ileride birşeyler yazmak istiyorum.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/diger/setjmp-h.html</guid><pubDate>Tue, 18 Jun 2019 06:53:00 GMT</pubDate></item><item><title>Blog Tasarımım Yenilendi</title><link>http://ysar.net/diger/yeni-tasarim.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;p&gt;Blogun görüntüsü bir süredir beni rahatsız ediyordu. Bootstrap stilinin yerine, daha okunaklı ve sade
 bir görünüm tasarladım. Blogun yeni görüntüsü ile ilgili, öngöremediğim sorunlar olursa, e-posta yoluyla
 beni bilgilendirebilirsiniz.&lt;/p&gt;</description><guid>http://ysar.net/diger/yeni-tasarim.html</guid><pubDate>Sun, 09 Sep 2018 22:22:00 GMT</pubDate></item><item><title>Devlet Siteleri</title><link>http://ysar.net/diger/devlet-siteleri.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Ben genelde çok şikayet eden bir insan değilim. Devlet sitelerinin de, devlet sitesi olduğu düşünüldüğünde,
 yüksek kaliteli siteler beklemek doğru olmaz. Ama yine de, bunların ufak tefek sıkıntıları birleşip,
