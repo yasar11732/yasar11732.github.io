@@ -31,7 +31,7 @@
  </url>
  <url>
   <loc>http://ysar.net/2019/index.html</loc>
-  <lastmod>2019-06-18T18:29:00Z</lastmod>
+  <lastmod>2019-06-23T13:46:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/algoritma/4-renk-teoremi-ve-harita-boyama.html</loc>
@@ -95,7 +95,7 @@
  </url>
  <url>
   <loc>http://ysar.net/archive.html</loc>
-  <lastmod>2019-06-18T08:55:00Z</lastmod>
+  <lastmod>2019-06-23T13:16:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/assembly/index.html</loc>
@@ -123,7 +123,7 @@
  </url>
  <url>
   <loc>http://ysar.net/diger/setjmp-h.html</loc>
-  <lastmod>2019-06-18T18:29:00Z</lastmod>
+  <lastmod>2019-06-23T13:17:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/diger/yeni-blog.html</loc>
@@ -231,7 +231,7 @@
  </url>
  <url>
   <loc>http://ysar.net/index.html</loc>
-  <lastmod>2019-06-18T18:29:00Z</lastmod>
+  <lastmod>2019-06-23T13:46:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/primes.html</loc>
@@ -491,7 +491,7 @@
  </url>
  <url>
   <loc>http://ysar.net/python/senkronizasyon-araci-olarak-dosyalar.html</loc>
-  <lastmod>2019-06-14T22:28:00Z</lastmod>
+  <lastmod>2019-06-23T13:17:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/python/sha256-ftputil.html</loc>
@@ -622,6 +622,10 @@
   <lastmod>2019-06-14T22:28:00Z</lastmod>
  </url>
  <url>
+  <loc>http://ysar.net/yazilim-dunyasi/autotools.html</loc>
+  <lastmod>2019-06-23T13:46:00Z</lastmod>
+ </url>
+ <url>
   <loc>http://ysar.net/yazilim-dunyasi/awk-kelime-sayma.html</loc>
   <lastmod>2019-06-14T22:28:00Z</lastmod>
  </url>
@@ -639,7 +643,7 @@
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/content-disposition-satirinda-us-ascii-harici-karakterler.html</loc>
-  <lastmod>2019-06-14T22:28:00Z</lastmod>
+  <lastmod>2019-06-23T13:17:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/git-deposunu-bolme.html</loc>
@@ -659,7 +663,7 @@
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/index.html</loc>
-  <lastmod>2019-06-02T09:20:00Z</lastmod>
+  <lastmod>2019-06-23T13:46:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/iyi-programci-yazilimci-nasil-olunur.html</loc>

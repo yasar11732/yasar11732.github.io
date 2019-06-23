@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Autotools kullanarak ./configure &amp; make &amp; make install ile yüklenebilecek paketler nasıl hazırlanır">
+<meta name="viewport" content="width=device-width">
+<title>Autotools Gizemini Çözüyoruz | YSAR.NET</title>
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900%7CUbuntu:300,400,500,700" rel="stylesheet">
+<link href="../assets/icons/foundation-icons.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/style.css" rel="stylesheet" type="text/css">
+<script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/yazilim-dunyasi/autotools.html">
+<!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="../diger/setjmp-h.html" title="&lt;setjmp.h&gt; Ne İşe Yarar" type="text/html">
+<meta property="og:site_name" content="YSAR.NET">
+<meta property="og:title" content="Autotools Gizemini Çözüyoruz">
+<meta property="og:url" content="http://ysar.net/yazilim-dunyasi/autotools.html">
+<meta property="og:description" content="Autotools kullanarak ./configure &amp; make &amp; make install ile yüklenebilecek paketler nasıl hazırlanır">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2019-06-23T16:16:00+03:00">
+</head>
+<body>
+
+         
+    <header class="fixed-top"><div class="container">
+        <a href="http://ysar.net">
+            <img class="logo" src="../assets/img/Logo.svg"></a>
+        <div class="subtitle">Python, Yazılım ve Programlama</div>
+    <nav id="menu"><ul>
+<li class="fi-info"><a href="../yasar-arabaci.html">Hakkımda</a></li>
+            <li class="fi-social-github"><a href="https://github.com/yasar11732/">GitHub</a></li>
+            <li class="question"><a href="../soru-cevap.html">Soru-Cevap</a></li>
+            <li class="fi-rss"><a href="../rss.xml">RSS</a></li>
+        </ul></nav>
+</div>
+        
+    </header><main class="main-content"><article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 itemprop="headline name">Autotools Gizemini Çözüyoruz</h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Autotools, GNU build sistemi oluşturmaya yarayan araçlar grubudur. GNU/Linux sistemlerde
+antik çağlardan beri yazılım geliştirme ve paylaşma macerasının merkezinde
+olmuş <code>autotools</code> programlarını anlamak, hem gnu/linux sistemlerine kurulacak yazılımları yapmak
+isteyenlerin, hem de linux dağıtımlarına paket oluşturmak isteyenlerin işine
+yarayacaktır. Autotools adını ilk kez duyuyor olabilirsiniz ama, Eğer linux üzerinde kaynak
+koddan program derleyip kurmuşsanız, aşağıdaki 3 komutu muhakkak biliyorsunuz.</p>
+<pre class="code literal-block"><span></span>./configure
+make
+make install
+</pre>
+
+
+<p><code>tar.gz</code> dosyası bir klasöre açılır, o klasörün içine <code>cd</code> ile geçilir, esrarengiz komutlar
+verilir ve, Hollywood filmlerindeki hacker sahnelerini andıran yazıları izledikten sonra,
+programımız derlenir ve kullanmaya başlarız.</p>
+<p>Bu yazıda, GNU/Linux işletim sistemlerinde kaynak kod dağıtma, derleme ve yükleme sisteminin bel kemiğini
+oluşturan <code>autotools</code> araçlarını kullanmaya yetecek kadar teorik bilgi ve örnek verme niyetindeyim. Hedefim autotools'un
+girift detaylarına inmekten ziyade, bu ismi ilk kez duyanları, referans belgelere başvurarak ihtiyaçlarını
+karşılayabilecek aşamaya getirecek kadar bu programları tanıtmak.</p>
+<p>Autotools araçları, yazdığımız programları, <code>./configure</code>, <code>make</code> ve <code>make install</code> ile çeşitli unix nevinden
+sistemlerde derlenip kurulabilmesi için, <code>./configure</code> programını, <code>Makefile</code> dosyalarını ve konfigürasyon 
+dosyalarını (genellikle config.h) üretmeye yarar. Bu nedenle, öncelikle bu 3 komutun vazifelerini hatırlamakta
+fayda var. </p>
+<p><code>configure</code> programı aslında POSIX standardında yazılmış bir kabuk betiğidir. Bu betik,
+programımızın derleneceği platformun niteliklerini anlamak için bir takım testler yaparak,
+gerekli araç ve kütüphanelerin varlığını teyit eder. Eğer derlenecek programın derlenebilmesi
+için gerekli program, kütüphane ve araçlar sistemde mevcutsa, yaptığı testlerin sonuçlarını ve
+komut satırından aldığı argümanların değerlerini kullanarak <code>Makefile</code> dosyalarını ve konfigürasyon
+dosyalarını (genellikle <code>config.h</code>) oluşturur. <code>configure</code> programının başarılı sonuçlanması,
+programımızın başarıyla derlenip kurulabileceğini gösterir.</p>
+<p><code>make</code> programı, <code>Makefile</code> dosyasında tanımlanan görevleri yerine getirir. Autotools
+tarafından oluşturulan <code>Makefile</code> dosyasında birçok görev tanımlanır. <code>make</code> komutu
+herhangi bir argüman verilmeden çalıştırıldığında, <code>Makefile</code> içindeki öntanımlı (eng. default)
+hedefi yerine getirir. Autotools tarafından üretilen <code>Makefile</code> dosyasındaki öntanımlı görev
+programın derlenmesidir.</p>
+<p><code>make</code> programı <code>install</code> hedefiyle birlikte çalıştığında, derlenmiş program, kütüphane,
+belgeler, header dosyaları ve diğer dosyalar ilgili klasörlere yüklenir. Bunların yükleneceği yer, <code>configure</code>
+aşamasında özellikle değiştirilmezse, <code>/bin</code>, <code>/lib</code> vs. gibi standart yollardır.</p>
+<p>Şimdi, <code>autotools</code> kullanarak, bir <code>Hello World</code> uygulaması yapalım. Bu uygulama 5 adımdan oluşacak.</p>
+<p>Birinci adımda, kaynak kodlarını içerek klasörü oluşturup, bu klasöre geçeceğiz.</p>
+<pre class="code literal-block"><span></span>mkdir helloworld
+<span class="nb">cd</span> helloword
+</pre>
+
+
+<p>İkinci adımda, derlenecek programı yazacağız. <code>main.c</code> adında bir dosya oluşturup, aşağıdaki
+programı kopyalayın.</p>
+<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"config.h"</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"Hello World."</span><span class="p">);</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"Bu program: "</span> <span class="n">PACKAGE_STRING</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Üçüncü adımda, <code>Makefile.am</code> dosyası oluşturup, aşağıdaki satırları yazın.</p>
+<pre class="code literal-block"><span></span>bin_PROGRAMS = hello
+hello_SOURCES = main.c
+</pre>
+
+
+<p>Dördüncü adımda, <code>configure.ac</code> dosyasını aşağıdaki gibi oluşturun.</p>
+<pre class="code literal-block"><span></span>AC_INIT([helloworld],[1.0],[bug-reports@helloworld.com])
+AM_INIT_AUTOMAKE([foreign])
+AC_PROG_CC
+AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT
+</pre>
+
+
+<p>Son olarak, <code>autoreconf --install</code> komutu ile, build sistemimiz hazır hale geliyor. Bu aşamada, <code>./configure</code>
+ve <code>make</code> komutlarıyla programınızı derleyip, çıktısını inceleyebilirsiniz.</p>
+<p>Eğer elinizde imkan varsa, yazının devamını okumadan önce, yukarıdaki örneği denemenizi tavsiye ederim. Yazının
+devamında, bir adım geri gidip, bu örnekte neler olup bittiğine biraz daha yakından bakacağız.</p>
+<p>Yazının başından beri, <code>autotools</code>'un bir araçlar grubu olduğundan bahsettik, ancak, bu araçların hangileri
+olduğuna hiç değinmemiştik. Bu araçların başlıca 2 tanesi, <code>autoconf</code>, <code>automake</code> diyebiliriz.
+Bunlardan <code>autoconf</code> programı, otomatik olarak <code>configure</code> betiği oluşturmaya, <code>automake</code> programı otomatik
+olarak <code>Makefile</code> oluşturmaya yarıyor. Şu aşamada, <code>autotools</code> içindeki diğer programları yardımcı araçlar
+olarak düşünebiliriz. Autotools içindeki araçları birbirinden bağımsız programlar olarak düşünmemelisiniz.
+Bunların birbiriyle çok sıkı ve karmaşık ilişkileri var. Bu ilişkileri yazının devamında biraz daha detaylı inceleyeceğiz.</p>
+<p>Öncelikle, <code>autoconf</code> programını inceleyelim. Bu program, <code>configure.ac</code> dosyasını okuyarak, <code>configure</code>
+programını oluşturur. <code>configure</code> programının amacından yukarıda bahsettiğim için, konuyu doğrudan <code>configure.ac</code>
+dosyasına getireceğim. Bu dosyayı, M4 makroları içeren bir kabuk (shell) betiği olarak tanımlayabiliriz.
+M4 çok eski bir şablon dilidir. <code>configure.ac</code> içindeki M4 makroları, <code>autoconf</code> tarafından shell
+programına dönüştürülür. Bu makrolar, bir veya daha fazla argüman alabilir. Bu argümanların da
+bazıları gerekli, bazıları ise seçmeli olabilir. Bunları, makro adından sonra gelen
+parantezler içinde virgülle ayrılmış olarak belirtiriz. Ayrıca, her bir argümanı köşeli
+parantezler içine alırız. <code>configure.ac</code> dosyasında kendi yazdığınız makroları kullanabileceğiniz
+gibi, <code>autotools</code> tarafından sağlanan makroları da kullanabilirsiniz. <code>autotools</code> içinde o kadar çok
+hazır makro var ki, ihtiyacınız olan makroyu hazır olanlar içinde bulamamanız mümkün olsa da muhtemel değil.
+Bu yazıda, nasıl makro yazabileceğimiz konusuna değinmeyeceğiz.</p>
+<p>Örneğimizdeki <code>configure.ac</code> dosyası, sadece makrolardan oluşuyor. Sırayla bu makroların gereğine ve 
+aldıkları argümanlara göz atalım. <code>AC_INIT</code> makrosu, ikisi zorunlu üçü seçmeli olmak üzere 5 argüman
+alabiliyor. Bu makronun görevi, <code>configure</code> programının aldığı komut satırı argümanlarını işlemek
+ve programı kullanılabilir hale getirmek. Eğer ne yaptığınızı çok iyi bilmiyorsanız, <code>configure.ac</code>
+dosyasına daima <code>AC_INIT</code> makrosuyla başlayın. Bu makronun ilk argümanı paketinizin ismini, ikinci
+argümanı ise paketinizin versiyonunu içerir. Bu makro hakkında daha detaylı bilgiyi <a href="https://www.gnu.org/software/autoconf/manual/autoconf-2.67/html_node/Initializing-configure.html">Autoconf Belgelerinde</a> bulabilirsiniz.</p>
+<p>Kullandığımız ikinci makro, <code>AM_INIT_AUTOMAKE</code>. Bu makro, <code>automake</code> programına ayar vermek için kullanılır.
+Burada <code>foreign</code> seçeneğini kullanmamızın nedeni, yazdığımız
+programın GNU standartlarına uymadığını belirtmek. Eğer bu seçeneği belirtmezsek, README, NEW, AUTHORS
+gibi tüm standart dosyaları oluşturmak zorunda kalırız. Bu makro hakkında daha fazla detaya şu an için
+gerek yok.</p>
+<p><code>AC_PROG_CC</code> makrosu, sistemde çalışan bir C derleyicisi bulur.</p>
+<p><code>AC_CONFIG_HEADERS</code> makrosu, bir konfigürasyon header dosyası (Örnekte config.h) oluşturur. Bu header içindeki tanımlamalar,
+daha önce çalışan makrolardan elde edilir. Örneğin, <code>AC_INIT</code> makrosu tarafından ayarlanan paketin adı
+ve versiyonu gibi bilgiler, bu header dosyasına yazılır. Böylece, C programımızın içinde bu bilgilere
+ulaşabiliriz.</p>
+<p><code>AC_CONFIG_FILES</code> makrosu ile, <code>configure</code> programının oluşturacağı dosyalar belirtilir. Bu dosyalar
+<code>.in</code> uzantılı olarak aranır, işlendikten sonra <code>.in</code> uzantısı olmadan kaydedilir. Bizim örneğimizde,
+<code>Makefile.in</code> dosyası, <code>Makefile</code> dosyasına dönüşecek. Bu dönüşüm işleminde pek matah birşey yok. <code>Makefile.in</code>
+dosyasının içinde iki @ işareti arasında belirtilen değişkenler doldurulacak. Bu değişkenlerin değeri de,
+çalışan makrolar tarafından belirleniyor. Mesela, <code>CC</code> değişkeni, <code>AC_PROG_CC</code> makrosu sayesinde tanımlanıyor.</p>
+<p><code>AC_OUTPUT</code> makrosu, <code>config.status</code> isminde bir shell programı oluşturup, bu programı çalıştırır.
+<code>Makefile</code> ve <code>config.h</code> dosyalarının oluşması gibi görevler <code>config.status</code> tarafından gerçekleştiği
+için, bu makronun kullanılması zaruridir.</p>
+<p>Devam etmeden önce, biraz toparlayalım. <code>autoconf</code> programı <code>configure.ac</code> dosyasını okuyarak,
+<code>configure</code> kabuk programını oluşturuyor. <code>configure</code> programının amacı ise, platformun
+özelliklerini test edip, Makefile ve config.h dosyalarını oluşturmak.</p>
+<p>Autotools içinde merkezi yeri olan diğer program da, <code>automake</code>'dir. Bu program, <code>Makefile.am</code>
+dosyalarındaki tanımlamalara göre, <code>Makefile.in</code> dosyaları oluşturur. <code>Makefile.in</code> dosyalarının
+<code>configure</code> betiği tarafından işlenip, <code>Makefile</code> dosyalarına dönüştüğünü yukarıda belirmiştim.</p>
+<p>Örneğimizdeki <code>Makefile.am</code> dosyası, sadece iki satırdan oluşuyor. İlk satırda, <code>bin_PROGRAMS = hello</code>
+tanımlaması, üç şey belirtiyor. Birincisi, o satırda tanımı yapılan hedefin <code>bindir</code> klasörüne yükleneceği,
+ikincisi bu hedefin bir program olduğu, üçüncüsü ise bunun adının hello olduğu. Burada <code>bin_</code> olarak
+belirtilen önek, yükleme yerini belirtir. <code>bin</code>, <code>lib</code>,
+<code>include</code>, <code>data</code> gibi önceden tanımlı değerleri kullanabilirsiniz. Önekten sonra gelen kısım ise,
+hedefin türünü belirtiyor. Hedef türü olarak, şunlardan birini seçmelisiniz; ‘PROGRAMS’, ‘LIBRARIES’,
+‘LTLIBRARIES’, ‘LISP’, ‘PYTHON’, ‘JAVA’, ‘SCRIPTS’, ‘DATA’, ‘HEADERS’, ‘MANS’, ve ‘TEXINFOS’. Bunların
+isimleri yeterince açıklayıcı. Her hedef türü doğru çalışabilmesi için, çeşitli değişkenlere
+ihtiyaç duyar. <code>PROGRAMS</code> hedef türü için, <code>_SOURCES</code> değişkeni ile, programın hangi C dosyaları
+kullanılarak derleneceğini belirttik. Eğer <code>_SOURCES</code> ile kaynak dosyalarını belirtmezsek,
+<code>automake</code> bizim için tahminde bulunacaktır, ama, açıkca belirtmek daha güvenli olur. <code>configure.ac</code>
+örneğine geri dönerseniz, <code>AC_PROG_CC</code> programı ile, geçerli bir C derleyecisi bulmuştuk. <code>PROGRAMS</code>
+haricindeki diğer hedef türleri için, <code>AC_PROG_CC</code> benzeri bir kontrolü <code>configure.ac</code>'ye eklemek
+gerekebilir. Bunun detayları için, <a href="https://www.gnu.org/software/automake/manual/automake.html">Automake Belgeleri</a>
+yeterince detaylı açıklamalar içeriyor.</p>
+<p>Sıra <code>main.c</code> dosyasını incelemeye geldi. <code>main.c</code> programında, <code>config.h</code> header dosyasını kullandık.
+Bu noktaya kadar dikkatle okuduysanız, <code>config.h</code> dosyasının otomatik olarak oluşturulduğunu anlamışsınızdır.
+Bu sayede, <code>configure</code> aşamasında tanımlanan yapılandırma değerlerini, C kaynak kodlarımız içinde kullanabiliriz.
+Örnek programımızda, <code>PACKAGE_STRING</code> değişkenini kullandık. Bu değişken, <code>AC_INIT</code> makrosu tarafından
+tanımlanıyor. Bizim örneğimizde, <code>helloworld 1.0</code> değerini alıyor.</p>
+<p><code>autoconf</code> ve <code>automake</code> programlardan bahsettik ama, dikkat ederseniz örneğimizde bu iki programı
+hiç kullanmadık. Eğer <code>automake</code> ve <code>autoconf</code> programlarını manuel olarak tetiklemek isterseniz,
+<code>autoheader</code>, <code>aclocal</code>, <code>autoconf</code> ve <code>automake</code> gibi programları doğru sırada çalıştırmanız gerekiyor.
+Manuel çalıştırmak hataya çok müsait olduğu için, <code>autoreconf</code> programı, <code>autotools</code> içindeki diğer
+araçları doğru şekilde çalıştırmaya yarıyor. </p>
+<p>Yeni başlayanlar için, <code>autotools</code> çok yıpratıcı olabilir. Şu ana kadar, birçok yeni konseptle
+karşılaştınız, ve kafanızın karışmış olması gayet normal. Ama başardığımız şeye dikkat edin.
+6 satırlık bir <code>configure.ac</code> ve 2 satırlık <code>Makefile.am</code> ile, elle yazabileceğimizden
+çok daha iyi bir <code>Makefile</code> elde ettik. <code>make install</code> hedefi sayesinde, programınızı
+kurabilirsiniz, <code>configure</code> aşamasında programın nereye kurulması gerektiğini seçebilirsiniz,
+<code>make dist</code> ile <code>tar.gz</code> paketi oluşturabilirsiniz. Standart bir GNU/Linux paketinde olmasını
+bekleyeceğiniz herşeyi, hem kolayca, hem de hataya fazla yer bırakmayacak bir şekilde elde ettik.
+Bu da, Linux paket yöneticileri için, büyük kolaylık demek.</p>
+<p>Bu noktada, <code>autotools</code> temellerini kavradığınızı varsayıyorum. Birkaç yeni örnek ile,
+hem öğrendiklerimiz pekiştireceğiz, hem de <code>autotools</code>'un diğer kabiliyetleri hakkında
+bilgi sahibi olacağız.</p>
+<p>Diyelim ki, Linux üstünde çalışacak bir oyun programladınız. Yazdığınız oyunda grafik
+ve ses dosyaları kullanmak isteyeceksiniz. Kullandığınız data dosyaları, farklı linux
+sürümlerinde, farklı klasörlere yüklenebilir. Bu örnekte, C programımızın, data
+klasöründeki dosyaları bulmasını sağlayacağız.</p>
+<p>Öncelikle, <code>Makefile.am</code> dosyasına bakalım;</p>
+<pre class="code literal-block"><span></span>bin_PROGRAMS = oyun
+oyun_SOURCES = oyun.c
+dist_pkgdata_DATA = esound.wav \
+               another.wav \
+               background.png
+AM_CFLAGS = -DDATADIR=\"$(pkgdatadir)\"
+</pre>
+
+
+<p>İlk iki satırı zaten biliyorsunuz. Üçüncü satırda, <code>pkgdata</code> klasörüne yüklenecek olan,
+<code>DATA</code> dosyalarını tanımladık. Burada ikinci bir önek olarak <code>dist</code> öneki kullandık. <code>DATA</code>
+dosyalarını <code>tar.gz</code> dağıtımına dahil etmek için, <code>dist</code> öneki kullanmalısınız. Üçüncü satırda,
+C derleyicisinin komut satırına gönderilecek bir argüman tanımladık. Burada kullandığımız <code>pkgdatadir</code>,
+autoconf/automake tarafından ayarlanan bir değişken. Böylece, C dosyalarımızda kullanılabilecek bir makro
+tanımı yapmış olduk. Şimdi, <code>oyun.c</code> dosyasına bakalım.</p>
+<pre class="code literal-block"><span></span><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">IMAGE</span> <span class="n">background</span> <span class="o">=</span> <span class="n">load_image</span><span class="p">(</span><span class="n">DATADIR</span> <span class="s">"/background.png"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Böylece, programımız ilgili data dosyalarını bulabilecek bir şekilde derlenmiş oldu.</p>
+<p>İyice pekiştirmek için, bir örnek daha yapalım. Bu örneğimizde, <code>configure</code> betiğinin,
+programımızın bazı özelliklerini açıp kapatabilmesini sağlayacağız. Öncelikle, <code>configure.ac</code>
+dosyasına, aşağıdaki iki satırı ekleyeceğiz.</p>
+<pre class="code literal-block"><span></span><span class="n">AC_ARG_ENABLE</span><span class="p">([</span><span class="n">debug</span><span class="p">],</span> <span class="n">AS_HELP_STRING</span><span class="p">([</span><span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">debug</span><span class="p">]),[</span><span class="n">ENABLE_DEBUG</span><span class="o">=</span><span class="err">$</span><span class="n">enableval</span><span class="p">],[</span><span class="n">ENABLE_DEBUG</span><span class="o">=</span><span class="s">"no"</span><span class="p">])</span>
+<span class="n">AS_IF</span><span class="p">([</span><span class="n">test</span> <span class="s">"x$ENABLE_DEBUG"</span> <span class="o">=</span> <span class="s">"xyes"</span><span class="p">],</span> <span class="n">AC_DEFINE</span><span class="p">(</span><span class="n">ENABLE_DEBUG</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">Enable</span> <span class="n">Debugging</span><span class="p">])</span>
+</pre>
+
+
+<p>Şimdi, <code>config.h.in</code> dosyasına, aşağıdaki satırı eklememiz gerekiyor.</p>
+<pre class="code literal-block"><span></span>#undef ENABLE_DEBUG
+</pre>
+
+
+<p>Bundan sonra, <code>autoreconf -i</code> ile, configure betiğini yeniden oluşturmak gerekiyor. Böylece, <code>./configure --enable-debug</code>
+komutu ile, <code>config.h</code> dosyasında <code>#define ENABLE_DEBUG</code> satırı eklenmesini sağlayabiliriz. Bu makro tanımlı olduğunda,
+program çıktı verirken bu makronun varlığını kontrol ederek, ekstra bilgi sunabilir.</p>
+<p>Toparlamak gerekirse, <code>autotools</code> kullanarak bir build sistemi oluşturmak konusuna yüzeysel bir giriş yaptık. Bu araçlar hakkında
+söylenebilecekler malesef bir blog yazısına sığamayacak kadar çok. Eğer projenizde <code>autotools</code> kullanmaya karar verirseniz,
+sıfırdan <code>configure.ac</code> ve <code>Makefile.am</code> dosyaları yazmak yerine, yapacağınız projeye benzer bir projenin dosyalarını
+kullanarak başlamanız işinizi kolaylaştıracaktır. Eğer <a href="https://github.com/search?q=configure+extension%3Aac&amp;type=Code">Github'da autotools kullanan projeleri</a>
+aratırsanız, karşınıza binlerce sonuç çıkacatır. <code>automake</code> ve <code>autoconf</code> belgeleri içinde,
+kullanabileceğiniz tüm makrolar hakkında bilgi alabilirsiniz.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><div class="pager">
+                <a href="../diger/setjmp-h.html" rel="prev" title="&lt;setjmp.h&gt; Ne İşe Yarar">Önceki yazı</a>
+        </div>
+
+    </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
+	</script></article></main><script>
+  if(document.location.hostname == "ysar.net")
+  {
+      (function() {
+        var cx = '013136674562336859018:ouohwab0yku';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+      
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-44774134-1', 'auto');
+          ga('send', 'pageview');
+  }
+
+</script>
+</body>
+</html>

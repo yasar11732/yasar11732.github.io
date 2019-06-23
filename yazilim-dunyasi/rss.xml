@@ -1,5 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Yazilim Dunyasi)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/yazilim-dunyasi/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Sun, 02 Jun 2019 09:20:37 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Content-Disposition Satırında US-ASCII Harici Karakterler Nasıl Kodlanmalı</title><link>http://ysar.net/yazilim-dunyasi/content-disposition-satirinda-us-ascii-harici-karakterler.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Aşağıdaki sıradan dosya yükleme formuna bir göz atalım.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Yazilim Dunyasi)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/yazilim-dunyasi/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Sun, 23 Jun 2019 13:46:02 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Autotools Gizemini Çözüyoruz</title><link>http://ysar.net/yazilim-dunyasi/autotools.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Autotools, GNU build sistemi oluşturmaya yarayan araçlar grubudur. GNU/Linux sistemlerde
+antik çağlardan beri yazılım geliştirme ve paylaşma macerasının merkezinde
+olmuş &lt;code&gt;autotools&lt;/code&gt; programlarını anlamak, hem gnu/linux sistemlerine kurulacak yazılımları yapmak
+isteyenlerin, hem de linux dağıtımlarına paket oluşturmak isteyenlerin işine
+yarayacaktır. Autotools adını ilk kez duyuyor olabilirsiniz ama, Eğer linux üzerinde kaynak
+koddan program derleyip kurmuşsanız, aşağıdaki 3 komutu muhakkak biliyorsunuz.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;./configure
+make
+make install
+&lt;/pre&gt;
+
+
+&lt;p&gt;&lt;code&gt;tar.gz&lt;/code&gt; dosyası bir klasöre açılır, o klasörün içine &lt;code&gt;cd&lt;/code&gt; ile geçilir, esrarengiz komutlar
+verilir ve, Hollywood filmlerindeki hacker sahnelerini andıran yazıları izledikten sonra,
+programımız derlenir ve kullanmaya başlarız.&lt;/p&gt;
+&lt;p&gt;Bu yazıda, GNU/Linux işletim sistemlerinde kaynak kod dağıtma, derleme ve yükleme sisteminin bel kemiğini
+oluşturan &lt;code&gt;autotools&lt;/code&gt; araçlarını kullanmaya yetecek kadar teorik bilgi ve örnek verme niyetindeyim. Hedefim autotools'un
+girift detaylarına inmekten ziyade, bu ismi ilk kez duyanları, referans belgelere başvurarak ihtiyaçlarını
+karşılayabilecek aşamaya getirecek kadar bu programları tanıtmak.&lt;/p&gt;
+&lt;p&gt;Autotools araçları, yazdığımız programları, &lt;code&gt;./configure&lt;/code&gt;, &lt;code&gt;make&lt;/code&gt; ve &lt;code&gt;make install&lt;/code&gt; ile çeşitli unix nevinden
+sistemlerde derlenip kurulabilmesi için, &lt;code&gt;./configure&lt;/code&gt; programını, &lt;code&gt;Makefile&lt;/code&gt; dosyalarını ve konfigürasyon 
+dosyalarını (genellikle config.h) üretmeye yarar. Bu nedenle, öncelikle bu 3 komutun vazifelerini hatırlamakta
+fayda var. &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;configure&lt;/code&gt; programı aslında POSIX standardında yazılmış bir kabuk betiğidir. Bu betik,
+programımızın derleneceği platformun niteliklerini anlamak için bir takım testler yaparak,
+gerekli araç ve kütüphanelerin varlığını teyit eder. Eğer derlenecek programın derlenebilmesi
+için gerekli program, kütüphane ve araçlar sistemde mevcutsa, yaptığı testlerin sonuçlarını ve
+komut satırından aldığı argümanların değerlerini kullanarak &lt;code&gt;Makefile&lt;/code&gt; dosyalarını ve konfigürasyon
+dosyalarını (genellikle &lt;code&gt;config.h&lt;/code&gt;) oluşturur. &lt;code&gt;configure&lt;/code&gt; programının başarılı sonuçlanması,
+programımızın başarıyla derlenip kurulabileceğini gösterir.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;make&lt;/code&gt; programı, &lt;code&gt;Makefile&lt;/code&gt; dosyasında tanımlanan görevleri yerine getirir. Autotools
+tarafından oluşturulan &lt;code&gt;Makefile&lt;/code&gt; dosyasında birçok görev tanımlanır. &lt;code&gt;make&lt;/code&gt; komutu
+herhangi bir argüman verilmeden çalıştırıldığında, &lt;code&gt;Makefile&lt;/code&gt; içindeki öntanımlı (eng. default)
+hedefi yerine getirir. Autotools tarafından üretilen &lt;code&gt;Makefile&lt;/code&gt; dosyasındaki öntanımlı görev
+programın derlenmesidir.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;make&lt;/code&gt; programı &lt;code&gt;install&lt;/code&gt; hedefiyle birlikte çalıştığında, derlenmiş program, kütüphane,
+belgeler, header dosyaları ve diğer dosyalar ilgili klasörlere yüklenir. Bunların yükleneceği yer, &lt;code&gt;configure&lt;/code&gt;
+aşamasında özellikle değiştirilmezse, &lt;code&gt;/bin&lt;/code&gt;, &lt;code&gt;/lib&lt;/code&gt; vs. gibi standart yollardır.&lt;/p&gt;
+&lt;p&gt;Şimdi, &lt;code&gt;autotools&lt;/code&gt; kullanarak, bir &lt;code&gt;Hello World&lt;/code&gt; uygulaması yapalım. Bu uygulama 5 adımdan oluşacak.&lt;/p&gt;
+&lt;p&gt;Birinci adımda, kaynak kodlarını içerek klasörü oluşturup, bu klasöre geçeceğiz.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;mkdir helloworld
+&lt;span class="nb"&gt;cd&lt;/span&gt; helloword
+&lt;/pre&gt;
+
+
+&lt;p&gt;İkinci adımda, derlenecek programı yazacağız. &lt;code&gt;main.c&lt;/code&gt; adında bir dosya oluşturup, aşağıdaki
+programı kopyalayın.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;"config.h"&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Hello World."&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Bu program: "&lt;/span&gt; &lt;span class="n"&gt;PACKAGE_STRING&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Üçüncü adımda, &lt;code&gt;Makefile.am&lt;/code&gt; dosyası oluşturup, aşağıdaki satırları yazın.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;bin_PROGRAMS = hello
+hello_SOURCES = main.c
+&lt;/pre&gt;
+
+
+&lt;p&gt;Dördüncü adımda, &lt;code&gt;configure.ac&lt;/code&gt; dosyasını aşağıdaki gibi oluşturun.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;AC_INIT([helloworld],[1.0],[bug-reports@helloworld.com])
+AM_INIT_AUTOMAKE([foreign])
+AC_PROG_CC
+AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT
+&lt;/pre&gt;
+
+
+&lt;p&gt;Son olarak, &lt;code&gt;autoreconf --install&lt;/code&gt; komutu ile, build sistemimiz hazır hale geliyor. Bu aşamada, &lt;code&gt;./configure&lt;/code&gt;
+ve &lt;code&gt;make&lt;/code&gt; komutlarıyla programınızı derleyip, çıktısını inceleyebilirsiniz.&lt;/p&gt;
+&lt;p&gt;Eğer elinizde imkan varsa, yazının devamını okumadan önce, yukarıdaki örneği denemenizi tavsiye ederim. Yazının
+devamında, bir adım geri gidip, bu örnekte neler olup bittiğine biraz daha yakından bakacağız.&lt;/p&gt;
+&lt;p&gt;Yazının başından beri, &lt;code&gt;autotools&lt;/code&gt;'un bir araçlar grubu olduğundan bahsettik, ancak, bu araçların hangileri
+olduğuna hiç değinmemiştik. Bu araçların başlıca 2 tanesi, &lt;code&gt;autoconf&lt;/code&gt;, &lt;code&gt;automake&lt;/code&gt; diyebiliriz.
+Bunlardan &lt;code&gt;autoconf&lt;/code&gt; programı, otomatik olarak &lt;code&gt;configure&lt;/code&gt; betiği oluşturmaya, &lt;code&gt;automake&lt;/code&gt; programı otomatik
+olarak &lt;code&gt;Makefile&lt;/code&gt; oluşturmaya yarıyor. Şu aşamada, &lt;code&gt;autotools&lt;/code&gt; içindeki diğer programları yardımcı araçlar
+olarak düşünebiliriz. Autotools içindeki araçları birbirinden bağımsız programlar olarak düşünmemelisiniz.
+Bunların birbiriyle çok sıkı ve karmaşık ilişkileri var. Bu ilişkileri yazının devamında biraz daha detaylı inceleyeceğiz.&lt;/p&gt;
+&lt;p&gt;Öncelikle, &lt;code&gt;autoconf&lt;/code&gt; programını inceleyelim. Bu program, &lt;code&gt;configure.ac&lt;/code&gt; dosyasını okuyarak, &lt;code&gt;configure&lt;/code&gt;
+programını oluşturur. &lt;code&gt;configure&lt;/code&gt; programının amacından yukarıda bahsettiğim için, konuyu doğrudan &lt;code&gt;configure.ac&lt;/code&gt;
+dosyasına getireceğim. Bu dosyayı, M4 makroları içeren bir kabuk (shell) betiği olarak tanımlayabiliriz.
+M4 çok eski bir şablon dilidir. &lt;code&gt;configure.ac&lt;/code&gt; içindeki M4 makroları, &lt;code&gt;autoconf&lt;/code&gt; tarafından shell
+programına dönüştürülür. Bu makrolar, bir veya daha fazla argüman alabilir. Bu argümanların da
+bazıları gerekli, bazıları ise seçmeli olabilir. Bunları, makro adından sonra gelen
+parantezler içinde virgülle ayrılmış olarak belirtiriz. Ayrıca, her bir argümanı köşeli
+parantezler içine alırız. &lt;code&gt;configure.ac&lt;/code&gt; dosyasında kendi yazdığınız makroları kullanabileceğiniz
+gibi, &lt;code&gt;autotools&lt;/code&gt; tarafından sağlanan makroları da kullanabilirsiniz. &lt;code&gt;autotools&lt;/code&gt; içinde o kadar çok
+hazır makro var ki, ihtiyacınız olan makroyu hazır olanlar içinde bulamamanız mümkün olsa da muhtemel değil.
+Bu yazıda, nasıl makro yazabileceğimiz konusuna değinmeyeceğiz.&lt;/p&gt;
+&lt;p&gt;Örneğimizdeki &lt;code&gt;configure.ac&lt;/code&gt; dosyası, sadece makrolardan oluşuyor. Sırayla bu makroların gereğine ve 
+aldıkları argümanlara göz atalım. &lt;code&gt;AC_INIT&lt;/code&gt; makrosu, ikisi zorunlu üçü seçmeli olmak üzere 5 argüman
+alabiliyor. Bu makronun görevi, &lt;code&gt;configure&lt;/code&gt; programının aldığı komut satırı argümanlarını işlemek
+ve programı kullanılabilir hale getirmek. Eğer ne yaptığınızı çok iyi bilmiyorsanız, &lt;code&gt;configure.ac&lt;/code&gt;
+dosyasına daima &lt;code&gt;AC_INIT&lt;/code&gt; makrosuyla başlayın. Bu makronun ilk argümanı paketinizin ismini, ikinci
+argümanı ise paketinizin versiyonunu içerir. Bu makro hakkında daha detaylı bilgiyi &lt;a href="https://www.gnu.org/software/autoconf/manual/autoconf-2.67/html_node/Initializing-configure.html"&gt;Autoconf Belgelerinde&lt;/a&gt; bulabilirsiniz.&lt;/p&gt;
+&lt;p&gt;Kullandığımız ikinci makro, &lt;code&gt;AM_INIT_AUTOMAKE&lt;/code&gt;. Bu makro, &lt;code&gt;automake&lt;/code&gt; programına ayar vermek için kullanılır.
+Burada &lt;code&gt;foreign&lt;/code&gt; seçeneğini kullanmamızın nedeni, yazdığımız
+programın GNU standartlarına uymadığını belirtmek. Eğer bu seçeneği belirtmezsek, README, NEW, AUTHORS
+gibi tüm standart dosyaları oluşturmak zorunda kalırız. Bu makro hakkında daha fazla detaya şu an için
+gerek yok.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;AC_PROG_CC&lt;/code&gt; makrosu, sistemde çalışan bir C derleyicisi bulur.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;AC_CONFIG_HEADERS&lt;/code&gt; makrosu, bir konfigürasyon header dosyası (Örnekte config.h) oluşturur. Bu header içindeki tanımlamalar,
+daha önce çalışan makrolardan elde edilir. Örneğin, &lt;code&gt;AC_INIT&lt;/code&gt; makrosu tarafından ayarlanan paketin adı
+ve versiyonu gibi bilgiler, bu header dosyasına yazılır. Böylece, C programımızın içinde bu bilgilere
+ulaşabiliriz.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;AC_CONFIG_FILES&lt;/code&gt; makrosu ile, &lt;code&gt;configure&lt;/code&gt; programının oluşturacağı dosyalar belirtilir. Bu dosyalar
+&lt;code&gt;.in&lt;/code&gt; uzantılı olarak aranır, işlendikten sonra &lt;code&gt;.in&lt;/code&gt; uzantısı olmadan kaydedilir. Bizim örneğimizde,
+&lt;code&gt;Makefile.in&lt;/code&gt; dosyası, &lt;code&gt;Makefile&lt;/code&gt; dosyasına dönüşecek. Bu dönüşüm işleminde pek matah birşey yok. &lt;code&gt;Makefile.in&lt;/code&gt;
+dosyasının içinde iki @ işareti arasında belirtilen değişkenler doldurulacak. Bu değişkenlerin değeri de,
+çalışan makrolar tarafından belirleniyor. Mesela, &lt;code&gt;CC&lt;/code&gt; değişkeni, &lt;code&gt;AC_PROG_CC&lt;/code&gt; makrosu sayesinde tanımlanıyor.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;AC_OUTPUT&lt;/code&gt; makrosu, &lt;code&gt;config.status&lt;/code&gt; isminde bir shell programı oluşturup, bu programı çalıştırır.
+&lt;code&gt;Makefile&lt;/code&gt; ve &lt;code&gt;config.h&lt;/code&gt; dosyalarının oluşması gibi görevler &lt;code&gt;config.status&lt;/code&gt; tarafından gerçekleştiği
+için, bu makronun kullanılması zaruridir.&lt;/p&gt;
+&lt;p&gt;Devam etmeden önce, biraz toparlayalım. &lt;code&gt;autoconf&lt;/code&gt; programı &lt;code&gt;configure.ac&lt;/code&gt; dosyasını okuyarak,
+&lt;code&gt;configure&lt;/code&gt; kabuk programını oluşturuyor. &lt;code&gt;configure&lt;/code&gt; programının amacı ise, platformun
+özelliklerini test edip, Makefile ve config.h dosyalarını oluşturmak.&lt;/p&gt;
+&lt;p&gt;Autotools içinde merkezi yeri olan diğer program da, &lt;code&gt;automake&lt;/code&gt;'dir. Bu program, &lt;code&gt;Makefile.am&lt;/code&gt;
+dosyalarındaki tanımlamalara göre, &lt;code&gt;Makefile.in&lt;/code&gt; dosyaları oluşturur. &lt;code&gt;Makefile.in&lt;/code&gt; dosyalarının
+&lt;code&gt;configure&lt;/code&gt; betiği tarafından işlenip, &lt;code&gt;Makefile&lt;/code&gt; dosyalarına dönüştüğünü yukarıda belirmiştim.&lt;/p&gt;
+&lt;p&gt;Örneğimizdeki &lt;code&gt;Makefile.am&lt;/code&gt; dosyası, sadece iki satırdan oluşuyor. İlk satırda, &lt;code&gt;bin_PROGRAMS = hello&lt;/code&gt;
+tanımlaması, üç şey belirtiyor. Birincisi, o satırda tanımı yapılan hedefin &lt;code&gt;bindir&lt;/code&gt; klasörüne yükleneceği,
+ikincisi bu hedefin bir program olduğu, üçüncüsü ise bunun adının hello olduğu. Burada &lt;code&gt;bin_&lt;/code&gt; olarak
+belirtilen önek, yükleme yerini belirtir. &lt;code&gt;bin&lt;/code&gt;, &lt;code&gt;lib&lt;/code&gt;,
+&lt;code&gt;include&lt;/code&gt;, &lt;code&gt;data&lt;/code&gt; gibi önceden tanımlı değerleri kullanabilirsiniz. Önekten sonra gelen kısım ise,
+hedefin türünü belirtiyor. Hedef türü olarak, şunlardan birini seçmelisiniz; ‘PROGRAMS’, ‘LIBRARIES’,
+‘LTLIBRARIES’, ‘LISP’, ‘PYTHON’, ‘JAVA’, ‘SCRIPTS’, ‘DATA’, ‘HEADERS’, ‘MANS’, ve ‘TEXINFOS’. Bunların
+isimleri yeterince açıklayıcı. Her hedef türü doğru çalışabilmesi için, çeşitli değişkenlere
+ihtiyaç duyar. &lt;code&gt;PROGRAMS&lt;/code&gt; hedef türü için, &lt;code&gt;_SOURCES&lt;/code&gt; değişkeni ile, programın hangi C dosyaları
+kullanılarak derleneceğini belirttik. Eğer &lt;code&gt;_SOURCES&lt;/code&gt; ile kaynak dosyalarını belirtmezsek,
+&lt;code&gt;automake&lt;/code&gt; bizim için tahminde bulunacaktır, ama, açıkca belirtmek daha güvenli olur. &lt;code&gt;configure.ac&lt;/code&gt;
+örneğine geri dönerseniz, &lt;code&gt;AC_PROG_CC&lt;/code&gt; programı ile, geçerli bir C derleyecisi bulmuştuk. &lt;code&gt;PROGRAMS&lt;/code&gt;
+haricindeki diğer hedef türleri için, &lt;code&gt;AC_PROG_CC&lt;/code&gt; benzeri bir kontrolü &lt;code&gt;configure.ac&lt;/code&gt;'ye eklemek
+gerekebilir. Bunun detayları için, &lt;a href="https://www.gnu.org/software/automake/manual/automake.html"&gt;Automake Belgeleri&lt;/a&gt;
+yeterince detaylı açıklamalar içeriyor.&lt;/p&gt;
+&lt;p&gt;Sıra &lt;code&gt;main.c&lt;/code&gt; dosyasını incelemeye geldi. &lt;code&gt;main.c&lt;/code&gt; programında, &lt;code&gt;config.h&lt;/code&gt; header dosyasını kullandık.
+Bu noktaya kadar dikkatle okuduysanız, &lt;code&gt;config.h&lt;/code&gt; dosyasının otomatik olarak oluşturulduğunu anlamışsınızdır.
+Bu sayede, &lt;code&gt;configure&lt;/code&gt; aşamasında tanımlanan yapılandırma değerlerini, C kaynak kodlarımız içinde kullanabiliriz.
+Örnek programımızda, &lt;code&gt;PACKAGE_STRING&lt;/code&gt; değişkenini kullandık. Bu değişken, &lt;code&gt;AC_INIT&lt;/code&gt; makrosu tarafından
+tanımlanıyor. Bizim örneğimizde, &lt;code&gt;helloworld 1.0&lt;/code&gt; değerini alıyor.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;autoconf&lt;/code&gt; ve &lt;code&gt;automake&lt;/code&gt; programlardan bahsettik ama, dikkat ederseniz örneğimizde bu iki programı
+hiç kullanmadık. Eğer &lt;code&gt;automake&lt;/code&gt; ve &lt;code&gt;autoconf&lt;/code&gt; programlarını manuel olarak tetiklemek isterseniz,
+&lt;code&gt;autoheader&lt;/code&gt;, &lt;code&gt;aclocal&lt;/code&gt;, &lt;code&gt;autoconf&lt;/code&gt; ve &lt;code&gt;automake&lt;/code&gt; gibi programları doğru sırada çalıştırmanız gerekiyor.
+Manuel çalıştırmak hataya çok müsait olduğu için, &lt;code&gt;autoreconf&lt;/code&gt; programı, &lt;code&gt;autotools&lt;/code&gt; içindeki diğer
+araçları doğru şekilde çalıştırmaya yarıyor. &lt;/p&gt;
+&lt;p&gt;Yeni başlayanlar için, &lt;code&gt;autotools&lt;/code&gt; çok yıpratıcı olabilir. Şu ana kadar, birçok yeni konseptle
+karşılaştınız, ve kafanızın karışmış olması gayet normal. Ama başardığımız şeye dikkat edin.
+6 satırlık bir &lt;code&gt;configure.ac&lt;/code&gt; ve 2 satırlık &lt;code&gt;Makefile.am&lt;/code&gt; ile, elle yazabileceğimizden
+çok daha iyi bir &lt;code&gt;Makefile&lt;/code&gt; elde ettik. &lt;code&gt;make install&lt;/code&gt; hedefi sayesinde, programınızı
+kurabilirsiniz, &lt;code&gt;configure&lt;/code&gt; aşamasında programın nereye kurulması gerektiğini seçebilirsiniz,
+&lt;code&gt;make dist&lt;/code&gt; ile &lt;code&gt;tar.gz&lt;/code&gt; paketi oluşturabilirsiniz. Standart bir GNU/Linux paketinde olmasını
+bekleyeceğiniz herşeyi, hem kolayca, hem de hataya fazla yer bırakmayacak bir şekilde elde ettik.
+Bu da, Linux paket yöneticileri için, büyük kolaylık demek.&lt;/p&gt;
+&lt;p&gt;Bu noktada, &lt;code&gt;autotools&lt;/code&gt; temellerini kavradığınızı varsayıyorum. Birkaç yeni örnek ile,
+hem öğrendiklerimiz pekiştireceğiz, hem de &lt;code&gt;autotools&lt;/code&gt;'un diğer kabiliyetleri hakkında
+bilgi sahibi olacağız.&lt;/p&gt;
+&lt;p&gt;Diyelim ki, Linux üstünde çalışacak bir oyun programladınız. Yazdığınız oyunda grafik
+ve ses dosyaları kullanmak isteyeceksiniz. Kullandığınız data dosyaları, farklı linux
+sürümlerinde, farklı klasörlere yüklenebilir. Bu örnekte, C programımızın, data
+klasöründeki dosyaları bulmasını sağlayacağız.&lt;/p&gt;
+&lt;p&gt;Öncelikle, &lt;code&gt;Makefile.am&lt;/code&gt; dosyasına bakalım;&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;bin_PROGRAMS = oyun
+oyun_SOURCES = oyun.c
+dist_pkgdata_DATA = esound.wav \
+               another.wav \
+               background.png
+AM_CFLAGS = -DDATADIR=\"$(pkgdatadir)\"
+&lt;/pre&gt;
+
+
+&lt;p&gt;İlk iki satırı zaten biliyorsunuz. Üçüncü satırda, &lt;code&gt;pkgdata&lt;/code&gt; klasörüne yüklenecek olan,
+&lt;code&gt;DATA&lt;/code&gt; dosyalarını tanımladık. Burada ikinci bir önek olarak &lt;code&gt;dist&lt;/code&gt; öneki kullandık. &lt;code&gt;DATA&lt;/code&gt;
+dosyalarını &lt;code&gt;tar.gz&lt;/code&gt; dağıtımına dahil etmek için, &lt;code&gt;dist&lt;/code&gt; öneki kullanmalısınız. Üçüncü satırda,
+C derleyicisinin komut satırına gönderilecek bir argüman tanımladık. Burada kullandığımız &lt;code&gt;pkgdatadir&lt;/code&gt;,
+autoconf/automake tarafından ayarlanan bir değişken. Böylece, C dosyalarımızda kullanılabilecek bir makro
+tanımı yapmış olduk. Şimdi, &lt;code&gt;oyun.c&lt;/code&gt; dosyasına bakalım.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;IMAGE&lt;/span&gt; &lt;span class="n"&gt;background&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;load_image&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;DATADIR&lt;/span&gt; &lt;span class="s"&gt;"/background.png"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Böylece, programımız ilgili data dosyalarını bulabilecek bir şekilde derlenmiş oldu.&lt;/p&gt;
+&lt;p&gt;İyice pekiştirmek için, bir örnek daha yapalım. Bu örneğimizde, &lt;code&gt;configure&lt;/code&gt; betiğinin,
+programımızın bazı özelliklerini açıp kapatabilmesini sağlayacağız. Öncelikle, &lt;code&gt;configure.ac&lt;/code&gt;
+dosyasına, aşağıdaki iki satırı ekleyeceğiz.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;AC_ARG_ENABLE&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="n"&gt;debug&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;AS_HELP_STRING&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;enable&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;debug&lt;/span&gt;&lt;span class="p"&gt;]),[&lt;/span&gt;&lt;span class="n"&gt;ENABLE_DEBUG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;enableval&lt;/span&gt;&lt;span class="p"&gt;],[&lt;/span&gt;&lt;span class="n"&gt;ENABLE_DEBUG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;"no"&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;span class="n"&gt;AS_IF&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt; &lt;span class="s"&gt;"x$ENABLE_DEBUG"&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"xyes"&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;AC_DEFINE&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ENABLE_DEBUG&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;Enable&lt;/span&gt; &lt;span class="n"&gt;Debugging&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Şimdi, &lt;code&gt;config.h.in&lt;/code&gt; dosyasına, aşağıdaki satırı eklememiz gerekiyor.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;#undef ENABLE_DEBUG
+&lt;/pre&gt;
+
+
+&lt;p&gt;Bundan sonra, &lt;code&gt;autoreconf -i&lt;/code&gt; ile, configure betiğini yeniden oluşturmak gerekiyor. Böylece, &lt;code&gt;./configure --enable-debug&lt;/code&gt;
+komutu ile, &lt;code&gt;config.h&lt;/code&gt; dosyasında &lt;code&gt;#define ENABLE_DEBUG&lt;/code&gt; satırı eklenmesini sağlayabiliriz. Bu makro tanımlı olduğunda,
+program çıktı verirken bu makronun varlığını kontrol ederek, ekstra bilgi sunabilir.&lt;/p&gt;
+&lt;p&gt;Toparlamak gerekirse, &lt;code&gt;autotools&lt;/code&gt; kullanarak bir build sistemi oluşturmak konusuna yüzeysel bir giriş yaptık. Bu araçlar hakkında
+söylenebilecekler malesef bir blog yazısına sığamayacak kadar çok. Eğer projenizde &lt;code&gt;autotools&lt;/code&gt; kullanmaya karar verirseniz,
+sıfırdan &lt;code&gt;configure.ac&lt;/code&gt; ve &lt;code&gt;Makefile.am&lt;/code&gt; dosyaları yazmak yerine, yapacağınız projeye benzer bir projenin dosyalarını
+kullanarak başlamanız işinizi kolaylaştıracaktır. Eğer &lt;a href="https://github.com/search?q=configure+extension%3Aac&amp;amp;type=Code"&gt;Github'da autotools kullanan projeleri&lt;/a&gt;
+aratırsanız, karşınıza binlerce sonuç çıkacatır. &lt;code&gt;automake&lt;/code&gt; ve &lt;code&gt;autoconf&lt;/code&gt; belgeleri içinde,
+kullanabileceğiniz tüm makrolar hakkında bilgi alabilirsiniz.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/autotools.html</guid><pubDate>Sun, 23 Jun 2019 13:16:00 GMT</pubDate></item><item><title>Content-Disposition Satırında US-ASCII Harici Karakterler Nasıl Kodlanmalı</title><link>http://ysar.net/yazilim-dunyasi/content-disposition-satirinda-us-ascii-harici-karakterler.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Aşağıdaki sıradan dosya yükleme formuna bir göz atalım.&lt;/p&gt;
 &lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
 &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
 &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;head&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
@@ -759,16 +968,4 @@ Haskell ilk iki elemanı bulacak kadar fonksiyonu çalıştırıp, orada bırak�
 C'nin aksine, çıkarım yapma yoluyla veri tiplerini bulabiliyor. Örneğin, &lt;code&gt;a = 5&lt;/code&gt; derseniz, &lt;code&gt;a&lt;/code&gt;'nın bir int
 olduğunu belirtmenize gerek yok, Haskell kendi anlıyor.&lt;/p&gt;
 &lt;p&gt;Haskell &lt;strong&gt;zarif ve ifade gücü yüksek&lt;/strong&gt; bir dil. Python'dan hatırlayacağınız, &lt;em&gt;list comprehension&lt;/em&gt; yapısı Haskell
-kaynaklı. Ne kadar az kod, o kadar kolay bakım gereksinimi ve o kadar az bug demek. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/haskell-tanitim.html"&gt;Devamını oku…&lt;/a&gt; (1 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/haskell-tanitim.html</guid><pubDate>Sun, 13 Oct 2013 09:51:18 GMT</pubDate></item><item><title>İyi Programcı Nasıl Olunur</title><link>http://ysar.net/yazilim-dunyasi/iyi-programci-yazilimci-nasil-olunur.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Ben iyi bir programcı olduğumu iddia edemem. Ancak, kendi çabalarıyla programcılık hakkında bazı şeyler öğrenmiş
-ve hayatının belirli bir kısmında, amatör olarak da olsa, programcılıkla uğraşmış biriyim. Bu maceram boyunca, edindiğim
-deneyimler doğrultusunda, doğru veya yanlış, "iyi programcı nasıl olunur?", "iyi programcı olmak için neler yapmak gerekir", "yazılım konusunda
-kendini geliştirme nasıl mümkün olur" gibi sorulara bir cevap yazıyorum. Yazı iki kısımdan oluşuyor; önce bana göre
-iyi bir programcı olmak için ihtiyaç duyacağınız şeylerden bahsedeceğim, sonra kendinizi geliştirebilmeniz için
-bazı adımlar tavsiye edeceğim. Ancak, bunlara geçmeden önce şunu da belirtmek istiyorum ki, bunları
-benim gibi bu işin okulunu okumamış ve kendi çabalarıyla programlama konusunda bir yerlere gelmek isteyen kişileri düşünerek yazdım.
-Çünkü, burada tavsiye edeceğim adımlar, zaten bilgisayar mühendisliği bölümlerinde derslerde veriliyordur diye düşünüyorum. O yüzden, bu yazı okullulara çok hitap etmeyebilir.&lt;/p&gt;
-&lt;p&gt;Bence programcılar iki kısımdan oluşuyor. İlk grup, programcılığı
-programcılık için yapanlar grubu. Bu gruptaki kişiler, sırf eğlence olsun diye program yazan, farklı ve yeni şeyler denemeye yatkın
-kişilerdir. Diğer grup ise, programcılığı bir araç olarak kullanan ve programcılık aracılığıyla
-bir işini halletmesi gereken kişilerdir. Bunlara örnek olarak, bilimsel amaçlarla programcılık yapanları
-verebiliriz. Bu yazı ilk gruba yönelik olacak. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/iyi-programci-yazilimci-nasil-olunur.html"&gt;Devamını oku…&lt;/a&gt; (5 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/iyi-programci-yazilimci-nasil-olunur.html</guid><pubDate>Wed, 09 Oct 2013 14:19:33 GMT</pubDate></item></channel></rss>
+kaynaklı. Ne kadar az kod, o kadar kolay bakım gereksinimi ve o kadar az bug demek. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/haskell-tanitim.html"&gt;Devamını oku…&lt;/a&gt; (1 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/haskell-tanitim.html</guid><pubDate>Sun, 13 Oct 2013 09:51:18 GMT</pubDate></item></channel></rss>
