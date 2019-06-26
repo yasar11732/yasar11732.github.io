@@ -1,5 +1,362 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET</title><link>http://ysar.net/</link><description>Yaşar Arabacı İnternet Günlüğü</description><atom:link href="http://ysar.net/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Sun, 23 Jun 2019 13:46:02 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Autotools Gizemini Çözüyoruz</title><link>http://ysar.net/yazilim-dunyasi/autotools.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Autotools, GNU build sistemi oluşturmaya yarayan araçlar grubudur. GNU/Linux sistemlerde
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET</title><link>http://ysar.net/</link><description>Yaşar Arabacı İnternet Günlüğü</description><atom:link href="http://ysar.net/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Wed, 26 Jun 2019 11:52:05 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Flex ve Bison kullanarak JSON İşleme (1. Kısım)</title><link>http://ysar.net/yazilim-dunyasi/flex-bison.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;İki kısımdan oluşmasını planladığım bu yazı dizisinde, Flex ve Bison
+kullanarak, JSON işleyen Lexer ve Parser tasarlayacağız. Bu kısımda,
+Flex/Bison konusuna sıfırdan başlayacağım için, önceden bu programları
+tanıyor olmanıza gerek yok. &lt;/p&gt;
+&lt;h2&gt;İhtiyaç Listesi&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Derleme ortamı olarak Linux/Unix veya Cygwin üzerinde &lt;code&gt;make&lt;/code&gt;, &lt;code&gt;cc&lt;/code&gt; vb. geliştirici programları&lt;/li&gt;
+&lt;li&gt;flex (ya da lex) ve bison (ya da yacc)&lt;/li&gt;
+&lt;li&gt;Başlangıç seviyesinde C Programlama Bilgisi&lt;/li&gt;
+&lt;li&gt;Orta Seviye Düzenli İfadeler (Regular Expressions, RegExp) Bilgisi&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Flex ve Bison&lt;/h2&gt;
+&lt;p&gt;Her ne kadar Flex ve Bison iki ayrı program olsa da, neredeyse her zaman birlikte kullanılırlar. Bu programlar,
+kendi dosya formatlarında yazılmış metinleri, lexer ve parser olarak ifade edilen C programlarına dönüştürürler.
+Lexer'ın görevi, verilen metin dosyasını, token dediğimiz parçalara bölmektir. Token'in ne olduğu, işleyeceğimiz
+metin formatına göre değişebilir. Şimdilik token'lerine ayırmayı, metni kelimelerine bölmek olarak düşünebiliriz.
+Parser'ın görevi ise, tokenleri gramer kurallarına uygun olarak analiz etmektir. Eğer lexer'in görevini
+metni kelimelerine ayırmak olarak düşünürsek, parser'ın görevini de kelimelerden cümleler, cümlelerden paragraflar,
+paragraflardan da makaleler oluşturacak şekilde tokenleri gramer kurallarına uygun gruplara ayırmak olarak düşünebiliriz.&lt;/p&gt;
+&lt;h2&gt;Flex Programının Anatomisi&lt;/h2&gt;
+&lt;p&gt;Detaylara girmeden önce, yazılabilecek en küçük flex dosyalarından birini inceleyerek başlayalım.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%%&lt;/span&gt;
+&lt;span class="n"&gt;username&lt;/span&gt; &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"%s"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;getlogin&lt;/span&gt;&lt;span class="p"&gt;());&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Yukarıdaki 2 satırı &lt;code&gt;example.l&lt;/code&gt; adıyla kaydedin. Bu dosyadan Lexer oluşturmak için, aşağıdaki komutu kullanacağız.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;lex example.l
+&lt;/pre&gt;
+
+
+&lt;p&gt;&lt;code&gt;lex&lt;/code&gt; programının çıktı dosyasının adı &lt;code&gt;lex.yy.c&lt;/code&gt;'dir. Bu &lt;code&gt;.c&lt;/code&gt; dosyasını derleyip, flex kütüphanesiyle linklememiz gerekiyor.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;gcc lex.yy.c -lfl
+&lt;/pre&gt;
+
+
+&lt;p&gt;Sizin sisteminizde flex kütüphanesinin adı farklı olabilir. Linkleme hatası ile karşılaşırsanız, &lt;code&gt;-lfl&lt;/code&gt; yerine &lt;code&gt;-ll&lt;/code&gt;
+ile deneyebilirsiniz. Derlenen programı (gcc ile derlediyseniz &lt;code&gt;a.out&lt;/code&gt;) çalıştırdığınızda, sizden birşeyler yazmanızı
+bekleyecektir. &lt;code&gt;merhaba username&lt;/code&gt; yazarak &lt;code&gt;enter&lt;/code&gt; tuşuna basarsanız, username kelimesinin yerine, login sahibi kullanıcının
+adı gelmiş şekilde size çıktı verecektir. CTRL^D tuş kombinasyonu ile programdan çıkabilirsiniz.&lt;/p&gt;
+&lt;p&gt;Örnekte de gördüğünüz gibi, bir flex dosyasında, kurallar ve bunlara karşılık gelen C kodlarını tanımlarız. Kuralları tanımlamak için, düzenli ifadeler kullanırız. Bu örnekte,
+metin içinde &lt;code&gt;username&lt;/code&gt; ile eşleşme sağlandığında, &lt;code&gt;printf("%s", getlogin());&lt;/code&gt; C kodu çalışacak. Böylece, &lt;code&gt;username&lt;/code&gt;
+geçen yerleri, kullanıcının login adıyla değiştirmiş olduk. Hiçbir kuralla eşleşmeyen &lt;code&gt;merhaba&lt;/code&gt; kelimesi, çıktı
+olarak kopyalanır.&lt;/p&gt;
+&lt;p&gt;Pratikte göreceğiniz flex dosyaları, bundan daha karmaşık olacaktır. Daha normal bir örnek görmek isterseniz,
+&lt;a href="http://www.quut.com/c/ANSI-C-grammar-l-1998.html"&gt;C Programlama Dili için hazırlanmış Lex dosyasını&lt;/a&gt; inceleyebilirsiniz.&lt;/p&gt;
+&lt;p&gt;Bir lex dosyası, en az 1, en çok 3 kısımdan oluşur. Kısımlar birbirinden &lt;code&gt;%%&lt;/code&gt; işareti ile ayrılır. Birinci kısımda,
+genel tanımlamalar yapılır. Bu kısımda doğrudan C kodu kullanmak isterseniz, &lt;code&gt;%{&lt;/code&gt; ve &lt;code&gt;%}&lt;/code&gt; işaretleri arasına
+yazmanız gerekiyor. Bu kısma yazdığınız C kodları, oluşan &lt;code&gt;lex.yy.c&lt;/code&gt; dosyasının üst kısımlarına kopyalanır. Bu nedenle,
+&lt;code&gt;#include&lt;/code&gt; ifadesi kullanmak isterseniz, bu kısımda kullanmalısınız. İkinci kısımda,
+kuralları ve kurallara karşılık glen C kodlarını tanımlıyoruz. Üçüncü kısımda ise, istediğiniz C kodunu yazabilirsiniz.
+Burada yazdığınız C kodları da olduğu gibi &lt;code&gt;lex.yy.c&lt;/code&gt; dosyasına kopyalanacak.
+Bu 3 kısımdan sadece ikincisi zorunlu. Eğer birinci kısmı boş bırakacaksanız, ikinci kısma geçtiğinizin anlaşılması için dosyaya
+&lt;code&gt;%%&lt;/code&gt; ile başlamanız gerekiyor.&lt;/p&gt;
+&lt;p&gt;Aşağıda biraz daha gelişmiş bir Lex dosyası örneği var. Bu kodları test etmek için, &lt;code&gt;example2.l&lt;/code&gt; adında bir dosya oluşturup,
+aşağıdaki içeriği içine kopyalayın. Bu programı derlerken, &lt;code&gt;main&lt;/code&gt; ve &lt;code&gt;yywrap&lt;/code&gt; fonksiyonlarını biz sağladığımız için, flex
+kütüphanesi ile &lt;span style="text-decoration: underline"&gt;linklememeniz&lt;/span&gt; gerekiyor. Bu aşamada &lt;code&gt;yywrap&lt;/code&gt; fonksiyonunun
+işlevi önemli değil. Olduğu gibi kabul edin. Kullandığımız &lt;code&gt;yylex&lt;/code&gt; fonksiyonu ise, flex tarafından
+sağlanan ve asıl işi yapan fonksiyon.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;num_lines&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;num_chars&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="o"&gt;%%&lt;/span&gt;
+&lt;span class="err"&gt;\&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;num_lines&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;num_chars&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;.&lt;/span&gt;  &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;num_chars&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="o"&gt;%%&lt;/span&gt;
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;yylex&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+    &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"satir sayisi = %d, karakter_sayisi = %d&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;num_lines&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;num_chars&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;yywrap&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Tebrikler, Lex kullanarak, metin belgesindeki karakterleri ve satırları sayan bir program ürettiniz.&lt;/p&gt;
+&lt;h2&gt;Bison Programının Anatomisi&lt;/h2&gt;
+&lt;p&gt;Bison dosyaları da, Flex dosyaları gibi &lt;code&gt;%%&lt;/code&gt; ile ayrılmış 3 kısımdan oluşur. Aynı şekilde, birinci kısımda
+tanımlamalar, ikinci kısımda kurallar, üçüncü kısımda ise, istediğimiz C kodları bulunuyor. Kuralların
+hangi formatta yazılacağına, bu yazının devamında uygulamalı olarak değineceğiz.&lt;/p&gt;
+&lt;h2&gt;JSON Formatı&lt;/h2&gt;
+&lt;p&gt;JSON (JavaScript Object Notation) programlar arası veri alışverişinde yaygın olarak
+kullanılan sade ve kompakt bir formattır. JSON formatında 6 çeşit veri türü ifade edilebilir.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;String (Örn. "Bu bir string")&lt;/li&gt;
+&lt;li&gt;Sayı   (Örn. 12.57)&lt;/li&gt;
+&lt;li&gt;Boolean (true/false)&lt;/li&gt;
+&lt;li&gt;null&lt;/li&gt;
+&lt;li&gt;Object (Örn: {'key': 'value'})&lt;/li&gt;
+&lt;li&gt;Array (Örn: [1,2,3])&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;C dilinde, herhangi bir JSON değerini tutabilecek bir veri yapısı, ve bu veri yapısı
+üzerinde işlem yapacak bir kütüphane tasarlamak geniş bir konu olduğundan, bu yazıda
+tasarlanan parser'ı sadece JSON nesnelerinin türünü konsola çıktı vermek için kullanacağız. Burada
+oluşturacağımız Parser ile birlikte çalışacak JSON kütüphanesini, önümüzdeki günlerde
+yazmayı planladığım ayrı bir blog yazısına bırakıyorum.&lt;/p&gt;
+&lt;h2&gt;Tokenler&lt;/h2&gt;
+&lt;p&gt;JSON grameri için, aşağıdaki tokenleri kullanacağız;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;String&lt;/li&gt;
+&lt;li&gt;Number&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;true&lt;/code&gt;/&lt;code&gt;false&lt;/code&gt;/&lt;code&gt;null&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Şu karakterler: &lt;code&gt;[{:,}]&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Bu tokenlerin arasında kalan boşluk, tab, yeni satır gibi karakterleri göz ardı edeceğiz.&lt;/p&gt;
+&lt;h2&gt;Projenin İskeleti&lt;/h2&gt;
+&lt;p&gt;Yazıyı takip etmeyi kolaylaştırmak için, &lt;a href="http://ysar.net/jsonparser-skeleton.tar.gz"&gt;hazırladığım proje iskeletini&lt;/a&gt;
+indirerek, arşivi açtıktan sonra, &lt;code&gt;./configure&lt;/code&gt; komutu ile projeyi derleme
+aşamasına getirebilirsiniz. Eğer sisteminizde C derleyicisi, flex ve bison programlarından biri eksikse,
+&lt;code&gt;configure&lt;/code&gt; programı hata verecektir. Proje iskeletinin içinde bizi ilgilendiren 2 dosya var; &lt;code&gt;lexer.l&lt;/code&gt; ve &lt;code&gt;parser.y&lt;/code&gt;.
+&lt;code&gt;lexer.l&lt;/code&gt; flex programı tarafından okunup lexer kodlarını, &lt;code&gt;parser.y&lt;/code&gt; de bison tarafından okunup parser
+kodlarını oluşturacak. İskelet proje içindeki diğer dosyalar build sisteminin bir parçası olduğundan, detayları
+bu yazının konusunun dışında kalıyor. İskelet projeyi indirmeden devam etmek isteyenler için, &lt;code&gt;lexer.l&lt;/code&gt; ve
+&lt;code&gt;parser.y&lt;/code&gt; nin şablonları aşağıdaki şekilde;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;lexer.l&lt;/code&gt;&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;"parser.h" // bison -d tarafından otomatik oluşturuluyor&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="o"&gt;%%&lt;/span&gt;
+
+&lt;span class="o"&gt;%%&lt;/span&gt;
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;yywrap&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;&lt;code&gt;parser.y&lt;/code&gt;&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdlib.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="k"&gt;extern&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;yylex&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="k"&gt;extern&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;yyparse&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;yyerror&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;start&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;token&lt;/span&gt; &lt;span class="n"&gt;NEWLINE&lt;/span&gt;
+&lt;span class="o"&gt;%%&lt;/span&gt;
+&lt;span class="nl"&gt;line&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;NEWLINE&lt;/span&gt;
+&lt;span class="o"&gt;%%&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;yyerror&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Parse error: %s&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;exit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;h2&gt;İşe Koyulalım&lt;/h2&gt;
+&lt;p&gt;Tanıyacağımız tokenleri &lt;code&gt;parser.y&lt;/code&gt; içine ekleyerek başlayacağız. Bunun için iskelet projedeki &lt;code&gt;parser.y&lt;/code&gt;
+dosyasındaki &lt;code&gt;%start&lt;/code&gt; ve &lt;code&gt;%token&lt;/code&gt; ile başlayan satırları silerek, bunun yerine aşağıdaki satırları ekleyin.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;%start&lt;/span&gt; &lt;span class="n"&gt;JValue&lt;/span&gt;
+&lt;span class="nf"&gt;%token&lt;/span&gt; &lt;span class="n"&gt;T_STRING&lt;/span&gt; &lt;span class="n"&gt;T_NUMBER&lt;/span&gt; &lt;span class="n"&gt;T_TRUE&lt;/span&gt; &lt;span class="n"&gt;T_FALSE&lt;/span&gt; &lt;span class="n"&gt;T_NULL&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Tek karakterden oluşan tokenler için (virgül, süslü parantez vs.), token tanımı yapmaya gerek yok.
+Yukarıda &lt;code&gt;%start&lt;/code&gt; ile başlayan satırda, gramer'in başlangıç sembolünü de değiştirdiğimiz için,
+&lt;code&gt;parser.y&lt;/code&gt; içinde &lt;code&gt;line:&lt;/code&gt; ile başlayan satırı da aşağıdaki şekilde değiştirin;&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;JValue&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;T_STRING&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_NUMBER&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_TRUE&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_FALSE&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_NULL&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Burada, gramer'imizin başlangıç kuralını da belirlemiş olduk. &lt;code&gt;JValue&lt;/code&gt; kuralını &lt;code&gt;%start&lt;/code&gt; kuralı
+olarak belirlediğimiz için, parser'ımız tüm girdisini bir &lt;code&gt;JValue&lt;/code&gt;'ya indirgemeyi deneyecek.
+Kuralı tanımlarken kullandığımız "|" işareti, düzenli ifadelerde olduğu gibi, seçenek ifade ediyor.
+İlk kuralı kelimelerle ifade etmek gerekirse, &lt;code&gt;JValue&lt;/code&gt; bir T_STRING, ya da bir T_NUMBER, ya da bir T_TRUE, ya da bir T_FALSE, ya
+da bir T_NULL olabilir. Array ve Object türleri daha karmaşık olduğu için, onları sonraki adımlarda
+ekleyeceğiz.&lt;/p&gt;
+&lt;p&gt;Parser &lt;code&gt;T_STRING&lt;/code&gt;, &lt;code&gt;T_NUMBER&lt;/code&gt; gibi tokenleri, lexer'dan bekleyecek. Basit
+tokenleri lexer'a tanımlayarak başlayalım. Projedeki &lt;code&gt;lexer.l&lt;/code&gt; dosyasını açıp, iki &lt;code&gt;%%&lt;/code&gt; arasındaki boş satıra,
+aşağıdaki satırları ekleyin;&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;":" { return ':'; }
+"," { return ','; }
+"{" { return '{'; }
+"}" { return '}'; }
+"[" { return '['; }
+"]" { return ']'; }
+"null"  { return T_NULL; }
+"true"   { return T_TRUE; }
+"false"  { return T_FALSE; }
+[ \t\n\r]+ { /* ignore */ }
+&lt;/pre&gt;
+
+
+&lt;p&gt;Program şu an derlenebilir aşamada, ancak, herhangi bir çıktı vermediğimiz
+için, ne başardığımızı test edemiyoruz. &lt;code&gt;parser.y&lt;/code&gt; dosyası içindeki kuralları, aşağıdaki
+şekilde güncelleyin.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;JValue&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;T_STRING&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"String"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
+      &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_NUMBER&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Number"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
+      &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_TRUE&lt;/span&gt;   &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"TRUE"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
+      &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_FALSE&lt;/span&gt;  &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"FALSE"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
+      &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_NULL&lt;/span&gt;   &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"NULL"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Nasıl lexer dosyasına eşleşme sağlandığında çalışacak kodlar ekleyebiliyorsak, parser
+dosyasına da yukarıdaki örnekte olduğu gibi, kod ekleyebiliyoruz. Böylece, bir eşleşme olduğunda,
+konsolda çıktı görebileceğiz. Parser'ımızın çalışması için, &lt;code&gt;main&lt;/code&gt; fonksiyonuna, &lt;code&gt;yyparse&lt;/code&gt; çağrısı
+eklemek gerekiyor.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;int main(void) {
+    yyparse();
+    return 0;
+}
+&lt;/pre&gt;
+
+
+&lt;p&gt;&lt;code&gt;yyparse&lt;/code&gt; fonksiyonu, bison tarafından sağlanan ve parser'ı çalıştıran fonksiyon. Artık projeyi derleyip (&lt;code&gt;make&lt;/code&gt; komutu ile)
+aşağıdaki komutlarla test edebilirsiniz.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;echo "true" | ./jsonparser
+echo "false" | ./jsonparser
+echo "null" | ./jsonparser
+echo "   true   " | ./jsonparser
+echo "yok" | ./jsonparser
+&lt;/pre&gt;
+
+
+&lt;p&gt;Basit tokenleri bitirdikten sonra, düzenli ifade kullanmak zorunda kalacağımız
+tokenlere geçebiliriz. Önce, String ile eşleşen bir düzenli ifade ile başlayalım. &lt;code&gt;lexer.l&lt;/code&gt;
+içine, aşağıdaki satırı ekleyip, programı tekrar derleyin.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;\"(\\.|[^\\"\n])*\" { return T_STRING; }
+&lt;/pre&gt;
+
+
+&lt;p&gt;Aşağıdaki şekilde, programı test edebilirsiniz.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;echo "   \"metin var\"  " | ./jsonparser
+&lt;/pre&gt;
+
+
+&lt;p&gt;Program çalıştığında konsolda "String" çıktısını göreceksiniz, ancak, &lt;code&gt;lexer.l&lt;/code&gt;
+içindeki düzenli ifademiz çok karmaşık görünüyor. Bunu çözmek için,
+&lt;code&gt;lexer.l&lt;/code&gt;'nin birinci kısmında bazı tanımlamalar yapacağız. Aşağıdaki kodları,
+&lt;code&gt;lexer.l&lt;/code&gt;'deki ilk &lt;code&gt;%%&lt;/code&gt; işaretinden hemen önce gelecek şekilde dosyaya ekleyin.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;TIRNAK ["]
+BIRKARAKTER .
+TERSTAKSIM \\
+KACMAKARAKTER {TERSTAKSIM}{BIRKARAKTER}
+NORMALKARAKTER [^\\"\b\f\n\r\t]
+KARAKTER {NORMALKARAKTER}|{KACMAKARAKTER}
+KARAKTERLER {KARAKTER}+
+&lt;/pre&gt;
+
+
+&lt;p&gt;Böylece, &lt;code&gt;\"(\\.|[^\\"\n])*\"&lt;/code&gt; düzenli ifadesinin yerine, &lt;code&gt;{TIRNAK}{TIRNAK}|{TIRNAK}{KARAKTERLER}{TIRNAK}&lt;/code&gt;
+yazabilirsiniz. Bu sayede, düzenli ifademiz çok daha okunaklı olur. &lt;code&gt;T_STRING&lt;/code&gt; tokenimiz ile standart JSON
+string'i arasındaki küçük farklılıkları, yazıyı kısa tutmak adına dikkate almayacağım. &lt;code&gt;T_NUMBER&lt;/code&gt; ile devam edelim.
+Önce aşağıdaki tanımları, &lt;code&gt;lexer.l&lt;/code&gt;'nin tanımlar kısmına ekleyin.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;ONDALIK [.]
+POZITIFRAKAM [1-9]
+SIFIR 0
+RAKAM {SIFIR}|{POZITIFRAKAM}
+E     [eE]
+EXP   {E}[-+]?{RAKAM}+
+FRAC  {ONDALIK}{RAKAM}+
+INT   {SIFIR}|{POZITIFRAKAM}{RAKAM}*
+&lt;/pre&gt;
+
+
+&lt;p&gt;Bu tanımlamaları yaptıktan sonra, aşağıdaki kuralı, kurallar kısmına ekleyip, projeyi tekrar test edebiliriz.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;[-]?{INT}{FRAC}?{EXP}?          { return T_NUMBER; }
+&lt;/pre&gt;
+
+
+&lt;p&gt;&lt;code&gt;lexer&lt;/code&gt; artık &lt;code&gt;T_NUMBER&lt;/code&gt; tokeni de gönderebildiğine göre, &lt;code&gt;lexer.l&lt;/code&gt; ile daha fazla işimiz kalmadı. &lt;code&gt;parser.y&lt;/code&gt; içinde
+hala Object ve Array türlerini tanımlamadık. Önce, Array ile başlayalım. &lt;code&gt;parser.y&lt;/code&gt; içinde kuralları aşağıdaki şekilde
+yeniden düzenleyin.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;JValue&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;T_STRING&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"String"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
+      &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_NUMBER&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Number"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
+      &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_TRUE&lt;/span&gt;   &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"TRUE"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
+      &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_FALSE&lt;/span&gt;  &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"FALSE"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
+      &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_NULL&lt;/span&gt;   &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"NULL"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
+      &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;JArray&lt;/span&gt;   &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Array"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
+
+&lt;span class="n"&gt;JArray&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;'['&lt;/span&gt; &lt;span class="s1"&gt;']'&lt;/span&gt;
+      &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="s1"&gt;'['&lt;/span&gt; &lt;span class="n"&gt;Liste&lt;/span&gt; &lt;span class="s1"&gt;']'&lt;/span&gt;
+
+&lt;span class="n"&gt;Liste&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;JValue&lt;/span&gt;
+     &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;Liste&lt;/span&gt; &lt;span class="s1"&gt;','&lt;/span&gt; &lt;span class="n"&gt;JValue&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Programı derleyip, şu komutla test ederseniz, aşağıdaki gibi bir çıktı göreceksiniz: &lt;code&gt;echo "[1, 2, 3, true, false, null ]" | ./jsonparser&lt;/code&gt;&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;Number
+Number
+Number
+TRUE
+FALSE
+NULL
+Array
+&lt;/pre&gt;
+
+
+&lt;p&gt;Eğer konsolda tek bir satır çıktı görmeyi beklediyseniz, şaşırmış olabilirsiniz. Yazdığımız kurallara
+dikkat ederseniz, &lt;code&gt;JValue&lt;/code&gt; sembolü her oluştuğunda, konsola hangi türden bir &lt;code&gt;JValue&lt;/code&gt; oluştuğunu
+yazıyoruz. &lt;code&gt;JArray&lt;/code&gt; içinde de sınırsız sayıda &lt;code&gt;JValue&lt;/code&gt; bulunabildiği için, bunlara ait çıktıları
+da konsolda göreceğiz. Köşeli parantez kapama tokeni (&lt;code&gt;]&lt;/code&gt;) gelene kadar &lt;code&gt;JArray&lt;/code&gt; tanımı eksik
+kaldığı için, konsolda "Array" çıktısını en son görüyoruz.&lt;/p&gt;
+&lt;p&gt;Burada ilk kez birden fazla tokenden üretilen bir sembol tanımı yapmış olduk. &lt;code&gt;JValue&lt;/code&gt; örneğinde,
+tek bir T_STRING tokeni, bir &lt;code&gt;JValue&lt;/code&gt; tanımlamak için yeterli iken, bir &lt;code&gt;JArray&lt;/code&gt; için en azından
+ardarda gelmiş &lt;code&gt;[&lt;/code&gt; ve &lt;code&gt;]&lt;/code&gt; tokenleri gerekiyor.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;JArray&lt;/code&gt; içinde geçen &lt;code&gt;Liste&lt;/code&gt; sembolü de, tanımladığımız ilk özyinelemeli (eng. recursive) sembol oldu.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Liste&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;JValue&lt;/span&gt;
+     &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;Liste&lt;/span&gt; &lt;span class="s1"&gt;','&lt;/span&gt; &lt;span class="n"&gt;JValue&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Burada şunu ifade etmiş oluyoruz; tek başına &lt;code&gt;JValue&lt;/code&gt; bir &lt;code&gt;Liste&lt;/code&gt; tanımlar, ya da, &lt;code&gt;Liste&lt;/code&gt; &lt;code&gt;,&lt;/code&gt; &lt;code&gt;JValue&lt;/code&gt;
+yanyana geldiğinde bir liste tanımlar. Böyle bir gramer, bir veya daha fazla &lt;code&gt;JValue&lt;/code&gt; değerinin birbirine
+&lt;code&gt;,&lt;/code&gt; ile bağlanarak bir liste oluşturduğunu ifade ediyor.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Object&lt;/code&gt; türünün gramer tanımı da, &lt;code&gt;JArray&lt;/code&gt;'e çok yakın;&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;JObject: '{' '}'
+       | '{' KVListe '}'
+
+KVListe: KV
+       | KVListe ',' KV
+
+KV: T_STRING ':' JValue
+&lt;/pre&gt;
+
+
+&lt;p&gt;Bunun tek farkı, süslü parantezler içinde değerler listesi değil de, anahtar-değer çiftleri listesi var. &lt;code&gt;JValue&lt;/code&gt;
+tanımını da aşağıdaki şekilde güncelledikten sonra, programı yeniden derleyebiliriz.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;JValue&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;T_STRING&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"String"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
+  &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_NUMBER&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Number"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
+  &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_TRUE&lt;/span&gt;   &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"TRUE"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
+  &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_FALSE&lt;/span&gt;  &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"FALSE"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
+  &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_NULL&lt;/span&gt;   &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"NULL"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
+  &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;JArray&lt;/span&gt;   &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Array"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
+  &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;JObject&lt;/span&gt;  &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Object"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Bu programı, &lt;code&gt;echo "{\"sayi\":12, \"liste\": [true, false, null]}" | ./jsonparser&lt;/code&gt; komutu
+ile test ederseniz, ekrana aşağıdaki çıktıyı alacaksınız.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;Number
+TRUE
+FALSE
+NULL
+Array
+Object
+&lt;/pre&gt;
+
+
+&lt;p&gt;Dikkat ederseniz, çıktının hiçbir yerinde String ifadesi geçmiyor. Anahtar-değer çiftlerinde
+anahtar görevi gören string'ler, kendi başlarına bir JValue ifade etmediği için, konsolda
+çıktı olarak da göremiyoruz.&lt;/p&gt;
+&lt;p&gt;Böylece, JSON formatındaki veriyi tarayan programı bitirmiş olduk. Bu yazıda, ekranda çıktı göstermek dışında,
+faydalı bir iş yapmasak da, lexer ve parser kullanarak bir metni taramayı başardık. Bu serinin ikinci kısmında,
+Parser'ımızla bir JSON kütüphanesini bir araya getirip, validasyon/formatlama/başka türe dönüştürme
+gibi konulara değinmeyi düşünüyorum.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/flex-bison.html</guid><pubDate>Wed, 26 Jun 2019 07:25:00 GMT</pubDate></item><item><title>Autotools Gizemini Çözüyoruz</title><link>http://ysar.net/yazilim-dunyasi/autotools.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Autotools, GNU build sistemi oluşturmaya yarayan araçlar grubudur. GNU/Linux sistemlerde
 antik çağlardan beri yazılım geliştirme ve paylaşma macerasının merkezinde
 olmuş &lt;code&gt;autotools&lt;/code&gt; programlarını anlamak, hem gnu/linux sistemlerine kurulacak yazılımları yapmak
 isteyenlerin, hem de linux dağıtımlarına paket oluşturmak isteyenlerin işine
@@ -1944,105 +2301,4 @@ kullandım. POSIX sistemlerde bunun yerine &lt;code&gt;iconv&lt;/code&gt; kullan
 
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/rfc2231.html</guid><pubDate>Sat, 01 Jun 2019 18:10:00 GMT</pubDate></item><item><title>C Programlama Dilinde UTF8 Veriyi URL Kodlama</title><link>http://ysar.net/yazilim-dunyasi/urlencode-utf8-data.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Not: Bu yazıda birtakım eksiklikler olduğu için, yeniden yazma ihtiyacı hissetim. Yazının güncel versiyonuna &lt;a href="http://ysar.net/yazilim-dunyasi/rfc2231.html"&gt;buradan&lt;/a&gt; ulaşabilirsiniz.&lt;/p&gt;
-&lt;h2&gt;Anahtar Kelimeler&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;C ile UTF8 kodlama&lt;/li&gt;
-&lt;li&gt;C ile URL Kodlama&lt;/li&gt;
-&lt;li&gt;Wide Karakter Array'i MultiByte Karakter Array'ine dönüştürme&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt; &lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#define WINDOWS_LEAN_AND_MEAN&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;windows.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt; // fopen, fclose&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;wchar.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-
-&lt;span class="c1"&gt;// 0-15 arası değelerin hex karşılığı&lt;/span&gt;
-&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;base16&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="sc"&gt;'0'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'1'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'2'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'3'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'4'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'5'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'6'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'7'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'8'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'9'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'A'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'B'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'C'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'E'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'F'&lt;/span&gt; &lt;span class="p"&gt;};&lt;/span&gt;
-
-&lt;span class="c1"&gt;// LPSTR ==&amp;gt; char *&lt;/span&gt;
-&lt;span class="c1"&gt;// LPWSTR ==&amp;gt; wchar_t *&lt;/span&gt;
-&lt;span class="n"&gt;LPSTR&lt;/span&gt; &lt;span class="nf"&gt;utf8UrlEncode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;LPWSTR&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="c1"&gt;// wide char türündeki veriyi, utf8 olarak kodlamak&lt;/span&gt;
-    &lt;span class="c1"&gt;// için windowsda WideCharToMultiByte kullanıyoruz&lt;/span&gt;
-    &lt;span class="c1"&gt;// linux için wcstombs fonksiyonu kullanılabilir&lt;/span&gt;
-
-    &lt;span class="c1"&gt;// Gerekli buffer büyüklüğünü öğrenmek için&lt;/span&gt;
-    &lt;span class="c1"&gt;// dördüncü parametreye -1 veriyoruz.&lt;/span&gt;
-    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;buffersize&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;WideCharToMultiByte&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;65001&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-    &lt;span class="c1"&gt;// utf8 olarak veriyi tutmak için gerekli&lt;/span&gt;
-    &lt;span class="c1"&gt;// buffer'ı oluştur&lt;/span&gt;
-    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;utf8data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;malloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;buffersize&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-
-    &lt;span class="n"&gt;WideCharToMultiByte&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;65001&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;utf8data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;buffersize&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-    &lt;span class="c1"&gt;// url kodlama için gerekli buffer büyüklüğünü&lt;/span&gt;
-    &lt;span class="c1"&gt;// hesaplıyoruz.&lt;/span&gt;
-    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="n"&gt;buffersize&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;utf8data&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="sc"&gt;'\0'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="c1"&gt;// [0-9a-zA-Z] olduğu gibi kalacak,&lt;/span&gt;
-        &lt;span class="c1"&gt;// diger karakterleri % kodlayacağız.&lt;/span&gt;
-        &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="sc"&gt;'0'&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="sc"&gt;'9'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-            &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="sc"&gt;'a'&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="sc"&gt;'z'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-            &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="sc"&gt;'A'&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="sc"&gt;'Z'&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-            &lt;span class="n"&gt;buffersize&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="p"&gt;}&lt;/span&gt;
-        &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-            &lt;span class="n"&gt;buffersize&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="p"&gt;}&lt;/span&gt;
-    &lt;span class="p"&gt;}&lt;/span&gt;
-
-    &lt;span class="c1"&gt;// url kodlama için gerekli buffer&lt;/span&gt;
-    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;encodedutf8data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;malloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;buffersize&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-    &lt;span class="c1"&gt;// url kodlama&lt;/span&gt;
-    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;encodedutf8data&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;utf8data&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="sc"&gt;'\0'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="c1"&gt;// [0-9a-zA-Z] olduğu gibi kalacak,&lt;/span&gt;
-        &lt;span class="c1"&gt;// diger karakterleri % kodlayacağız.&lt;/span&gt;
-        &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="sc"&gt;'0'&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="sc"&gt;'9'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-            &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="sc"&gt;'a'&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="sc"&gt;'z'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-            &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="sc"&gt;'A'&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="sc"&gt;'Z'&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-            &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p2&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="p"&gt;}&lt;/span&gt;
-        &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-            &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p2&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sc"&gt;'%'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-            &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p2&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;base16&lt;/span&gt;&lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="p"&gt;)(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
-            &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p2&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;base16&lt;/span&gt;&lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="p"&gt;)(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mh"&gt;0xF&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
-        &lt;span class="p"&gt;}&lt;/span&gt;
-    &lt;span class="p"&gt;}&lt;/span&gt;
-
-    &lt;span class="c1"&gt;// kodlanmış datanın büyüklüğü&lt;/span&gt;
-    &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;buffersize&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-    &lt;span class="n"&gt;free&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;utf8data&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;encodedutf8data&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;WINAPI&lt;/span&gt; &lt;span class="nf"&gt;wWinMain&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;HINSTANCE&lt;/span&gt; &lt;span class="n"&gt;hInstance&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;HINSTANCE&lt;/span&gt; &lt;span class="n"&gt;hPrevInstance&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="n"&gt;PWSTR&lt;/span&gt; &lt;span class="n"&gt;pCmdLine&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;nCmdShow&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="kt"&gt;FILE&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fopen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"utf8encodetest.txt"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"w"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;data_len&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;utf8UrlEncode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;L&lt;/span&gt;&lt;span class="s"&gt;"Yaşar Arabacı"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;data_len&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-    &lt;span class="n"&gt;fwrite&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data_len&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-    &lt;span class="n"&gt;fclose&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/urlencode-utf8-data.html</guid><pubDate>Wed, 29 May 2019 20:12:00 GMT</pubDate></item></channel></rss>
+&lt;/pre&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/rfc2231.html</guid><pubDate>Sat, 01 Jun 2019 18:10:00 GMT</pubDate></item></channel></rss>
