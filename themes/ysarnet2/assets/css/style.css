@@ -67,7 +67,8 @@ blockquote {
     top: 2.1rem;
 }
 .main-content img {
-    max-width: 33rem;
+    min-width: 33rem;
+	max-width: 45rem;
 }
 
 .brand {
