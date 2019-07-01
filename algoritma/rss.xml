@@ -1,5 +1,313 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Algoritma)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/algoritma/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Sun, 16 Jun 2019 16:09:23 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Canonical Huffman Kodlaması</title><link>http://ysar.net/algoritma/canonical-huffman-kodlamasi.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Deflate formatını anlama konusunda sonlara yaklaştığımı hissediyorum. &lt;a href="http://ysar.net/algoritma/huffman-kodlamasi.html"&gt;Huffman Kodlaması&lt;/a&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Algoritma)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/algoritma/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Mon, 01 Jul 2019 18:44:55 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Düzenli İfade (RegExp) Motorları ve Otomatlar</title><link>http://ysar.net/algoritma/dfa.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Geçtiğimiz günlerde, Flex ve Bison ile JSON işlemeye yönelik tutorial yazdım.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/flex-bison.html"&gt;Flex ve Bison kullanarak JSON İşleme (1. Kısım)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/json-kutuphanesi.html"&gt;Flex ve Bison kullanarak JSON İşleme (2. Kısım)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;O iki yazı üzerinde çalışırken, dikkatim düzenli ifade (RegExp) motorları üzerine kaydı.
+Bu yazıda, &lt;code&gt;[-]?(0|[1-9][0-9]*)([.][0-9]+)?([eE][-+]?[0-9]+)?&lt;/code&gt; düzenli ifadesi ile
+eşleşecek bir "Deterministic Finite Automata" (ks. DFA, tr; Belirli Sonlu Otomat)
+kodlayacağız. &lt;/p&gt;
+&lt;h2&gt;Düzenli İfadeler ve DFA&lt;/h2&gt;
+&lt;p&gt;Düzenli ifadeler, metin işleyen programlar için, çok faydalı araçlardır. Örneğin, internet
+formlarında, girilen metnin format kurallarına uyup uymadığını test edebilir, metin
+belgelerinin içinde e-posta, telefon numarası arayabilir, ya da bir önceki yazıda olduğu
+gibi, lexical analiz aracı olarak kullanabilirsiniz.&lt;/p&gt;
+&lt;p&gt;Düzenli ifadeler, mini bir programlama dili gibidir. &lt;code&gt;(a|b)+&lt;/code&gt; gibi bir ifade, düzenli
+ifade motoru tarafından derlenir, derlenen düzenli ifade, istediğimiz metin üzerinde
+arama veya eşleme yapmak için kullanılır.&lt;/p&gt;
+&lt;p&gt;Düzenli ifade motoru yazmak için, tek bir yol yok. Bu yazıda, metinle eşleme yapmak
+için, düzenli ifadeyi bir DFA'ya çevireceğiz. Her ne kadar düzenli ifade motorları
+&lt;code&gt;(a|b)+&lt;/code&gt; gibi bir düzenli ifadeyi otomatik olarak DFA'ya çevirebilse de, bu yazıda
+çevirme işlemini manuel olarak yapacağız.&lt;/p&gt;
+&lt;p&gt;Önce DFA'yı tarif ederek başlayalım. DFA'yı bir makine (automata) gibi düşünebilirsiniz.
+Bu makinenin üstünde bazı tuşlar hayal edin. Bu tuşların birine basıldığında, makine bir
+durumdan, başka bir duruma geçiyor. Makinenin üzerinde, o an hangi durumda olduğu gösteren
+led ışıklar da var. Bu makineyi öyle bir şekilde tasarlayacağız ki, düzenli ifadeyle
+eşleşen bir metin tuşladığımızda başarılı ledi yanacak, aksi halde başarısız ledi yanacak.&lt;/p&gt;
+&lt;p&gt;Bu makineyi oluşturmak için, 5 şeyi bilmemiz gerek.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Led Sayısı        (Makine kaç farklı durumda olabilir)&lt;/li&gt;
+&lt;li&gt;Başlangıç Ledi    (Makineyi sıfırladığımızda, hangi led yanacak)&lt;/li&gt;
+&lt;li&gt;Başarılı Ledler   (Ledlerin hangileri başarılı eşleşmeyi gösterecek)&lt;/li&gt;
+&lt;li&gt;Tuşlar            (Makinenin üstünde kaç farklı tuş olacak)&lt;/li&gt;
+&lt;li&gt;Geçiş Tablosu     (Hangi durumda, hangi tuşa basılınca, hangi duruma geçilecek)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Bu tarz makineye, Deterministic Finite Automata (DFA) deniyor çünkü;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Deterministic&lt;/em&gt;: Hangi girdiye, hangi sonucu vereceği kesin olarak bellidir.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Finite&lt;/em&gt;       : Makinanın içinde bulunabileceği sınırlı sayıda durum vardır.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Automata&lt;/em&gt;     : Bu bir makina&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Daha net anlaşılması için, basit düzenli ifadeleri, DFA'ya çevirelim.
+Örnekler fazla karmaşık olmaması için 3 tuşlu bir makineyle başlayalım.
+Bunlar küçük harflerle 'a','b' ve 'c' tuşları olsun. Makinemizde, 3
+adet de durum ledi olacak, bunlar da büyük harflerle 'A','B' ve 'C' olsun.
+Bu şartlarda, &lt;code&gt;a&lt;/code&gt; düzenli ifadesi ile eşleşecek bir DFA, aşağıdaki şemaya göre çalışabilir.&lt;/p&gt;
+&lt;p&gt;&lt;img src="http://ysar.net/../example1.svg"&gt;&lt;/p&gt;
+&lt;p&gt;Yukarıdaki şemada, 'A' ledi başlangıç durumunu, 'B' ledi başarılı eşleşmeyi,
+'C' ledi de başarısız eşlemeyi ifade etsin. Başlangıç durumunda iken, 'a' tuşuna
+bastığımızda, 'B' ledini yakacağız. Diğer tüm durumlarda, 'C' ledini yakacağız.
+Böylece, tek bir 'a' karakteri kabul eden bir DFA tasarlamış olduk.&lt;/p&gt;
+&lt;p&gt;Aynı DFA'yı, aşağıdaki tablo ile de gösterebiliriz.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;+-------+---+---+---+
+| Durum | a | b | c |
++-------+------------
+|  A    | B | C | C |
++-------+---+---+---+
+|  B    | C | C | C |
++-------+---+---+---+
+|  C    | C | C | C |
++-------+---+---+---+
+&lt;/pre&gt;
+
+
+&lt;p&gt;Soldaki sütun, o anki durumu, üst satır, işleyeceğimiz bir sonraki karakteri, hücre
+içindeki değerler de, o durumda o karakter işlendiğinde hangi duruma geçileceğini
+ifade ediyor.&lt;/p&gt;
+&lt;p&gt;Bir de, &lt;code&gt;a*&lt;/code&gt; düzenli ifadesini deneyelim. Burada, sıfır, bir veya daha fazla 'a'
+karakteri ile eşleme yapmak istiyoruz. Bunun için de, aşağıdaki şekilde bir DFA
+yapabiliriz. Burada, başlangıç ve başarılı ledi 'A' ledi, başarısız ledi 'B' ledi
+olsun. 'C' ye ihtiyacımız yok.&lt;/p&gt;
+&lt;p&gt;&lt;img src="http://ysar.net/../example2.svg"&gt;&lt;/p&gt;
+&lt;p&gt;Şimdi de, &lt;code&gt;a+&lt;/code&gt; ifadesine bakalım. Bir öncekinden farkı, en az bir tane
+'a' karakterine ihtiyaç duyulması. Aşağıdaki DFA'da, başlangıç 'C',
+başarılı 'A' ve başarısız 'B' durumu olsun.&lt;/p&gt;
+&lt;p&gt;&lt;img src="http://ysar.net/../example3.svg"&gt;&lt;/p&gt;
+&lt;p&gt;Şimdiye kadar yaptığımız örneklerde, tüm durumlar ya başlangıç, ya başarılı
+eşleşme ya da hata belirtiyordu. Bunların haricinde, belirsizlik ifade
+eden durumlarımız da olabilir. Bu durumlar, eşlemenin sağlanıp sağlanmadığını
+tespit edebilmek için, daha fazla karakter okumak gerekir anlamına gelir. Şimdiye
+kadar yaptığımız örnekler çok basit olduğu için, böyle bir durumla karşılaşmadık.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(a|b)a&lt;/code&gt; düzenli ifadesini DFA'ya çevirebilmek için, belirsiz duruma da ihtiyacımız
+olacak. Önce 'a' veya 'b' karakteri istiyoruz. Daha sonra 1 tane
+daha 'a' karakterine ihtiyacımız var. İlk okuduğumuz karakter 'a' veya 'b' ise,
+daha fazla karakter okumadan başarılı veya başarısız bir sonuç bildiremeyiz. Bu düzenli
+ifadeyi DFA'ya çevirmek için, dördüncü bir duruma ihtiyacımız olacak. Bu duruma da 'D'
+durumu diyelim.&lt;/p&gt;
+&lt;p&gt;&lt;img src="http://ysar.net/../example4.svg"&gt;&lt;/p&gt;
+&lt;p&gt;DFA'larımız büyüdükçe, başarısız her girdiyi bir noktaya toplamak şemalarımızın
+okunmasını zorlaştıracağı için, şemada belirtilmeyen her yolun başarısız durumuna
+gittiğini varsayabiliriz. Bu varsayıma dayanarak, yukarıdaki şema ile, aşağıdaki
+şema birbirine denk olarak değerlendirilmelidir.&lt;/p&gt;
+&lt;p&gt;&lt;img src="http://ysar.net/../example5.svg"&gt;&lt;/p&gt;
+&lt;h2&gt;DFA'yı Nasıl Kodlayacağız&lt;/h2&gt;
+&lt;p&gt;Uygulamada,  "State Machine" (durum makinesi?) kodlamak için
+kullanılan en az iki farklı yöntem var. Bunlardan biri, durumlar arasındaki geçişi
+bir tabloda göstermek. Bir önceki başlık altında yaptığımız son örneği, bir
+tablo ile kodlamak istersek, aşağıdaki gibi kodlayabiliriz.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;ornek_5&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;tablo&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+              &lt;span class="c1"&gt;//  a | b | c&lt;/span&gt;
+        &lt;span class="cm"&gt;/* A */&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="sc"&gt;'B'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'B'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;
+        &lt;span class="cm"&gt;/* B */&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="sc"&gt;'C'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;
+        &lt;span class="cm"&gt;/* C */&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;
+        &lt;span class="cm"&gt;/* D */&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="p"&gt;};&lt;/span&gt;
+
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sc"&gt;'A'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;// Başlangıç&lt;/span&gt;
+
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;match_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;// kaç karakter eşledik&lt;/span&gt;
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;          &lt;span class="c1"&gt;// kaçıncı karakteri işliyoruz.&lt;/span&gt;
+
+    &lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;// D başarısız durum&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="sc"&gt;'C'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;// C başarılı durum&lt;/span&gt;
+            &lt;span class="n"&gt;match_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+        &lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;tablo&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="sc"&gt;'A'&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="sc"&gt;'a'&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;// kaç karakter eşleyebildiğimizi döndür&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;DFA'yı kodlamak için kullanılabilecek bir diğer yöntem de, durum geçişlerini
+&lt;code&gt;switch&lt;/code&gt; ifadesiyle göstermek. Bunun C kodunda karşılığı da aşağıdaki şekilde
+olabilir.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;ornek_5_2&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+
+
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sc"&gt;'A'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;// Başlangıç&lt;/span&gt;
+
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;match_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;// kaç karakter eşledik&lt;/span&gt;
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;          &lt;span class="c1"&gt;// kaçıncı karakteri işliyoruz.&lt;/span&gt;
+
+    &lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;// D başarısız durum&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;string&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+        &lt;span class="k"&gt;switch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;state&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="sc"&gt;'A'&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="sc"&gt;'a'&lt;/span&gt; &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="sc"&gt;'b'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                    &lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sc"&gt;'B'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+                &lt;span class="k"&gt;else&lt;/span&gt;
+                    &lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="sc"&gt;'B'&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="sc"&gt;'a'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                    &lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sc"&gt;'C'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+                &lt;span class="k"&gt;else&lt;/span&gt;
+                    &lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="sc"&gt;'C'&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+                &lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+
+        &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;// kaç karakter eşleyebildiğimizi döndür&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Makrolarla biraz daha okunaklı olarak kodlayabiliriz.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#define SETSTATE(x) {state = (x); goto set_state_end; }&lt;/span&gt;
+&lt;span class="cp"&gt;#define END_OF_CASE SETSTATE(0)&lt;/span&gt;
+&lt;span class="cp"&gt;#define MATCH_FOUND (match_size = i);&lt;/span&gt;
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;ornek_5_3&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+
+
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sc"&gt;'A'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;// Başlangıç&lt;/span&gt;
+
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;match_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;// kaç karakter eşledik&lt;/span&gt;
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;          &lt;span class="c1"&gt;// kaçıncı karakteri işliyoruz.&lt;/span&gt;
+
+    &lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;state&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;string&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+        &lt;span class="k"&gt;switch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;state&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="sc"&gt;'A'&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="sc"&gt;'a'&lt;/span&gt; &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="sc"&gt;'b'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;SETSTATE&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;'B'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="n"&gt;END_OF_CASE&lt;/span&gt;
+            &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="sc"&gt;'B'&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="sc"&gt;'a'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;SETSTATE&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;'C'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="n"&gt;END_OF_CASE&lt;/span&gt;
+            &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="sc"&gt;'C'&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+                &lt;span class="n"&gt;MATCH_FOUND&lt;/span&gt;
+                &lt;span class="n"&gt;END_OF_CASE&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="nl"&gt;set_state_end&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;// kaç karakter eşleyebildiğimizi döndür&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="cp"&gt;#undef SETSTATE&lt;/span&gt;
+&lt;span class="cp"&gt;#undef END_OF_CASE&lt;/span&gt;
+&lt;span class="cp"&gt;#undef MATCH_FOUND&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;h2&gt;Sayı Eşleyen DFA&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;[-]?(0|[1-9][0-9]*)([.][0-9]+)?([eE][-+]?[0-9]+)?&lt;/code&gt; düzenli ifadesine karşılık gelen DFA'yı
+aşağıdaki şekilde oluşturdum.&lt;/p&gt;
+&lt;p&gt;&lt;img src="http://ysar.net/../dfa_graph.svg"&gt;&lt;/p&gt;
+&lt;p&gt;İlk yaptığımız örneklere nazaran, biraz daha uzun bir DFA, ancak, temel prensipleri
+doğru kavradıysanız, şema ile düzenli ifadeyi karşılaştırarak, nasıl çalıştığını
+rahatlıkla anlayabilirsiniz diye düşünüyorum. Bu DFA'nın C kodu olarak karşılığı
+da, son yaptığım örneğin, biraz daha uzunu olacak.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+
+&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;long&lt;/span&gt; &lt;span class="nf"&gt;match_number&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="cp"&gt;#define SETSTATE(x) {state = (x); goto set_state_end; }&lt;/span&gt;
+&lt;span class="cp"&gt;#define END_OF_CASE SETSTATE(0)&lt;/span&gt;
+&lt;span class="cp"&gt;#define MATCH_FOUND (match_size = i);&lt;/span&gt;
+
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sc"&gt;'A'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;long&lt;/span&gt; &lt;span class="n"&gt;match_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;state&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+
+        &lt;span class="k"&gt;switch&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;state&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="sc"&gt;'A'&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="sc"&gt;'0'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;SETSTATE&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;'B'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="sc"&gt;'-'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;SETSTATE&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;'C'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="sc"&gt;'1'&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="sc"&gt;'9'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;SETSTATE&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="n"&gt;END_OF_CASE&lt;/span&gt;
+            &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="sc"&gt;'B'&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+                &lt;span class="n"&gt;MATCH_FOUND&lt;/span&gt; &lt;span class="c1"&gt;// 0 veya -0 esledik&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="sc"&gt;'.'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;SETSTATE&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;'E'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="n"&gt;END_OF_CASE&lt;/span&gt;
+            &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="sc"&gt;'C'&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="sc"&gt;'0'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;SETSTATE&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;'B'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="sc"&gt;'1'&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="sc"&gt;'9'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;SETSTATE&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="n"&gt;END_OF_CASE&lt;/span&gt;
+            &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+                &lt;span class="n"&gt;MATCH_FOUND&lt;/span&gt; &lt;span class="c1"&gt;// pozitif tamsayı esledik&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="sc"&gt;'0'&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="sc"&gt;'9'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;SETSTATE&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;'D'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="sc"&gt;'.'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;SETSTATE&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;'E'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="n"&gt;END_OF_CASE&lt;/span&gt;
+            &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="sc"&gt;'E'&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="sc"&gt;'0'&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="sc"&gt;'9'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;SETSTATE&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;'F'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="n"&gt;END_OF_CASE&lt;/span&gt;
+            &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="sc"&gt;'F'&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+                &lt;span class="n"&gt;MATCH_FOUND&lt;/span&gt; &lt;span class="c1"&gt;// ondalikli sayi esledik&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="sc"&gt;'0'&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="sc"&gt;'9'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;SETSTATE&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;'F'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="sc"&gt;'e'&lt;/span&gt; &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="sc"&gt;'E'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;SETSTATE&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;'G'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="n"&gt;END_OF_CASE&lt;/span&gt;
+            &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="sc"&gt;'G'&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="sc"&gt;'-'&lt;/span&gt; &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="sc"&gt;'+'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;SETSTATE&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;'H'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="sc"&gt;'0'&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="sc"&gt;'9'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;SETSTATE&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;'J'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="n"&gt;END_OF_CASE&lt;/span&gt;
+            &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="sc"&gt;'H'&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="sc"&gt;'0'&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="sc"&gt;'9'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;SETSTATE&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;'J'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="n"&gt;END_OF_CASE&lt;/span&gt;
+            &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="sc"&gt;'J'&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+                &lt;span class="n"&gt;MATCH_FOUND&lt;/span&gt; &lt;span class="c1"&gt;// bilimsel gosterimli sayi esledik&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="sc"&gt;'0'&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="sc"&gt;'9'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;SETSTATE&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;'J'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="n"&gt;END_OF_CASE&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nl"&gt;set_state_end&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;match_size&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="cp"&gt;#undef MATCH_FOUND&lt;/span&gt;
+&lt;span class="cp"&gt;#undef END_OF_CASE&lt;/span&gt;
+&lt;span class="cp"&gt;#undef SETSTATE&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[])&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Match &lt;/span&gt;&lt;span class="se"&gt;\"&lt;/span&gt;&lt;span class="s"&gt;%s&lt;/span&gt;&lt;span class="se"&gt;\"&lt;/span&gt;&lt;span class="s"&gt;: %d&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;match_number&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]));&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Fonksiyonu komut satırından test edebilmek için, &lt;code&gt;main&lt;/code&gt; fonksiyonu da yazdım. Komut satırından
+vereceğiniz 1. argüman üzerinde eşleme işlemini yapıyor. Aşağıdaki gibi farklı sayı çeşitleriyle
+test edebilirsiniz.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;0
+-0
+1
+12
+12.4
+-12.4
+12.4E-02
+-12.42e+12
+&lt;/pre&gt;
+
+
+&lt;p&gt;Artık düzenli ifadelerin nasıl çalıştığı konusunda biraz bilgi sahibi oldunuz. Hayatınıza
+daha bilgili olarak devam edebilirsiniz.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/dfa.html</guid><pubDate>Mon, 01 Jul 2019 18:44:00 GMT</pubDate></item><item><title>Canonical Huffman Kodlaması</title><link>http://ysar.net/algoritma/canonical-huffman-kodlamasi.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Deflate formatını anlama konusunda sonlara yaklaştığımı hissediyorum. &lt;a href="http://ysar.net/algoritma/huffman-kodlamasi.html"&gt;Huffman Kodlaması&lt;/a&gt;
 ve &lt;a href="http://ysar.net/algoritma/lz77.html"&gt;lz77&lt;/a&gt; konusunu genel çerçevesiyle kavradım. Huffman kodlaması yapan ilk programı yazdığımda,
 oluşan kodların dosyaya hangi biçimde yazılması gerektiği konusunda net bir fikrim yoktu. &lt;a href="https://www.ietf.org/rfc/rfc1951.txt"&gt;RFC 1951&lt;/a&gt;
 içindeki örnekleri takip ederek, yöntemi anlamaya çalışıyorum.&lt;/p&gt;
@@ -1326,6 +1634,4 @@ fonksiyon yazdım. İlgilenenler aşağıda bulabilir.&lt;/p&gt;
 
 &lt;span class="n"&gt;P&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="n"&gt;P&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;P&lt;/span&gt; &lt;span class="o"&gt;~=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)];&lt;/span&gt;
 &lt;span class="k"&gt;end&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/matlab-sieve-of-erastosthenes.html</guid><pubDate>Mon, 26 Nov 2012 14:54:48 GMT</pubDate></item><item><title>İki bilinmeyenli denklem çözümleri</title><link>http://ysar.net/algoritma/iki-bilinmeyenli-denklem-cozumleri.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Dün Python ile, iki bilinmeyenli denklem çözümleriyle ile birşeyler
-yazdım. Paylaşayım dedim. Sonuncusunun biraz daha elden geçmesi lazım,
-ama aşağı yukarı çalışıyor. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/algoritma/iki-bilinmeyenli-denklem-cozumleri.html"&gt;Devamını oku…&lt;/a&gt; (1 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/iki-bilinmeyenli-denklem-cozumleri.html</guid><pubDate>Fri, 20 Jan 2012 23:17:00 GMT</pubDate></item></channel></rss>
+&lt;/pre&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/matlab-sieve-of-erastosthenes.html</guid><pubDate>Mon, 26 Nov 2012 14:54:48 GMT</pubDate></item></channel></rss>
