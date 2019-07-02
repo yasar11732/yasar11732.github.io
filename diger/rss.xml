@@ -1,5 +1,235 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Diger)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/diger/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Tue, 18 Jun 2019 18:29:28 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>&lt;setjmp.h&gt; Ne İşe Yarar</title><link>http://ysar.net/diger/setjmp-h.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Son bir hafta, veya biraz daha uzun bir süre boyunca, akademik bir merak neticesinde deflate formatında sıkıştırma/açma
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Diger)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/diger/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Tue, 02 Jul 2019 20:46:06 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Çengel Bulmaca</title><link>http://ysar.net/diger/cengel-bulmaca-1.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Bir aralar çengel bulmacak yapmaya merak salmıştım. O zamanlardan kalan bir çalışma.&lt;/p&gt;
+&lt;style id="Kitap31_17974_Styles"&gt;
+&lt;!--table
+    {mso-displayed-decimal-separator:"\,";
+    mso-displayed-thousand-separator:"\.";}
+.xl1517974
+    {padding-top:1px;
+    padding-right:1px;
+    padding-left:1px;
+    mso-ignore:padding;
+    color:black;
+    font-size:11.0pt;
+    font-weight:400;
+    font-style:normal;
+    text-decoration:none;
+    font-family:Calibri, sans-serif;
+    mso-font-charset:162;
+    mso-number-format:General;
+    text-align:general;
+    vertical-align:bottom;
+    mso-background-source:auto;
+    mso-pattern:auto;
+    white-space:nowrap;}
+.xl6317974
+    {padding-top:1px;
+    padding-right:1px;
+    padding-left:1px;
+    mso-ignore:padding;
+    color:#827A4A;
+    font-size:10.0pt;
+    font-weight:700;
+    font-style:normal;
+    text-decoration:none;
+    font-family:Arial, sans-serif;
+    mso-font-charset:162;
+    mso-number-format:General;
+    text-align:left;
+    vertical-align:top;
+    border:.5pt solid windowtext;
+    mso-background-source:auto;
+    mso-pattern:auto;
+    white-space:nowrap;}
+.xl6417974
+    {padding-top:1px;
+    padding-right:1px;
+    padding-left:1px;
+    mso-ignore:padding;
+    color:#EEECE1;
+    font-size:6.0pt;
+    font-weight:700;
+    font-style:normal;
+    text-decoration:none;
+    font-family:Arial, sans-serif;
+    mso-font-charset:162;
+    mso-number-format:General;
+    text-align:left;
+    vertical-align:top;
+    border:.5pt solid windowtext;
+    background:black;
+    mso-pattern:black none;
+    white-space:nowrap;}
+--&gt;
+&lt;/style&gt;
+
+&lt;table border="0" cellpadding="0" cellspacing="0" width="459" style="border-collapse:
+ collapse;table-layout:fixed;width:342pt"&gt;
+ &lt;col width="51" span="9" style="mso-width-source:userset;mso-width-alt:1820;
+ width:38pt"&gt;
+ &lt;tr height="51" style="mso-height-source:userset;height:38.4pt"&gt;
+  &lt;td height="51" class="xl6317974" width="51" style="height:38.4pt;width:38pt"&gt;1&lt;/td&gt;
+  &lt;td class="xl6317974" width="51" style="border-left:none;width:38pt"&gt;18&lt;/td&gt;
+  &lt;td class="xl6317974" width="51" style="border-left:none;width:38pt"&gt;19&lt;/td&gt;
+  &lt;td class="xl6317974" width="51" style="border-left:none;width:38pt"&gt;20&lt;/td&gt;
+  &lt;td class="xl6417974" width="51" style="border-left:none;width:38pt"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" width="51" style="border-left:none;width:38pt"&gt;2&lt;/td&gt;
+  &lt;td class="xl6317974" width="51" style="border-left:none;width:38pt"&gt;24&lt;/td&gt;
+  &lt;td class="xl6317974" width="51" style="border-left:none;width:38pt"&gt;25&lt;/td&gt;
+  &lt;td class="xl6317974" width="51" style="border-left:none;width:38pt"&gt;27&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr height="51" style="mso-height-source:userset;height:38.4pt"&gt;
+  &lt;td height="51" class="xl6317974" style="height:38.4pt;border-top:none"&gt;3&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;4&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr height="51" style="mso-height-source:userset;height:38.4pt"&gt;
+  &lt;td height="51" class="xl6317974" style="height:38.4pt;border-top:none"&gt;5&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;6&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr height="51" style="mso-height-source:userset;height:38.4pt"&gt;
+  &lt;td height="51" class="xl6417974" style="height:38.4pt;border-top:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;7&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;22&lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;8&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr height="51" style="mso-height-source:userset;height:38.4pt"&gt;
+  &lt;td height="51" class="xl6417974" style="height:38.4pt;border-top:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;9&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;23&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr height="51" style="mso-height-source:userset;height:38.4pt"&gt;
+  &lt;td height="51" class="xl6317974" style="height:38.4pt;border-top:none"&gt;10&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;11&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr height="51" style="mso-height-source:userset;height:38.4pt"&gt;
+  &lt;td height="51" class="xl6317974" style="height:38.4pt;border-top:none"&gt;12&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;21&lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;13&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;26&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;28&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr height="51" style="mso-height-source:userset;height:38.4pt"&gt;
+  &lt;td height="51" class="xl6317974" style="height:38.4pt;border-top:none"&gt;14&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;15&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr height="51" style="mso-height-source:userset;height:38.4pt"&gt;
+  &lt;td height="51" class="xl6317974" style="height:38.4pt;border-top:none"&gt;16&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;17&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+ &lt;/tr&gt;
+ 
+ &lt;tr height="0" style="display:none"&gt;
+  &lt;td width="51" style="width:38pt"&gt;&lt;/td&gt;
+  &lt;td width="51" style="width:38pt"&gt;&lt;/td&gt;
+  &lt;td width="51" style="width:38pt"&gt;&lt;/td&gt;
+  &lt;td width="51" style="width:38pt"&gt;&lt;/td&gt;
+  &lt;td width="51" style="width:38pt"&gt;&lt;/td&gt;
+  &lt;td width="51" style="width:38pt"&gt;&lt;/td&gt;
+  &lt;td width="51" style="width:38pt"&gt;&lt;/td&gt;
+  &lt;td width="51" style="width:38pt"&gt;&lt;/td&gt;
+  &lt;td width="51" style="width:38pt"&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+&lt;/table&gt;
+
+&lt;div style="position: relative; width: 100%; margin-top:1em"&gt;
+    &lt;div style="float: left; width: 45%; padding: 1em"&gt;
+            &lt;h6 style="font-size:1.4em;border-bottom: 1px solid black"&gt;Soldan Sağa&lt;/h6&gt;
+    &lt;/div&gt;
+    &lt;div style="float: left; width: 45%; padding: 1em"&gt;
+        &lt;h6 style="font-size:1.4em;border-bottom: 1px solid black"&gt;Yukarıdan Aşağıya&lt;/h6&gt;
+    &lt;/div&gt;
+
+    &lt;div style="float: left; width: 45%; padding: 1em"&gt;
+
+        &lt;div&gt;1) Aynı zamanda bir fiil çekimi olan rakam&lt;/div&gt;
+        &lt;div&gt;2) Kendi kendine verilen söz, ahit&lt;/div&gt;
+        &lt;div&gt;3) Bozkır&lt;/div&gt;
+        &lt;div&gt;4) Mevsimi dışında bitki yetiştirmek için hazırlanan kapalı alan&lt;/div&gt;
+        &lt;div&gt;5) Genellikle iltihaba bağlı olarak vücutta gelişen şişlik veya yumru&lt;/div&gt;
+        &lt;div&gt;6) Elektrik yüklü atom&lt;/div&gt;
+        &lt;div&gt;7) İçine su koyulan metal kap&lt;/div&gt;
+        &lt;div&gt;8) (Kısa) Vücutta kas ve sinir hastalıkları teşhisinde kullanılan bir yöntem&lt;/div&gt;
+        &lt;div&gt;9) Şu an çözdüğünüz&lt;/div&gt;
+        &lt;div&gt;10) Küp şeklinde rasgele sayı üretici&lt;/div&gt;
+        &lt;div&gt;11) Jamaika kökenli bir müzik türü&lt;/div&gt;
+        &lt;div&gt;12) ______-Gaz, metalcilikte kullanılan bir kaynak yöntemi&lt;/div&gt;
+        &lt;div&gt;13) Ölmüş birini hatırlamak için yapılan tören&lt;/div&gt;
+        &lt;div&gt;14) Üstü açık boru&lt;/div&gt;
+        &lt;div&gt;15) Erkek incir&lt;/div&gt;
+        &lt;div&gt;16) Gözümde canlanır koskoca ______?&lt;/div&gt;
+        &lt;div&gt;17) Sesin ayırt edici özelliği&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div style="float:left; width: 45%;clear: right; border-left: 2px dotted black; padding: 1em"&gt;
+
+        &lt;div&gt;1) (Kısa) Yüksek Seçim Kurulu&lt;/div&gt;
+        &lt;div&gt;10) Odak uzaklığı sabit olmayan lens türü&lt;/div&gt;
+        &lt;div&gt;18) Hitit&lt;/div&gt;
+        &lt;div&gt;9) _____giller, yeşil kabuklu ve taneli bir bitki familyası&lt;/div&gt;
+
+        &lt;div&gt;19) İzinsiz&lt;/div&gt;
+        &lt;div&gt;20) _____ etmek, bozmak, geri çekmek, geçersiz kılmak&lt;/div&gt;
+        &lt;div&gt;21) Simetrik rakam&lt;/div&gt;
+        &lt;div&gt;22) Cep telefonunda kısa mesaj&lt;/div&gt;
+        &lt;div&gt;2) İsyan eden&lt;/div&gt;
+        &lt;div&gt;23) Bir dinde öğrenilmesi gerekli görülen bilgilerin tümü&lt;/div&gt;
+        &lt;div&gt;24) Öfkeli, telaşlı veya coşkulu&lt;/div&gt;
+        &lt;div&gt;25) Güzel koku&lt;/div&gt;
+        &lt;div&gt;26) _____ etmek, engel olmak, yasaklamak&lt;/div&gt;
+        &lt;div&gt;27) Meyve aromalı bir toz içeçek&lt;/div&gt;
+        &lt;div&gt;28) Yumurtanın beyazı&lt;/div&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>http://ysar.net/diger/cengel-bulmaca-1.html</guid><pubDate>Tue, 02 Jul 2019 20:12:00 GMT</pubDate></item><item><title>&lt;setjmp.h&gt; Ne İşe Yarar</title><link>http://ysar.net/diger/setjmp-h.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Son bir hafta, veya biraz daha uzun bir süre boyunca, akademik bir merak neticesinde deflate formatında sıkıştırma/açma
 yapan bir programın nasıl yazılabileceğini araştıyordum. Zlib kütüphanesinin içinde, deflate formatını açmaya yarayan
 referans niteliğinde yazılmış, &lt;a href="https://github.com/madler/zlib/blob/master/contrib/puff/puff.c"&gt;puff.c&lt;/a&gt; adında bir C
 programı var. Bu programı incelerken, içinde &lt;code&gt;setjmp()&lt;/code&gt; ve &lt;code&gt;longjmp()&lt;/code&gt; fonksiyonlarını gördüm. Kodlarda, bu fonksiyonların

@@ -1,5 +1,235 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET</title><link>http://ysar.net/</link><description>Yaşar Arabacı İnternet Günlüğü</description><atom:link href="http://ysar.net/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Mon, 01 Jul 2019 18:44:55 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Düzenli İfade (RegExp) Motorları ve Otomatlar</title><link>http://ysar.net/algoritma/dfa.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Geçtiğimiz günlerde, Flex ve Bison ile JSON işlemeye yönelik tutorial yazdım.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET</title><link>http://ysar.net/</link><description>Yaşar Arabacı İnternet Günlüğü</description><atom:link href="http://ysar.net/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Tue, 02 Jul 2019 20:46:06 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Çengel Bulmaca</title><link>http://ysar.net/diger/cengel-bulmaca-1.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Bir aralar çengel bulmacak yapmaya merak salmıştım. O zamanlardan kalan bir çalışma.&lt;/p&gt;
+&lt;style id="Kitap31_17974_Styles"&gt;
+&lt;!--table
+    {mso-displayed-decimal-separator:"\,";
+    mso-displayed-thousand-separator:"\.";}
+.xl1517974
+    {padding-top:1px;
+    padding-right:1px;
+    padding-left:1px;
+    mso-ignore:padding;
+    color:black;
+    font-size:11.0pt;
+    font-weight:400;
+    font-style:normal;
+    text-decoration:none;
+    font-family:Calibri, sans-serif;
+    mso-font-charset:162;
+    mso-number-format:General;
+    text-align:general;
+    vertical-align:bottom;
+    mso-background-source:auto;
+    mso-pattern:auto;
+    white-space:nowrap;}
+.xl6317974
+    {padding-top:1px;
+    padding-right:1px;
+    padding-left:1px;
+    mso-ignore:padding;
+    color:#827A4A;
+    font-size:10.0pt;
+    font-weight:700;
+    font-style:normal;
+    text-decoration:none;
+    font-family:Arial, sans-serif;
+    mso-font-charset:162;
+    mso-number-format:General;
+    text-align:left;
+    vertical-align:top;
+    border:.5pt solid windowtext;
+    mso-background-source:auto;
+    mso-pattern:auto;
+    white-space:nowrap;}
+.xl6417974
+    {padding-top:1px;
+    padding-right:1px;
+    padding-left:1px;
+    mso-ignore:padding;
+    color:#EEECE1;
+    font-size:6.0pt;
+    font-weight:700;
+    font-style:normal;
+    text-decoration:none;
+    font-family:Arial, sans-serif;
+    mso-font-charset:162;
+    mso-number-format:General;
+    text-align:left;
+    vertical-align:top;
+    border:.5pt solid windowtext;
+    background:black;
+    mso-pattern:black none;
+    white-space:nowrap;}
+--&gt;
+&lt;/style&gt;
+
+&lt;table border="0" cellpadding="0" cellspacing="0" width="459" style="border-collapse:
+ collapse;table-layout:fixed;width:342pt"&gt;
+ &lt;col width="51" span="9" style="mso-width-source:userset;mso-width-alt:1820;
+ width:38pt"&gt;
+ &lt;tr height="51" style="mso-height-source:userset;height:38.4pt"&gt;
+  &lt;td height="51" class="xl6317974" width="51" style="height:38.4pt;width:38pt"&gt;1&lt;/td&gt;
+  &lt;td class="xl6317974" width="51" style="border-left:none;width:38pt"&gt;18&lt;/td&gt;
+  &lt;td class="xl6317974" width="51" style="border-left:none;width:38pt"&gt;19&lt;/td&gt;
+  &lt;td class="xl6317974" width="51" style="border-left:none;width:38pt"&gt;20&lt;/td&gt;
+  &lt;td class="xl6417974" width="51" style="border-left:none;width:38pt"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" width="51" style="border-left:none;width:38pt"&gt;2&lt;/td&gt;
+  &lt;td class="xl6317974" width="51" style="border-left:none;width:38pt"&gt;24&lt;/td&gt;
+  &lt;td class="xl6317974" width="51" style="border-left:none;width:38pt"&gt;25&lt;/td&gt;
+  &lt;td class="xl6317974" width="51" style="border-left:none;width:38pt"&gt;27&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr height="51" style="mso-height-source:userset;height:38.4pt"&gt;
+  &lt;td height="51" class="xl6317974" style="height:38.4pt;border-top:none"&gt;3&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;4&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr height="51" style="mso-height-source:userset;height:38.4pt"&gt;
+  &lt;td height="51" class="xl6317974" style="height:38.4pt;border-top:none"&gt;5&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;6&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr height="51" style="mso-height-source:userset;height:38.4pt"&gt;
+  &lt;td height="51" class="xl6417974" style="height:38.4pt;border-top:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;7&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;22&lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;8&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr height="51" style="mso-height-source:userset;height:38.4pt"&gt;
+  &lt;td height="51" class="xl6417974" style="height:38.4pt;border-top:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;9&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;23&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr height="51" style="mso-height-source:userset;height:38.4pt"&gt;
+  &lt;td height="51" class="xl6317974" style="height:38.4pt;border-top:none"&gt;10&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;11&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr height="51" style="mso-height-source:userset;height:38.4pt"&gt;
+  &lt;td height="51" class="xl6317974" style="height:38.4pt;border-top:none"&gt;12&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;21&lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;13&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;26&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;28&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr height="51" style="mso-height-source:userset;height:38.4pt"&gt;
+  &lt;td height="51" class="xl6317974" style="height:38.4pt;border-top:none"&gt;14&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;15&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr height="51" style="mso-height-source:userset;height:38.4pt"&gt;
+  &lt;td height="51" class="xl6317974" style="height:38.4pt;border-top:none"&gt;16&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6417974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt;17&lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+  &lt;td class="xl6317974" style="border-top:none;border-left:none"&gt; &lt;/td&gt;
+ &lt;/tr&gt;
+ 
+ &lt;tr height="0" style="display:none"&gt;
+  &lt;td width="51" style="width:38pt"&gt;&lt;/td&gt;
+  &lt;td width="51" style="width:38pt"&gt;&lt;/td&gt;
+  &lt;td width="51" style="width:38pt"&gt;&lt;/td&gt;
+  &lt;td width="51" style="width:38pt"&gt;&lt;/td&gt;
+  &lt;td width="51" style="width:38pt"&gt;&lt;/td&gt;
+  &lt;td width="51" style="width:38pt"&gt;&lt;/td&gt;
+  &lt;td width="51" style="width:38pt"&gt;&lt;/td&gt;
+  &lt;td width="51" style="width:38pt"&gt;&lt;/td&gt;
+  &lt;td width="51" style="width:38pt"&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+&lt;/table&gt;
+
+&lt;div style="position: relative; width: 100%; margin-top:1em"&gt;
+    &lt;div style="float: left; width: 45%; padding: 1em"&gt;
+            &lt;h6 style="font-size:1.4em;border-bottom: 1px solid black"&gt;Soldan Sağa&lt;/h6&gt;
+    &lt;/div&gt;
+    &lt;div style="float: left; width: 45%; padding: 1em"&gt;
+        &lt;h6 style="font-size:1.4em;border-bottom: 1px solid black"&gt;Yukarıdan Aşağıya&lt;/h6&gt;
+    &lt;/div&gt;
+
+    &lt;div style="float: left; width: 45%; padding: 1em"&gt;
+
+        &lt;div&gt;1) Aynı zamanda bir fiil çekimi olan rakam&lt;/div&gt;
+        &lt;div&gt;2) Kendi kendine verilen söz, ahit&lt;/div&gt;
+        &lt;div&gt;3) Bozkır&lt;/div&gt;
+        &lt;div&gt;4) Mevsimi dışında bitki yetiştirmek için hazırlanan kapalı alan&lt;/div&gt;
+        &lt;div&gt;5) Genellikle iltihaba bağlı olarak vücutta gelişen şişlik veya yumru&lt;/div&gt;
+        &lt;div&gt;6) Elektrik yüklü atom&lt;/div&gt;
+        &lt;div&gt;7) İçine su koyulan metal kap&lt;/div&gt;
+        &lt;div&gt;8) (Kısa) Vücutta kas ve sinir hastalıkları teşhisinde kullanılan bir yöntem&lt;/div&gt;
+        &lt;div&gt;9) Şu an çözdüğünüz&lt;/div&gt;
+        &lt;div&gt;10) Küp şeklinde rasgele sayı üretici&lt;/div&gt;
+        &lt;div&gt;11) Jamaika kökenli bir müzik türü&lt;/div&gt;
+        &lt;div&gt;12) ______-Gaz, metalcilikte kullanılan bir kaynak yöntemi&lt;/div&gt;
+        &lt;div&gt;13) Ölmüş birini hatırlamak için yapılan tören&lt;/div&gt;
+        &lt;div&gt;14) Üstü açık boru&lt;/div&gt;
+        &lt;div&gt;15) Erkek incir&lt;/div&gt;
+        &lt;div&gt;16) Gözümde canlanır koskoca ______?&lt;/div&gt;
+        &lt;div&gt;17) Sesin ayırt edici özelliği&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div style="float:left; width: 45%;clear: right; border-left: 2px dotted black; padding: 1em"&gt;
+
+        &lt;div&gt;1) (Kısa) Yüksek Seçim Kurulu&lt;/div&gt;
+        &lt;div&gt;10) Odak uzaklığı sabit olmayan lens türü&lt;/div&gt;
+        &lt;div&gt;18) Hitit&lt;/div&gt;
+        &lt;div&gt;9) _____giller, yeşil kabuklu ve taneli bir bitki familyası&lt;/div&gt;
+
+        &lt;div&gt;19) İzinsiz&lt;/div&gt;
+        &lt;div&gt;20) _____ etmek, bozmak, geri çekmek, geçersiz kılmak&lt;/div&gt;
+        &lt;div&gt;21) Simetrik rakam&lt;/div&gt;
+        &lt;div&gt;22) Cep telefonunda kısa mesaj&lt;/div&gt;
+        &lt;div&gt;2) İsyan eden&lt;/div&gt;
+        &lt;div&gt;23) Bir dinde öğrenilmesi gerekli görülen bilgilerin tümü&lt;/div&gt;
+        &lt;div&gt;24) Öfkeli, telaşlı veya coşkulu&lt;/div&gt;
+        &lt;div&gt;25) Güzel koku&lt;/div&gt;
+        &lt;div&gt;26) _____ etmek, engel olmak, yasaklamak&lt;/div&gt;
+        &lt;div&gt;27) Meyve aromalı bir toz içeçek&lt;/div&gt;
+        &lt;div&gt;28) Yumurtanın beyazı&lt;/div&gt;
+
+    &lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>http://ysar.net/diger/cengel-bulmaca-1.html</guid><pubDate>Tue, 02 Jul 2019 20:12:00 GMT</pubDate></item><item><title>Düzenli İfade (RegExp) Motorları ve Otomatlar</title><link>http://ysar.net/algoritma/dfa.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Geçtiğimiz günlerde, Flex ve Bison ile JSON işlemeye yönelik tutorial yazdım.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/flex-bison.html"&gt;Flex ve Bison kullanarak JSON İşleme (1. Kısım)&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/json-kutuphanesi.html"&gt;Flex ve Bison kullanarak JSON İşleme (2. Kısım)&lt;/a&gt;&lt;/li&gt;
@@ -2551,98 +2781,4 @@ bir string üzerinde gerçekleştirmek için, sırayla tüm karakleri yukarıdak
 
 &lt;p&gt;Öyle sanıyorum ki, yukarıdaki kodlarda optimize edilebilecek kısımlar vardır. Ancak,
 kolayca anlaşılabilr olması açısından, yapılabilecek optimizasyonlara dikkat etmedim.
-Faydalı bir yazı olmuştur diye ümit ediyorum.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/utf8-kodlama.html</guid><pubDate>Fri, 07 Jun 2019 16:51:00 GMT</pubDate></item><item><title>Senkronizasyon Aracı Olarak Dosyalar</title><link>http://ysar.net/python/senkronizasyon-araci-olarak-dosyalar.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Zaman zaman, yazdığımız programlarda yapılacak işi, multi-threading veya
-multi-processing kullanarak paralel olarak gerçekleştirme ihtiyacı hissederiz.
-Bu gibi durumlarda, aynı anda çalışmakta olan işlemleri veya iş parçacıklarını (thread)
-belirli bir senkronizasyon içinde çalıştırmamız gerekir. Bu senkronizasyonu sağlamak
-için, kullandığımız programlama dilinin bize sağladığı araçları kullanırız.&lt;/p&gt;
-&lt;p&gt;Geçmişte, python ile yazdığım bir program ile, internetteki çeşitli kaynaklardan
-binlerce json belgesi indirmem gerekti. Python'daki threading ve multi-processing
-modüllerini kullanmak yerine, değişik birşey yapmak istedim. Bu yazıda kısaca,
-aynı anda çalışan işlemleri senkronize etmek için kullandığım metotdan bahsedeceğim.&lt;/p&gt;
-&lt;p&gt;Python'da dosya açarken, standard &lt;code&gt;open&lt;/code&gt; fonksiyonunun yanında, &lt;code&gt;os&lt;/code&gt; modülü içindeki
-&lt;code&gt;open&lt;/code&gt; fonksiyonunu da kullanabiliyoruz. &lt;code&gt;os&lt;/code&gt; modülü içindeki &lt;code&gt;open&lt;/code&gt; fonksiyonu ile
-dosya açarken, daha fazla kontrole sahibiz. Bunun için, &lt;code&gt;os.open&lt;/code&gt; fonksiyonunun ikinci
-argümanına, dosya açmak için gerekli seçenekleri, bitwise or (|) ile birleştirerek belirtiyoruz. Burada
-göstereceğim yöntem için gerekli olan argümanlar &lt;code&gt;os.O_CREAT&lt;/code&gt; ve &lt;code&gt;os.O_EXCL&lt;/code&gt;. Bu iki
-argüman birlikte kullanıldığında, oluşturmaya çalıştığımız dosya zaten varsa, dosya açma
-işlemi başarısız oluyor. Bunu nasıl kullanabileceğimizi görmek için, aşağıdaki örnek
-kodları inceleyebiliriz.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;requests&lt;/span&gt;
-
-&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;requests&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;session&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;span class="n"&gt;flags&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;O_CREAT&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;O_EXCL&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;O_WRONLY&lt;/span&gt;
-&lt;span class="n"&gt;endpoint&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"http://www.example.com/api"&lt;/span&gt;
-
-&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="nb"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"id-listesi.txt"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-
-    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="n"&gt;error&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
-        &lt;span class="n"&gt;_id&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;strip&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-        &lt;span class="n"&gt;hedef&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"indirmeler/&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;.json"&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;_id&lt;/span&gt;
-
-        &lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-            &lt;span class="n"&gt;file_handle&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hedef&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;flags&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="k"&gt;except&lt;/span&gt; &lt;span class="ne"&gt;OSError&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;errno&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;errno&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;EEXIST&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-                &lt;span class="sd"&gt;"""&lt;/span&gt;
-&lt;span class="sd"&gt;                Dosya zaten var hatası aldık, bu beklediğimiz bir durum&lt;/span&gt;
-&lt;span class="sd"&gt;                bu nedenle, hiçbirşey yapmayacağız&lt;/span&gt;
-&lt;span class="sd"&gt;                """&lt;/span&gt;
-                &lt;span class="k"&gt;pass&lt;/span&gt;
-            &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-                &lt;span class="sd"&gt;"""&lt;/span&gt;
-&lt;span class="sd"&gt;                Dosya var hatası dışında bir hata alırsak,&lt;/span&gt;
-&lt;span class="sd"&gt;                bu hatayı görmek istiyoruz.&lt;/span&gt;
-&lt;span class="sd"&gt;                """&lt;/span&gt;
-                &lt;span class="k"&gt;raise&lt;/span&gt;
-        &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;  &lt;span class="c1"&gt;# Herhangi bir hata almadık, indirme işlemine geç&lt;/span&gt;
-            &lt;span class="sd"&gt;"""&lt;/span&gt;
-&lt;span class="sd"&gt;            os modülü bize file-descriptor veriyor. Bu descriptor'u&lt;/span&gt;
-&lt;span class="sd"&gt;            kullanarak, standard bir python dosya objesi oluşturmak&lt;/span&gt;
-&lt;span class="sd"&gt;            için, os.fdopen fonksiyonunu kullanıyoruz&lt;/span&gt;
-&lt;span class="sd"&gt;            """&lt;/span&gt;
-            &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fdopen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;file_handle&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'w'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;file_obj&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-                &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; indiriliyor"&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;_id&lt;/span&gt;
-
-                &lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;endpoint&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s2"&gt;"id"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;_id&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
-
-                &lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-                    &lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dump&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;file_obj&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-                &lt;span class="k"&gt;except&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-                    &lt;span class="n"&gt;error&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;
-
-        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;error&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-            &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;remove&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hedef&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Yukarıdaki kodları incelerseniz, &lt;code&gt;multiprocessing&lt;/code&gt; ve &lt;code&gt;threading&lt;/code&gt; modüllerinden
-hiç bahsedilmediğini göreceksiniz. İşin güzelliği de burada. Yukarıdaki programı
-yanyana birkaç kere çalıştırırsanız, herhangi bir işlemin indirmeye başladığı
-dosyayı bir diğeri indirmeyecektir. İşin püf noktası şöyle; tüm işlemler, bir
-linki indirmeye başlamadan önce, o linkin daha önce indirilmeye başlayıp
-başlamadığını anlamak için, dosyayı (os.O_CREAT | os.O_EXCL) seçenekleriyle
-açmaya çalışıyor. Eğer o dosya daha önce oluşturulmuşsa, bir sonraki linkten
-denemeye devam ediyor.&lt;/p&gt;
-&lt;p&gt;Peki, aşağıdaki şekilde yapmış olsak, işimizi görmez miydi?&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;isfile&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hedef&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="nb"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hedef&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;'w'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="c1"&gt;# burada indirme işlemini yap&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Dürüst olmak gerekirse, eğer çok kritik bir iş yapmıyorsanız, bu yöntem
-de işinizi görebilir. Ancak, prensip olarak yanlış, çünkü, race-condition
-olarak tabir edilen duruma neden oluyor. Yani, yanyana çalışan işlemlerden
-birinin dosyanın olmadığını görmesi ile dosyayı oluşturması arasında
-geçen süre zarfında, diğer işlemler de aynı dosyanın olmadığını görüp
-oluşturmaya çalışacaklardır. Bu kimi zaman aynı dosyanın iki kere indirilmesine
-neden olacak, kimi zaman ise, beklenmedik hatalara yol açacaktır. Bu nedenle, (os.O_CREAT | os.O_EXCL) ile dosyanın
-olmaması halinde açılması tek adımda gerçekleştiği için, bu ihtimal
-ortadan kalkıyor. Bu şekilde dosya açmak, bir nevi mutex vazifesi görüyor.&lt;/p&gt;
-&lt;p&gt;Özetle, uygulamadaki basitliğinden ve esnekliğinden dolayı, uygun olduğu durumlarda,
-multiprocessing veya threading modüllerini kullanmak yerine, bu yöntemle yazdığım programı
-yanyana çalıştırıyorum. Şimdiye kadar herhangi bir sorunla karşılaşmadım. Siz de,
-basit uygulamalarınızda buradaki gibi bir yöntem kullanabilirsiniz.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/python/senkronizasyon-araci-olarak-dosyalar.html</guid><pubDate>Tue, 04 Jun 2019 18:03:00 GMT</pubDate></item></channel></rss>
+Faydalı bir yazı olmuştur diye ümit ediyorum.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/utf8-kodlama.html</guid><pubDate>Fri, 07 Jun 2019 16:51:00 GMT</pubDate></item></channel></rss>
