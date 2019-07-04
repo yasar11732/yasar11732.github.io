@@ -1,5 +1,5 @@
 <!--
-.. date: 2019/07/03 23:50
+.. date: 2019/07/04 23:05
 .. description: 
 .. slug: javascript-ile-baslamak-icin-6-neden
 .. title: Programlamaya JavaScript ile Başlamak İçin 6 Neden
