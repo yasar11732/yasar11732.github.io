@@ -1,5 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET</title><link>http://ysar.net/</link><description>Yaşar Arabacı İnternet Günlüğü</description><atom:link href="http://ysar.net/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Tue, 02 Jul 2019 20:46:06 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Çengel Bulmaca</title><link>http://ysar.net/diger/cengel-bulmaca-1.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Bir aralar çengel bulmacak yapmaya merak salmıştım. O zamanlardan kalan bir çalışma.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET</title><link>http://ysar.net/</link><description>Yaşar Arabacı İnternet Günlüğü</description><atom:link href="http://ysar.net/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Thu, 04 Jul 2019 20:01:27 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Programlamaya JavaScript ile Başlamak İçin 6 Neden</title><link>http://ysar.net/yazilim-dunyasi/javascript-ile-baslamak-icin-6-neden.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Hobi olarak programlama öğrenmek isteyenler veya programlamaya bir yerden başlayıp, zaman içinde
+meslek haline getirmek isteyenler, zaman zaman e-posta yolu ile bana ulaşıp, hangi programlama diliyle
+başlamaları gerektiği konusunda fikir almak istiyorlar. Bugüne kadar, bazen C, bazen de Python lehine
+tavsiye veriyordum. Son zamanlarda, JavaScript'in başlangıç dili olmaya çok müsait olduğu konusunda
+giderek kuvvetlenen bir kanaat geliştirdim. Neden böyle düşündüğümü, 6 madde halinde sizlerle paylaşmak istedim.&lt;/p&gt;
+&lt;h2&gt;Şimdi Başlayabilirsiniz&lt;/h2&gt;
+&lt;p&gt;Eğer bu yazıyı şahsi bilgisayarınızdaki bir web tarayıcı üzerinden okuyorsanız, JavaScript
+kodlamaya hemen başlayabilirsiniz. JavaScript ile programlamaya başlamak için, diğer dillerde
+olduğu gibi, geliştiricilere yönelik araç/gereçlerin kurulumuna ihtiyacınız yok. Bir metin
+düzenleyici (notepad, gedit, textedit gibi) ve web tarayıcı işinizi görecektir.&lt;/p&gt;
+&lt;h2&gt;Platform Özgürlüğü&lt;/h2&gt;
+&lt;p&gt;JavaScript kodlarınız tarayıcıda çalışacağı için, derleyici/yorumlayıcı sürümleri,
+işletim sistemi veya işlemci mimarisi
+gibi platformlar arasındaki farklılıklarla dikkatinizi bölmenize gerek kalmayacak. Tarayıcılar
+arasında da birtakım farklılıklar olabilse de, bunlar öğrenme aşamasında engel olacak konular değil.&lt;/p&gt;
+&lt;h2&gt;Otomatik Hafıza Yönetimi&lt;/h2&gt;
+&lt;p&gt;Bu özellik çoğu modern dil için de geçerli, ama, JavaScript özelinde
+tekrar etmekte fayda var. Hafızada yer ayırmak, işi bittikten sonra
+hafızayı iade etmek gibi işler JavaScript tarafından kontrol ediliyor.
+Ayrıca, kullanacağınız değişkenlerin veri tiplerini de açıkla belirtmek zorunda değilsiniz.
+Bu sayede, doğrudan
+aritmetik işlemler, fonksiyonlar, döngüler, koşullu ifadeler gibi programlama
+konularına geçebilir, hızlı deneme/yanılma süreci sayesinde, kendinizi geliştirebilirsiniz.&lt;/p&gt;
+&lt;h2&gt;Arayüz Programlama&lt;/h2&gt;
+&lt;p&gt;Python/C/Java gibi dillerle programlama öğrenmeye başlayan biri, neredeyse her zaman
+konsol programları yaparak başlar. Konsol programlarının gerekliliği ve faydası
+tartışmaya açık olmamakla birlikte, programlamaya yeni başlayanların, özellikle de
+hobi olarak programlama öğrenmek isteyenlerin hayalinde konsol uygulamaları yapmaktan
+ziyade, arayüzü olan interaktif programlar yapmak var. İnternetin programlama dili
+olan JavaScript, HTML/CSS ile birlikte, arayüzü olan interaktif uygulamalar yapmaya
+çok elverişli. O kadar elverişli ki, bazı masaüstü programları bile, programın içine
+gömülü web tarayıcı sayesinde HTML/JavaScript ile kodlanıyor.&lt;/p&gt;
+&lt;h2&gt;Güvenli Ortam&lt;/h2&gt;
+&lt;p&gt;Acemi programcının, bilgisayara zarar verme endişesi taşımasına gerek yok. JavaScript
+ile aşırı RAM/CPU kullanımı neticesinde tarayıcıyı veya tüm bilgisayarı kilitleme
+riski olsa da, istemeden binlerce dosyayı silme, binlerce dosya oluşturma, bilgisayar
+ayarlarında zararlı değişiklikler yapma gibi potansiyel riskler sıfıra yakın.&lt;/p&gt;
+&lt;h2&gt;Diğer Dillerle Benzerliği&lt;/h2&gt;
+&lt;p&gt;JavaScript grameri, koşullu ifadeleri, döngüleri gibi özellikleri C/C++/Java/C#
+gibi dillere çok yakın. JavaScript yazarken edindiğiniz alışkanlıkları, bu dillere
+geçerken yanınızda götürebilirsiniz.&lt;/p&gt;
+&lt;h2&gt;İkna Oldum, Şimdi Ne Yapmalıyım?&lt;/h2&gt;
+&lt;p&gt;Boş bir metin dosyası oluşturun, aşağıdaki satırları yapıştırın, ve &lt;code&gt;.html&lt;/code&gt; uzantısı ile
+kaydedin.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;p&lt;/span&gt; &lt;span class="na"&gt;id=&lt;/span&gt;&lt;span class="s"&gt;"metin"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;script&amp;gt;&lt;/span&gt;
+    document.getElementById("metin").innerText = "Merhaba Dünya!"
+&lt;span class="nt"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;İlk JavaScript programınızı bir tarayıcıda test etmeye hazırsınız. Belki bugün
+programlama maceranızın bir başlangıcı olur.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/javascript-ile-baslamak-icin-6-neden.html</guid><pubDate>Wed, 03 Jul 2019 20:50:00 GMT</pubDate></item><item><title>Çengel Bulmaca</title><link>http://ysar.net/diger/cengel-bulmaca-1.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Bir aralar çengel bulmacak yapmaya merak salmıştım. O zamanlardan kalan bir çalışma.&lt;/p&gt;
 &lt;style id="Kitap31_17974_Styles"&gt;
 &lt;!--table
     {mso-displayed-decimal-separator:"\,";
@@ -2519,266 +2571,4 @@ işlemini de yapmadık. Bunları da denemek isteyebilirsiniz. İyi kodlamalar.&l
 
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/huffman-kodlamasi.html</guid><pubDate>Mon, 10 Jun 2019 18:29:00 GMT</pubDate></item><item><title>UTF-8 Kodlama Algoritması</title><link>http://ysar.net/algoritma/utf8-kodlama.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;a href="https://ysar.net/yazilim-dunyasi/rfc2231.html"&gt;RFC2231 Kodlaması&lt;/a&gt; başlıklı yazıda, &lt;code&gt;wchar_t&lt;/code&gt; türündeki
-bir string'i utf8 olarak kodlamak için işletim sisteminin sağladığı fonksiyonları kullanmıştım. Ancak,
-daha sonra, kodlama egzersizi olarak &lt;code&gt;wchar_t&lt;/code&gt; türündeki bir string'i utf8 olarak kodlayan fonksiyonu kendim
-yazmak istedim. Referans olarak, &lt;a href="https://tools.ietf.org/html/rfc3629"&gt;RFC 3629&lt;/a&gt;'daki tanımlamaları kullandım.
-Bu yazıda, geniş karakter (&lt;code&gt;wchar_t&lt;/code&gt;) türündeki veriyi, nasıl utf8 olarak kodlayabileceğimizden bahsedeceğim.&lt;/p&gt;
-&lt;p&gt;Bahsettiğim RFC'nin 3. başlığı altında, UTF-8'in tanımı yapılmış. Buna göre, &lt;code&gt;0x0&lt;/code&gt; ile &lt;code&gt;0x10FFFF&lt;/code&gt; arasındaki
-unicode karakterler, 1-4 byte dizilimle kodlanıyor. Kodlamada kullanılan her bir byte'a octet (eng. sekizli)
-deniyor. Tek bir octet'den oluşan dizilimde üst bit (MSB) 0 olmak zorunda, kalan 7 bit ile karakterimizi
-kodluyoruz. Dolayısıyla, karakter kodu 127 ve altı için, UTF8 kodlama ile us-ascii kodlama eşdeğer oluyor.
-&lt;code&gt;n&lt;/code&gt; octetli'li (&lt;code&gt;n &amp;gt; 1&lt;/code&gt;) dizilimlerde iste, ilk octet'in üst &lt;code&gt;n&lt;/code&gt; biti 1 olarak, bunları takip eden ilk bit
-ise 0 olarak ayarlanıp, kalan bitler kodlama amaçlı kullanılıyor. Devamında gelen octetlerin ise, hepsinin
-en üst biti 1, onu takip eden bit ise 0 olarak ayarlanıp, kalan bitler kodlama amaçlı kullanılıyor.
-RFC'deki örnek tabloyu buraya kopyalıyorum.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;   Karakter Kodu Aralığı  |        UTF-8 octet dizilimi
-         (hexadecimal)    |              (binary)
-      --------------------+---------------------------------------------
-      0000 0000-0000 007F | 0xxxxxxx
-      0000 0080-0000 07FF | 110xxxxx 10xxxxxx
-      0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx
-      0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-&lt;/pre&gt;
-
-
-&lt;p&gt;Şimdi adım adım, UTF8 kodlama algoritmasının aşamalarına geçeceğiz. Aşamalara geçmeden
-önce, işimizi daha anlaşılır yapabilmek için, tanımlamalarımızı yapalım.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#define UTF8_OCTET1_MAX 0x7F&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_OCTET2_MAX 0x7FF&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_OCTET3_MAX 0xFFFF&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_OCTET4_MAX 0x10FFFF&lt;/span&gt;
-
-&lt;span class="cp"&gt;#define UTF8_SEQUENCE1_START 0x00&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_SEQUENCE2_START 0xC0&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_SEQUENCE3_START 0xE0&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_SEQUENCE4_START 0xF0&lt;/span&gt;
-
-&lt;span class="cp"&gt;#define UTF8_CONTINUATION_BYTE 0x80&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_CONTINUATION_BYTE_MASK 0x3F&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;İlk 4 tanım, sırasıyla 1 octet, 2 octet, 3 octet ve 4 octet ile kodlanabilecek karakter
-kodlarının üst sınırını belirtiyor. Bu sayılarını doğrudan örnek tablodan kopyaladım.
-Daha sonra gelen 4 tanım ise, yine sırasıyla 1 octet, 2 octet, 3 octet ve 4 octet dizilimlerinde
-ilk octet'in üst bitlerinde olması gereken değeri belirtiyor. Bu sayıları
-elde etmek için, örnek tabloda binary olarak gösterilen birinci octet'leri (&lt;code&gt;b00000000&lt;/code&gt;,&lt;code&gt;b11000000&lt;/code&gt;,&lt;code&gt;b11100000&lt;/code&gt;,&lt;code&gt;b11110000&lt;/code&gt;), hex gösterimine
-çevirdim. &lt;code&gt;UTF8_CONTINUATION_BYTE&lt;/code&gt; tanımı, çoklu octet dizilimlerinde, her bir octet'in
-üst bitlerinin alması gerektiği değeri gösteriyor. Bunu da aynı şekilde
-örnek tablodan hex'e çevirdim. Son olarak, &lt;code&gt;UTF8_CONTINUATION_BYTE_MASK&lt;/code&gt; ile
-tanımlanan değeri, bir sayının en alttaki 6 bitini maskelemek için kullanacağım.&lt;/p&gt;
-&lt;p&gt;Şimdi adım adım, algoritmayı inceleyelim. Birinci adım olarak, karakterin kaç octet
-ile kodlanacağını hesaplayacağız. Bunun için mümkün olan en düşük octet sayının
-kullanacağız.  &lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// 1. Gerekli Octet Sayısını Hesapla&lt;/span&gt;
-&lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;cbOctet&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;  
-               &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;UTF8_OCTET1_MAX&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-               &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;UTF8_OCTET2_MAX&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-               &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;UTF8_OCTET3_MAX&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-               &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;UTF8_OCTET4_MAX&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Yukarıdaki örnekte, eğer &lt;code&gt;UTF8_OCTET4_MAX&lt;/code&gt;'dan büyük bir karakter kodu
-ile karşılaşırsak, &lt;code&gt;cbOctet&lt;/code&gt; 5 olacak. En fazla 4 octet kullanabileceğimiz
-için, bu durumu hata durumu olarak değerlendireceğiz. İkinci adımda ise,
-kullanılacak octet'lerin, üst bitleri tabloda gösterildiği şekilde ayarlayacağız.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// 2a. Başlangıç octet'inin üst bitlerini ayala&lt;/span&gt;
-&lt;span class="k"&gt;switch&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cbOctet&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-        &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UTF8_SEQUENCE1_START&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-        &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UTF8_SEQUENCE2_START&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-        &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UTF8_SEQUENCE3_START&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-        &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UTF8_SEQUENCE4_START&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="k"&gt;default&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="c1"&gt;// utf8 ile kodlanamayacak bir karakter varsa, 0 döndür&lt;/span&gt;
-        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="c1"&gt;// 2b. devam octetlerinin üst bitlerini ayarla&lt;/span&gt;
-&lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;cbOctet&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UTF8_CONTINUATION_BYTE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;İkinci adımda çok ilginç birşey yok. Her bir octet'in üst bitlerini
-olması gerektiği gibi ayarlayıp, kalan bitlerini sıfırladık. Üçüncü
-adımda, karakter kodundaki bitleri, octet'lerdeki kullanılabilir bitlere
-kopyalacağız. Bunun için, karakter kodunun en alttaki bitlerini
-en sondaki octet'e kopyalarak, yukarı doğru devam edeceğiz. Bunu
-yapmak için, en baştaki octet dışında, &lt;code&gt;UTF8_CONTINUATION_BYTE_MASK&lt;/code&gt; maskesi
-ile alttaki 6 biti seçip, karakter kodunu 6 bit sağa kaydıracağız.
-En baştaki octet'e gelindiğinde, sadece ihtiyacımız olan bitler
-kaldığı için, herhangi bir maskeleme yapmamıza gerek yok.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// 3. Son octetten başa doğru, bitleri&lt;/span&gt;
-&lt;span class="c1"&gt;// doldur. Her devam octet'inde 6'şar&lt;/span&gt;
-&lt;span class="c1"&gt;// bit kullanacağız. Geriye kalan bitler&lt;/span&gt;
-&lt;span class="c1"&gt;// teknik olarak başlangıç octet'ine&lt;/span&gt;
-&lt;span class="c1"&gt;// sığmak zorunda&lt;/span&gt;
-&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;cbOctet&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;|=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;UTF8_CONTINUATION_BYTE_MASK&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;|=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Böylece, tek bir unicode karakteri, utf8 olarak kodlamış olduk. Bu işlemi
-bir string üzerinde gerçekleştirmek için, sırayla tüm karakleri yukarıdaki
-şekilde kodlamak yeterli. Örnek programın son hali aşağıdaki gibi olacak.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdlib.h&amp;gt; // malloc&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;string.h&amp;gt; // memcpy&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;  // fopen, fwrite, fclose&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;wchar.h&amp;gt;  // wchar_t&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-
-&lt;span class="cp"&gt;#define UTF8_OCTET1_MAX 0x7F&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_OCTET2_MAX 0x7FF&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_OCTET3_MAX 0xFFFF&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_OCTET4_MAX 0x10FFFF&lt;/span&gt;
-
-&lt;span class="cp"&gt;#define UTF8_SEQUENCE1_START 0x00&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_SEQUENCE2_START 0xC0&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_SEQUENCE3_START 0xE0&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_SEQUENCE4_START 0xF0&lt;/span&gt;
-
-&lt;span class="cp"&gt;#define UTF8_CONTINUATION_BYTE 0x80&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_CONTINUATION_BYTE_MASK 0x3F&lt;/span&gt;
-
-&lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="nf"&gt;utf8_encode_char&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;wchar_t&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="c1"&gt;// 1. Gerekli Octet Sayısını Hesapla&lt;/span&gt;
-    &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;cbOctet&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;  
-                   &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;UTF8_OCTET1_MAX&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-                   &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;UTF8_OCTET2_MAX&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-                   &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;UTF8_OCTET3_MAX&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-                   &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;UTF8_OCTET4_MAX&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-
-    &lt;span class="c1"&gt;// 2a. Başlangıç octet'inin üst bitlerini ayala&lt;/span&gt;
-    &lt;span class="k"&gt;switch&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cbOctet&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-            &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UTF8_SEQUENCE1_START&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-            &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-            &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UTF8_SEQUENCE2_START&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-            &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-            &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UTF8_SEQUENCE3_START&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-            &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-            &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UTF8_SEQUENCE4_START&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-            &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="k"&gt;default&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="c1"&gt;// utf8 ile kodlanamayacak bir karakter varsa, 0 döndür&lt;/span&gt;
-            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="p"&gt;}&lt;/span&gt;
-
-    &lt;span class="c1"&gt;// 2b. devam octetlerinin üst bitlerini ayarla&lt;/span&gt;
-    &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;cbOctet&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UTF8_CONTINUATION_BYTE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="p"&gt;}&lt;/span&gt;
-
-    &lt;span class="c1"&gt;// 3. Son octetten başa doğru, bitleri&lt;/span&gt;
-    &lt;span class="c1"&gt;// doldur. Her devam octet'inde 6'şar&lt;/span&gt;
-    &lt;span class="c1"&gt;// bit kullanacağız. Geriye kalan bitler&lt;/span&gt;
-    &lt;span class="c1"&gt;// teknik olarak başlangıç octet'ine&lt;/span&gt;
-    &lt;span class="c1"&gt;// sığmak zorunda&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;cbOctet&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;|=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;UTF8_CONTINUATION_BYTE_MASK&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="p"&gt;}&lt;/span&gt;
-
-    &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;|=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;cbOctet&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="cm"&gt;/*&lt;/span&gt;
-&lt;span class="cm"&gt;    IN: wchar_t *pwszWide: NULL ile biten, wchar_t stringi&lt;/span&gt;
-&lt;span class="cm"&gt;    OUT: size_t *cbEncoded : Kodlamış string'in boyutu&lt;/span&gt;
-
-&lt;span class="cm"&gt;    RETURN: utf8 ile kodlanmış, NULL ile biten array&lt;/span&gt;
-&lt;span class="cm"&gt;*/&lt;/span&gt;
-&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;utf8_encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;wchar_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pwszWide&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;cbEncoded&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;cbEncoded&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;cbTemp&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;encoded_char&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
-    &lt;span class="kt"&gt;wchar_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pwcTemp&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="kt"&gt;char&lt;/span&gt;    &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pcTemp2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-    &lt;span class="c1"&gt;// realloc yapmak zorunda kalmamak için&lt;/span&gt;
-    &lt;span class="c1"&gt;// pwszWide üzerinden 1 tur geçip, kodlanmış&lt;/span&gt;
-    &lt;span class="c1"&gt;// veri için gerekli hafızayı hesaplayacağız.&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pwcTemp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pwszWide&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pwcTemp&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;pwcTemp&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;cbEncoded&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="n"&gt;utf8_encode_char&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pwcTemp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;encoded_char&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="p"&gt;}&lt;/span&gt;
-
-    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pszEncoded&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;malloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;cbEncoded&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; &lt;span class="c1"&gt;// +1 null&lt;/span&gt;
-
-    &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pwcTemp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pwszWide&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pcTemp2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pszEncoded&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pwcTemp&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;pwcTemp&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="n"&gt;cbTemp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;utf8_encode_char&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pwcTemp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;encoded_char&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-        &lt;span class="n"&gt;memcpy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pcTemp2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;encoded_char&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cbTemp&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-        &lt;span class="n"&gt;pcTemp2&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="n"&gt;cbTemp&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="p"&gt;}&lt;/span&gt;
-
-    &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pcTemp2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;// NULL terminator&lt;/span&gt;
-
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;pszEncoded&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;
-
-    &lt;span class="kt"&gt;wchar_t&lt;/span&gt; &lt;span class="n"&gt;example1&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sa"&gt;L&lt;/span&gt;&lt;span class="s"&gt;"İŞTE BUNLAR HEP TÜRKÇE KARAKTERLER: ÜĞİŞÇÖ"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="kt"&gt;wchar_t&lt;/span&gt; &lt;span class="n"&gt;example2&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="mh"&gt;0xD55C&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0xAD6D&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0xC5B4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0x0&lt;/span&gt;&lt;span class="p"&gt;};&lt;/span&gt; &lt;span class="c1"&gt;// korece korece&lt;/span&gt;
-    &lt;span class="kt"&gt;wchar_t&lt;/span&gt; &lt;span class="n"&gt;example3&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="mh"&gt;0x65E5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0x672C&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0x8A9E&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0x0&lt;/span&gt;&lt;span class="p"&gt;};&lt;/span&gt; &lt;span class="c1"&gt;// japonca japon&lt;/span&gt;
-    &lt;span class="kt"&gt;wchar_t&lt;/span&gt; &lt;span class="n"&gt;example4&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="mh"&gt;0x233B4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0x0&lt;/span&gt;&lt;span class="p"&gt;};&lt;/span&gt;                &lt;span class="c1"&gt;// çince bir karater&lt;/span&gt;
-
-    &lt;span class="kt"&gt;FILE&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fopen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"examples.txt"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;"wb"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-    &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;cbEncoded&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pszEncoded&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;utf8_encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;example1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;cbEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="n"&gt;fprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"%s&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pszEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="n"&gt;free&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pszEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-    &lt;span class="n"&gt;pszEncoded&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;utf8_encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;example2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;cbEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="n"&gt;fprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"%s&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pszEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="n"&gt;free&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pszEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-    &lt;span class="n"&gt;pszEncoded&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;utf8_encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;example3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;cbEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="n"&gt;fprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"%s&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pszEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="n"&gt;free&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pszEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-    &lt;span class="n"&gt;pszEncoded&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;utf8_encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;example4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;cbEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="n"&gt;fprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"%s&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pszEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="n"&gt;free&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pszEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-    &lt;span class="n"&gt;fclose&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-
-&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Öyle sanıyorum ki, yukarıdaki kodlarda optimize edilebilecek kısımlar vardır. Ancak,
-kolayca anlaşılabilr olması açısından, yapılabilecek optimizasyonlara dikkat etmedim.
-Faydalı bir yazı olmuştur diye ümit ediyorum.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/utf8-kodlama.html</guid><pubDate>Fri, 07 Jun 2019 16:51:00 GMT</pubDate></item></channel></rss>
+&lt;/pre&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/huffman-kodlamasi.html</guid><pubDate>Mon, 10 Jun 2019 18:29:00 GMT</pubDate></item></channel></rss>

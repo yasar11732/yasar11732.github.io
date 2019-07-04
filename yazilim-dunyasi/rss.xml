@@ -1,5 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Yazilim Dunyasi)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/yazilim-dunyasi/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Thu, 27 Jun 2019 21:18:42 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Flex ve Bison kullanarak JSON İşleme (2. Kısım)</title><link>http://ysar.net/yazilim-dunyasi/json-kutuphanesi.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Bu yazının &lt;a href="http://ysar.net/yazilim-dunyasi/flex-bison.html"&gt;birinci bölümünde&lt;/a&gt; Flex/Bison kullanarak
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Yazilim Dunyasi)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/yazilim-dunyasi/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Thu, 04 Jul 2019 20:01:28 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Programlamaya JavaScript ile Başlamak İçin 6 Neden</title><link>http://ysar.net/yazilim-dunyasi/javascript-ile-baslamak-icin-6-neden.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Hobi olarak programlama öğrenmek isteyenler veya programlamaya bir yerden başlayıp, zaman içinde
+meslek haline getirmek isteyenler, zaman zaman e-posta yolu ile bana ulaşıp, hangi programlama diliyle
+başlamaları gerektiği konusunda fikir almak istiyorlar. Bugüne kadar, bazen C, bazen de Python lehine
+tavsiye veriyordum. Son zamanlarda, JavaScript'in başlangıç dili olmaya çok müsait olduğu konusunda
+giderek kuvvetlenen bir kanaat geliştirdim. Neden böyle düşündüğümü, 6 madde halinde sizlerle paylaşmak istedim.&lt;/p&gt;
+&lt;h2&gt;Şimdi Başlayabilirsiniz&lt;/h2&gt;
+&lt;p&gt;Eğer bu yazıyı şahsi bilgisayarınızdaki bir web tarayıcı üzerinden okuyorsanız, JavaScript
+kodlamaya hemen başlayabilirsiniz. JavaScript ile programlamaya başlamak için, diğer dillerde
+olduğu gibi, geliştiricilere yönelik araç/gereçlerin kurulumuna ihtiyacınız yok. Bir metin
+düzenleyici (notepad, gedit, textedit gibi) ve web tarayıcı işinizi görecektir.&lt;/p&gt;
+&lt;h2&gt;Platform Özgürlüğü&lt;/h2&gt;
+&lt;p&gt;JavaScript kodlarınız tarayıcıda çalışacağı için, derleyici/yorumlayıcı sürümleri,
+işletim sistemi veya işlemci mimarisi
+gibi platformlar arasındaki farklılıklarla dikkatinizi bölmenize gerek kalmayacak. Tarayıcılar
+arasında da birtakım farklılıklar olabilse de, bunlar öğrenme aşamasında engel olacak konular değil.&lt;/p&gt;
+&lt;h2&gt;Otomatik Hafıza Yönetimi&lt;/h2&gt;
+&lt;p&gt;Bu özellik çoğu modern dil için de geçerli, ama, JavaScript özelinde
+tekrar etmekte fayda var. Hafızada yer ayırmak, işi bittikten sonra
+hafızayı iade etmek gibi işler JavaScript tarafından kontrol ediliyor.
+Ayrıca, kullanacağınız değişkenlerin veri tiplerini de açıkla belirtmek zorunda değilsiniz.
+Bu sayede, doğrudan
+aritmetik işlemler, fonksiyonlar, döngüler, koşullu ifadeler gibi programlama
+konularına geçebilir, hızlı deneme/yanılma süreci sayesinde, kendinizi geliştirebilirsiniz.&lt;/p&gt;
+&lt;h2&gt;Arayüz Programlama&lt;/h2&gt;
+&lt;p&gt;Python/C/Java gibi dillerle programlama öğrenmeye başlayan biri, neredeyse her zaman
+konsol programları yaparak başlar. Konsol programlarının gerekliliği ve faydası
+tartışmaya açık olmamakla birlikte, programlamaya yeni başlayanların, özellikle de
+hobi olarak programlama öğrenmek isteyenlerin hayalinde konsol uygulamaları yapmaktan
+ziyade, arayüzü olan interaktif programlar yapmak var. İnternetin programlama dili
+olan JavaScript, HTML/CSS ile birlikte, arayüzü olan interaktif uygulamalar yapmaya
+çok elverişli. O kadar elverişli ki, bazı masaüstü programları bile, programın içine
+gömülü web tarayıcı sayesinde HTML/JavaScript ile kodlanıyor.&lt;/p&gt;
+&lt;h2&gt;Güvenli Ortam&lt;/h2&gt;
+&lt;p&gt;Acemi programcının, bilgisayara zarar verme endişesi taşımasına gerek yok. JavaScript
+ile aşırı RAM/CPU kullanımı neticesinde tarayıcıyı veya tüm bilgisayarı kilitleme
+riski olsa da, istemeden binlerce dosyayı silme, binlerce dosya oluşturma, bilgisayar
+ayarlarında zararlı değişiklikler yapma gibi potansiyel riskler sıfıra yakın.&lt;/p&gt;
+&lt;h2&gt;Diğer Dillerle Benzerliği&lt;/h2&gt;
+&lt;p&gt;JavaScript grameri, koşullu ifadeleri, döngüleri gibi özellikleri C/C++/Java/C#
+gibi dillere çok yakın. JavaScript yazarken edindiğiniz alışkanlıkları, bu dillere
+geçerken yanınızda götürebilirsiniz.&lt;/p&gt;
+&lt;h2&gt;İkna Oldum, Şimdi Ne Yapmalıyım?&lt;/h2&gt;
+&lt;p&gt;Boş bir metin dosyası oluşturun, aşağıdaki satırları yapıştırın, ve &lt;code&gt;.html&lt;/code&gt; uzantısı ile
+kaydedin.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;p&lt;/span&gt; &lt;span class="na"&gt;id=&lt;/span&gt;&lt;span class="s"&gt;"metin"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;script&amp;gt;&lt;/span&gt;
+    document.getElementById("metin").innerText = "Merhaba Dünya!"
+&lt;span class="nt"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;İlk JavaScript programınızı bir tarayıcıda test etmeye hazırsınız. Belki bugün
+programlama maceranızın bir başlangıcı olur.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/javascript-ile-baslamak-icin-6-neden.html</guid><pubDate>Wed, 03 Jul 2019 20:50:00 GMT</pubDate></item><item><title>Flex ve Bison kullanarak JSON İşleme (2. Kısım)</title><link>http://ysar.net/yazilim-dunyasi/json-kutuphanesi.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Bu yazının &lt;a href="http://ysar.net/yazilim-dunyasi/flex-bison.html"&gt;birinci bölümünde&lt;/a&gt; Flex/Bison kullanarak
 JSON tarayan bir parser yapmıştık. Ancak, bu parser karşılaştığı
 JSON türlerinin ismini konsola yazmak dışında faydalı bir iş yapmıyordu.
 Bu yazıda, sıfırdan bir JSON kütüphanesi tasarlayarak, parser ile
@@ -1611,6 +1663,4 @@ yasar arabaci test1 ./command_expand
 
 &lt;p&gt;Bu programı kendi statik site oluşturucu programımı yapma gayesi ile yazmıştım. O projede ne kadar ileri giderim şimdilik bilemiyorum.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/sablon-doldurucu.html</guid><pubDate>Thu, 30 Aug 2018 21:15:00 GMT</pubDate></item><item><title>SageMath</title><link>http://ysar.net/yazilim-dunyasi/sage-math.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Eğer bloğumu takip ediyorsanız, son birkaç haftadır Euler problemi çözümlerimi paylaştığımı biliyorsunuz. Euler Problemleri,
 programcılık problemleri olduğu kadar, matematik problemleri de sayılabilir. Bu yazıda, bu problemlerin çözümünde sıklıkla faydalandığım
-&lt;a href="http://www.sagemath.org/"&gt;SageMath&lt;/a&gt; programından bahsedeceğim. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/sage-math.html"&gt;Devamını oku…&lt;/a&gt; (6 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/yazilim-dunyasi/sage-math.html</guid><pubDate>Wed, 22 Aug 2018 22:01:00 GMT</pubDate></item><item><title>Neden İşletim Sistemi Geliştirmemeliyiz - Ekleme</title><link>http://ysar.net/yazilim-dunyasi/neden-isletim-sistemi-gelistirmemeliyiz-ekleme.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Geçen gün neden işletim sistemi geliştirmemeliyiz adında bir yazı yazmıştım.
-Galiba o yazıda konuya nasıl yaklaştığımı net olarak ifade edemedim. O yüzden
-bu konuyu biraz daha açmaya karar verdim. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/neden-isletim-sistemi-gelistirmemeliyiz-ekleme.html"&gt;Devamını oku…&lt;/a&gt; (4 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/neden-isletim-sistemi-gelistirmemeliyiz-ekleme.html</guid><pubDate>Thu, 24 Oct 2013 13:38:00 GMT</pubDate></item></channel></rss>
+&lt;a href="http://www.sagemath.org/"&gt;SageMath&lt;/a&gt; programından bahsedeceğim. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/sage-math.html"&gt;Devamını oku…&lt;/a&gt; (6 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/yazilim-dunyasi/sage-math.html</guid><pubDate>Wed, 22 Aug 2018 22:01:00 GMT</pubDate></item></channel></rss>
