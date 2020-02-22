@@ -35,7 +35,7 @@
  </url>
  <url>
   <loc>http://ysar.net/2020/index.html</loc>
-  <lastmod>2020-02-22T17:34:00Z</lastmod>
+  <lastmod>2020-02-22T17:35:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/algoritma/4-renk-teoremi-ve-harita-boyama.html</loc>
@@ -48,6 +48,10 @@
  <url>
   <loc>http://ysar.net/algoritma/benzer-yazi-analizi.html</loc>
   <lastmod>2020-02-21T20:47:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://ysar.net/algoritma/buyuk-sayi-islemleri-giris.html</loc>
+  <lastmod>2020-02-22T17:35:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/algoritma/buyuk-sayi-toplama-cikarma.html</loc>
@@ -79,7 +83,7 @@
  </url>
  <url>
   <loc>http://ysar.net/algoritma/index.html</loc>
-  <lastmod>2020-02-22T17:34:00Z</lastmod>
+  <lastmod>2020-02-22T17:35:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/algoritma/kimya-formula-parser.html</loc>
@@ -247,7 +251,7 @@
  </url>
  <url>
   <loc>http://ysar.net/index.html</loc>
-  <lastmod>2020-02-22T17:34:00Z</lastmod>
+  <lastmod>2020-02-22T17:35:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/primes.html</loc>
@@ -686,10 +690,6 @@
   <lastmod>2020-02-22T17:31:00Z</lastmod>
  </url>
  <url>
-  <loc>http://ysar.net/yazilim-dunyasi/ingilizce-ogren-zararli-olabilir.html</loc>
-  <lastmod>2020-02-21T20:47:00Z</lastmod>
- </url>
- <url>
   <loc>http://ysar.net/yazilim-dunyasi/iyi-programci-yazilimci-nasil-olunur.html</loc>
   <lastmod>2020-02-21T20:47:00Z</lastmod>
  </url>
@@ -703,7 +703,7 @@
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/javascript-ile-baslamak-icin-6-neden.html</loc>
-  <lastmod>2020-02-22T17:31:00Z</lastmod>
+  <lastmod>2020-02-22T17:35:00Z</lastmod>
  </url>
  <url>
   <loc>http://ysar.net/yazilim-dunyasi/json-kutuphanesi.html</loc>
