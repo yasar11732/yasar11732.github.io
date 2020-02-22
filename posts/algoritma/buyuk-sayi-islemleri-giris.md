@@ -1,5 +1,5 @@
 <!--
-.. date: 2020-02-21 21:44
+.. date: 2020-02-22 20:35
 .. description: 
 .. slug: buyuk-sayi-islemleri-giris
 .. title: Büyük Sayı Algoritmaları - Giriş
