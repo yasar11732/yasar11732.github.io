@@ -1,5 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Algoritma)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/algoritma/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Mon, 01 Jul 2019 18:44:55 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Düzenli İfade (RegExp) Motorları ve Otomatlar</title><link>http://ysar.net/algoritma/dfa.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Geçtiğimiz günlerde, Flex ve Bison ile JSON işlemeye yönelik tutorial yazdım.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Algoritma)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/algoritma/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Sat, 22 Feb 2020 17:34:23 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Büyük Sayı Algoritmaları - Giriş</title><link>http://ysar.net/algoritma/buyuk-sayi-toplama-cikarma.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;İşlemciler aritmetik işlemleri gerçekleştirken, genellikle 8-64 bit
+arasında sayılar üzerinde işlem yapar. Bir program, daha büyük sayılar
+üzerinde işlem yapmak için, birden fazla sayıdan oluşan bir array
+üzerinde işlem yapabilir. Python programlama dilinde, sınırsız
+uzunlukta sayılar üzerinde işlem yapmak, dilin bir özelliği olarak
+sunulmuştur. Java'da ve C#'da ise, BigInteger sınıf ile, sınırsız
+uzunluktaki sayılar üzerinde işlem yapılabiliyor. Ben de,
+&lt;a href="http://ysar.net/euler/euler-13.html"&gt;(Euler 13) C Programlama Dilinde Büyük Sayıları Toplama&lt;/a&gt; 
+yazısını yazdığım günden bu yana, C ile büyük sayı
+kütüphanesi yazmaya niyetliydim. Geçtiğimiz günlerde,
+kısmen de olsa, bunu gerçekleştirebildim.&lt;/p&gt;
+&lt;p&gt;İlk yazdığım büyük sayı kütüphanesi, test edebildiğim kadarıyla
+doğru çalışmasına rağmen, aynı zamanda oldukça yavaştı. Bu nedenle,
+fikir alabilmek adına, &lt;a href="https://gmplib.org/"&gt;GMP&lt;/a&gt; kütüphanesini,
+ve &lt;a href="https://github.com/openssl/openssl/tree/master/crypto/bn"&gt;OpenSSL&lt;/a&gt;
+kütüphanesinin ilgili bölümlerini inceledim. Her ikisi de,
+benim ilk yazdığım kütüphaneye göre oldukça iyi olsa da, ikisi
+arasında tercih yapmak gerekirse, GMP'nin tasarımını daha
+başarılı buldum.&lt;/p&gt;
+&lt;p&gt;Bu yazı ile, GMP'yi örnek olarak olarak C ile yazacağım
+büyük sayı kütüphanesini anlatacak bir yazı dizisine başlamak
+istiyorum. Burada anlatacağım algoritmalar ve kütüphane, performans
+açısından GMP kadar iyi olmayacak. Bunun nedenlerinden aklıma gelen
+birkaç tanesi şu şekilde;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;GMP kütüphanesi, neredeyse her işlemci mimarisi için ayrı
+   ayrı optimize edilmiş assembly kodları içeriyor. Benim
+   yazacağım kütüphane sadece C kodlarından oluşacak. İşlemci
+   mimarisine uygun kod oluşturma işini C derleyecilerine
+   bırakacağım.&lt;/li&gt;
+&lt;li&gt;GMP kütüphanesi, her bir işlem için, bilinen en iyi algoritmaları
+   kullanıyor. Hatta bazı işlemler için, birkaç farklı algoritma
+   içerisinden, sayıların büyüklüğüne göre uygun olan algoritmayı
+   seçip kullanıyor. Burada bahsedeceğim algoritmalar, belki
+   ufak tefek optimizasyonlar içerse de, en temel seviyedeki
+   algoritmalar olacak.&lt;/li&gt;
+&lt;li&gt;GMP, her bir platform için, en uygun integer türünü seçip
+   kullanıyor. Bunu gerçekleştirebilmek için, derleme
+   hedefinin özelliklerini test edebilecek bir build sistemi
+   gerekiyor. Düzgün bir build sistemi yapmak başlı başına
+   ayrı bir iş olduğundan, ve bu konuya çok hakim olmadığım için,
+   platforma özgü veri tipi seçimi yapmayacağım.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;GMP kütüphanesi kadar iyi olmayacak olsa da, bir büyük sayı
+kütüphanesi geliştirmenin eğitsel değeri olduğuna inanıyorum.&lt;/p&gt;
+&lt;h3&gt;Veri Tipleri ve Makrolar&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;bn.h&lt;/code&gt; dosyası, büyük sayı kütüphanesinin header dosyası olacak. İlk versiyonu aşağıdaki gibi;&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#ifndef __BN_H_&lt;/span&gt;
+&lt;span class="cp"&gt;#define __BN_H_&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;limits.h&amp;gt; // CHAR_BIT&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdint.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+
+&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="kt"&gt;int32_t&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="kt"&gt;uint32_t&lt;/span&gt; &lt;span class="n"&gt;bn_digit_t&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="n"&gt;bn_long_digit_t&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="cp"&gt;#define BN_DIGIT_BITS ((sizeof(bn_digit_t)) * CHAR_BIT)&lt;/span&gt;
+&lt;span class="cp"&gt;#define BN_DIGIT_MAX ((bn_digit_t) ~ (bn_digit_t)0)&lt;/span&gt;
+&lt;span class="cp"&gt;#define BN_DIGIT_HI ((bn_digit_t) (1 &amp;lt;&amp;lt; (BN_DIGIT_BITS / 2)))&lt;/span&gt;
+&lt;span class="cp"&gt;#define BN_DIGIT_LOWMASK (BN_DIGIT_HI - 1)&lt;/span&gt;
+
+&lt;span class="cp"&gt;#define BN_MAX(a,b) ((a) &amp;gt; (b) ? (a) : (b))&lt;/span&gt;
+&lt;span class="cp"&gt;#define BN_MIN(a,b) ((a) &amp;lt; (b) ? (a) : (b))&lt;/span&gt;
+&lt;span class="cp"&gt;#define BN_ABS(a) ((a) &amp;gt;= 0 ? (a) : -(a))&lt;/span&gt;
+&lt;span class="cp"&gt;#define BN_CMP(a,b) (((a) &amp;gt; (b)) - ((b) &amp;gt; (a)))&lt;/span&gt;
+
+
+&lt;span class="cp"&gt;#endif&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Veri tiplerinin anlamları şu şekilde;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;bn_size_t&lt;/code&gt;: Uzunluk ile ilgili verileri tutan veri tipi. Bazı fonksiyonlardan
+   negatif uzunluk döndürmemiz gerekeceği için, signed 32 bit integer iyi bir tercih olacaktır.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;bn_digit_t&lt;/code&gt;: Aritmetik işlemlerde kullanılacak veri tipi. Temel aritmetik
+   işlemleri negatif olmayan sayıların üzerinde yapacağımız için, bu veri tipi unsigned olacak.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;bn_long_digit_t&lt;/code&gt;: &lt;code&gt;bn_digit_t&lt;/code&gt;'nin iki katı bit genişliğindeki veri tipi. Genişleyen çarpma
+   ve daralan bölme işlemleri için kolaylık sağlayacak.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;bn_digit_t&lt;/code&gt; tipine "digit" adını vermemizin nedeni, bu sayıların &lt;code&gt;2^32&lt;/code&gt;'lik sayı tabanında
+bir haneyi ifade etmesi. Örneğin, onluk tabanda işlem yaparken, &lt;code&gt;0..(10-1)&lt;/code&gt; arasındaki
+her bir rakam, sayının bir hanesini temsil ediyor. Biz yapacağımız işlemlerde,
+&lt;code&gt;0..(2^32 - 1)&lt;/code&gt; arasındaki sayıları tek hane olarak kabul edip işlem yapacağız. Birden fazla
+haneden oluşan sayıları ifade etmek için, &lt;code&gt;bn_digit_t[]&lt;/code&gt; veya &lt;code&gt;bn_digit_t*&lt;/code&gt; tiplerini
+kullanacağız. Yazacağımız bütün algoritmalar, sayıların little-endian olarak sıralandığı
+varsayımıyla çalışacak. Örneğin, &lt;code&gt;2^32&lt;/code&gt;'lik tabandaki &lt;code&gt;bn_digit_t a[3] = {1, 2, 3}&lt;/code&gt; sayısı, 
+onluk tabanda &lt;code&gt;1 + 2^32 * 2 + 2 ^ 64 * 3 = 55340232229718589441&lt;/code&gt; sayısına karşılık geliyor.&lt;/p&gt;
+&lt;p&gt;Bahsedeceğimiz algoritmaları denerken, veya hata tespiti yapmaya çalışırken, onluk taban
+ile &lt;code&gt;2^32&lt;/code&gt;'lik taban arasında sık sık dönüşüm yapma ihtiyacı hissedebilirsiniz. Ben bunu
+daha pratik yapabilmek adına aşağıdaki iki python fonksiyonunu kullanıyorum.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;base&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="mi"&gt;32&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;to2_32&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+
+    &lt;span class="n"&gt;xs&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;base&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;digit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;base&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;digit&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;digit&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;base&lt;/span&gt;
+
+    &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;xs&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;from2_32&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+
+    &lt;span class="n"&gt;num&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;)):&lt;/span&gt;
+        &lt;span class="n"&gt;num&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;base&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;num&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;64 bit aritmetiği destekleyen işlemcilerde, &lt;code&gt;bn_long_digit_t&lt;/code&gt; üzerindeki işlemler, doğrudan
+işlemci üzerinde yapılırken, diğer işlemcilerde 64 bit aritmetiği taklit
+eden kodları derleyici ekleyecektir. Dolayısıyla, 64 bit işlemcilerde
+bir nebze daha iyi bir performans bekleyebiliriz. 64 bit mimarisine sahip işlemciler
+için, GCC'nin bazı sürümleri 128 bit integer türünü destekliyor.
+Böyle bir platformda kütüphaneyi derlerken, &lt;code&gt;bn_digit_t&lt;/code&gt;'yi 64 bit,
+&lt;code&gt;bn_long_digit_t&lt;/code&gt;'yi 128 bit olarak ayarlayabilirsiniz. 128 bit aritmetiği
+desteklemeyen platformlar için, 128 bit aritmetiği kendimiz taklit edebiliriz.
+Çarpma ve Bölme ile ilgili yazılarda, bununla ilgili bir bölüm olacak.&lt;/p&gt;
+&lt;p&gt;Makrolar oldukça standart, bu nedenle, kısaca bahsedip geçeceğim;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;BN_DIGIT_BITS&lt;/code&gt;: &lt;code&gt;bn_digit_t&lt;/code&gt;'nin bit genişliği. Yukarıdaki örnekte bu makro 32 değerini alacak.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;BN_DIGIT_MAX&lt;/code&gt;: &lt;code&gt;bn_digit_t&lt;/code&gt;'nin alabileceği en büyük değer. Yukarıdaki örnekte &lt;code&gt;2^32 - 1&lt;/code&gt; (diğer bir ifadeyle &lt;code&gt;0xFFFFFFFF&lt;/code&gt;) değerini alacak.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;BN_DIGIT_HI&lt;/code&gt;: &lt;code&gt;bn_digit_t&lt;/code&gt;'nin, üst yarısının, alt biti. &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;BN_DIGIT_LOWMASK&lt;/code&gt;: &lt;code&gt;bn_digit_t&lt;/code&gt;'nin alt yarısını elde etmeye yarayan maske.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;BN_MAX&lt;/code&gt;, &lt;code&gt;BN_MIN&lt;/code&gt; : iki sayının büyük ve küçük olanını seçmeye yarayan makrolar.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;BN_ABS&lt;/code&gt; : Bir sayının mutlak değerini döndürür. Standart C kütüphanesinde &lt;code&gt;abs&lt;/code&gt; fonksiyonu olsa da, bu fonksiyonun
+              inline derlenme garantisi yok. Ekstra fonksiyon çağrısına gerek bırakmamak için, bu makroyu tercih edeceğiz.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;BN_CMP&lt;/code&gt; : İki sayıyı karşılaştır. İlk sayı ikinci sayıdan büyükse 1, küçükse -1, eşitse 0 döndürür.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Bir sonraki yazıda, negatif olmayan tamsayılar üzerinde toplama ve çıkarma fonksiyonlarını tanımlayacağız.&lt;/p&gt;
+&lt;h3&gt;Ek Kaynaklar&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Eli Bendersky's website
+: &lt;a href="https://eli.thegreenplace.net/2010/10/21/64-bit-types-and-arithmetic-on-32-bit-cpus"&gt;64-bit types and arithmetic on 32-bit CPUs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;GCC Documentation: &lt;a href="https://gcc.gnu.org/onlinedocs/gcc/Long-Long.html#Long-Long"&gt;Double-Word Integers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;GNU MP Manual: &lt;a href="https://gmplib.org/manual/Introduction-to-GMP.html#Introduction-to-GMP"&gt;Introduction to GNU MP&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Wikipedia: &lt;a href="https://en.wikipedia.org/wiki/128-bit_computing"&gt;128-bit computing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Wikipedia: &lt;a href="https://en.wikipedia.org/wiki/Endianness"&gt;Endianness&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Wikipedia: &lt;a href="https://en.wikipedia.org/wiki/Arbitrary-precision_arithmetic"&gt;Arbitrary-precision arithmetic&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/buyuk-sayi-toplama-cikarma.html</guid><pubDate>Fri, 21 Feb 2020 18:44:00 GMT</pubDate></item><item><title>Düzenli İfade (RegExp) Motorları ve Otomatlar</title><link>http://ysar.net/algoritma/dfa.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Geçtiğimiz günlerde, Flex ve Bison ile JSON işlemeye yönelik tutorial yazdım.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/flex-bison.html"&gt;Flex ve Bison kullanarak JSON İşleme (1. Kısım)&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/json-kutuphanesi.html"&gt;Flex ve Bison kullanarak JSON İşleme (2. Kısım)&lt;/a&gt;&lt;/li&gt;
@@ -1619,19 +1764,4 @@ Buyurun bakalım, umarım beğenirsiniz: &lt;/p&gt;&lt;p&gt;&lt;a href="http://y
 boyamak için 4 rengin yeterli olacağını savunuyor. Komşuluk, köşe olmayan ortak bir
 sınıra sahip olmak olarak tanımlanmış. Bu teoremin geçerli olması için, bölgelerin
 bir bütün halinde olması gerekiyor. Dünya haritası bu kurala uymuyor, çünkü, Alaska'nın
-Amerikayla kara bağlantısı yok. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/algoritma/4-renk-teoremi-ve-harita-boyama.html"&gt;Devamını oku…&lt;/a&gt; (5 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/4-renk-teoremi-ve-harita-boyama.html</guid><pubDate>Wed, 23 Oct 2013 13:00:00 GMT</pubDate></item><item><title>Matlab'da Sieve of Erastosthenes algoritması</title><link>http://ysar.net/algoritma/matlab-sieve-of-erastosthenes.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Matlab ile sieve algoritması kullanarak asal sayıları bulan bir
-fonksiyon yazdım. İlgilenenler aşağıda bulabilir.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;function&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;P &lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;sieve&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;x&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
-&lt;span class="c"&gt;%sieve Find prime numbers up to max using&lt;/span&gt;
-&lt;span class="c"&gt;%   sieve of Eratosthenes&lt;/span&gt;
-&lt;span class="n"&gt;P&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="n"&gt;len&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;length&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;P&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="nb"&gt;fix&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="nb"&gt;sqrt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;P&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;P&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;P&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)):&lt;/span&gt;&lt;span class="n"&gt;P&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="k"&gt;end&lt;/span&gt;
-&lt;span class="k"&gt;end&lt;/span&gt;
-
-&lt;span class="n"&gt;P&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="n"&gt;P&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;P&lt;/span&gt; &lt;span class="o"&gt;~=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)];&lt;/span&gt;
-&lt;span class="k"&gt;end&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/matlab-sieve-of-erastosthenes.html</guid><pubDate>Mon, 26 Nov 2012 14:54:48 GMT</pubDate></item></channel></rss>
+Amerikayla kara bağlantısı yok. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/algoritma/4-renk-teoremi-ve-harita-boyama.html"&gt;Devamını oku…&lt;/a&gt; (5 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/4-renk-teoremi-ve-harita-boyama.html</guid><pubDate>Wed, 23 Oct 2013 13:00:00 GMT</pubDate></item></channel></rss>
