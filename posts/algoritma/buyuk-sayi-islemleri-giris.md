@@ -108,17 +108,15 @@ daha pratik yapabilmek adına aşağıdaki iki python fonksiyonunu kullanıyorum
 base = 2**32
 
 def to2_32(x):
-    
-	xs = []
-	while x > base:
-		digit = int(x / base)
-		xs.append(digit)
-		x = x - digit * base
-	
-	if(x):
-		xs.append(x)
-		
-	return xs
+    xs = []
+    while x > base:
+		xs.append(x % base)
+		x = int(x / base)
+
+    if(x):
+        xs.append(x)
+
+    return xs
 
 def from2_32(xs):
 
