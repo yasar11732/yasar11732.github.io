@@ -17,17 +17,9 @@
 <meta property="og:site_name" content="YSAR.NET">
 <meta property="og:title" content="Büyük Sayı Algoritmaları - Toplama / Çıkarma">
 <meta property="og:url" content="http://ysar.net/algoritma/buyuk-sayi-islemleri-toplama-cikarma.html">
-<meta property="og:description" content='// http://felix11h.github.io/blog/mathjax-theorems
-.theorem {
-display: block;
-font-style: italic;
-}
-.theorem:before {
-content: "Teorem. ";
-font-weight: bold;
-font-style: normal;
-}
-.theorem[text]:befor'>
+<meta property="og:description" content='Bu yazıda n-haneli iki doğal sayı üzerinde toplama/çıkarma işlemi yapararak,
+n-haneli sonuç ve "elde" döndüren algoritmaları inceleyeceğiz. Bu algoritmalar
+kağıt/kalem ile yaptığımız toplama çıkarma i'>
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2020-02-23T18:28:00+03:00">
 <meta property="article:tag" content="mathjax">
@@ -53,6 +45,11 @@ font-style: normal;
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
+<p>Bu yazıda n-haneli iki doğal sayı üzerinde toplama/çıkarma işlemi yapararak,
+n-haneli sonuç ve "elde" döndüren algoritmaları inceleyeceğiz. Bu algoritmalar
+kağıt/kalem ile yaptığımız toplama çıkarma işlemleriyle oldukça benzer ve ilerleyen
+yazılara konu olacak algoritmalara nazaran oldukça temel düzeyde. <a href="buyuk-sayi-islemleri-giris.html">Bir önceki yazıda</a>
+tanımlanan veri türlerini kullanacağımız için, önce o yazıyı okumanızı tavsiye ederim. <!--TEASER_END--></p>
 <style>
 // http://felix11h.github.io/blog/mathjax-theorems
 .theorem {
@@ -69,11 +66,6 @@ content: "Teorem (" attr(text) ") ";
 }
 
 </style>
-<p>Bu yazıda n-haneli iki doğal sayı üzerinde toplama/çıkarma işlemi yapararak,
-n-haneli sonuç ve "elde" döndüren algoritmaları inceleyeceğiz. Bu algoritmalar
-kağıt/kalem ile yaptığımız toplama çıkarma işlemleriyle oldukça benzer ve ilerleyen
-yazılara konu olacak algoritmalara nazaran oldukça temel düzeyde. <a href="buyuk-sayi-islemleri-giris.html">Bir önceki yazıda</a>
-tanımlanan veri türlerini kullanacağımız için, önce o yazıyı okumanızı tavsiye ederim.</p>
 <pre class="code literal-block"><span></span><span class="n">bn_digit_t</span> <span class="nf">bn_add_n</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">result</span><span class="p">,</span> <span class="k">const</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op1</span><span class="p">,</span> <span class="k">const</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op2</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">n</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="n">bn_size_t</span> <span class="n">i</span><span class="p">;</span>
