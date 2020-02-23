@@ -6,6 +6,12 @@
 .. tags: mathjax
 -->
 
+Bu yazıda n-haneli iki doğal sayı üzerinde toplama/çıkarma işlemi yapararak,
+n-haneli sonuç ve "elde" döndüren algoritmaları inceleyeceğiz. Bu algoritmalar
+kağıt/kalem ile yaptığımız toplama çıkarma işlemleriyle oldukça benzer ve ilerleyen
+yazılara konu olacak algoritmalara nazaran oldukça temel düzeyde. [Bir önceki yazıda](buyuk-sayi-islemleri-giris.html)
+tanımlanan veri türlerini kullanacağımız için, önce o yazıyı okumanızı tavsiye ederim. <!--TEASER_END-->
+
 <style>
 // http://felix11h.github.io/blog/mathjax-theorems
 .theorem {
@@ -22,12 +28,6 @@ content: "Teorem (" attr(text) ") ";
 }
 
 </style>
-
-Bu yazıda n-haneli iki doğal sayı üzerinde toplama/çıkarma işlemi yapararak,
-n-haneli sonuç ve "elde" döndüren algoritmaları inceleyeceğiz. Bu algoritmalar
-kağıt/kalem ile yaptığımız toplama çıkarma işlemleriyle oldukça benzer ve ilerleyen
-yazılara konu olacak algoritmalara nazaran oldukça temel düzeyde. [Bir önceki yazıda](buyuk-sayi-islemleri-giris.html)
-tanımlanan veri türlerini kullanacağımız için, önce o yazıyı okumanızı tavsiye ederim.
 
 ```C
 bn_digit_t bn_add_n(bn_digit_t *result, const bn_digit_t *op1, const bn_digit_t *op2, bn_size_t n)
