@@ -1,5 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Algoritma)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/algoritma/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Sun, 23 Feb 2020 15:27:57 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Büyük Sayı Algoritmaları - Giriş</title><link>http://ysar.net/algoritma/buyuk-sayi-islemleri-giris.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;İşlemciler aritmetik işlemleri gerçekleştirken, genellikle 8-64 bit
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Algoritma)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/algoritma/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Sun, 23 Feb 2020 15:28:54 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Büyük Sayı Algoritmaları - Toplama / Çıkarma</title><link>http://ysar.net/algoritma/buyuk-sayi-islemleri-toplama-cikarma.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;style&gt;
+// http://felix11h.github.io/blog/mathjax-theorems
+.theorem {
+display: block;
+font-style: italic;
+}
+.theorem:before {
+content: "Teorem. ";
+font-weight: bold;
+font-style: normal;
+}
+.theorem[text]:before {
+content: "Teorem (" attr(text) ") ";
+}
+
+&lt;/style&gt;
+
+&lt;p&gt;Bu yazıda n-haneli iki doğal sayı üzerinde toplama/çıkarma işlemi yapararak,
+n-haneli sonuç ve "elde" döndüren algoritmaları inceleyeceğiz. Bu algoritmalar
+kağıt/kalem ile yaptığımız toplama çıkarma işlemleriyle oldukça benzer ve ilerleyen
+yazılara konu olacak algoritmalara nazaran oldukça temel düzeyde. &lt;a href="http://ysar.net/algoritma/buyuk-sayi-islemleri-giris.html"&gt;Bir önceki yazıda&lt;/a&gt;
+tanımlanan veri türlerini kullanacağımız için, önce o yazıyı okumanızı tavsiye ederim.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="nf"&gt;bn_add_n&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="n"&gt;carry&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;carry&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+        &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+        &lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+        &lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;carry&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;carry&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;carry&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;carry&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Yukarıdaki fonksiyonda, &lt;code&gt;op1&lt;/code&gt; ve &lt;code&gt;op2&lt;/code&gt;, &lt;code&gt;n&lt;/code&gt; haneli iki doğal sayıyı ifade ediyor. &lt;code&gt;result&lt;/code&gt;
+ise, &lt;code&gt;n&lt;/code&gt; haneli sonucun yazılacağı hafıza alanının başlangıcına işaret ediyor. &lt;code&gt;i&lt;/code&gt; değişkeni
+standart bir döngü sayacı. &lt;code&gt;carry&lt;/code&gt; ise, her toplama işlemi sonrası, bir üst haneye aktarılması
+gereken "elde" değerini tutacak. Döngüye başladığımızda, toplayacağımız sayıların ilgili
+hanelerini okuyoruz. Sayılardan bir tanesine, "elde" değerini ekliyoruz. Diğer sayıyı
+da ekleyip, sonuç array'inin ilgili hanesine sonucu yazıyoruz.&lt;/p&gt;
+&lt;p&gt;İki sayının toplamı, sayı tabanını (\(2^{32}\)) aştığında, sonuç sadece düşük bitleri içerecektir. Bu
+mod \(2^{32}\)'de toplama işlemi yapmaya eşdeğerdir. Onluk sayı tabanında düşünürsek, \(7 + 8 \equiv 5 \mod 10\)
+sonucun birler basamağını verir. Aynı şekilde, C ile yaptığımız toplama işleminin sonucunda (\(2^{32}\))
+tabanında toplama sonucunun birler basamağını elde ediyoruz. Üst haneye 1 eklememiz gerektiğini anlamak
+için, topladığımız sayıları toplam ile karşılaştırabiliriz.&lt;/p&gt;
+&lt;div class="theorem" text="Tek Haneli Sayıların Toplamı"&gt;
+
+\(n\) tabanında tek haneli iki sayının toplamının sonucu iki haneli olduğunda, sonucun birler basamağı
+iki sayıdan da küçüktür.
+$$
+(0 \leq a \leq b &amp;lt; n) \land (c = a + b \geq n) \implies (c \mod n &amp;lt; a) \land (c \mod n &amp;lt; b)
+$$
+&lt;/div&gt;
+
+&lt;p&gt;Öncelikle, \(0 \leq a \leq b &amp;lt; n\) ve \(c = a + b \geq n\) ise, \(c \mod n = a + b - n\) olur.
+Eğer \(c \mod n \geq a\) olsa idi, \(a + b - n \geq a\) olurdu. Buradan da, \(b \geq n\)
+sonucunu elde ederiz. Ancak, \(b &amp;lt; n\) olduğunu bildiğimiz için, \(c \mod n &amp;lt; a\) olmak zorundadır.&lt;/p&gt;
+&lt;p&gt;Çıkarma algoritması oldukça benzer olsa da, birkaç nüans farkı var. Burada, üst haneye 1 vermek
+yerine, üst haneden 1 almamız gerekiyor.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="nf"&gt;bn_sub_n&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="n"&gt;carry&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;carry&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+        &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+        &lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="n"&gt;carry&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;carry&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;carry&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;carry&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;r&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;carry&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Döngüye başladığımızda, eğer bu haneden 1 eksiltmemiz gerekiyorsa, çıkana 1 ekliyoruz.
+Çıkana 1 ekleme işlemi taşabileceği için, bunu kontrol etmemiz gerekiyor. Bir üst
+haneden değer eksiltmemiz gerektiğini ise eksilen çıkandan küçük olduğunda anlıyoruz.
+Son olarak, çıkarma işlemini yapıp, sonucun ilgili hanesine yazıyoruz.&lt;/p&gt;
+&lt;p&gt;İlerleyen yazılardaki algoritmalarda kullanmak üzere, n-haneli sayı ile 1 haneli sayı
+arasında toplama çıkarma yapan, ve m-haneli sayı ile n-haneli (\(m \geq n\) olmak üzere)
+sayılar arasında toplama çıkarma işlemi yapan fonksiyonlara ihtiyacımız olacak. Bunları egzersiz
+olarak yazabilirsiniz, bir sonraki yazının girişinde bu fonksiyonları paylaşacağım. Egzersizleri
+yaparken, sayıların başına 0 ekleyerek hane sayılarını eşitlemeden yapmaya çalışın.&lt;/p&gt;
+&lt;h3&gt;Ek Kaynaklar&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Knuth D. Art of The Computer Programming Vol 2 Section 4.3.1&lt;/li&gt;
+&lt;li&gt;Wikipedia. &lt;a href="https://en.wikipedia.org/wiki/Integer_overflow"&gt;Integer overflow&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Wikipedia. &lt;a href="https://en.wikipedia.org/wiki/Modular_arithmetic"&gt;Modular Arithmetic&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;x86 Instruction Set Reference &lt;a href="https://x86.puri.sm/html/file_module_x86_id_4.html"&gt;ADC&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;x86 Instruction Set Reference &lt;a href="https://x86.puri.sm/html/file_module_x86_id_28.html"&gt;CLC&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;x86 Instruction Set Reference &lt;a href="https://x86.puri.sm/html/file_module_x86_id_302.html"&gt;STC&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/algoritma/buyuk-sayi-islemleri-toplama-cikarma.html</guid><pubDate>Sun, 23 Feb 2020 15:28:00 GMT</pubDate></item><item><title>Büyük Sayı Algoritmaları - Giriş</title><link>http://ysar.net/algoritma/buyuk-sayi-islemleri-giris.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;İşlemciler aritmetik işlemleri gerçekleştirken, genellikle 8-64 bit
 arasında sayılar üzerinde işlem yapar. Bir program, daha büyük sayılar
 üzerinde işlem yapmak için, birden fazla sayıdan oluşan bir array
 üzerinde işlem yapabilir. Python programlama dilinde, sınırsız
@@ -1760,8 +1864,4 @@ yazısında bahsedilen yönteme kısaca değineceğim. &lt;/p&gt;&lt;p&gt;&lt;a 
 yazısını gördüm. Yaptığı şey çok hoşuma gitti, ben de özendim, o tarz birşey yapayım dedim. Tam olarak ne yapsam diye
 düşünürken, aklıma sorting algoritmaları geldi. Sort algoritmalarını bir resim üzerinde uygulasam ve ara adımlardan
 bir video oluştursam ilginç olabilir diye düşündüm, ve çeşitli sıralama algoritmaları ile birkaç video hazırladım.
-Buyurun bakalım, umarım beğenirsiniz: &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/algoritma/pixel-siralama-videolari.html"&gt;Devamını oku…&lt;/a&gt; (3 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/pixel-siralama-videolari.html</guid><pubDate>Mon, 28 Oct 2013 10:37:17 GMT</pubDate></item><item><title>4 renk teoremi ve harita boyama</title><link>http://ysar.net/algoritma/4-renk-teoremi-ve-harita-boyama.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;4 renk teoremi, verilen bir yüzeysel haritayı, komşu bölgeler farklı renklerde olacak şekilde
-boyamak için 4 rengin yeterli olacağını savunuyor. Komşuluk, köşe olmayan ortak bir
-sınıra sahip olmak olarak tanımlanmış. Bu teoremin geçerli olması için, bölgelerin
-bir bütün halinde olması gerekiyor. Dünya haritası bu kurala uymuyor, çünkü, Alaska'nın
-Amerikayla kara bağlantısı yok. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/algoritma/4-renk-teoremi-ve-harita-boyama.html"&gt;Devamını oku…&lt;/a&gt; (5 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/4-renk-teoremi-ve-harita-boyama.html</guid><pubDate>Wed, 23 Oct 2013 13:00:00 GMT</pubDate></item></channel></rss>
+Buyurun bakalım, umarım beğenirsiniz: &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/algoritma/pixel-siralama-videolari.html"&gt;Devamını oku…&lt;/a&gt; (3 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/pixel-siralama-videolari.html</guid><pubDate>Mon, 28 Oct 2013 10:37:17 GMT</pubDate></item></channel></rss>
