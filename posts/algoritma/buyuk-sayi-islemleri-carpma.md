@@ -1,5 +1,5 @@
 <!--
-.. date: 2020-02-24 20:36
+.. date: 2020-02-23 20:36
 .. description: 
 .. slug: buyuk-sayi-islemleri-carpma
 .. title: Büyük Sayı Algoritmaları - Çarpma
@@ -70,8 +70,10 @@ u * v & = (2^{16} * u_h + u_l) * (2^{16} * v_h + v_l) \\
 $$
 </div>
 
-32 bit değişkenlere bağlı kalarak çarpma işlemini yukarıdaki gibi yapabiliriz. Ancak, C derleyecileri
-32 bit işlemcilerde 64 bit aritmetiği taklit ettiği için, işin kolayına da kaçabiliriz.
+Yukarıdaki fonksiyon genel olarak genişleyen (argümanlarından geniş sonuç veren) çarpma
+işlemlerinde kullanılabilir. Ancak, birçok modern 32 bit işlemci, 64 bit sonuç verebiliyor.
+64 bit işlemcilerde zaten böyle bir sorunumuz olmadığı için, aşağıdaki fonksiyon çoğunlukla
+yukarıdakinden daha iyi bir performans verecektir.
 
 ```C
 void bn_mul_n11(bn_digit_t *rl, bn_digit_t op1, bn_digit_t op2)
@@ -79,11 +81,6 @@ void bn_mul_n11(bn_digit_t *rl, bn_digit_t op1, bn_digit_t op2)
 	*((bn_long_digit_t *)rl) = ((bn_long_digit_t)op1) * ((bn_long_digit_t)op2);
 }
 ```
-
-Bu ikinci fonksiyon 32 bit işlemcilerde ilkini nazaran benzer bir performans verecektir. 64 bit
-işlemcilerde ise daha iyi bir performans bekleyebiliriz. Ancak, 64 bit işlemcilerde, `bn_digit_t`'yi 64 bit
-olarak ayarlarsanız, ikinci fonksiyonu kullanmak için 128 bit bir değişkene ihtiyacımız var. Bunu da
-her derleyeci desteklemiyor.
 
 1-hane x 1-hane çarpımı yaptıktan sonra, n-hane x 1-hane çarpımına geçebiliriz. Bir önceki yazıda egzersiz
 olarak bıraktığım, n-haneli ve 1 haneli toplamı fonksiyonunu da burada tanımlıyorum.
@@ -193,4 +190,37 @@ void bn_mul_n(bn_digit_t *result, bn_digit_t *op1, bn_size_t m, bn_digit_t *op2,
 
 Bu fonksiyonda, önce `op2`'nin son hanesi ile, `op1`'i çarpıp, sonucu `result` array'ine yazıyoruz.
 `for` döngüsünün her bir adımında, `op2` bir sonraki hanesini `op1` ile çarparak, `result`
-array'inin bir sonraki hanesine ekliyoruz. 
+array'inin bir sonraki hanesine ekliyoruz. Döngünün her girişinde `result` pointer'ını bir artırdığımıza
+dikkat edin. Böylece, `op2`'nin her hanesinin çarpımını, sonuca kaydırarak eklemiş oluyoruz. Örneğin, onluk
+tabanda 565 ile 17'nin çarpımını aşağıdaki gibi hayal edebilirsiniz.
+
+<pre>
+    567
+x    17
+-- -- -
+   3969
++ 0567
+-- -- -
+  09639
+</pre>
+
+Bir önceki yazıda, egzersiz olarak bıraktığım farklı büyüklükteki doğal sayıları toplama fonksiyonu da şu şekilde yazılabilir
+
+	:::C
+	
+	bn_digit_t bn_add_nn(bn_digit_t *result, const bn_digit_t *op1, bn_size_t n1, const bn_digit_t *op2, bn_size_t n2)
+	{
+		bn_digit_t carry = bn_add_n(result, op1, op2, n2);
+		if (n1 > n2)
+			carry = bn_add_n1(result + n2, op1 + n2, n1 - n2, carry);
+		
+		return carry;
+	}
+
+Ek Kaynaklar
+------------
+
+ - Knuth D. Art of The Computer Programming Vol 2 Section 4.3.1
+ - [Karatsuba algorithm](https://en.wikipedia.org/wiki/Karatsuba_algorithm)
+ - [Toom–Cook multiplication](https://en.wikipedia.org/wiki/Toom%E2%80%93Cook_multiplication)
+ - x86 Instruction Set Reference [MUL](https://x86.puri.sm/html/file_module_x86_id_210.html)
