@@ -1,5 +1,5 @@
 <!--
-.. date: 2020-02-23 20:36
+.. date: 2020-02-26 22:44
 .. description: 
 .. slug: buyuk-sayi-islemleri-carpma
 .. title: Büyük Sayı Algoritmaları - Çarpma
