@@ -1,5 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET</title><link>http://ysar.net/</link><description>Yaşar Arabacı İnternet Günlüğü</description><atom:link href="http://ysar.net/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Wed, 26 Feb 2020 19:44:50 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Büyük Sayı Algoritmaları - Çarpma</title><link>http://ysar.net/algoritma/buyuk-sayi-islemleri-carpma.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;a href="http://ysar.net/algoritma/buyuk-sayi-islemleri-toplama-cikarma.html"&gt;Bir önceki yazıda&lt;/a&gt;, n-haneli doğal sayılar üzerinde toplama
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET</title><link>http://ysar.net/</link><description>Yaşar Arabacı İnternet Günlüğü</description><atom:link href="http://ysar.net/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Tue, 03 Mar 2020 22:34:28 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Rastgele Sayı Üretici</title><link>http://ysar.net/algoritma/rastgele-sayi-uretici.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Merhabalar,&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Arbitrary-precision_arithmetic"&gt;Multi-precision&lt;/a&gt; doğal sayılarda bölme yapan bir fonksiyonu test etmek için, C'deki &lt;code&gt;rand()&lt;/code&gt;
+fonksiyonu ile rastgele sayı oluştururken, oluşturduğum sayıların
+yeterince rastgele olmadığına (artık o ne demekse) karar verdim. Fonksiyon içinde, çok
+nadiren de olsa çalışması gereken bir &lt;code&gt;if&lt;/code&gt; bloguna, milyarlarca sayı üretmeme rağmen girememiştim.
+Hal böyle olunca, C'deki &lt;code&gt;rand()&lt;/code&gt;
+fonksiyonuna alternatif olarak, &lt;a href="https://en.wikipedia.org/wiki/RC4"&gt;RC4&lt;/a&gt; tabanlı
+bir rastgele sayı üretici oluşturdum.&lt;/p&gt;
+&lt;p&gt;Bu rastgele sayı üreticinin özelliği, küçük sayılara daha fazla ağırlık veriyor olması. Dolayısı ile,
+uniform dağılımda sayılar üretmiyor. Kriptografi alanında kullanılmaması gerektiğini de özellikle
+vurgulamak istiyorum. Kodlar aşağıdaki gibi;&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#if defined(__GNUC__)&lt;/span&gt;
+&lt;span class="cp"&gt;#define nlz(x) __builtin_clz(x)&lt;/span&gt;
+&lt;span class="cp"&gt;#elif defined(_MSC_VER)&lt;/span&gt;
+&lt;span class="cp"&gt;#define nlz(x) __lzcnt(x)&lt;/span&gt;
+&lt;span class="cp"&gt;#else&lt;/span&gt;
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;nlz&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;value&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&amp;gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;32&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="cp"&gt;#endif&lt;/span&gt;
+
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdint.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+
+&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="kt"&gt;int32_t&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="kt"&gt;uint32_t&lt;/span&gt; &lt;span class="n"&gt;bn_digit_t&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;rngstate&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;uint8_t&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;256&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+
+&lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;rngstate&lt;/span&gt; &lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;init_rng&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;keysize&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;strlen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="kt"&gt;uint8_t&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;256&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="n"&gt;j&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;256&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;j&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;keysize&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+        &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;tmp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+        &lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+        &lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;tmp&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kt"&gt;uint8_t&lt;/span&gt; &lt;span class="nf"&gt;myarc4&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="kt"&gt;uint8_t&lt;/span&gt; &lt;span class="n"&gt;temp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;temp&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="kt"&gt;uint8_t&lt;/span&gt;&lt;span class="p"&gt;)(&lt;/span&gt;&lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;RNGSTATE&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;)];&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;fill_random&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;arr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;do&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="n"&gt;num&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="n"&gt;k&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;myarc4&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="mi"&gt;33&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="n"&gt;_nlz&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;32&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+        &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_nlz&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;32&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+        &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;shift&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_nlz&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;32&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;shift&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="n"&gt;shift&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+            &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;mask&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;shift&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="n"&gt;num&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;num&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;shift&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;myarc4&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;mask&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+            &lt;span class="n"&gt;_nlz&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;nlz&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;num&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+
+        &lt;span class="n"&gt;arr&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;num&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;len&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Burada kullanmak isteyebileceğiniz iki fonksiyon var; &lt;code&gt;fill_random&lt;/code&gt; ve &lt;code&gt;myarc4&lt;/code&gt;. &lt;code&gt;myarc4&lt;/code&gt; fonksiyonu
+RC4 şifrelemeden esinlenerek(!) yazdım. Her çağrıldığında, rastgele 8 bit bir değer döndürüyor. Ancak,
+fonksiyonu kullanmadan önce, program başlangıcında bir kez &lt;code&gt;init_rng&lt;/code&gt; fonksiyonunu çağırmanız gerekiyor.
+Argüman olarak statik bir string verirseniz, her seferinde aynı sayıları üretir. Eğer istediğiniz bu değilse,
+&lt;code&gt;key&lt;/code&gt; olarak kullanılacak string'i &lt;code&gt;/dev/urandom&lt;/code&gt;'u okuyarak veya &lt;a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptgenrandom"&gt;CryptGenRandom&lt;/a&gt;
+ fonksiyonunu kullanarak oluşturup, bununla birlikte &lt;code&gt;init_rng&lt;/code&gt;
+fonksiyonunu çağırabilirsiniz.&lt;/p&gt;
+&lt;p&gt;Herhangi uzunluktaki 32bit integer array'ini rastgele sayılarla doldurmak için, &lt;code&gt;fill_random&lt;/code&gt; fonksiyonu
+kullanabilirsiniz. İlk argüman olarak array'i, ikinci argüman olarak da array uzunluğunu göndermeniz gerekiyor.
+Yukarıda da bahsettiğim gibi, burada oluşacak sayılar, sıfıra doğru meyilli. Yaklaşık olarak 1/32 ihtimalle 0,
+1/32 ihtimalle 1, 1/64 ihtimalle 2 ve 3 döndürmesini bekleyebilirsiniz. &lt;/p&gt;
+&lt;p&gt;Standart kütüphanedeki &lt;code&gt;rand()&lt;/code&gt; fonksiyonuna nazaran oldukça yavaş kalabilir, ama, farklı bir dağılıma
+sahip rastgele sayılar üretmek isterseniz işinize yarayabileceğini düşünüyorum.&lt;/p&gt;
+&lt;p&gt;Kriptografi için kullanılmaması gerektiğini tekrar hatırlatayım.&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/algoritma/rastgele-sayi-uretici.html</guid><pubDate>Tue, 03 Mar 2020 22:28:00 GMT</pubDate></item><item><title>Büyük Sayı Algoritmaları - Çarpma</title><link>http://ysar.net/algoritma/buyuk-sayi-islemleri-carpma.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;a href="http://ysar.net/algoritma/buyuk-sayi-islemleri-toplama-cikarma.html"&gt;Bir önceki yazıda&lt;/a&gt;, n-haneli doğal sayılar üzerinde toplama
 çıkarma algoritmalarından bahsetmiştik. Bu yazıda m-haneli doğal sayılar ile n-haneli doğal sayılar arasında
 çarpma işlemi yapan bir algoritmayı inceleyeceğiz. Bu algoritmanın ön çalışması olarak, bir haneli iki
 sayı çarparak, iki haneli sonuç döndüren bir fonksiyon yazacağız. &lt;/p&gt;
@@ -1812,90 +1920,4 @@ söylenebilecekler malesef bir blog yazısına sığamayacak kadar çok. Eğer p
 sıfırdan &lt;code&gt;configure.ac&lt;/code&gt; ve &lt;code&gt;Makefile.am&lt;/code&gt; dosyaları yazmak yerine, yapacağınız projeye benzer bir projenin dosyalarını
 kullanarak başlamanız işinizi kolaylaştıracaktır. Eğer &lt;a href="https://github.com/search?q=configure+extension%3Aac&amp;amp;type=Code"&gt;Github'da autotools kullanan projeleri&lt;/a&gt;
 aratırsanız, karşınıza binlerce sonuç çıkacatır. &lt;code&gt;automake&lt;/code&gt; ve &lt;code&gt;autoconf&lt;/code&gt; belgeleri içinde,
-kullanabileceğiniz tüm makrolar hakkında bilgi alabilirsiniz.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/autotools.html</guid><pubDate>Sun, 23 Jun 2019 13:16:00 GMT</pubDate></item><item><title>&lt;setjmp.h&gt; Ne İşe Yarar</title><link>http://ysar.net/diger/setjmp-h.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Son bir hafta, veya biraz daha uzun bir süre boyunca, akademik bir merak neticesinde deflate formatında sıkıştırma/açma
-yapan bir programın nasıl yazılabileceğini araştıyordum. Zlib kütüphanesinin içinde, deflate formatını açmaya yarayan
-referans niteliğinde yazılmış, &lt;a href="https://github.com/madler/zlib/blob/master/contrib/puff/puff.c"&gt;puff.c&lt;/a&gt; adında bir C
-programı var. Bu programı incelerken, içinde &lt;code&gt;setjmp()&lt;/code&gt; ve &lt;code&gt;longjmp()&lt;/code&gt; fonksiyonlarını gördüm. Kodlarda, bu fonksiyonların
-tanımının &lt;code&gt;setjmp.h&lt;/code&gt; içerisinde yapıldığı yazıyordu. Zlib kaynak kodları içerisinde bu header dosyasını bir süre aradıktan
-sonra, &lt;code&gt;setjmp.h&lt;/code&gt;'nin C standardı içinde olduğunu öğrendim. Şimdiye kadar C dilini iyi kullandığını
-vehmetmiş biri olarak, hiç duymadığım bir header dosyasıyla karşılaşmak beni heyecanlandırdı. Hemen internetten araştırmaya
-koyuldum.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;setjmp.h&lt;/code&gt; header dosyası, 3 şey tanımlıyor; &lt;code&gt;setjmp()&lt;/code&gt;, &lt;code&gt;longjmp()&lt;/code&gt; ve &lt;code&gt;jmp_buf&lt;/code&gt;. Bu üçü sayesinde, normal fonksiyon çağırma
-ve fonksiyondan değer döndürme mekanizmasının dışına çıkıp, programın başka bir yerine zıplayabiliyoruz. Bunu fonksiyon sınırlarını
-aşan &lt;code&gt;goto&lt;/code&gt; gibi düşünebiliriz. Okuduğum kaynaklarda 2 çeşit kullanımı var. Birincisi, daha üst seviye dillerde bulunan özel durum (exception)
-yönetimini gerçekleştirme, ikincisi de coroutine oluşturmak. Bu yazı özel durumlar üzerine kurulu olacak ama, C dilinde coroutine yazma
-konusunda da çok heyecanlıyım, ilerleyen günlerde bu konuda da denemeler yapmak istiyorum.&lt;/p&gt;
-&lt;p&gt;Uygulamaya geçmeden önce, teorik bilgiyle başlamak istiyorum. &lt;code&gt;setjmp&lt;/code&gt; makrosu, argüman olarak &lt;code&gt;jmp_buf&lt;/code&gt; adında bir &lt;code&gt;struct&lt;/code&gt;
-alıyor. İleride &lt;code&gt;longjmp&lt;/code&gt; tarafından kullanılmak üzere, geçerli yürütme bağlamını (execution context) &lt;code&gt;jmp_buf&lt;/code&gt; tipindeki
-değişkene kaydediyor. Geçerli yürütme bağlamından kasıt, &lt;code&gt;setjmp&lt;/code&gt; makrosu çalıştırıldığı andaki genel amaçlı register'larla
-birlikte, Instruction Pointer, Stack Pointer, EFLAGS gibi register'ların değerleri. Bunun detayları haliyle işlemci
-mimarisine göre değişebilir. Bu makronun kullanıcısı olarak bizi ilgilendiren, bu makronun bir zıplama noktası kaydettiği.
-Bu makronun dönüş değeri, yürütme bağlamını kaydettiği anda 0, &lt;code&gt;longjmp&lt;/code&gt; ile dönüldüğü anda ise, &lt;code&gt;longjmp&lt;/code&gt; tarafından ayarlanan
-değere eşit oluyor. Bunu anlamak için, bir örneğe başvurmakta fayda var.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;setjmp.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;string.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-
-&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="k"&gt;struct&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="kt"&gt;jmp_buf&lt;/span&gt; &lt;span class="n"&gt;env&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-
-&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;smemset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;val&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;longjmp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;env&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-    &lt;span class="n"&gt;memset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;val&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;malloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-
-    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;setjmp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;env&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"String uzunlugu yeterli degil."&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="p"&gt;}&lt;/span&gt;
-
-    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"%d&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-        &lt;span class="n"&gt;smemset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="p"&gt;}&lt;/span&gt;
-
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Yukarıdaki örneği incelerseniz, &lt;code&gt;setjmp&lt;/code&gt; kullanımı daha anlaşılır olur diye düşünüyorum. Dikkat etmeniz gereken
-en önemli kısım, &lt;code&gt;setjmp&lt;/code&gt; makrosundan birden fazla kez dönüldüğü. İlk çağırıldığında, dönüş değeri 0 olacağı için,
-&lt;code&gt;if&lt;/code&gt; blogu içerisine girilmeyecek, ve program &lt;code&gt;while&lt;/code&gt; döngüsüne girecek. &lt;code&gt;while&lt;/code&gt; döngüsü sonsuz bir döngü gibi görünse
-de, aslında öyle değil. &lt;code&gt;smemset&lt;/code&gt; fonksiyonu, özel durumlarda (bunu exception gibi düşünebiliriz) &lt;code&gt;longjmp&lt;/code&gt; fonksiyonunu
-kullandığı için, sanki &lt;code&gt;setjmp&lt;/code&gt; fonksiyonundan yeni dönülüyormuş gibi, &lt;code&gt;main&lt;/code&gt; fonksiyonu içindeki &lt;code&gt;if&lt;/code&gt; koşuluna zıplayacak.
-Ancak bu sefer, &lt;code&gt;setjmp&lt;/code&gt;'nin dönüş değeri &lt;code&gt;longjmp&lt;/code&gt; tarafından 1 olarak ayarlandığı için, &lt;code&gt;if&lt;/code&gt;in koşulu sağlanacak ve &lt;code&gt;main&lt;/code&gt;
-fonksiyonu hata mesajı yazdırıp dönecek. Gözünüzü kısıp, kafanızı biraz eğerek bakarsanız, tıpkı daha yüksek seviye dillerdeki
-throw/catch veya raise/catch benzeri bir program davranışı ile karşı karşıyayız.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;1
-2
-3
-4
-5
-6
-String uzunlugu yeterli degil.
-&lt;/pre&gt;
-
-
-&lt;p&gt;Yukarıdaki kadar küçük bir programda, &lt;code&gt;setjmp&lt;/code&gt; ve &lt;code&gt;longjmp&lt;/code&gt; kullanımını anlatmak mümkün olsa da, bu ikisinin
-faydasını göstermek pek muhtemel görünmüyor. Ancak, fonksiyon çağrı hiyerarşisinin derinliklerinde oluşan özel
-durumların, üst seviye bir fonksiyonda merkezi bir şekilde yönetilmesine imkan sağlaması açısından faydalı görünüyor.
-Ayrıca, embedded programlama için de, thread benzeri bir program akışı sağlamanın tek yolu bu olabilir. Bu yazıda
-söylemek istediklerim bu kadar, ama, &lt;code&gt;setjmp&lt;/code&gt; ile coroutine oluşturma konusunda da ileride birşeyler yazmak istiyorum.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/diger/setjmp-h.html</guid><pubDate>Tue, 18 Jun 2019 06:53:00 GMT</pubDate></item></channel></rss>
+kullanabileceğiniz tüm makrolar hakkında bilgi alabilirsiniz.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/autotools.html</guid><pubDate>Sun, 23 Jun 2019 13:16:00 GMT</pubDate></item></channel></rss>
