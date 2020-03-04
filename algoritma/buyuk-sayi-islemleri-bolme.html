@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Büyük Sayı Algoritmaları - Bölme | YSAR.NET</title>
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900%7CUbuntu:300,400,500,700" rel="stylesheet">
+<link href="../assets/icons/foundation-icons.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/style.css" rel="stylesheet" type="text/css">
+<script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/algoritma/buyuk-sayi-islemleri-bolme.html">
+<!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="rastgele-sayi-uretici.html" title="Rastgele Sayı Üretici" type="text/html">
+<meta property="og:site_name" content="YSAR.NET">
+<meta property="og:title" content="Büyük Sayı Algoritmaları - Bölme">
+<meta property="og:url" content="http://ysar.net/algoritma/buyuk-sayi-islemleri-bolme.html">
+<meta property="og:description" content="Daha önceki yazılarda, değişken-genişlikteki doğal sayılar üzerinde
+toplama, çıkarma ve çarpma algoritmalarına değinmiştik. Bu yazıda, D. Knuth'un
+The Art of The Computer Programming kitabının 4.3.1'i">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2020-03-04T23:18:00+03:00">
+<meta property="article:tag" content="mathjax">
+</head>
+<body>
+
+         
+    <header class="fixed-top"><div class="container">
+        <a href="http://ysar.net">
+            <img class="logo" src="../assets/img/Logo.svg"></a>
+        <div class="subtitle">Python, Yazılım ve Programlama</div>
+    <nav id="menu"><ul>
+<li class="fi-info"><a href="../yasar-arabaci.html">Hakkımda</a></li>
+            <li class="fi-social-github"><a href="https://github.com/yasar11732/">GitHub</a></li>
+            <li class="question"><a href="../soru-cevap.html">Soru-Cevap</a></li>
+            <li class="fi-rss"><a href="../rss.xml">RSS</a></li>
+        </ul></nav>
+</div>
+        
+    </header><main class="main-content"><article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 itemprop="headline name">Büyük Sayı Algoritmaları - Bölme</h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Daha önceki yazılarda, değişken-genişlikteki doğal sayılar üzerinde
+toplama, çıkarma ve çarpma algoritmalarına değinmiştik. Bu yazıda, D. Knuth'un
+<em>The Art of The Computer Programming</em> kitabının 4.3.1'inci kısmında anlatılan
+<em>Algoritm D.</em>'den bahsedeceğim. Bu algoritma, değişken-genişlikteki doğal
+sayılarda bölme işlemi yaparken, kabul edilebilir bir performansa sahip.
+Kodlara geçmeden önce, algoritmayı inceleyelim. <!-- TEASER_END --></p>
+<p>
+İki doğal sayı olan \( u = (u_{m+n-1} \ldots u_1u0)_b \) ve \(v = (v_{n-1} \ldots v_1v0)_b\) için,
+\(v_{n-1} \neq 0\) ve \(n &gt; 1\) olmak üzere, b-tabanındaki bölümü \(\lfloor u / v \rfloor = (q_mq_{m-1} \ldots q_0)_b\)
+ve kalanı \(u \mod v = (r_{n-1} \ldots r_1r_0)_b\) olarak tanımlıyoruz.
+</p>
+
+<ul>
+<li>
+<strong>D.1</strong> [Normalizasyon] Bu adımda, bölenin en üst hanesi sayı tabanının yarısından büyük veya eşit olacak, ancak, bölenin
+   hane sayısı artmayacak şekilde, bölünen ve böleni bir \(d\) sayısı ile çarpıyoruz. Bu işlemi bilgisayarda yaparken,
+   bölenin en üst biti 1 olacak kadar, iki sayıyı kaydırabiliriz. Bu adımda, bölünenin hane sayısı 1 artmalı.
+   Eğer \(d\) ile çarpıldığında hane sayısı artmamışsa, sayının başına bir 0 eklememiz gerekiyor.</li>
+<li>
+<strong>D.2</strong> [Döngü Başlangıcı] \(j = m\). Döngü sayacını bölünen ve bölenin hane sayılarının farkına eşitliyoruz.</li>
+<li>
+<strong>D.3</strong> [\(\hat{q}\) hesabı] \(\hat{q} \leftarrow \lfloor (u_{j+n}b + u_{j+n-1}) / (v_{n-1}) \rfloor\) ve
+  \(\hat{r} \leftarrow(u_{j+n}b + u_{j+n-1}) \mod v_{n-1} \) olsun. Türkçe ifade edersek, bölünenin üstten
+  iki hanesini, bölenin en üst hanesine bölüp, sonucu \(\hat{q}\) ve kalanı \(\hat{r}\) olarak tanımla.
+  Burada hesaplanan \(\hat{q}\), bölümün bir hanesinin tahmini değeri olacak. Kitaptaki açıklamalardan,
+  burada hesaplanan tahmini değerin, olması gerekenden en çok 2 fazla olabileceği anlaşılıyor. Eğer  \(\hat{q} = b\)
+  ise, veya \(\hat{q}v_{n-2} &gt; b\hat{r} + u_{j+n-2}\) ise \(\hat{q}\) değerini 1 azaltıp, \(\hat{r}\)
+  değerine \(v_{n-1}\) ekleyip, \(\hat{r} &lt; b\) ise bu testi tekrar ediyoruz. Burada yapılan işlemi de
+  Türkçe ifade etmek gerekirse, bölen ve bölünenin birer hanelerine daha bakarak, \(\hat{q}\) değerini
+  düzeltiyoruz. Böylece, \(\hat{q}\)'in 2 fazla olduğu durumların tümünü, 1 fazla olduğu durumların büyük
+  bir çoğunluğunu hızlıca elemiş oluyoruz. Ben bu iddiayı kanıtlamadım, ancak, birçok farklı sayı ile test
+  ederek teyit ettim.</li>
+<li>
+<strong>D.4</strong> [Çarp Çıkar] \((u_{j+n} \ldots u_j)_b = (u_{j+n} \ldots u_j)_b - \hat{q}(v_{n-1} \ldots v_0)_b \).
+   Bu adımda, bir önceki adımda hesaplanan \(\hat{q}\) ile böleni çarpıp, j (döngü sayacı) kadar
+   hane kaydırarak, bölünenden çıkarıyoruz. Çıkarma işleminin sonucu negatif ise, bunu hatırlamamız gerekiyor.</li>
+<li>
+<strong>D.5</strong> [Kalanı Kontrol Et] \(q_j \leftarrow \hat{q}\) olarak ayarla. Eğer, bir önceki adımın sonucu negatif
+   ise <strong>D.6</strong>'ya, değilse, <strong>D.7</strong>'ye geç.</li>
+<li>
+<strong>D.6</strong> [Geri Ekle] \(q_j\)'yi 1 azalt ve \((u_{n+j} \ldots u_j)_b\)'ye \((0v_{n-1} \ldots v_n)_b\) ekle.
+   D. Knuth bu adımın gerekli olduğu durumların çok nadir olduğunu belirtmiş. Ben de
+   algoritmayı test ederken, milyarlarca rastgele bölme işlemi yapmama rağmen bu adıma gelemediğim için, bu adımı
+   tetikleyecek bir <a href="rastgele-sayi-uretici.html">rastgele sayı üreticisi</a> yazmak zorunda kaldım.
+   D. Knuth, bu adımın gerekli olma ihtimalini 2/b olarak vermiş. Benim bulabildiğim örneklerin çoğunda,
+   hem bölenin, hem bölünenin üstten bir alttaki hanesi sıfırdı.</li>
+<li>
+<strong>D.7</strong> [Döngü] j'yi 1 azalt ve, eğer \(j &gt;= 0\) ise <strong>D.3</strong>'e git.</li>
+<li>
+<strong>D.8</strong> [Düzelt] Bölme işleminin sonucu \((q_m \ldots q_0)_b\). Eğer kalan bulmak gerekiyorsa,
+   \((u_{n-1} \ldots u_0)_b\) sayısını <strong>D.1</strong>'deki \(d\) sayısına bölmeliyiz. Eğer <strong>D.1</strong>'de
+   bit kaydırma yapılmışsa, aynı miktarda sağa bit kaydırarak kalanı elde edebiliriz.</li>
+</ul>
+<p>Algoritmayı C'de yazmadan önce, onluk tabanda bir örnek yapalım. Bölünen 713892 ve bölen
+152 olsun.</p>
+<ul>
+<li>
+<strong>D.1</strong> [Normalizasyon] Onluk tabanda işlem yaptığımız için, bölenin üst hanesinin 5 veya
+ daha büyük bir sayı olmasını istiyoruz. \(d\)'yi 6 seçersek, bölünen 713892 x 6 = 4283352,
+ bölen ise 152 x 6 = 912 olur.</li>
+<li>
+<strong>D.2</strong> [Döngü Başlangıcı] j = (6 - 3) = 3.</li>
+<li>
+<strong>D.3</strong> [\(\hat{q}\) hesabı] \(\hat{q} = \lfloor \frac{42}{9} \rfloor = 4 \), \(\hat{r} = 42 \mod 9 = 6\).
+ Düzeltme testini yaptığımızda, \(4 * 1 \ngtr 68\) olduğundan, düzeltme yapmayacağız. Bu hesaptaki 4 \(\hat{q}\), 1 bölenin bir sonraki hanesi,
+ 6 \(\hat{r}\) ve 8 bölünenin bir sonraki hanesi.</li>
+<li>
+<strong>D.4</strong> [Çarp Çıkar] 4 x 912 = 3648. 4283 - 3648 = 635. Bölünenin yeni değeri, 635352.</li>
+<li>
+<strong>D.5</strong> [Kalanı Kontrol Et] Sonucun 3. hanesi (0 tabanlı indekslemeye göre) 4 olarak tespit edildi.
+   Bir önceki adımın sonucu (635) pozitif olduğu için, <strong>D.7</strong>'ye geç.</li>
+<li>
+<strong>D.7</strong> [Döngü] j = 2, <strong>D.3</strong>'e geç.</li>
+<li>
+<strong>D.3</strong> [\(\hat{q}\) hesabı] \(\hat{q} = \lfloor \frac{63}{9} \rfloor = 7 \), \(\hat{r} = 63 \mod 9 = 0\).
+ Düzeltme testini yaptığımızda, \(7 * 1 &gt; 5\) olduğu için, \(\hat{q} = 6\) ve \(\hat{r} = 0 + 9 = 9\). Testi tekrar
+ yaptığımızda, \(7 * 1 \ngtr 95\) olduğundan, devam ediyoruz.</li>
+<li>
+<strong>D.4</strong> [Çarp Çıkar] 6 x 912 = 5472. 6353 - 5472 = 881. Bölünenin yeni değeri, 88152.</li>
+<li>
+<strong>D.5</strong> [Kalanı Kontrol Et] Sonucun 2. hanesi (0 tabanlı indekslemeye göre) 6 olarak tespit edildi. Bir önceki
+ adımın sonucu (881) pozitif olduğu için, <strong>D.7</strong>'ye geç.</li>
+<li>
+<strong>D.7</strong> [Döngü] j = 1, <strong>D.3</strong>'e geç.</li>
+<li>
+<strong>D.3</strong> [\(\hat{q}\) hesabı] \(\hat{q} = \lfloor \frac{88}{9} \rfloor = 9 \), \(\hat{r} = 88 \mod 9 = 7\).
+ Düzeltme testini yaptığımızda, \(9 * 1 \ngtr 71\) olduğundan, düzeltme yapılmayacak.</li>
+<li>
+<strong>D.4</strong> [Çarp Çıkar] 9 x 912 = 8208. 8815 - 8208 = 607. Bölünenin yeni değeri, 6072.</li>
+<li>
+<strong>D.5</strong> [Kalanı Kontrol Et] Sonucun 1. hanesi (0 tabanlı indekslemeye göre) 9 olarak tespit edildi. Bir önceki
+ adımın sonucu (607) pozitif olduğu için, <strong>D.7</strong>'ye geç.</li>
+<li>
+<strong>D.7</strong> [Döngü] j = 0, <strong>D.3</strong>'e geç.</li>
+<li>
+<strong>D.3</strong> [\(\hat{q}\) hesabı] \(\hat{q} = \lfloor \frac{60}{9} \rfloor = 6 \), \(\hat{r} = 60 \mod 9 = 6\).
+ Düzeltme testini yaptığımızda, \(6 * 1 \ngtr 67\) olduğu için, herhangi bir düzeltme yapmayacağız.</li>
+<li>
+<strong>D.4</strong> [Çarp Çıkar] 6 x 912 = 5472. 6072 - 5472 = 600. Bölünenin yeni değeri, 600.</li>
+<li>
+<strong>D.5</strong> [Kalanı Kontrol Et] Sonucun 0. hanesi (0 tabanlı indekslemeye göre) 6  olarak tespit edildi. Bir önceki
+   adımın sonucu (600) pozitif olduğu için, <strong>D.7</strong>'ye geç.</li>
+<li>
+<strong>D.7</strong> [Döngü] j = -1, döngüden çık.</li>
+<li>
+<strong>D.8</strong> [Düzelt] Elde ettiğimiz haneleri yanyana getirerek, bölümü 4696 olarak buluyoruz.
+   kalanı bulmak için, 600'ü 6'ya bölmemiz gerekiyor. Dolayısıyla, kalan, 600/6 = 100 oluyor.</li>
+</ul>
+<p>Algoritmayı dikkatli takip ettiyseniz, normalizasyon adımı haricinde, kağıt/kalemle bölme
+işleminden bir farkı yok. Kağıt/kalemle 4283352 sayısını, 912 ile bölerek bunu teyit
+edebilirsiniz.</p>
+<p>Algoritmanın ilk adımında yapılacak kaydırma miktarını hesaplamak için, sayının üst 0 bitlerini
+saymamız gerekiyor. Bunun için, aşağıdaki <code>nlz</code> (number of leading zeros) fonksiyonunu kullanacağız.</p>
+<pre class="code literal-block"><span></span><span class="cp">#if defined(__GNUC__)</span>
+<span class="cp">#define nlz(x) __builtin_clz(x)</span>
+<span class="cp">#elif defined(_MSC_VER)</span>
+<span class="cp">#define nlz(x) __lzcnt(x)</span>
+<span class="cp">#else</span>
+<span class="kt">int</span> <span class="nf">nlz</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">value</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">value</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">32</span> <span class="o">-</span> <span class="n">i</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cp">#endif</span>
+</pre>
+
+
+<p>Tanıdığımız derleyecilerde, derleyecilerin intrinsic fonksiyonlarını kullanacağız, aksi durumda,
+<code>nlz</code> fonksiyonunu kendimiz sağlamak zorundayız. Aşağıdaki fonksiyonda, kitaptakinden farklı bir
+notasyon kullandım. Bölüm ve kalan, yukarıdaki gibi <code>q</code> ve <code>r</code>, bölünen <code>n</code>, bölünenin uzunluğu <code>nlen</code>,
+bölen <code>d</code> ve bölenin uzunluğu <code>dlen</code>. Döngü sayacı olarak da, <code>j</code> yerine <code>i</code> kullandım.</p>
+<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">bn_div_n</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">q</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">r</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">n</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">nlen</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">d</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">dlen</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// Geçiçi kullanılacak hafıza alanları.</span>
+
+    <span class="c1">// nn =&gt; Bölünenin normalizasyon geçirmiş hali</span>
+    <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">nn</span> <span class="o">=</span> <span class="n">alloca</span><span class="p">((</span><span class="n">nlen</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">bn_digit_t</span><span class="p">));</span>
+
+    <span class="c1">// dn =&gt; Bölenin normalizasyon geçirmiş hali.</span>
+    <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">dn</span> <span class="o">=</span> <span class="n">alloca</span><span class="p">((</span><span class="n">dlen</span><span class="p">)</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">bn_digit_t</span><span class="p">));</span>
+
+
+    <span class="c1">// D.1</span>
+    <span class="c1">// ================</span>
+
+    <span class="c1">// normalizasyon için kaydırma miktarı</span>
+    <span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="n">nlz</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">dlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
+
+    <span class="c1">// Kaydırma işlemleri</span>
+    <span class="n">bn_size_t</span> <span class="n">i</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">dlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">dn</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">-</span> <span class="n">s</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">dn</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">;</span>
+
+    <span class="n">nn</span><span class="p">[</span><span class="n">nlen</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)(</span><span class="n">n</span><span class="p">[</span><span class="n">nlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">-</span> <span class="n">s</span><span class="p">));</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">nlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">nn</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)(</span><span class="n">n</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">-</span> <span class="n">s</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">nn</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">;</span>
+
+    <span class="c1">// D.2 DÖNGÜ</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">nlen</span> <span class="o">-</span> <span class="n">dlen</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// D.3 - şapkalı q hesabı için, 64 bit aritmetik kullanacağız.</span>
+        <span class="n">bn_long_digit_t</span> <span class="n">qhat</span><span class="p">;</span>
+        <span class="n">bn_long_digit_t</span> <span class="n">rhat</span><span class="p">;</span>
+        <span class="n">bn_long_digit_t</span> <span class="n">ulong</span> <span class="o">=</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)(</span><span class="n">nn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">+</span> <span class="n">i</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="n">BN_DIGIT_BITS</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">bn_long_digit_t</span><span class="p">)(</span><span class="n">nn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">+</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
+
+        <span class="n">qhat</span> <span class="o">=</span> <span class="n">ulong</span> <span class="o">/</span> <span class="n">dn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+
+        <span class="c1">// Düzgün bir derleyici (i.e GCC/Clang) bunu optimize edecektir.</span>
+        <span class="c1">// eğer etmiyorsa, rhat = ulong - (qhat * dn[dlen - 1])</span>
+        <span class="n">rhat</span> <span class="o">=</span> <span class="n">ulong</span> <span class="o">%</span> <span class="n">dn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+
+        <span class="c1">// qhat 2 haneli mi kontrolü</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">qhat</span> <span class="o">&gt;</span> <span class="n">BN_DIGIT_MAX</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="o">--</span><span class="n">qhat</span><span class="p">;</span>
+            <span class="n">rhat</span> <span class="o">+=</span> <span class="n">dn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Düzeltme döngüsü</span>
+        <span class="k">while</span> <span class="p">((</span><span class="n">rhat</span> <span class="o">&gt;&gt;</span> <span class="n">BN_DIGIT_BITS</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">qhat</span> <span class="o">*</span> <span class="n">dn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">-</span> <span class="mi">2</span><span class="p">])</span> <span class="o">&gt;</span><span class="p">((</span><span class="n">rhat</span> <span class="o">&lt;&lt;</span> <span class="n">BN_DIGIT_BITS</span><span class="p">)</span> <span class="o">+</span> <span class="n">nn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">+</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]))</span>
+        <span class="p">{</span>
+            <span class="o">--</span><span class="n">qhat</span><span class="p">;</span>
+            <span class="n">rhat</span> <span class="o">+=</span> <span class="n">dn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+        <span class="p">}</span>
+
+        <span class="c1">// D.4 - Çarp-Çıkar</span>
+        <span class="n">bn_digit_t</span> <span class="n">borrow</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">bn_size_t</span> <span class="n">k</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">dlen</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">ulong</span> <span class="o">=</span> <span class="n">dn</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">qhat</span><span class="p">;</span>
+            <span class="n">ulong</span> <span class="o">+=</span> <span class="n">borrow</span><span class="p">;</span>
+            <span class="n">borrow</span> <span class="o">=</span> <span class="n">nn</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">((</span><span class="n">bn_digit_t</span><span class="p">)</span><span class="n">ulong</span><span class="p">);</span>
+            <span class="n">nn</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span> <span class="o">-=</span> <span class="p">(</span><span class="n">bn_digit_t</span><span class="p">)</span><span class="n">ulong</span><span class="p">;</span>
+            <span class="n">borrow</span> <span class="o">+=</span> <span class="n">ulong</span> <span class="o">&gt;&gt;</span> <span class="n">BN_DIGIT_BITS</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Elimizde kalanı bir üst haneye taşımak için</span>
+        <span class="n">ulong</span> <span class="o">=</span> <span class="n">borrow</span><span class="p">;</span>
+        <span class="n">borrow</span> <span class="o">=</span> <span class="p">(</span><span class="n">nn</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">borrow</span><span class="p">);</span>
+        <span class="n">nn</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span> <span class="o">-=</span> <span class="p">(</span><span class="n">bn_digit_t</span><span class="p">)</span><span class="n">ulong</span><span class="p">;</span>
+
+        <span class="c1">// D.6 - Çıkarma sonucu negatif ise, düzelt. Burası nadiren çalışacak.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">borrow</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="o">--</span><span class="n">qhat</span><span class="p">;</span>
+            <span class="n">bn_add_n</span><span class="p">(</span><span class="n">nn</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">nn</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">dn</span><span class="p">,</span> <span class="n">dlen</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="c1">// D.5 - Sonucun ilgili hanesini yazıyoruz.</span>
+        <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">bn_digit_t</span><span class="p">)</span><span class="n">qhat</span><span class="p">;</span>
+
+        <span class="c1">// D.7 - i'yi eksiltip, i &gt;= 0 ise D.3'e geç.</span>
+    <span class="p">}</span>
+
+    <span class="c1">// D.8 Eğer kalan istenmişse, düzelt</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">dlen</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">nn</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">s</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)</span><span class="n">nn</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">-</span> <span class="n">s</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">nn</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">s</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Bu fonksiyonla ilgili değinmek istediğim birkaç husus var. Öncelikle, geçici hafıza için <code>malloc</code>/<code>free</code> yerine
+<code>alloca</code> kullandım. Geçici hafızayı stack üzerinde tutmak genellikle daha etkin olsa da, eğer çok büyük
+sayılar arasında bölme işlemi yapacaksanız, stack alanını tüketebilirsiniz. Böyle bir riski öngörüyorsanız,
+<code>alloca</code> yerine <code>malloc</code>/<code>free</code> tercih etmelisiniz. Bir diğer konu da, çarp/çıkar aşaması. Daha önceki
+yazılarda, çarpma ve çıkarma işlemleri için ayrı fonksiyonlar tanımlamıştık. Ancak, döngü içerisinde ekstra
+fonksiyon çağrısından ve çarpma/çıkarmanın ara sonucu için ekstra hafıza ayırma yükünden kaçınmak için,
+çarpma ve çıkarma işlemlerini buraya bir <code>for</code> döngüsü ile dahil ettim.</p>
+<p>Yukarıdaki algoritma, GMP kütüphanesinde, <em>basecase division</em> olarak geçiyor. Bazı özel durumlar için,
+daha verimli algoritmalar kullansalar da, bölme işlemi için genellikle kullanılan algoritma bu gibi
+görünüyor.</p>
+<h3>Ek Kaynaklar</h3>
+<ul>
+<li>Knuth D. Art of The Computer Programming Vol 2 Section 4.3.1</li>
+<li><a href="https://gmplib.org/manual/Division-Algorithms.html#Division-Algorithms">GMP Division Algorithms</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Division_algorithm">Wikipedia - Division algorithm</a></li>
+</ul>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><div class="pager">
+                <a href="rastgele-sayi-uretici.html" rel="prev" title="Rastgele Sayı Üretici">Önceki yazı</a>
+        </div>
+
+    </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
+	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+        </script></article></main><script>
+  if(document.location.hostname == "ysar.net")
+  {
+      (function() {
+        var cx = '013136674562336859018:ouohwab0yku';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+      
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-44774134-1', 'auto');
+          ga('send', 'pageview');
+  }
+
+</script>
+</body>
+</html>

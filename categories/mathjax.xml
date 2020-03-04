@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (mathjax ile ilgili yazılar)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/categories/mathjax.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Tue, 03 Mar 2020 22:34:27 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Rastgele Sayı Üretici</title><link>http://ysar.net/algoritma/rastgele-sayi-uretici.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Merhabalar,&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (mathjax ile ilgili yazılar)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/categories/mathjax.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Wed, 04 Mar 2020 20:19:08 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Büyük Sayı Algoritmaları - Bölme</title><link>http://ysar.net/algoritma/buyuk-sayi-islemleri-bolme.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Daha önceki yazılarda, değişken-genişlikteki doğal sayılar üzerinde
+toplama, çıkarma ve çarpma algoritmalarına değinmiştik. Bu yazıda, D. Knuth'un
+&lt;em&gt;The Art of The Computer Programming&lt;/em&gt; kitabının 4.3.1'inci kısmında anlatılan
+&lt;em&gt;Algoritm D.&lt;/em&gt;'den bahsedeceğim. Bu algoritma, değişken-genişlikteki doğal
+sayılarda bölme işlemi yaparken, kabul edilebilir bir performansa sahip.
+Kodlara geçmeden önce, algoritmayı inceleyelim. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/algoritma/buyuk-sayi-islemleri-bolme.html"&gt;Devamını oku…&lt;/a&gt; (7 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/algoritma/buyuk-sayi-islemleri-bolme.html</guid><pubDate>Wed, 04 Mar 2020 20:18:00 GMT</pubDate></item><item><title>Rastgele Sayı Üretici</title><link>http://ysar.net/algoritma/rastgele-sayi-uretici.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Merhabalar,&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Arbitrary-precision_arithmetic"&gt;Multi-precision&lt;/a&gt; doğal sayılarda bölme yapan bir fonksiyonu test etmek için, C'deki &lt;code&gt;rand()&lt;/code&gt;
 fonksiyonu ile rastgele sayı oluştururken, oluşturduğum sayıların
 yeterince rastgele olmadığına (artık o ne demekse) karar verdim. Fonksiyon içinde, çok
@@ -346,19 +351,4 @@ tanımlanan veri türlerini kullanacağımız için, önce o yazıyı okumanız�
 
 &lt;p&gt;&lt;a href="http://ysar.net/euler/euler-13.html"&gt;Devamını oku…&lt;/a&gt; (4 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/euler/euler-13.html</guid><pubDate>Thu, 23 Aug 2018 13:36:00 GMT</pubDate></item><item><title>SageMath</title><link>http://ysar.net/yazilim-dunyasi/sage-math.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Eğer bloğumu takip ediyorsanız, son birkaç haftadır Euler problemi çözümlerimi paylaştığımı biliyorsunuz. Euler Problemleri,
 programcılık problemleri olduğu kadar, matematik problemleri de sayılabilir. Bu yazıda, bu problemlerin çözümünde sıklıkla faydalandığım
-&lt;a href="http://www.sagemath.org/"&gt;SageMath&lt;/a&gt; programından bahsedeceğim. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/sage-math.html"&gt;Devamını oku…&lt;/a&gt; (6 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/yazilim-dunyasi/sage-math.html</guid><pubDate>Wed, 22 Aug 2018 22:01:00 GMT</pubDate></item><item><title>(Euler 12) Üçgen Sayılar ve Bölenlerinin Sayısı</title><link>http://ysar.net/euler/euler-12.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Üçgen sayılar sayı dizisi, doğal sayılar eklenerek oluşturulur. Örneğin, 7. üçgen sayı 1 + 2 + 3 + 4 + 5 + 6 + 7 = 28 olur.
-İlk 10 terim şu şekildedir.&lt;/p&gt;
-&lt;p&gt;1, 3, 6, 10, 15, 21, 28, 36, 45, 55, ...&lt;/p&gt;
-&lt;p&gt;İlk 7 üçgen sayının bölenlerine bakalım;&lt;/p&gt;
-&lt;pre&gt;
- 1: 1
- 3: 1,3
- 6: 1,2,3,6
-10: 1,2,5,10
-15: 1,3,5,15
-21: 1,3,7,21
-28: 1,2,4,7,14,28
-&lt;/pre&gt;
-
-&lt;p&gt;5'den fazla böleni olan ilk üçgen sayının 28 olduğunu görüyoruz.&lt;/p&gt;
-&lt;p&gt;500'den fazla böleni olan ilk üçgen sayı kaçtır? &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/euler/euler-12.html"&gt;Devamını oku…&lt;/a&gt; (10 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/euler/euler-12.html</guid><pubDate>Wed, 22 Aug 2018 15:06:00 GMT</pubDate></item></channel></rss>
+&lt;a href="http://www.sagemath.org/"&gt;SageMath&lt;/a&gt; programından bahsedeceğim. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/sage-math.html"&gt;Devamını oku…&lt;/a&gt; (6 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/yazilim-dunyasi/sage-math.html</guid><pubDate>Wed, 22 Aug 2018 22:01:00 GMT</pubDate></item></channel></rss>

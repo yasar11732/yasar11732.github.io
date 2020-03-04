@@ -7,7 +7,7 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <sitemap>
   <loc>http://ysar.net/algoritma/rss.xml</loc>
-  <lastmod>2020-03-03T22:34:00Z</lastmod>
+  <lastmod>2020-03-04T20:19:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://ysar.net/assembly/rss.xml</loc>
@@ -15,7 +15,7 @@
  </sitemap>
  <sitemap>
   <loc>http://ysar.net/categories/mathjax.xml</loc>
-  <lastmod>2020-03-03T22:34:00Z</lastmod>
+  <lastmod>2020-03-04T20:19:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://ysar.net/diger/rss.xml</loc>
@@ -31,11 +31,11 @@
  </sitemap>
  <sitemap>
   <loc>http://ysar.net/rss.xml</loc>
-  <lastmod>2020-03-03T22:34:00Z</lastmod>
+  <lastmod>2020-03-04T20:19:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://ysar.net/sitemap.xml</loc>
-  <lastmod>2020-03-03T22:34:00Z</lastmod>
+  <lastmod>2020-03-04T20:19:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://ysar.net/windows/rss.xml</loc>

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Algoritma)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/algoritma/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Tue, 03 Mar 2020 22:34:28 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Rastgele Sayı Üretici</title><link>http://ysar.net/algoritma/rastgele-sayi-uretici.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Merhabalar,&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Algoritma)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/algoritma/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Wed, 04 Mar 2020 20:19:08 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Büyük Sayı Algoritmaları - Bölme</title><link>http://ysar.net/algoritma/buyuk-sayi-islemleri-bolme.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Daha önceki yazılarda, değişken-genişlikteki doğal sayılar üzerinde
+toplama, çıkarma ve çarpma algoritmalarına değinmiştik. Bu yazıda, D. Knuth'un
+&lt;em&gt;The Art of The Computer Programming&lt;/em&gt; kitabının 4.3.1'inci kısmında anlatılan
+&lt;em&gt;Algoritm D.&lt;/em&gt;'den bahsedeceğim. Bu algoritma, değişken-genişlikteki doğal
+sayılarda bölme işlemi yaparken, kabul edilebilir bir performansa sahip.
+Kodlara geçmeden önce, algoritmayı inceleyelim. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/algoritma/buyuk-sayi-islemleri-bolme.html"&gt;Devamını oku…&lt;/a&gt; (7 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/algoritma/buyuk-sayi-islemleri-bolme.html</guid><pubDate>Wed, 04 Mar 2020 20:18:00 GMT</pubDate></item><item><title>Rastgele Sayı Üretici</title><link>http://ysar.net/algoritma/rastgele-sayi-uretici.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Merhabalar,&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Arbitrary-precision_arithmetic"&gt;Multi-precision&lt;/a&gt; doğal sayılarda bölme yapan bir fonksiyonu test etmek için, C'deki &lt;code&gt;rand()&lt;/code&gt;
 fonksiyonu ile rastgele sayı oluştururken, oluşturduğum sayıların
 yeterince rastgele olmadığına (artık o ne demekse) karar verdim. Fonksiyon içinde, çok
@@ -2058,15 +2063,4 @@ bir string üzerinde gerçekleştirmek için, sırayla tüm karakleri yukarıdak
 
 &lt;p&gt;Öyle sanıyorum ki, yukarıdaki kodlarda optimize edilebilecek kısımlar vardır. Ancak,
 kolayca anlaşılabilr olması açısından, yapılabilecek optimizasyonlara dikkat etmedim.
-Faydalı bir yazı olmuştur diye ümit ediyorum.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/utf8-kodlama.html</guid><pubDate>Fri, 07 Jun 2019 16:51:00 GMT</pubDate></item><item><title>Evrimsel Algoritmalar</title><link>http://ysar.net/algoritma/evrimsel-algoritmalar.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Ne zamandır, evrimsel algoritmalar ve genetik algoritmalarına göz atmak istiyordum.. Bugün biraz fırsat bulup, evrimsel algoritmalara
-göz attım.&lt;/p&gt;
-&lt;p&gt;Evrimsel algoritma, bana biraz breadth-first search algoritmalarını andırdı. Genel gidişat şu şekilde:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Rastgele bireylerden ilk popülasyonu oluştur&lt;/li&gt;
-&lt;li&gt;Her bireyin, aranan sonuca benzerliğini test et&lt;/li&gt;
-&lt;li&gt;En iyi bireylerden, mutasyon ve eşleşme ile yeni bireyler oluştur.&lt;/li&gt;
-&lt;li&gt;En iyi bireylerden yeni popülasyon oluştur.&lt;/li&gt;
-&lt;li&gt;Yeterince iyi bireyler elde edene kadar tekrarla&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Bu tür algoritmaları genelde arama uzayının çok büyük olduğu durumlarda kullanıyorlar. Daha önce gördüğüm algoritmalara
-nazaran, doğru sonuca bir hayli hızlı yaklaşıyor, ancak, bazı sıkıntılar da yaşadım, bunlardan birazdan bahsedeceğim. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/algoritma/evrimsel-algoritmalar.html"&gt;Devamını oku…&lt;/a&gt; (7 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/evrimsel-algoritmalar.html</guid><pubDate>Sun, 03 Nov 2013 23:59:00 GMT</pubDate></item></channel></rss>
+Faydalı bir yazı olmuştur diye ümit ediyorum.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/utf8-kodlama.html</guid><pubDate>Fri, 07 Jun 2019 16:51:00 GMT</pubDate></item></channel></rss>
