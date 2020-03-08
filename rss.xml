@@ -1,5 +1,268 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET</title><link>http://ysar.net/</link><description>Yaşar Arabacı İnternet Günlüğü</description><atom:link href="http://ysar.net/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Wed, 04 Mar 2020 20:19:06 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Büyük Sayı Algoritmaları - Bölme</title><link>http://ysar.net/algoritma/buyuk-sayi-islemleri-bolme.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Daha önceki yazılarda, değişken-genişlikteki doğal sayılar üzerinde
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET</title><link>http://ysar.net/</link><description>Yaşar Arabacı İnternet Günlüğü</description><atom:link href="http://ysar.net/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Sun, 08 Mar 2020 22:26:41 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Büyük Sayı Algoritmaları - Tam Sayılara Giriş</title><link>http://ysar.net/algoritma/buyuk-sayi-islemleri-tamsayilar.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Yazı dizisinin ilk 4 yazısında, doğal sayılar üzerinde işlem
+yapan temel fonksiyonlar yazdık. Genellikle, bu fonksiyonları
+doğrudan kullanmayacağız. Onun yerine, bu yazıdan itibaren
+ele alacağımız daha üst seviye fonksiyonları kullanacağız.Yeni
+fonksiyonlarımız, önceki yazılarda değinmediğimiz hafıza
+yönetimini sağlayacağı gibi, negatif sayılar üzerinde de
+işlem yapabilecek.&lt;/p&gt;
+&lt;p&gt;Bilgisayarlarla negatif sayıları işlemenin çeşitli yöntemleri var.
+Öncelikle, kısaca bu yöntemlerin üzerinden geçelim.&lt;/p&gt;
+&lt;h3&gt;İşaret ve Mutlak Değer (Signed Magnitude Representation - SMR)&lt;/h3&gt;
+&lt;p&gt;Yazı dilinde negatif sayının önüne eksi işareti koyduğumuz gibi,
+bu yöntemde de sayının başına eksi işareti koyuyoruz. Tabi ki,
+binary sistemde eksi işareti yok. Onun yerine, sayının en üst
+bitini 1 olarak ayarlayarak, sayıyı negatif yapacağız. Bu gösterimde,
+0 sayısı iki farklı şekilde (+0 ve -0) yazılabildiği için,
+&lt;code&gt;n&lt;/code&gt; bit kullanarak, &lt;code&gt;2^n - 1&lt;/code&gt; farklı sayı ifade edilebiliyor.
+Bu sayılar üzerinde aritmetik işlem yaparken, pozitif/negatif
+kontrolü yapmak gerekiyor. Bu düzenin kullanım alanına örnek
+olarak, &lt;code&gt;float&lt;/code&gt; türündeki sayıları verebiliriz.&lt;/p&gt;
+&lt;h3&gt;1'in Tümleyeni (One's Complement)&lt;/h3&gt;
+&lt;p&gt;Bu gösterimde, pozitif sayıların bitlerini tersine çevirerek, negatif
+sayıları ifade ediyoruz. Örneğin, 8 bitlik '00000001' sayısı +1'i
+ifade ederken, '11111110' sayısı ise -1'i ifade ediyor. SMR'de olduğu
+gibi, en üst biti kontrol ederek, sayının işaretini tespit edilebiliyor.
+Yine SMR'de olduğu gibi, sıfırın iki farklı gösterimi olduğundan, &lt;code&gt;n&lt;/code&gt;
+bit kullanarak, &lt;code&gt;2^n - 1&lt;/code&gt; farklı değer ifade edebiliyoruz. Rivayet
+odur ki, çok eski bilgisayarda bu yöntem kullanılırmış, ama çoğu
+modern bilgisayarda negatif tam sayılar için 2'nin tümleyeni düzeni
+kullanılıyor.&lt;/p&gt;
+&lt;h3&gt;2'nin Tümleyeni (Two's Complement)&lt;/h3&gt;
+&lt;p&gt;Bu yöntem üzerinde biraz daha fazla duracağım, çünkü modern
+bilgisayarlarda tam sayılar bu şekilde ifade ediliyor. Aşağıdaki
+tablodan, 8 bit signed bir tam sayının her bitinin değerini
+inceleyebilirsiniz.&lt;/p&gt;
+&lt;pre&gt;
++-------+------+-----+-----+-----+-----+-----+-----+-----+
+| Bit   | 7    | 6   | 5   | 4   | 3   | 2   | 1   | 0   |
++-------+------+-----+-----+-----+-----+-----+-----+-----+
+| İkili | -2^7 | 2^6 | 2^5 | 2^4 | 2^3 | 2^2 | 2^1 | 2^0 |
++-------+------+-----+-----+-----+-----+-----+-----+-----+
+| Onlu  | -128 | 64  | 32  | 16  | 8   | 4   | 2   | 1   |
++-------+------+-----+-----+-----+-----+-----+-----+-----+
+&lt;/pre&gt;
+
+&lt;p&gt;Bu yöntem bir farkla, 1'in tümleyeni ile aynı. 1'in tümleyeni
+yöntemi ile, bir sayının negatifini almak istediğinizde, tüm
+bitlerini tersine çevirmeniz gerekiyor. 2'nin tümleyeni yönteminde
+ise, tüm bitleri çevirip, sonuca 1 eklemeniz gerekiyor.&lt;/p&gt;
+&lt;p&gt;Bu yöntemin en büyük avantajı, modüler aritmetik kurallarını bozmuyor
+olması. Örneğin, \(127 + 1 \equiv -128 \mod 128 \). Aynı şekilde,
+signed integer değerleri arasında toplama yaparken, 127 ile 1 sayısını
+topladığınızda, &lt;code&gt;-128&lt;/code&gt; sonucunu elde edersiniz.&lt;/p&gt;
+&lt;pre&gt;
+  0 1 1 1 1 1 1 1
++ 0 0 0 0 0 0 0 1
+-----------------
+  1 0 0 0 0 0 0 0
+&lt;/pre&gt;
+
+&lt;p&gt;Toplama işlemi yaparken, sayıların pozitif olup olmadığına dikkat etmeksizin, işlem yapabiliriz.
+Aşağıdaki örnekte, +1 ile -1'in toplamını 0 olarak buluyoruz.&lt;/p&gt;
+&lt;pre&gt;
+  0 0 0 0 0 0 0 1 (+1)
++ 1 1 1 1 1 1 1 1 (-1)
+-----------------
+1 0 0 0 0 0 0 0 0
+&lt;/pre&gt;
+
+&lt;p&gt;Sonucun bir biti dışarıya taşdığı için, +1 ile -1 toplamından 0 sonucu elde
+ediyoruz. Çıkarma işlemi de, negatif sayı ile toplamaya eşdeğer olduğundan,
+yukarıdaki örneği birden bir çıkarma olarak da düşünebilirsiniz.&lt;/p&gt;
+&lt;p&gt;Bu düzenin yapısı gereği, toplama, çıkarma ve çarpma
+yaparken, sayıların pozitif olmasına dikkat edilmeksizin işlem yapılabilir.
+Bu avantaj işlemci üreticilerine cazip gelmiş olacak ki, signed işlem yapabilen
+çoğu işlemci bu düzeni kullanıyor.&lt;/p&gt;
+&lt;h3&gt;Kaydırılmış İkili (Offset Binary)&lt;/h3&gt;
+&lt;p&gt;Bu düzende, her sayıyı kendinden &lt;code&gt;n&lt;/code&gt; fazla bir
+sayı ile ifade ediyoruz. Örneğin, 8 bitlik signed
+integer için, &lt;code&gt;n&lt;/code&gt; 128 olsun.&lt;/p&gt;
+&lt;pre&gt;
++------+----------+
+|Sayı  | Kodlanışı|
++------+----------+
+| 127  | 255      |
+| 126  | 254      |
+| 1    | 129      |
+| 0    | 128      |
+| -1   | 127      |
+| -127 | 1        |
+| -128 | 0        |
++------+----------+
+&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;float&lt;/code&gt; türündeki sayıların exponent kısmı için, bu düzen kullanılıyor.&lt;/p&gt;
+&lt;h3&gt;Hangisini Kullanmalıyız&lt;/h3&gt;
+&lt;p&gt;Yazdığım ilk büyük sayı kütüphanesi için, 2'nin tümleyeni
+yöntemini tercih etmiştim. Dört işlemin kolaylığı konusu
+çok cazip gelmişti. Ancak, işlemcilerin yaptığı gibi
+sabit genişlikteki sayılarla ilgilenmediğimiz için,
+2'nin tümleyeni düzeninin avantajları çok da önemli
+olmuyor. Aynı zamanda, büyük sayıların mutlak
+değerini almak gerektiğinde, tüm sayının üzerinden
+geçip, tüm bitlerini tersine çevirip sonuca bir eklemek
+gerektiği için, oldukça uzun sürüyor. Bu bölme işlemi
+için büyük bir sorun, çünkü pozitif ve negatif sayılar
+arasında bölme yaparken, mutlak değer üzerinden
+bölme yapmak gerekiyor. Modüler aritmeği de bölme işlemi
+üzerinden yapacağımız için, 2'nin tümleyeni çok kötü
+bir tercih. Kendim acı bir şekilde tecrübe ettim. Bu nedenle,
+GMP kütüphanesinin yaptığı gibi, Signed Magnitude (SMR) düzenini
+kullanacağız.&lt;/p&gt;
+&lt;p&gt;Artık biraz kod yazabiliriz.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;alloc&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="n"&gt;bnz_t&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="n"&gt;bnz_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;bnz_ptr&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;bnz_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;bn_constptr&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Tam sayıları, dinamik array veri yapısında tutacağız. &lt;code&gt;bnz_t&lt;/code&gt;
+veri yapısının &lt;code&gt;alloc&lt;/code&gt; üyesi, kaç hanelik yer ayırdığımızı tutacak.
+&lt;code&gt;length&lt;/code&gt; üyesi, hem sayının kaç haneli (2^32lik tabanda) olduğunu
+hem de pozitif mi yoksa negatif mi olduğunu tutacak. Örneğin, &lt;code&gt;length&lt;/code&gt; -5 ise,
+sayının 5 haneli ve negatif olduğunu anlayacağız. Eğer &lt;code&gt;length&lt;/code&gt;
+0 ise, tamsayının da 0 olduğunu anlayacağız. Eğer &lt;code&gt;length&lt;/code&gt; sıfır
+değilse, ama &lt;code&gt;alloc&lt;/code&gt; 0 ise, hafızanın stack üzerinde ayrıldığını
+anlayacağız.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;bnz_t&lt;/code&gt;'yi kullanıma hazırlamak için, aşağıdaki fonksiyonu kullanacağız. &lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;bnz_init&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bnz_ptr&lt;/span&gt; &lt;span class="n"&gt;bnz&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;memset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bnz&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bnz_t&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;&lt;code&gt;bnz_init&lt;/code&gt; bir kez çağırıldıktan sonra, &lt;code&gt;bnz_t&lt;/code&gt; türü farklı sayıları tutmak için tekrar tekrar kullanılabilir.&lt;/p&gt;
+&lt;p&gt;Hafızada ayırdığımız yerin, &lt;code&gt;n&lt;/code&gt; haneli bir sayıyı tutabilecek kadar büyük olmasını temin etmek için, aşağıdaki makroyu kullanacağız.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#define BN_GROW(bn, n) ((n) &amp;gt; (bn)-&amp;gt;alloc ? \&lt;/span&gt;
+&lt;span class="cp"&gt;    bnz_resize((bn), (n)) \&lt;/span&gt;
+&lt;span class="cp"&gt;    : (bn)-&amp;gt;digits)&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Bu makro, eğer zaten yeterli yer ayrılmışsa, &lt;code&gt;digits&lt;/code&gt; üyesini
+döndürecek, aksi takdirde, &lt;code&gt;bnz_resize&lt;/code&gt; fonksiyonunu çağıracak.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;bn_xrealloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p_old&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p_new&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;realloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p_old&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="n"&gt;p_new&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;exit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;p_new&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;bn_xmalloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;malloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;exit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;bnz_resize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bnz_ptr&lt;/span&gt; &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;alloc&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;bn_xrealloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt;
+        &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;bn_xmalloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;alloc&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;&lt;code&gt;bn_xmalloc&lt;/code&gt; ve &lt;code&gt;bn_xrealloc&lt;/code&gt; fonksiyonları, &lt;code&gt;malloc&lt;/code&gt; ve &lt;code&gt;realloc&lt;/code&gt;
+kullanarak gerekli hafıza alanlarını ayıramazlarsa, hata koduyla
+programı sonlandırıyor. &lt;code&gt;bnz_resize&lt;/code&gt; fonksiyonu, daha önce
+ayrılmış bir hafıza alanı varsa, onu genişletiyor. Eğer daha
+önce bir hafıza ayrılmamışsa, yeni yer ayırıyor.&lt;/p&gt;
+&lt;p&gt;Büyük tamsayılara, signed integer değeri atamak için, aşağıdaki
+fonksiyonu kullanacağız.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="nf"&gt;bn_trim&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;current_size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;current_size&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;current_size&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;current_size&lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;current_size&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;bnz_set_int&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bnz_ptr&lt;/span&gt; &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;num_digits&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;rp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;BN_GROW&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;num_digits&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;rp&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;BN_ABS&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;rp&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;// sayi positif&lt;/span&gt;
+        &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;bn_trim&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;num_digits&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="c1"&gt;// sayi negatif&lt;/span&gt;
+        &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;bn_trim&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;num_digits&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Eğer, &lt;code&gt;i&lt;/code&gt;'nin değeri sıfır ise, tek yapmamız gereken &lt;code&gt;length&lt;/code&gt;'i
+sıfıra atamak. &lt;code&gt;num_digits&lt;/code&gt;, &lt;code&gt;i&lt;/code&gt;'nin kaç hanede saklanacağını
+tutuyor. Eğer &lt;code&gt;sizeof(int) == sizeof(bn_digit_t)&lt;/code&gt; ise, bu değer
+1 olacak. Yeterli yer ayırdığımızdan emin olmak için, &lt;code&gt;BN_GROW&lt;/code&gt;
+makrosunu çağırıyoruz. &lt;code&gt;digits&lt;/code&gt; array'i içinde her zaman pozitif
+sayılar saklayacağımız için, mutlak değer alıyoruz. &lt;code&gt;bn_trim&lt;/code&gt;
+fonksiyonu ise, sayının başındaki sıfır haneleri silindikten
+sonra kalan hane sayısını veriyor. Tam sayılar üzerinde
+işlem yapacak algoritmaları &lt;code&gt;digits[length-1]&lt;/code&gt;'in
+sıfır olmadığı varsayımına göre çalıştıracağımız için,
+&lt;code&gt;bn_trim&lt;/code&gt; kullanarak, üstteki 0 hanelerini silmemiz gerekiyor.&lt;/p&gt;
+&lt;p&gt;Sonraki yazılarda, iki sayının mutlak değerlerini karşılaştırmamız
+gerekecek, bunun için, aşağıdaki fonksiyonları kullanacağız.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;bn_cmp_n&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+        &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;bn_cmp_nn&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;op1size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;op2size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1size&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;op2size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1size&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;op2size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1size&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;op2size&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;bn_cmp_n&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;op1size&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;İlk fonksiyon, uzunlukları eşit olan iki doğal sayıyı karşılaştırmaya yarıyor. İkinci fonksiyon
+ise, tüm uzunluklardaki doğal sayılar için kullanılabilir. İki doğal sayıyı karşılaştırırken,
+eğer birinin hane sayısı diğerinden büyükse, özel bir inceleme yapmadan, hane sayısı
+çok olanı büyük ilan edebiliriz. Hane sayılarının aynı olduğu durumlarda, üstten alta
+doğru haneleri kontrol etmemiz gerekiyor. Herhangi bir hanede farklılık olduğunda,
+sayıların hangisinin büyük olduğunu tespit edebiliriz. Eğer tüm haneleri eşitse,
+sayılar da eşit olmak zorunda. Bu iki fonksiyon da, birinci argüman büyükse 1,
+ikinci argüman büyükse -1, argümanlar eşit ise 0 döndürecek.&lt;/p&gt;
+&lt;p&gt;Gelecek yazılarda, tamsayılar üzerinde dört işlem yapacağız. Bunun için, daha önceki
+fonksiyonlardan faydalanmakla birlikte, işleme giren sayıların pozitif veya negatif
+olma durumlarına dikkat edeceğiz.&lt;/p&gt;
+&lt;h3&gt;Ek Kaynaklar&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Knuth D. Art of The Computer Programming Vol 2 Section 4.3.1&lt;/li&gt;
+&lt;li&gt;Wikipedia. &lt;a href="https://en.wikipedia.org/wiki/Signed_number_representations"&gt;Signed number representations&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/algoritma/buyuk-sayi-islemleri-tamsayilar.html</guid><pubDate>Sun, 08 Mar 2020 22:14:00 GMT</pubDate></item><item><title>Büyük Sayı Algoritmaları - Bölme</title><link>http://ysar.net/algoritma/buyuk-sayi-islemleri-bolme.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Daha önceki yazılarda, değişken-genişlikteki doğal sayılar üzerinde
 toplama, çıkarma ve çarpma algoritmalarına değinmiştik. Bu yazıda, D. Knuth'un
 &lt;em&gt;The Art of The Computer Programming&lt;/em&gt; kitabının 4.3.1'inci kısmında anlatılan
 &lt;em&gt;Algoritm D.&lt;/em&gt;'den bahsedeceğim. Bu algoritma, değişken-genişlikteki doğal
@@ -1359,361 +1622,4 @@ aşağıdaki noktalara dikkat etmeniz gerekiyor.&lt;/p&gt;
 &lt;h2&gt;Son Sözler&lt;/h2&gt;
 &lt;p&gt;Siz ne düşünüyorsunuz bilmiyorum ama, ben parser konusunu çok heyecan verici buluyorum. Bu iki yazıda öğrendiklerinizin
 üzerine biraz daha araştırma yaparak, CSV, HTML, XML, HTTP protokolü, ini dosyaları gibi çok çeşitli metin belgeleri
-üzerinde çalışabileceğiniz gibi, bir programlama dili derleyicisi veya yorumlayıcısı da yapabilirsiniz. Haydi gidin, birşeyler kodlayın.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/json-kutuphanesi.html</guid><pubDate>Thu, 27 Jun 2019 21:17:00 GMT</pubDate></item><item><title>Flex ve Bison kullanarak JSON İşleme (1. Kısım)</title><link>http://ysar.net/yazilim-dunyasi/flex-bison.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;İki kısımdan oluşmasını planladığım bu yazı dizisinde, Flex ve Bison
-kullanarak, JSON işleyen Lexer ve Parser tasarlayacağız. Bu kısımda,
-Flex/Bison konusuna sıfırdan başlayacağım için, önceden bu programları
-tanıyor olmanıza gerek yok. &lt;/p&gt;
-&lt;h2&gt;İhtiyaç Listesi&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;Derleme ortamı olarak Linux/Unix veya Cygwin üzerinde &lt;code&gt;make&lt;/code&gt;, &lt;code&gt;cc&lt;/code&gt; vb. geliştirici programları&lt;/li&gt;
-&lt;li&gt;flex (ya da lex) ve bison (ya da yacc)&lt;/li&gt;
-&lt;li&gt;Başlangıç seviyesinde C Programlama Bilgisi&lt;/li&gt;
-&lt;li&gt;Orta Seviye Düzenli İfadeler (Regular Expressions, RegExp) Bilgisi&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;Flex ve Bison&lt;/h2&gt;
-&lt;p&gt;Her ne kadar Flex ve Bison iki ayrı program olsa da, neredeyse her zaman birlikte kullanılırlar. Bu programlar,
-kendi dosya formatlarında yazılmış metinleri, lexer ve parser olarak ifade edilen C programlarına dönüştürürler.
-Lexer'ın görevi, verilen metin dosyasını, token dediğimiz parçalara bölmektir. Token'in ne olduğu, işleyeceğimiz
-metin formatına göre değişebilir. Şimdilik token'lerine ayırmayı, metni kelimelerine bölmek olarak düşünebiliriz.
-Parser'ın görevi ise, tokenleri gramer kurallarına uygun olarak analiz etmektir. Eğer lexer'in görevini
-metni kelimelerine ayırmak olarak düşünürsek, parser'ın görevini de kelimelerden cümleler, cümlelerden paragraflar,
-paragraflardan da makaleler oluşturacak şekilde tokenleri gramer kurallarına uygun gruplara ayırmak olarak düşünebiliriz.&lt;/p&gt;
-&lt;h2&gt;Flex Programının Anatomisi&lt;/h2&gt;
-&lt;p&gt;Detaylara girmeden önce, yazılabilecek en küçük flex dosyalarından birini inceleyerek başlayalım.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%%&lt;/span&gt;
-&lt;span class="n"&gt;username&lt;/span&gt; &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"%s"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;getlogin&lt;/span&gt;&lt;span class="p"&gt;());&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Yukarıdaki 2 satırı &lt;code&gt;example.l&lt;/code&gt; adıyla kaydedin. Bu dosyadan Lexer oluşturmak için, aşağıdaki komutu kullanacağız.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;lex example.l
-&lt;/pre&gt;
-
-
-&lt;p&gt;&lt;code&gt;lex&lt;/code&gt; programının çıktı dosyasının adı &lt;code&gt;lex.yy.c&lt;/code&gt;'dir. Bu &lt;code&gt;.c&lt;/code&gt; dosyasını derleyip, flex kütüphanesiyle linklememiz gerekiyor.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;gcc lex.yy.c -lfl
-&lt;/pre&gt;
-
-
-&lt;p&gt;Sizin sisteminizde flex kütüphanesinin adı farklı olabilir. Linkleme hatası ile karşılaşırsanız, &lt;code&gt;-lfl&lt;/code&gt; yerine &lt;code&gt;-ll&lt;/code&gt;
-ile deneyebilirsiniz. Derlenen programı (gcc ile derlediyseniz &lt;code&gt;a.out&lt;/code&gt;) çalıştırdığınızda, sizden birşeyler yazmanızı
-bekleyecektir. &lt;code&gt;merhaba username&lt;/code&gt; yazarak &lt;code&gt;enter&lt;/code&gt; tuşuna basarsanız, username kelimesinin yerine, login sahibi kullanıcının
-adı gelmiş şekilde size çıktı verecektir. CTRL^D tuş kombinasyonu ile programdan çıkabilirsiniz.&lt;/p&gt;
-&lt;p&gt;Örnekte de gördüğünüz gibi, bir flex dosyasında, kurallar ve bunlara karşılık gelen C kodlarını tanımlarız. Kuralları tanımlamak için, düzenli ifadeler kullanırız. Bu örnekte,
-metin içinde &lt;code&gt;username&lt;/code&gt; ile eşleşme sağlandığında, &lt;code&gt;printf("%s", getlogin());&lt;/code&gt; C kodu çalışacak. Böylece, &lt;code&gt;username&lt;/code&gt;
-geçen yerleri, kullanıcının login adıyla değiştirmiş olduk. Hiçbir kuralla eşleşmeyen &lt;code&gt;merhaba&lt;/code&gt; kelimesi, çıktı
-olarak kopyalanır.&lt;/p&gt;
-&lt;p&gt;Pratikte göreceğiniz flex dosyaları, bundan daha karmaşık olacaktır. Daha normal bir örnek görmek isterseniz,
-&lt;a href="http://www.quut.com/c/ANSI-C-grammar-l-1998.html"&gt;C Programlama Dili için hazırlanmış Lex dosyasını&lt;/a&gt; inceleyebilirsiniz.&lt;/p&gt;
-&lt;p&gt;Bir lex dosyası, en az 1, en çok 3 kısımdan oluşur. Kısımlar birbirinden &lt;code&gt;%%&lt;/code&gt; işareti ile ayrılır. Birinci kısımda,
-genel tanımlamalar yapılır. Bu kısımda doğrudan C kodu kullanmak isterseniz, &lt;code&gt;%{&lt;/code&gt; ve &lt;code&gt;%}&lt;/code&gt; işaretleri arasına
-yazmanız gerekiyor. Bu kısma yazdığınız C kodları, oluşan &lt;code&gt;lex.yy.c&lt;/code&gt; dosyasının üst kısımlarına kopyalanır. Bu nedenle,
-&lt;code&gt;#include&lt;/code&gt; ifadesi kullanmak isterseniz, bu kısımda kullanmalısınız. İkinci kısımda,
-kuralları ve kurallara karşılık glen C kodlarını tanımlıyoruz. Üçüncü kısımda ise, istediğiniz C kodunu yazabilirsiniz.
-Burada yazdığınız C kodları da olduğu gibi &lt;code&gt;lex.yy.c&lt;/code&gt; dosyasına kopyalanacak.
-Bu 3 kısımdan sadece ikincisi zorunlu. Eğer birinci kısmı boş bırakacaksanız, ikinci kısma geçtiğinizin anlaşılması için dosyaya
-&lt;code&gt;%%&lt;/code&gt; ile başlamanız gerekiyor.&lt;/p&gt;
-&lt;p&gt;Aşağıda biraz daha gelişmiş bir Lex dosyası örneği var. Bu kodları test etmek için, &lt;code&gt;example2.l&lt;/code&gt; adında bir dosya oluşturup,
-aşağıdaki içeriği içine kopyalayın. Bu programı derlerken, &lt;code&gt;main&lt;/code&gt; ve &lt;code&gt;yywrap&lt;/code&gt; fonksiyonlarını biz sağladığımız için, flex
-kütüphanesi ile &lt;span style="text-decoration: underline"&gt;linklememeniz&lt;/span&gt; gerekiyor. Bu aşamada &lt;code&gt;yywrap&lt;/code&gt; fonksiyonunun
-işlevi önemli değil. Olduğu gibi kabul edin. Kullandığımız &lt;code&gt;yylex&lt;/code&gt; fonksiyonu ise, flex tarafından
-sağlanan ve asıl işi yapan fonksiyon.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;num_lines&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;num_chars&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="o"&gt;%%&lt;/span&gt;
-&lt;span class="err"&gt;\&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;num_lines&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;num_chars&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;.&lt;/span&gt;  &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;num_chars&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="o"&gt;%%&lt;/span&gt;
-&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="n"&gt;yylex&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-    &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"satir sayisi = %d, karakter_sayisi = %d&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;num_lines&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;num_chars&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;yywrap&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Tebrikler, Lex kullanarak, metin belgesindeki karakterleri ve satırları sayan bir program ürettiniz.&lt;/p&gt;
-&lt;h2&gt;Bison Programının Anatomisi&lt;/h2&gt;
-&lt;p&gt;Bison dosyaları da, Flex dosyaları gibi &lt;code&gt;%%&lt;/code&gt; ile ayrılmış 3 kısımdan oluşur. Aynı şekilde, birinci kısımda
-tanımlamalar, ikinci kısımda kurallar, üçüncü kısımda ise, istediğimiz C kodları bulunuyor. Kuralların
-hangi formatta yazılacağına, bu yazının devamında uygulamalı olarak değineceğiz.&lt;/p&gt;
-&lt;h2&gt;JSON Formatı&lt;/h2&gt;
-&lt;p&gt;JSON (JavaScript Object Notation) programlar arası veri alışverişinde yaygın olarak
-kullanılan sade ve kompakt bir formattır. JSON formatında 6 çeşit veri türü ifade edilebilir.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;String (Örn. "Bu bir string")&lt;/li&gt;
-&lt;li&gt;Sayı   (Örn. 12.57)&lt;/li&gt;
-&lt;li&gt;Boolean (true/false)&lt;/li&gt;
-&lt;li&gt;null&lt;/li&gt;
-&lt;li&gt;Object (Örn: {'key': 'value'})&lt;/li&gt;
-&lt;li&gt;Array (Örn: [1,2,3])&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;C dilinde, herhangi bir JSON değerini tutabilecek bir veri yapısı, ve bu veri yapısı
-üzerinde işlem yapacak bir kütüphane tasarlamak geniş bir konu olduğundan, bu yazıda
-tasarlanan parser'ı sadece JSON nesnelerinin türünü konsola çıktı vermek için kullanacağız. Burada
-oluşturacağımız Parser ile birlikte çalışacak JSON kütüphanesini, önümüzdeki günlerde
-yazmayı planladığım ayrı bir blog yazısına bırakıyorum.&lt;/p&gt;
-&lt;h2&gt;Tokenler&lt;/h2&gt;
-&lt;p&gt;JSON grameri için, aşağıdaki tokenleri kullanacağız;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;String&lt;/li&gt;
-&lt;li&gt;Number&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;true&lt;/code&gt;/&lt;code&gt;false&lt;/code&gt;/&lt;code&gt;null&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Şu karakterler: &lt;code&gt;[{:,}]&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Bu tokenlerin arasında kalan boşluk, tab, yeni satır gibi karakterleri göz ardı edeceğiz.&lt;/p&gt;
-&lt;h2&gt;Projenin İskeleti&lt;/h2&gt;
-&lt;p&gt;Yazıyı takip etmeyi kolaylaştırmak için, &lt;a href="http://ysar.net/jsonparser-skeleton.tar.gz"&gt;hazırladığım proje iskeletini&lt;/a&gt;
-indirerek, arşivi açtıktan sonra, &lt;code&gt;./configure&lt;/code&gt; komutu ile projeyi derleme
-aşamasına getirebilirsiniz. Eğer sisteminizde C derleyicisi, flex ve bison programlarından biri eksikse,
-&lt;code&gt;configure&lt;/code&gt; programı hata verecektir. Proje iskeletinin içinde bizi ilgilendiren 2 dosya var; &lt;code&gt;lexer.l&lt;/code&gt; ve &lt;code&gt;parser.y&lt;/code&gt;.
-&lt;code&gt;lexer.l&lt;/code&gt; flex programı tarafından okunup lexer kodlarını, &lt;code&gt;parser.y&lt;/code&gt; de bison tarafından okunup parser
-kodlarını oluşturacak. İskelet proje içindeki diğer dosyalar build sisteminin bir parçası olduğundan, detayları
-bu yazının konusunun dışında kalıyor. İskelet projeyi indirmeden devam etmek isteyenler için, &lt;code&gt;lexer.l&lt;/code&gt; ve
-&lt;code&gt;parser.y&lt;/code&gt; nin şablonları aşağıdaki şekilde;&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;lexer.l&lt;/code&gt;&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;"parser.h" // bison -d tarafından otomatik oluşturuluyor&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="o"&gt;%%&lt;/span&gt;
-
-&lt;span class="o"&gt;%%&lt;/span&gt;
-&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;yywrap&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;&lt;code&gt;parser.y&lt;/code&gt;&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdlib.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="k"&gt;extern&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;yylex&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-&lt;span class="k"&gt;extern&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;yyparse&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;yyerror&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;start&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt;
-&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;token&lt;/span&gt; &lt;span class="n"&gt;NEWLINE&lt;/span&gt;
-&lt;span class="o"&gt;%%&lt;/span&gt;
-&lt;span class="nl"&gt;line&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;NEWLINE&lt;/span&gt;
-&lt;span class="o"&gt;%%&lt;/span&gt;
-
-&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;yyerror&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Parse error: %s&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="n"&gt;exit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;h2&gt;İşe Koyulalım&lt;/h2&gt;
-&lt;p&gt;Tanıyacağımız tokenleri &lt;code&gt;parser.y&lt;/code&gt; içine ekleyerek başlayacağız. Bunun için iskelet projedeki &lt;code&gt;parser.y&lt;/code&gt;
-dosyasındaki &lt;code&gt;%start&lt;/code&gt; ve &lt;code&gt;%token&lt;/code&gt; ile başlayan satırları silerek, bunun yerine aşağıdaki satırları ekleyin.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;%start&lt;/span&gt; &lt;span class="n"&gt;JValue&lt;/span&gt;
-&lt;span class="nf"&gt;%token&lt;/span&gt; &lt;span class="n"&gt;T_STRING&lt;/span&gt; &lt;span class="n"&gt;T_NUMBER&lt;/span&gt; &lt;span class="n"&gt;T_TRUE&lt;/span&gt; &lt;span class="n"&gt;T_FALSE&lt;/span&gt; &lt;span class="n"&gt;T_NULL&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Tek karakterden oluşan tokenler için (virgül, süslü parantez vs.), token tanımı yapmaya gerek yok.
-Yukarıda &lt;code&gt;%start&lt;/code&gt; ile başlayan satırda, gramer'in başlangıç sembolünü de değiştirdiğimiz için,
-&lt;code&gt;parser.y&lt;/code&gt; içinde &lt;code&gt;line:&lt;/code&gt; ile başlayan satırı da aşağıdaki şekilde değiştirin;&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;JValue&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;T_STRING&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_NUMBER&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_TRUE&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_FALSE&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_NULL&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Burada, gramer'imizin başlangıç kuralını da belirlemiş olduk. &lt;code&gt;JValue&lt;/code&gt; kuralını &lt;code&gt;%start&lt;/code&gt; kuralı
-olarak belirlediğimiz için, parser'ımız tüm girdisini bir &lt;code&gt;JValue&lt;/code&gt;'ya indirgemeyi deneyecek.
-Kuralı tanımlarken kullandığımız "|" işareti, düzenli ifadelerde olduğu gibi, seçenek ifade ediyor.
-İlk kuralı kelimelerle ifade etmek gerekirse, &lt;code&gt;JValue&lt;/code&gt; bir T_STRING, ya da bir T_NUMBER, ya da bir T_TRUE, ya da bir T_FALSE, ya
-da bir T_NULL olabilir. Array ve Object türleri daha karmaşık olduğu için, onları sonraki adımlarda
-ekleyeceğiz.&lt;/p&gt;
-&lt;p&gt;Parser &lt;code&gt;T_STRING&lt;/code&gt;, &lt;code&gt;T_NUMBER&lt;/code&gt; gibi tokenleri, lexer'dan bekleyecek. Basit
-tokenleri lexer'a tanımlayarak başlayalım. Projedeki &lt;code&gt;lexer.l&lt;/code&gt; dosyasını açıp, iki &lt;code&gt;%%&lt;/code&gt; arasındaki boş satıra,
-aşağıdaki satırları ekleyin;&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;":" { return ':'; }
-"," { return ','; }
-"{" { return '{'; }
-"}" { return '}'; }
-"[" { return '['; }
-"]" { return ']'; }
-"null"  { return T_NULL; }
-"true"   { return T_TRUE; }
-"false"  { return T_FALSE; }
-[ \t\n\r]+ { /* ignore */ }
-&lt;/pre&gt;
-
-
-&lt;p&gt;Program şu an derlenebilir aşamada, ancak, herhangi bir çıktı vermediğimiz
-için, ne başardığımızı test edemiyoruz. &lt;code&gt;parser.y&lt;/code&gt; dosyası içindeki kuralları, aşağıdaki
-şekilde güncelleyin.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;JValue&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;T_STRING&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"String"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
-      &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_NUMBER&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Number"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
-      &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_TRUE&lt;/span&gt;   &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"TRUE"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
-      &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_FALSE&lt;/span&gt;  &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"FALSE"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
-      &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_NULL&lt;/span&gt;   &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"NULL"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Nasıl lexer dosyasına eşleşme sağlandığında çalışacak kodlar ekleyebiliyorsak, parser
-dosyasına da yukarıdaki örnekte olduğu gibi, kod ekleyebiliyoruz. Böylece, bir eşleşme olduğunda,
-konsolda çıktı görebileceğiz. Parser'ımızın çalışması için, &lt;code&gt;main&lt;/code&gt; fonksiyonuna, &lt;code&gt;yyparse&lt;/code&gt; çağrısı
-eklemek gerekiyor.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;int main(void) {
-    yyparse();
-    return 0;
-}
-&lt;/pre&gt;
-
-
-&lt;p&gt;&lt;code&gt;yyparse&lt;/code&gt; fonksiyonu, bison tarafından sağlanan ve parser'ı çalıştıran fonksiyon. Artık projeyi derleyip (&lt;code&gt;make&lt;/code&gt; komutu ile)
-aşağıdaki komutlarla test edebilirsiniz.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;echo "true" | ./jsonparser
-echo "false" | ./jsonparser
-echo "null" | ./jsonparser
-echo "   true   " | ./jsonparser
-echo "yok" | ./jsonparser
-&lt;/pre&gt;
-
-
-&lt;p&gt;Basit tokenleri bitirdikten sonra, düzenli ifade kullanmak zorunda kalacağımız
-tokenlere geçebiliriz. Önce, String ile eşleşen bir düzenli ifade ile başlayalım. &lt;code&gt;lexer.l&lt;/code&gt;
-içine, aşağıdaki satırı ekleyip, programı tekrar derleyin.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;\"(\\.|[^\\"\n])*\" { return T_STRING; }
-&lt;/pre&gt;
-
-
-&lt;p&gt;Aşağıdaki şekilde, programı test edebilirsiniz.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;echo "   \"metin var\"  " | ./jsonparser
-&lt;/pre&gt;
-
-
-&lt;p&gt;Program çalıştığında konsolda "String" çıktısını göreceksiniz, ancak, &lt;code&gt;lexer.l&lt;/code&gt;
-içindeki düzenli ifademiz çok karmaşık görünüyor. Bunu çözmek için,
-&lt;code&gt;lexer.l&lt;/code&gt;'nin birinci kısmında bazı tanımlamalar yapacağız. Aşağıdaki kodları,
-&lt;code&gt;lexer.l&lt;/code&gt;'deki ilk &lt;code&gt;%%&lt;/code&gt; işaretinden hemen önce gelecek şekilde dosyaya ekleyin.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;TIRNAK ["]
-BIRKARAKTER .
-TERSTAKSIM \\
-KACMAKARAKTER {TERSTAKSIM}{BIRKARAKTER}
-NORMALKARAKTER [^\\"\b\f\n\r\t]
-KARAKTER {NORMALKARAKTER}|{KACMAKARAKTER}
-KARAKTERLER {KARAKTER}+
-&lt;/pre&gt;
-
-
-&lt;p&gt;Böylece, &lt;code&gt;\"(\\.|[^\\"\n])*\"&lt;/code&gt; düzenli ifadesinin yerine, &lt;code&gt;{TIRNAK}{TIRNAK}|{TIRNAK}{KARAKTERLER}{TIRNAK}&lt;/code&gt;
-yazabilirsiniz. Bu sayede, düzenli ifademiz çok daha okunaklı olur. &lt;code&gt;T_STRING&lt;/code&gt; tokenimiz ile standart JSON
-string'i arasındaki küçük farklılıkları, yazıyı kısa tutmak adına dikkate almayacağım. &lt;code&gt;T_NUMBER&lt;/code&gt; ile devam edelim.
-Önce aşağıdaki tanımları, &lt;code&gt;lexer.l&lt;/code&gt;'nin tanımlar kısmına ekleyin.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;ONDALIK [.]
-POZITIFRAKAM [1-9]
-SIFIR 0
-RAKAM {SIFIR}|{POZITIFRAKAM}
-E     [eE]
-EXP   {E}[-+]?{RAKAM}+
-FRAC  {ONDALIK}{RAKAM}+
-INT   {SIFIR}|{POZITIFRAKAM}{RAKAM}*
-&lt;/pre&gt;
-
-
-&lt;p&gt;Bu tanımlamaları yaptıktan sonra, aşağıdaki kuralı, kurallar kısmına ekleyip, projeyi tekrar test edebiliriz.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;[-]?{INT}{FRAC}?{EXP}?          { return T_NUMBER; }
-&lt;/pre&gt;
-
-
-&lt;p&gt;&lt;code&gt;lexer&lt;/code&gt; artık &lt;code&gt;T_NUMBER&lt;/code&gt; tokeni de gönderebildiğine göre, &lt;code&gt;lexer.l&lt;/code&gt; ile daha fazla işimiz kalmadı. &lt;code&gt;parser.y&lt;/code&gt; içinde
-hala Object ve Array türlerini tanımlamadık. Önce, Array ile başlayalım. &lt;code&gt;parser.y&lt;/code&gt; içinde kuralları aşağıdaki şekilde
-yeniden düzenleyin.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;JValue&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;T_STRING&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"String"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
-      &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_NUMBER&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Number"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
-      &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_TRUE&lt;/span&gt;   &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"TRUE"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
-      &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_FALSE&lt;/span&gt;  &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"FALSE"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
-      &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_NULL&lt;/span&gt;   &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"NULL"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
-      &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;JArray&lt;/span&gt;   &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Array"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
-
-&lt;span class="n"&gt;JArray&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;'['&lt;/span&gt; &lt;span class="s1"&gt;']'&lt;/span&gt;
-      &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="s1"&gt;'['&lt;/span&gt; &lt;span class="n"&gt;Liste&lt;/span&gt; &lt;span class="s1"&gt;']'&lt;/span&gt;
-
-&lt;span class="n"&gt;Liste&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;JValue&lt;/span&gt;
-     &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;Liste&lt;/span&gt; &lt;span class="s1"&gt;','&lt;/span&gt; &lt;span class="n"&gt;JValue&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Programı derleyip, şu komutla test ederseniz, aşağıdaki gibi bir çıktı göreceksiniz: &lt;code&gt;echo "[1, 2, 3, true, false, null ]" | ./jsonparser&lt;/code&gt;&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;Number
-Number
-Number
-TRUE
-FALSE
-NULL
-Array
-&lt;/pre&gt;
-
-
-&lt;p&gt;Eğer konsolda tek bir satır çıktı görmeyi beklediyseniz, şaşırmış olabilirsiniz. Yazdığımız kurallara
-dikkat ederseniz, &lt;code&gt;JValue&lt;/code&gt; sembolü her oluştuğunda, konsola hangi türden bir &lt;code&gt;JValue&lt;/code&gt; oluştuğunu
-yazıyoruz. &lt;code&gt;JArray&lt;/code&gt; içinde de sınırsız sayıda &lt;code&gt;JValue&lt;/code&gt; bulunabildiği için, bunlara ait çıktıları
-da konsolda göreceğiz. Köşeli parantez kapama tokeni (&lt;code&gt;]&lt;/code&gt;) gelene kadar &lt;code&gt;JArray&lt;/code&gt; tanımı eksik
-kaldığı için, konsolda "Array" çıktısını en son görüyoruz.&lt;/p&gt;
-&lt;p&gt;Burada ilk kez birden fazla tokenden üretilen bir sembol tanımı yapmış olduk. &lt;code&gt;JValue&lt;/code&gt; örneğinde,
-tek bir T_STRING tokeni, bir &lt;code&gt;JValue&lt;/code&gt; tanımlamak için yeterli iken, bir &lt;code&gt;JArray&lt;/code&gt; için en azından
-ardarda gelmiş &lt;code&gt;[&lt;/code&gt; ve &lt;code&gt;]&lt;/code&gt; tokenleri gerekiyor.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;JArray&lt;/code&gt; içinde geçen &lt;code&gt;Liste&lt;/code&gt; sembolü de, tanımladığımız ilk özyinelemeli (eng. recursive) sembol oldu.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Liste&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;JValue&lt;/span&gt;
-     &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;Liste&lt;/span&gt; &lt;span class="s1"&gt;','&lt;/span&gt; &lt;span class="n"&gt;JValue&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Burada şunu ifade etmiş oluyoruz; tek başına &lt;code&gt;JValue&lt;/code&gt; bir &lt;code&gt;Liste&lt;/code&gt; tanımlar, ya da, &lt;code&gt;Liste&lt;/code&gt; &lt;code&gt;,&lt;/code&gt; &lt;code&gt;JValue&lt;/code&gt;
-yanyana geldiğinde bir liste tanımlar. Böyle bir gramer, bir veya daha fazla &lt;code&gt;JValue&lt;/code&gt; değerinin birbirine
-&lt;code&gt;,&lt;/code&gt; ile bağlanarak bir liste oluşturduğunu ifade ediyor.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;Object&lt;/code&gt; türünün gramer tanımı da, &lt;code&gt;JArray&lt;/code&gt;'e çok yakın;&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;JObject: '{' '}'
-       | '{' KVListe '}'
-
-KVListe: KV
-       | KVListe ',' KV
-
-KV: T_STRING ':' JValue
-&lt;/pre&gt;
-
-
-&lt;p&gt;Bunun tek farkı, süslü parantezler içinde değerler listesi değil de, anahtar-değer çiftleri listesi var. &lt;code&gt;JValue&lt;/code&gt;
-tanımını da aşağıdaki şekilde güncelledikten sonra, programı yeniden derleyebiliriz.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;JValue&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;T_STRING&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"String"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
-  &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_NUMBER&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Number"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
-  &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_TRUE&lt;/span&gt;   &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"TRUE"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
-  &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_FALSE&lt;/span&gt;  &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"FALSE"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
-  &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;T_NULL&lt;/span&gt;   &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"NULL"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
-  &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;JArray&lt;/span&gt;   &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Array"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
-  &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;JObject&lt;/span&gt;  &lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="n"&gt;puts&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Object"&lt;/span&gt;&lt;span class="o"&gt;);}&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Bu programı, &lt;code&gt;echo "{\"sayi\":12, \"liste\": [true, false, null]}" | ./jsonparser&lt;/code&gt; komutu
-ile test ederseniz, ekrana aşağıdaki çıktıyı alacaksınız.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;Number
-TRUE
-FALSE
-NULL
-Array
-Object
-&lt;/pre&gt;
-
-
-&lt;p&gt;Dikkat ederseniz, çıktının hiçbir yerinde String ifadesi geçmiyor. Anahtar-değer çiftlerinde
-anahtar görevi gören string'ler, kendi başlarına bir JValue ifade etmediği için, konsolda
-çıktı olarak da göremiyoruz.&lt;/p&gt;
-&lt;p&gt;Böylece, JSON formatındaki veriyi tarayan programı bitirmiş olduk. Bu yazıda, ekranda çıktı göstermek dışında,
-faydalı bir iş yapmasak da, lexer ve parser kullanarak bir metni taramayı başardık. Bu serinin ikinci kısmında,
-Parser'ımızla bir JSON kütüphanesini bir araya getirip, validasyon/formatlama/başka türe dönüştürme
-gibi konulara değinmeyi düşünüyorum.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/flex-bison.html</guid><pubDate>Wed, 26 Jun 2019 07:25:00 GMT</pubDate></item></channel></rss>
+üzerinde çalışabileceğiniz gibi, bir programlama dili derleyicisi veya yorumlayıcısı da yapabilirsiniz. Haydi gidin, birşeyler kodlayın.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/yazilim-dunyasi/json-kutuphanesi.html</guid><pubDate>Thu, 27 Jun 2019 21:17:00 GMT</pubDate></item></channel></rss>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Büyük Sayı Algoritmaları - Tam Sayılara Giriş | YSAR.NET</title>
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900%7CUbuntu:300,400,500,700" rel="stylesheet">
+<link href="../assets/icons/foundation-icons.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/style.css" rel="stylesheet" type="text/css">
+<script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/algoritma/buyuk-sayi-islemleri-tamsayilar.html">
+<!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="buyuk-sayi-islemleri-bolme.html" title="Büyük Sayı Algoritmaları - Bölme" type="text/html">
+<meta property="og:site_name" content="YSAR.NET">
+<meta property="og:title" content="Büyük Sayı Algoritmaları - Tam Sayılara Giriş">
+<meta property="og:url" content="http://ysar.net/algoritma/buyuk-sayi-islemleri-tamsayilar.html">
+<meta property="og:description" content="Yazı dizisinin ilk 4 yazısında, doğal sayılar üzerinde işlem
+yapan temel fonksiyonlar yazdık. Genellikle, bu fonksiyonları
+doğrudan kullanmayacağız. Onun yerine, bu yazıdan itibaren
+ele alacağımız dah">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2020-03-09T01:14:00+03:00">
+<meta property="article:tag" content="mathjax">
+</head>
+<body>
+
+         
+    <header class="fixed-top"><div class="container">
+        <a href="http://ysar.net">
+            <img class="logo" src="../assets/img/Logo.svg"></a>
+        <div class="subtitle">Python, Yazılım ve Programlama</div>
+    <nav id="menu"><ul>
+<li class="fi-info"><a href="../yasar-arabaci.html">Hakkımda</a></li>
+            <li class="fi-social-github"><a href="https://github.com/yasar11732/">GitHub</a></li>
+            <li class="question"><a href="../soru-cevap.html">Soru-Cevap</a></li>
+            <li class="fi-rss"><a href="../rss.xml">RSS</a></li>
+        </ul></nav>
+</div>
+        
+    </header><main class="main-content"><article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 itemprop="headline name">Büyük Sayı Algoritmaları - Tam Sayılara Giriş</h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Yazı dizisinin ilk 4 yazısında, doğal sayılar üzerinde işlem
+yapan temel fonksiyonlar yazdık. Genellikle, bu fonksiyonları
+doğrudan kullanmayacağız. Onun yerine, bu yazıdan itibaren
+ele alacağımız daha üst seviye fonksiyonları kullanacağız.Yeni
+fonksiyonlarımız, önceki yazılarda değinmediğimiz hafıza
+yönetimini sağlayacağı gibi, negatif sayılar üzerinde de
+işlem yapabilecek.</p>
+<p>Bilgisayarlarla negatif sayıları işlemenin çeşitli yöntemleri var.
+Öncelikle, kısaca bu yöntemlerin üzerinden geçelim.</p>
+<h3>İşaret ve Mutlak Değer (Signed Magnitude Representation - SMR)</h3>
+<p>Yazı dilinde negatif sayının önüne eksi işareti koyduğumuz gibi,
+bu yöntemde de sayının başına eksi işareti koyuyoruz. Tabi ki,
+binary sistemde eksi işareti yok. Onun yerine, sayının en üst
+bitini 1 olarak ayarlayarak, sayıyı negatif yapacağız. Bu gösterimde,
+0 sayısı iki farklı şekilde (+0 ve -0) yazılabildiği için,
+<code>n</code> bit kullanarak, <code>2^n - 1</code> farklı sayı ifade edilebiliyor.
+Bu sayılar üzerinde aritmetik işlem yaparken, pozitif/negatif
+kontrolü yapmak gerekiyor. Bu düzenin kullanım alanına örnek
+olarak, <code>float</code> türündeki sayıları verebiliriz.</p>
+<h3>1'in Tümleyeni (One's Complement)</h3>
+<p>Bu gösterimde, pozitif sayıların bitlerini tersine çevirerek, negatif
+sayıları ifade ediyoruz. Örneğin, 8 bitlik '00000001' sayısı +1'i
+ifade ederken, '11111110' sayısı ise -1'i ifade ediyor. SMR'de olduğu
+gibi, en üst biti kontrol ederek, sayının işaretini tespit edilebiliyor.
+Yine SMR'de olduğu gibi, sıfırın iki farklı gösterimi olduğundan, <code>n</code>
+bit kullanarak, <code>2^n - 1</code> farklı değer ifade edebiliyoruz. Rivayet
+odur ki, çok eski bilgisayarda bu yöntem kullanılırmış, ama çoğu
+modern bilgisayarda negatif tam sayılar için 2'nin tümleyeni düzeni
+kullanılıyor.</p>
+<h3>2'nin Tümleyeni (Two's Complement)</h3>
+<p>Bu yöntem üzerinde biraz daha fazla duracağım, çünkü modern
+bilgisayarlarda tam sayılar bu şekilde ifade ediliyor. Aşağıdaki
+tablodan, 8 bit signed bir tam sayının her bitinin değerini
+inceleyebilirsiniz.</p>
+<pre>
++-------+------+-----+-----+-----+-----+-----+-----+-----+
+| Bit   | 7    | 6   | 5   | 4   | 3   | 2   | 1   | 0   |
++-------+------+-----+-----+-----+-----+-----+-----+-----+
+| İkili | -2^7 | 2^6 | 2^5 | 2^4 | 2^3 | 2^2 | 2^1 | 2^0 |
++-------+------+-----+-----+-----+-----+-----+-----+-----+
+| Onlu  | -128 | 64  | 32  | 16  | 8   | 4   | 2   | 1   |
++-------+------+-----+-----+-----+-----+-----+-----+-----+
+</pre>
+
+<p>Bu yöntem bir farkla, 1'in tümleyeni ile aynı. 1'in tümleyeni
+yöntemi ile, bir sayının negatifini almak istediğinizde, tüm
+bitlerini tersine çevirmeniz gerekiyor. 2'nin tümleyeni yönteminde
+ise, tüm bitleri çevirip, sonuca 1 eklemeniz gerekiyor.</p>
+<p>Bu yöntemin en büyük avantajı, modüler aritmetik kurallarını bozmuyor
+olması. Örneğin, \(127 + 1 \equiv -128 \mod 128 \). Aynı şekilde,
+signed integer değerleri arasında toplama yaparken, 127 ile 1 sayısını
+topladığınızda, <code>-128</code> sonucunu elde edersiniz.</p>
+<pre>
+  0 1 1 1 1 1 1 1
++ 0 0 0 0 0 0 0 1
+-----------------
+  1 0 0 0 0 0 0 0
+</pre>
+
+<p>Toplama işlemi yaparken, sayıların pozitif olup olmadığına dikkat etmeksizin, işlem yapabiliriz.
+Aşağıdaki örnekte, +1 ile -1'in toplamını 0 olarak buluyoruz.</p>
+<pre>
+  0 0 0 0 0 0 0 1 (+1)
++ 1 1 1 1 1 1 1 1 (-1)
+-----------------
+1 0 0 0 0 0 0 0 0
+</pre>
+
+<p>Sonucun bir biti dışarıya taşdığı için, +1 ile -1 toplamından 0 sonucu elde
+ediyoruz. Çıkarma işlemi de, negatif sayı ile toplamaya eşdeğer olduğundan,
+yukarıdaki örneği birden bir çıkarma olarak da düşünebilirsiniz.</p>
+<p>Bu düzenin yapısı gereği, toplama, çıkarma ve çarpma
+yaparken, sayıların pozitif olmasına dikkat edilmeksizin işlem yapılabilir.
+Bu avantaj işlemci üreticilerine cazip gelmiş olacak ki, signed işlem yapabilen
+çoğu işlemci bu düzeni kullanıyor.</p>
+<h3>Kaydırılmış İkili (Offset Binary)</h3>
+<p>Bu düzende, her sayıyı kendinden <code>n</code> fazla bir
+sayı ile ifade ediyoruz. Örneğin, 8 bitlik signed
+integer için, <code>n</code> 128 olsun.</p>
+<pre>
++------+----------+
+|Sayı  | Kodlanışı|
++------+----------+
+| 127  | 255      |
+| 126  | 254      |
+| 1    | 129      |
+| 0    | 128      |
+| -1   | 127      |
+| -127 | 1        |
+| -128 | 0        |
++------+----------+
+</pre>
+
+<p><code>float</code> türündeki sayıların exponent kısmı için, bu düzen kullanılıyor.</p>
+<h3>Hangisini Kullanmalıyız</h3>
+<p>Yazdığım ilk büyük sayı kütüphanesi için, 2'nin tümleyeni
+yöntemini tercih etmiştim. Dört işlemin kolaylığı konusu
+çok cazip gelmişti. Ancak, işlemcilerin yaptığı gibi
+sabit genişlikteki sayılarla ilgilenmediğimiz için,
+2'nin tümleyeni düzeninin avantajları çok da önemli
+olmuyor. Aynı zamanda, büyük sayıların mutlak
+değerini almak gerektiğinde, tüm sayının üzerinden
+geçip, tüm bitlerini tersine çevirip sonuca bir eklemek
+gerektiği için, oldukça uzun sürüyor. Bu bölme işlemi
+için büyük bir sorun, çünkü pozitif ve negatif sayılar
+arasında bölme yaparken, mutlak değer üzerinden
+bölme yapmak gerekiyor. Modüler aritmeği de bölme işlemi
+üzerinden yapacağımız için, 2'nin tümleyeni çok kötü
+bir tercih. Kendim acı bir şekilde tecrübe ettim. Bu nedenle,
+GMP kütüphanesinin yaptığı gibi, Signed Magnitude (SMR) düzenini
+kullanacağız.</p>
+<p>Artık biraz kod yazabiliriz.</p>
+<pre class="code literal-block"><span></span><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">bn_size_t</span> <span class="n">alloc</span><span class="p">;</span>
+    <span class="n">bn_size_t</span> <span class="n">length</span><span class="p">;</span>
+    <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">digits</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">bnz_t</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="n">bnz_t</span> <span class="o">*</span><span class="n">bnz_ptr</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="k">const</span> <span class="n">bnz_t</span> <span class="o">*</span><span class="n">bn_constptr</span><span class="p">;</span>
+</pre>
+
+
+<p>Tam sayıları, dinamik array veri yapısında tutacağız. <code>bnz_t</code>
+veri yapısının <code>alloc</code> üyesi, kaç hanelik yer ayırdığımızı tutacak.
+<code>length</code> üyesi, hem sayının kaç haneli (2^32lik tabanda) olduğunu
+hem de pozitif mi yoksa negatif mi olduğunu tutacak. Örneğin, <code>length</code> -5 ise,
+sayının 5 haneli ve negatif olduğunu anlayacağız. Eğer <code>length</code>
+0 ise, tamsayının da 0 olduğunu anlayacağız. Eğer <code>length</code> sıfır
+değilse, ama <code>alloc</code> 0 ise, hafızanın stack üzerinde ayrıldığını
+anlayacağız.</p>
+<p><code>bnz_t</code>'yi kullanıma hazırlamak için, aşağıdaki fonksiyonu kullanacağız. </p>
+<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">bnz_init</span><span class="p">(</span><span class="n">bnz_ptr</span> <span class="n">bnz</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">memset</span><span class="p">(</span><span class="n">bnz</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">bnz_t</span><span class="p">));</span>
+<span class="p">}</span>
+</pre>
+
+
+<p><code>bnz_init</code> bir kez çağırıldıktan sonra, <code>bnz_t</code> türü farklı sayıları tutmak için tekrar tekrar kullanılabilir.</p>
+<p>Hafızada ayırdığımız yerin, <code>n</code> haneli bir sayıyı tutabilecek kadar büyük olmasını temin etmek için, aşağıdaki makroyu kullanacağız.</p>
+<pre class="code literal-block"><span></span><span class="cp">#define BN_GROW(bn, n) ((n) &gt; (bn)-&gt;alloc ? \</span>
+<span class="cp">    bnz_resize((bn), (n)) \</span>
+<span class="cp">    : (bn)-&gt;digits)</span>
+</pre>
+
+
+<p>Bu makro, eğer zaten yeterli yer ayrılmışsa, <code>digits</code> üyesini
+döndürecek, aksi takdirde, <code>bnz_resize</code> fonksiyonunu çağıracak.</p>
+<pre class="code literal-block"><span></span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="nf">bn_xrealloc</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">p_old</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">size</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">p_new</span> <span class="o">=</span> <span class="n">realloc</span><span class="p">(</span><span class="n">p_old</span><span class="p">,</span> <span class="n">size</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">bn_digit_t</span><span class="p">));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">p_new</span><span class="p">)</span>
+        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">p_new</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">bn_digit_t</span> <span class="o">*</span><span class="nf">bn_xmalloc</span><span class="p">(</span><span class="n">bn_size_t</span> <span class="n">size</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">size</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">bn_digit_t</span><span class="p">));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">p</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">bn_digit_t</span> <span class="o">*</span><span class="nf">bnz_resize</span><span class="p">(</span><span class="n">bnz_ptr</span> <span class="n">bn</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">size</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">bn</span><span class="o">-&gt;</span><span class="n">alloc</span><span class="p">)</span>
+        <span class="n">bn</span><span class="o">-&gt;</span><span class="n">digits</span> <span class="o">=</span> <span class="n">bn_xrealloc</span><span class="p">(</span><span class="n">bn</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
+    <span class="k">else</span>
+        <span class="n">bn</span><span class="o">-&gt;</span><span class="n">digits</span> <span class="o">=</span> <span class="n">bn_xmalloc</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+
+    <span class="n">bn</span><span class="o">-&gt;</span><span class="n">alloc</span> <span class="o">=</span> <span class="n">size</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">bn</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p><code>bn_xmalloc</code> ve <code>bn_xrealloc</code> fonksiyonları, <code>malloc</code> ve <code>realloc</code>
+kullanarak gerekli hafıza alanlarını ayıramazlarsa, hata koduyla
+programı sonlandırıyor. <code>bnz_resize</code> fonksiyonu, daha önce
+ayrılmış bir hafıza alanı varsa, onu genişletiyor. Eğer daha
+önce bir hafıza ayrılmamışsa, yeni yer ayırıyor.</p>
+<p>Büyük tamsayılara, signed integer değeri atamak için, aşağıdaki
+fonksiyonu kullanacağız.</p>
+<pre class="code literal-block"><span></span><span class="n">bn_size_t</span> <span class="nf">bn_trim</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">digits</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">current_size</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">digits</span><span class="p">[</span><span class="n">current_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">current_size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">current_size</span><span class="o">--</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">current_size</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">bnz_set_int</span><span class="p">(</span><span class="n">bnz_ptr</span> <span class="n">bn</span><span class="p">,</span> <span class="kt">int</span> <span class="n">i</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">bn</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">bn_size_t</span> <span class="n">num_digits</span> <span class="o">=</span> <span class="p">((</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">bn_digit_t</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">rp</span> <span class="o">=</span> <span class="n">BN_GROW</span><span class="p">(</span><span class="n">bn</span><span class="p">,</span> <span class="n">num_digits</span><span class="p">);</span>
+    <span class="o">*</span><span class="p">((</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span><span class="n">rp</span><span class="p">)</span> <span class="o">=</span> <span class="n">BN_ABS</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="p">((</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span><span class="n">rp</span><span class="p">)</span> <span class="o">==</span> <span class="n">i</span><span class="p">)</span> <span class="c1">// sayi positif</span>
+        <span class="n">bn</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">=</span> <span class="n">bn_trim</span><span class="p">(</span><span class="n">rp</span><span class="p">,</span> <span class="n">num_digits</span><span class="p">);</span>
+    <span class="k">else</span> <span class="c1">// sayi negatif</span>
+        <span class="n">bn</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">=</span> <span class="o">-</span><span class="n">bn_trim</span><span class="p">(</span><span class="n">rp</span><span class="p">,</span> <span class="n">num_digits</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Eğer, <code>i</code>'nin değeri sıfır ise, tek yapmamız gereken <code>length</code>'i
+sıfıra atamak. <code>num_digits</code>, <code>i</code>'nin kaç hanede saklanacağını
+tutuyor. Eğer <code>sizeof(int) == sizeof(bn_digit_t)</code> ise, bu değer
+1 olacak. Yeterli yer ayırdığımızdan emin olmak için, <code>BN_GROW</code>
+makrosunu çağırıyoruz. <code>digits</code> array'i içinde her zaman pozitif
+sayılar saklayacağımız için, mutlak değer alıyoruz. <code>bn_trim</code>
+fonksiyonu ise, sayının başındaki sıfır haneleri silindikten
+sonra kalan hane sayısını veriyor. Tam sayılar üzerinde
+işlem yapacak algoritmaları <code>digits[length-1]</code>'in
+sıfır olmadığı varsayımına göre çalıştıracağımız için,
+<code>bn_trim</code> kullanarak, üstteki 0 hanelerini silmemiz gerekiyor.</p>
+<p>Sonraki yazılarda, iki sayının mutlak değerlerini karşılaştırmamız
+gerekecek, bunun için, aşağıdaki fonksiyonları kullanacağız.</p>
+<pre class="code literal-block"><span></span><span class="kt">int</span> <span class="nf">bn_cmp_n</span><span class="p">(</span><span class="k">const</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op1</span><span class="p">,</span> <span class="k">const</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op2</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">opsize</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">--</span><span class="n">opsize</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">op1</span><span class="p">[</span><span class="n">opsize</span><span class="p">]</span> <span class="o">!=</span> <span class="n">op2</span><span class="p">[</span><span class="n">opsize</span><span class="p">])</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">op1</span><span class="p">[</span><span class="n">opsize</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">op2</span><span class="p">[</span><span class="n">opsize</span><span class="p">])</span> <span class="o">-</span> <span class="p">(</span><span class="n">op1</span><span class="p">[</span><span class="n">opsize</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">op2</span><span class="p">[</span><span class="n">opsize</span><span class="p">]);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kt">int</span> <span class="nf">bn_cmp_nn</span><span class="p">(</span><span class="k">const</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op1</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">op1size</span><span class="p">,</span> <span class="k">const</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op2</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">op2size</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">op1size</span> <span class="o">!=</span> <span class="n">op2size</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">op1size</span> <span class="o">&gt;</span> <span class="n">op2size</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">op1size</span> <span class="o">&lt;</span> <span class="n">op2size</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="n">bn_cmp_n</span><span class="p">(</span><span class="n">op1</span><span class="p">,</span> <span class="n">op2</span><span class="p">,</span> <span class="n">op1size</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>İlk fonksiyon, uzunlukları eşit olan iki doğal sayıyı karşılaştırmaya yarıyor. İkinci fonksiyon
+ise, tüm uzunluklardaki doğal sayılar için kullanılabilir. İki doğal sayıyı karşılaştırırken,
+eğer birinin hane sayısı diğerinden büyükse, özel bir inceleme yapmadan, hane sayısı
+çok olanı büyük ilan edebiliriz. Hane sayılarının aynı olduğu durumlarda, üstten alta
+doğru haneleri kontrol etmemiz gerekiyor. Herhangi bir hanede farklılık olduğunda,
+sayıların hangisinin büyük olduğunu tespit edebiliriz. Eğer tüm haneleri eşitse,
+sayılar da eşit olmak zorunda. Bu iki fonksiyon da, birinci argüman büyükse 1,
+ikinci argüman büyükse -1, argümanlar eşit ise 0 döndürecek.</p>
+<p>Gelecek yazılarda, tamsayılar üzerinde dört işlem yapacağız. Bunun için, daha önceki
+fonksiyonlardan faydalanmakla birlikte, işleme giren sayıların pozitif veya negatif
+olma durumlarına dikkat edeceğiz.</p>
+<h3>Ek Kaynaklar</h3>
+<ul>
+<li>Knuth D. Art of The Computer Programming Vol 2 Section 4.3.1</li>
+<li>Wikipedia. <a href="https://en.wikipedia.org/wiki/Signed_number_representations">Signed number representations</a>
+</li>
+</ul>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><div class="pager">
+                <a href="buyuk-sayi-islemleri-bolme.html" rel="prev" title="Büyük Sayı Algoritmaları - Bölme">Önceki yazı</a>
+        </div>
+
+    </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
+	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+        </script></article></main><script>
+  if(document.location.hostname == "ysar.net")
+  {
+      (function() {
+        var cx = '013136674562336859018:ouohwab0yku';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+      
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-44774134-1', 'auto');
+          ga('send', 'pageview');
+  }
+
+</script>
+</body>
+</html>

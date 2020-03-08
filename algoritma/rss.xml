@@ -1,5 +1,268 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Algoritma)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/algoritma/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Wed, 04 Mar 2020 20:19:08 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Büyük Sayı Algoritmaları - Bölme</title><link>http://ysar.net/algoritma/buyuk-sayi-islemleri-bolme.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Daha önceki yazılarda, değişken-genişlikteki doğal sayılar üzerinde
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (Algoritma)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/algoritma/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Sun, 08 Mar 2020 22:26:41 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Büyük Sayı Algoritmaları - Tam Sayılara Giriş</title><link>http://ysar.net/algoritma/buyuk-sayi-islemleri-tamsayilar.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Yazı dizisinin ilk 4 yazısında, doğal sayılar üzerinde işlem
+yapan temel fonksiyonlar yazdık. Genellikle, bu fonksiyonları
+doğrudan kullanmayacağız. Onun yerine, bu yazıdan itibaren
+ele alacağımız daha üst seviye fonksiyonları kullanacağız.Yeni
+fonksiyonlarımız, önceki yazılarda değinmediğimiz hafıza
+yönetimini sağlayacağı gibi, negatif sayılar üzerinde de
+işlem yapabilecek.&lt;/p&gt;
+&lt;p&gt;Bilgisayarlarla negatif sayıları işlemenin çeşitli yöntemleri var.
+Öncelikle, kısaca bu yöntemlerin üzerinden geçelim.&lt;/p&gt;
+&lt;h3&gt;İşaret ve Mutlak Değer (Signed Magnitude Representation - SMR)&lt;/h3&gt;
+&lt;p&gt;Yazı dilinde negatif sayının önüne eksi işareti koyduğumuz gibi,
+bu yöntemde de sayının başına eksi işareti koyuyoruz. Tabi ki,
+binary sistemde eksi işareti yok. Onun yerine, sayının en üst
+bitini 1 olarak ayarlayarak, sayıyı negatif yapacağız. Bu gösterimde,
+0 sayısı iki farklı şekilde (+0 ve -0) yazılabildiği için,
+&lt;code&gt;n&lt;/code&gt; bit kullanarak, &lt;code&gt;2^n - 1&lt;/code&gt; farklı sayı ifade edilebiliyor.
+Bu sayılar üzerinde aritmetik işlem yaparken, pozitif/negatif
+kontrolü yapmak gerekiyor. Bu düzenin kullanım alanına örnek
+olarak, &lt;code&gt;float&lt;/code&gt; türündeki sayıları verebiliriz.&lt;/p&gt;
+&lt;h3&gt;1'in Tümleyeni (One's Complement)&lt;/h3&gt;
+&lt;p&gt;Bu gösterimde, pozitif sayıların bitlerini tersine çevirerek, negatif
+sayıları ifade ediyoruz. Örneğin, 8 bitlik '00000001' sayısı +1'i
+ifade ederken, '11111110' sayısı ise -1'i ifade ediyor. SMR'de olduğu
+gibi, en üst biti kontrol ederek, sayının işaretini tespit edilebiliyor.
+Yine SMR'de olduğu gibi, sıfırın iki farklı gösterimi olduğundan, &lt;code&gt;n&lt;/code&gt;
+bit kullanarak, &lt;code&gt;2^n - 1&lt;/code&gt; farklı değer ifade edebiliyoruz. Rivayet
+odur ki, çok eski bilgisayarda bu yöntem kullanılırmış, ama çoğu
+modern bilgisayarda negatif tam sayılar için 2'nin tümleyeni düzeni
+kullanılıyor.&lt;/p&gt;
+&lt;h3&gt;2'nin Tümleyeni (Two's Complement)&lt;/h3&gt;
+&lt;p&gt;Bu yöntem üzerinde biraz daha fazla duracağım, çünkü modern
+bilgisayarlarda tam sayılar bu şekilde ifade ediliyor. Aşağıdaki
+tablodan, 8 bit signed bir tam sayının her bitinin değerini
+inceleyebilirsiniz.&lt;/p&gt;
+&lt;pre&gt;
++-------+------+-----+-----+-----+-----+-----+-----+-----+
+| Bit   | 7    | 6   | 5   | 4   | 3   | 2   | 1   | 0   |
++-------+------+-----+-----+-----+-----+-----+-----+-----+
+| İkili | -2^7 | 2^6 | 2^5 | 2^4 | 2^3 | 2^2 | 2^1 | 2^0 |
++-------+------+-----+-----+-----+-----+-----+-----+-----+
+| Onlu  | -128 | 64  | 32  | 16  | 8   | 4   | 2   | 1   |
++-------+------+-----+-----+-----+-----+-----+-----+-----+
+&lt;/pre&gt;
+
+&lt;p&gt;Bu yöntem bir farkla, 1'in tümleyeni ile aynı. 1'in tümleyeni
+yöntemi ile, bir sayının negatifini almak istediğinizde, tüm
+bitlerini tersine çevirmeniz gerekiyor. 2'nin tümleyeni yönteminde
+ise, tüm bitleri çevirip, sonuca 1 eklemeniz gerekiyor.&lt;/p&gt;
+&lt;p&gt;Bu yöntemin en büyük avantajı, modüler aritmetik kurallarını bozmuyor
+olması. Örneğin, \(127 + 1 \equiv -128 \mod 128 \). Aynı şekilde,
+signed integer değerleri arasında toplama yaparken, 127 ile 1 sayısını
+topladığınızda, &lt;code&gt;-128&lt;/code&gt; sonucunu elde edersiniz.&lt;/p&gt;
+&lt;pre&gt;
+  0 1 1 1 1 1 1 1
++ 0 0 0 0 0 0 0 1
+-----------------
+  1 0 0 0 0 0 0 0
+&lt;/pre&gt;
+
+&lt;p&gt;Toplama işlemi yaparken, sayıların pozitif olup olmadığına dikkat etmeksizin, işlem yapabiliriz.
+Aşağıdaki örnekte, +1 ile -1'in toplamını 0 olarak buluyoruz.&lt;/p&gt;
+&lt;pre&gt;
+  0 0 0 0 0 0 0 1 (+1)
++ 1 1 1 1 1 1 1 1 (-1)
+-----------------
+1 0 0 0 0 0 0 0 0
+&lt;/pre&gt;
+
+&lt;p&gt;Sonucun bir biti dışarıya taşdığı için, +1 ile -1 toplamından 0 sonucu elde
+ediyoruz. Çıkarma işlemi de, negatif sayı ile toplamaya eşdeğer olduğundan,
+yukarıdaki örneği birden bir çıkarma olarak da düşünebilirsiniz.&lt;/p&gt;
+&lt;p&gt;Bu düzenin yapısı gereği, toplama, çıkarma ve çarpma
+yaparken, sayıların pozitif olmasına dikkat edilmeksizin işlem yapılabilir.
+Bu avantaj işlemci üreticilerine cazip gelmiş olacak ki, signed işlem yapabilen
+çoğu işlemci bu düzeni kullanıyor.&lt;/p&gt;
+&lt;h3&gt;Kaydırılmış İkili (Offset Binary)&lt;/h3&gt;
+&lt;p&gt;Bu düzende, her sayıyı kendinden &lt;code&gt;n&lt;/code&gt; fazla bir
+sayı ile ifade ediyoruz. Örneğin, 8 bitlik signed
+integer için, &lt;code&gt;n&lt;/code&gt; 128 olsun.&lt;/p&gt;
+&lt;pre&gt;
++------+----------+
+|Sayı  | Kodlanışı|
++------+----------+
+| 127  | 255      |
+| 126  | 254      |
+| 1    | 129      |
+| 0    | 128      |
+| -1   | 127      |
+| -127 | 1        |
+| -128 | 0        |
++------+----------+
+&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;float&lt;/code&gt; türündeki sayıların exponent kısmı için, bu düzen kullanılıyor.&lt;/p&gt;
+&lt;h3&gt;Hangisini Kullanmalıyız&lt;/h3&gt;
+&lt;p&gt;Yazdığım ilk büyük sayı kütüphanesi için, 2'nin tümleyeni
+yöntemini tercih etmiştim. Dört işlemin kolaylığı konusu
+çok cazip gelmişti. Ancak, işlemcilerin yaptığı gibi
+sabit genişlikteki sayılarla ilgilenmediğimiz için,
+2'nin tümleyeni düzeninin avantajları çok da önemli
+olmuyor. Aynı zamanda, büyük sayıların mutlak
+değerini almak gerektiğinde, tüm sayının üzerinden
+geçip, tüm bitlerini tersine çevirip sonuca bir eklemek
+gerektiği için, oldukça uzun sürüyor. Bu bölme işlemi
+için büyük bir sorun, çünkü pozitif ve negatif sayılar
+arasında bölme yaparken, mutlak değer üzerinden
+bölme yapmak gerekiyor. Modüler aritmeği de bölme işlemi
+üzerinden yapacağımız için, 2'nin tümleyeni çok kötü
+bir tercih. Kendim acı bir şekilde tecrübe ettim. Bu nedenle,
+GMP kütüphanesinin yaptığı gibi, Signed Magnitude (SMR) düzenini
+kullanacağız.&lt;/p&gt;
+&lt;p&gt;Artık biraz kod yazabiliriz.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;alloc&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="n"&gt;bnz_t&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="n"&gt;bnz_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;bnz_ptr&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;bnz_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;bn_constptr&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Tam sayıları, dinamik array veri yapısında tutacağız. &lt;code&gt;bnz_t&lt;/code&gt;
+veri yapısının &lt;code&gt;alloc&lt;/code&gt; üyesi, kaç hanelik yer ayırdığımızı tutacak.
+&lt;code&gt;length&lt;/code&gt; üyesi, hem sayının kaç haneli (2^32lik tabanda) olduğunu
+hem de pozitif mi yoksa negatif mi olduğunu tutacak. Örneğin, &lt;code&gt;length&lt;/code&gt; -5 ise,
+sayının 5 haneli ve negatif olduğunu anlayacağız. Eğer &lt;code&gt;length&lt;/code&gt;
+0 ise, tamsayının da 0 olduğunu anlayacağız. Eğer &lt;code&gt;length&lt;/code&gt; sıfır
+değilse, ama &lt;code&gt;alloc&lt;/code&gt; 0 ise, hafızanın stack üzerinde ayrıldığını
+anlayacağız.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;bnz_t&lt;/code&gt;'yi kullanıma hazırlamak için, aşağıdaki fonksiyonu kullanacağız. &lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;bnz_init&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bnz_ptr&lt;/span&gt; &lt;span class="n"&gt;bnz&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;memset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bnz&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bnz_t&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;&lt;code&gt;bnz_init&lt;/code&gt; bir kez çağırıldıktan sonra, &lt;code&gt;bnz_t&lt;/code&gt; türü farklı sayıları tutmak için tekrar tekrar kullanılabilir.&lt;/p&gt;
+&lt;p&gt;Hafızada ayırdığımız yerin, &lt;code&gt;n&lt;/code&gt; haneli bir sayıyı tutabilecek kadar büyük olmasını temin etmek için, aşağıdaki makroyu kullanacağız.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#define BN_GROW(bn, n) ((n) &amp;gt; (bn)-&amp;gt;alloc ? \&lt;/span&gt;
+&lt;span class="cp"&gt;    bnz_resize((bn), (n)) \&lt;/span&gt;
+&lt;span class="cp"&gt;    : (bn)-&amp;gt;digits)&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Bu makro, eğer zaten yeterli yer ayrılmışsa, &lt;code&gt;digits&lt;/code&gt; üyesini
+döndürecek, aksi takdirde, &lt;code&gt;bnz_resize&lt;/code&gt; fonksiyonunu çağıracak.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;bn_xrealloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p_old&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p_new&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;realloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p_old&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="n"&gt;p_new&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;exit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;p_new&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;bn_xmalloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;malloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;exit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;bnz_resize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bnz_ptr&lt;/span&gt; &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;alloc&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;bn_xrealloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt;
+        &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;bn_xmalloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;alloc&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;&lt;code&gt;bn_xmalloc&lt;/code&gt; ve &lt;code&gt;bn_xrealloc&lt;/code&gt; fonksiyonları, &lt;code&gt;malloc&lt;/code&gt; ve &lt;code&gt;realloc&lt;/code&gt;
+kullanarak gerekli hafıza alanlarını ayıramazlarsa, hata koduyla
+programı sonlandırıyor. &lt;code&gt;bnz_resize&lt;/code&gt; fonksiyonu, daha önce
+ayrılmış bir hafıza alanı varsa, onu genişletiyor. Eğer daha
+önce bir hafıza ayrılmamışsa, yeni yer ayırıyor.&lt;/p&gt;
+&lt;p&gt;Büyük tamsayılara, signed integer değeri atamak için, aşağıdaki
+fonksiyonu kullanacağız.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="nf"&gt;bn_trim&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;current_size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;current_size&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;current_size&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;current_size&lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;current_size&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;bnz_set_int&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bnz_ptr&lt;/span&gt; &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;num_digits&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;rp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;BN_GROW&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;num_digits&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;rp&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;BN_ABS&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;rp&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;// sayi positif&lt;/span&gt;
+        &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;bn_trim&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;num_digits&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="c1"&gt;// sayi negatif&lt;/span&gt;
+        &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;bn_trim&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;num_digits&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Eğer, &lt;code&gt;i&lt;/code&gt;'nin değeri sıfır ise, tek yapmamız gereken &lt;code&gt;length&lt;/code&gt;'i
+sıfıra atamak. &lt;code&gt;num_digits&lt;/code&gt;, &lt;code&gt;i&lt;/code&gt;'nin kaç hanede saklanacağını
+tutuyor. Eğer &lt;code&gt;sizeof(int) == sizeof(bn_digit_t)&lt;/code&gt; ise, bu değer
+1 olacak. Yeterli yer ayırdığımızdan emin olmak için, &lt;code&gt;BN_GROW&lt;/code&gt;
+makrosunu çağırıyoruz. &lt;code&gt;digits&lt;/code&gt; array'i içinde her zaman pozitif
+sayılar saklayacağımız için, mutlak değer alıyoruz. &lt;code&gt;bn_trim&lt;/code&gt;
+fonksiyonu ise, sayının başındaki sıfır haneleri silindikten
+sonra kalan hane sayısını veriyor. Tam sayılar üzerinde
+işlem yapacak algoritmaları &lt;code&gt;digits[length-1]&lt;/code&gt;'in
+sıfır olmadığı varsayımına göre çalıştıracağımız için,
+&lt;code&gt;bn_trim&lt;/code&gt; kullanarak, üstteki 0 hanelerini silmemiz gerekiyor.&lt;/p&gt;
+&lt;p&gt;Sonraki yazılarda, iki sayının mutlak değerlerini karşılaştırmamız
+gerekecek, bunun için, aşağıdaki fonksiyonları kullanacağız.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;bn_cmp_n&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+        &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;bn_cmp_nn&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;op1size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;op2size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1size&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;op2size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1size&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;op2size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1size&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;op2size&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;bn_cmp_n&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;op1size&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;İlk fonksiyon, uzunlukları eşit olan iki doğal sayıyı karşılaştırmaya yarıyor. İkinci fonksiyon
+ise, tüm uzunluklardaki doğal sayılar için kullanılabilir. İki doğal sayıyı karşılaştırırken,
+eğer birinin hane sayısı diğerinden büyükse, özel bir inceleme yapmadan, hane sayısı
+çok olanı büyük ilan edebiliriz. Hane sayılarının aynı olduğu durumlarda, üstten alta
+doğru haneleri kontrol etmemiz gerekiyor. Herhangi bir hanede farklılık olduğunda,
+sayıların hangisinin büyük olduğunu tespit edebiliriz. Eğer tüm haneleri eşitse,
+sayılar da eşit olmak zorunda. Bu iki fonksiyon da, birinci argüman büyükse 1,
+ikinci argüman büyükse -1, argümanlar eşit ise 0 döndürecek.&lt;/p&gt;
+&lt;p&gt;Gelecek yazılarda, tamsayılar üzerinde dört işlem yapacağız. Bunun için, daha önceki
+fonksiyonlardan faydalanmakla birlikte, işleme giren sayıların pozitif veya negatif
+olma durumlarına dikkat edeceğiz.&lt;/p&gt;
+&lt;h3&gt;Ek Kaynaklar&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Knuth D. Art of The Computer Programming Vol 2 Section 4.3.1&lt;/li&gt;
+&lt;li&gt;Wikipedia. &lt;a href="https://en.wikipedia.org/wiki/Signed_number_representations"&gt;Signed number representations&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/algoritma/buyuk-sayi-islemleri-tamsayilar.html</guid><pubDate>Sun, 08 Mar 2020 22:14:00 GMT</pubDate></item><item><title>Büyük Sayı Algoritmaları - Bölme</title><link>http://ysar.net/algoritma/buyuk-sayi-islemleri-bolme.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Daha önceki yazılarda, değişken-genişlikteki doğal sayılar üzerinde
 toplama, çıkarma ve çarpma algoritmalarına değinmiştik. Bu yazıda, D. Knuth'un
 &lt;em&gt;The Art of The Computer Programming&lt;/em&gt; kitabının 4.3.1'inci kısmında anlatılan
 &lt;em&gt;Algoritm D.&lt;/em&gt;'den bahsedeceğim. Bu algoritma, değişken-genişlikteki doğal
@@ -1801,266 +2064,4 @@ işlemini de yapmadık. Bunları da denemek isteyebilirsiniz. İyi kodlamalar.&l
 
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/huffman-kodlamasi.html</guid><pubDate>Mon, 10 Jun 2019 18:29:00 GMT</pubDate></item><item><title>UTF-8 Kodlama Algoritması</title><link>http://ysar.net/algoritma/utf8-kodlama.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;a href="https://ysar.net/yazilim-dunyasi/rfc2231.html"&gt;RFC2231 Kodlaması&lt;/a&gt; başlıklı yazıda, &lt;code&gt;wchar_t&lt;/code&gt; türündeki
-bir string'i utf8 olarak kodlamak için işletim sisteminin sağladığı fonksiyonları kullanmıştım. Ancak,
-daha sonra, kodlama egzersizi olarak &lt;code&gt;wchar_t&lt;/code&gt; türündeki bir string'i utf8 olarak kodlayan fonksiyonu kendim
-yazmak istedim. Referans olarak, &lt;a href="https://tools.ietf.org/html/rfc3629"&gt;RFC 3629&lt;/a&gt;'daki tanımlamaları kullandım.
-Bu yazıda, geniş karakter (&lt;code&gt;wchar_t&lt;/code&gt;) türündeki veriyi, nasıl utf8 olarak kodlayabileceğimizden bahsedeceğim.&lt;/p&gt;
-&lt;p&gt;Bahsettiğim RFC'nin 3. başlığı altında, UTF-8'in tanımı yapılmış. Buna göre, &lt;code&gt;0x0&lt;/code&gt; ile &lt;code&gt;0x10FFFF&lt;/code&gt; arasındaki
-unicode karakterler, 1-4 byte dizilimle kodlanıyor. Kodlamada kullanılan her bir byte'a octet (eng. sekizli)
-deniyor. Tek bir octet'den oluşan dizilimde üst bit (MSB) 0 olmak zorunda, kalan 7 bit ile karakterimizi
-kodluyoruz. Dolayısıyla, karakter kodu 127 ve altı için, UTF8 kodlama ile us-ascii kodlama eşdeğer oluyor.
-&lt;code&gt;n&lt;/code&gt; octetli'li (&lt;code&gt;n &amp;gt; 1&lt;/code&gt;) dizilimlerde iste, ilk octet'in üst &lt;code&gt;n&lt;/code&gt; biti 1 olarak, bunları takip eden ilk bit
-ise 0 olarak ayarlanıp, kalan bitler kodlama amaçlı kullanılıyor. Devamında gelen octetlerin ise, hepsinin
-en üst biti 1, onu takip eden bit ise 0 olarak ayarlanıp, kalan bitler kodlama amaçlı kullanılıyor.
-RFC'deki örnek tabloyu buraya kopyalıyorum.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;   Karakter Kodu Aralığı  |        UTF-8 octet dizilimi
-         (hexadecimal)    |              (binary)
-      --------------------+---------------------------------------------
-      0000 0000-0000 007F | 0xxxxxxx
-      0000 0080-0000 07FF | 110xxxxx 10xxxxxx
-      0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx
-      0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-&lt;/pre&gt;
-
-
-&lt;p&gt;Şimdi adım adım, UTF8 kodlama algoritmasının aşamalarına geçeceğiz. Aşamalara geçmeden
-önce, işimizi daha anlaşılır yapabilmek için, tanımlamalarımızı yapalım.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#define UTF8_OCTET1_MAX 0x7F&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_OCTET2_MAX 0x7FF&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_OCTET3_MAX 0xFFFF&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_OCTET4_MAX 0x10FFFF&lt;/span&gt;
-
-&lt;span class="cp"&gt;#define UTF8_SEQUENCE1_START 0x00&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_SEQUENCE2_START 0xC0&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_SEQUENCE3_START 0xE0&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_SEQUENCE4_START 0xF0&lt;/span&gt;
-
-&lt;span class="cp"&gt;#define UTF8_CONTINUATION_BYTE 0x80&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_CONTINUATION_BYTE_MASK 0x3F&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;İlk 4 tanım, sırasıyla 1 octet, 2 octet, 3 octet ve 4 octet ile kodlanabilecek karakter
-kodlarının üst sınırını belirtiyor. Bu sayılarını doğrudan örnek tablodan kopyaladım.
-Daha sonra gelen 4 tanım ise, yine sırasıyla 1 octet, 2 octet, 3 octet ve 4 octet dizilimlerinde
-ilk octet'in üst bitlerinde olması gereken değeri belirtiyor. Bu sayıları
-elde etmek için, örnek tabloda binary olarak gösterilen birinci octet'leri (&lt;code&gt;b00000000&lt;/code&gt;,&lt;code&gt;b11000000&lt;/code&gt;,&lt;code&gt;b11100000&lt;/code&gt;,&lt;code&gt;b11110000&lt;/code&gt;), hex gösterimine
-çevirdim. &lt;code&gt;UTF8_CONTINUATION_BYTE&lt;/code&gt; tanımı, çoklu octet dizilimlerinde, her bir octet'in
-üst bitlerinin alması gerektiği değeri gösteriyor. Bunu da aynı şekilde
-örnek tablodan hex'e çevirdim. Son olarak, &lt;code&gt;UTF8_CONTINUATION_BYTE_MASK&lt;/code&gt; ile
-tanımlanan değeri, bir sayının en alttaki 6 bitini maskelemek için kullanacağım.&lt;/p&gt;
-&lt;p&gt;Şimdi adım adım, algoritmayı inceleyelim. Birinci adım olarak, karakterin kaç octet
-ile kodlanacağını hesaplayacağız. Bunun için mümkün olan en düşük octet sayının
-kullanacağız.  &lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// 1. Gerekli Octet Sayısını Hesapla&lt;/span&gt;
-&lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;cbOctet&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;  
-               &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;UTF8_OCTET1_MAX&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-               &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;UTF8_OCTET2_MAX&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-               &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;UTF8_OCTET3_MAX&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-               &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;UTF8_OCTET4_MAX&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Yukarıdaki örnekte, eğer &lt;code&gt;UTF8_OCTET4_MAX&lt;/code&gt;'dan büyük bir karakter kodu
-ile karşılaşırsak, &lt;code&gt;cbOctet&lt;/code&gt; 5 olacak. En fazla 4 octet kullanabileceğimiz
-için, bu durumu hata durumu olarak değerlendireceğiz. İkinci adımda ise,
-kullanılacak octet'lerin, üst bitleri tabloda gösterildiği şekilde ayarlayacağız.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// 2a. Başlangıç octet'inin üst bitlerini ayala&lt;/span&gt;
-&lt;span class="k"&gt;switch&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cbOctet&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-        &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UTF8_SEQUENCE1_START&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-        &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UTF8_SEQUENCE2_START&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-        &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UTF8_SEQUENCE3_START&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-        &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UTF8_SEQUENCE4_START&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="k"&gt;default&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="c1"&gt;// utf8 ile kodlanamayacak bir karakter varsa, 0 döndür&lt;/span&gt;
-        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="c1"&gt;// 2b. devam octetlerinin üst bitlerini ayarla&lt;/span&gt;
-&lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;cbOctet&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UTF8_CONTINUATION_BYTE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;İkinci adımda çok ilginç birşey yok. Her bir octet'in üst bitlerini
-olması gerektiği gibi ayarlayıp, kalan bitlerini sıfırladık. Üçüncü
-adımda, karakter kodundaki bitleri, octet'lerdeki kullanılabilir bitlere
-kopyalacağız. Bunun için, karakter kodunun en alttaki bitlerini
-en sondaki octet'e kopyalarak, yukarı doğru devam edeceğiz. Bunu
-yapmak için, en baştaki octet dışında, &lt;code&gt;UTF8_CONTINUATION_BYTE_MASK&lt;/code&gt; maskesi
-ile alttaki 6 biti seçip, karakter kodunu 6 bit sağa kaydıracağız.
-En baştaki octet'e gelindiğinde, sadece ihtiyacımız olan bitler
-kaldığı için, herhangi bir maskeleme yapmamıza gerek yok.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// 3. Son octetten başa doğru, bitleri&lt;/span&gt;
-&lt;span class="c1"&gt;// doldur. Her devam octet'inde 6'şar&lt;/span&gt;
-&lt;span class="c1"&gt;// bit kullanacağız. Geriye kalan bitler&lt;/span&gt;
-&lt;span class="c1"&gt;// teknik olarak başlangıç octet'ine&lt;/span&gt;
-&lt;span class="c1"&gt;// sığmak zorunda&lt;/span&gt;
-&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;cbOctet&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;|=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;UTF8_CONTINUATION_BYTE_MASK&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;|=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Böylece, tek bir unicode karakteri, utf8 olarak kodlamış olduk. Bu işlemi
-bir string üzerinde gerçekleştirmek için, sırayla tüm karakleri yukarıdaki
-şekilde kodlamak yeterli. Örnek programın son hali aşağıdaki gibi olacak.&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdlib.h&amp;gt; // malloc&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;string.h&amp;gt; // memcpy&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;  // fopen, fwrite, fclose&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;wchar.h&amp;gt;  // wchar_t&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
-
-&lt;span class="cp"&gt;#define UTF8_OCTET1_MAX 0x7F&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_OCTET2_MAX 0x7FF&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_OCTET3_MAX 0xFFFF&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_OCTET4_MAX 0x10FFFF&lt;/span&gt;
-
-&lt;span class="cp"&gt;#define UTF8_SEQUENCE1_START 0x00&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_SEQUENCE2_START 0xC0&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_SEQUENCE3_START 0xE0&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_SEQUENCE4_START 0xF0&lt;/span&gt;
-
-&lt;span class="cp"&gt;#define UTF8_CONTINUATION_BYTE 0x80&lt;/span&gt;
-&lt;span class="cp"&gt;#define UTF8_CONTINUATION_BYTE_MASK 0x3F&lt;/span&gt;
-
-&lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="nf"&gt;utf8_encode_char&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;wchar_t&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="c1"&gt;// 1. Gerekli Octet Sayısını Hesapla&lt;/span&gt;
-    &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;cbOctet&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;  
-                   &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;UTF8_OCTET1_MAX&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-                   &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;UTF8_OCTET2_MAX&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-                   &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;UTF8_OCTET3_MAX&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-                   &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;UTF8_OCTET4_MAX&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-
-    &lt;span class="c1"&gt;// 2a. Başlangıç octet'inin üst bitlerini ayala&lt;/span&gt;
-    &lt;span class="k"&gt;switch&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cbOctet&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-            &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UTF8_SEQUENCE1_START&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-            &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-            &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UTF8_SEQUENCE2_START&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-            &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-            &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UTF8_SEQUENCE3_START&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-            &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
-            &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UTF8_SEQUENCE4_START&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-            &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="k"&gt;default&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="c1"&gt;// utf8 ile kodlanamayacak bir karakter varsa, 0 döndür&lt;/span&gt;
-            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="p"&gt;}&lt;/span&gt;
-
-    &lt;span class="c1"&gt;// 2b. devam octetlerinin üst bitlerini ayarla&lt;/span&gt;
-    &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;cbOctet&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UTF8_CONTINUATION_BYTE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="p"&gt;}&lt;/span&gt;
-
-    &lt;span class="c1"&gt;// 3. Son octetten başa doğru, bitleri&lt;/span&gt;
-    &lt;span class="c1"&gt;// doldur. Her devam octet'inde 6'şar&lt;/span&gt;
-    &lt;span class="c1"&gt;// bit kullanacağız. Geriye kalan bitler&lt;/span&gt;
-    &lt;span class="c1"&gt;// teknik olarak başlangıç octet'ine&lt;/span&gt;
-    &lt;span class="c1"&gt;// sığmak zorunda&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;cbOctet&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;|=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;UTF8_CONTINUATION_BYTE_MASK&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-        &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="p"&gt;}&lt;/span&gt;
-
-    &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;|=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;cbOctet&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="cm"&gt;/*&lt;/span&gt;
-&lt;span class="cm"&gt;    IN: wchar_t *pwszWide: NULL ile biten, wchar_t stringi&lt;/span&gt;
-&lt;span class="cm"&gt;    OUT: size_t *cbEncoded : Kodlamış string'in boyutu&lt;/span&gt;
-
-&lt;span class="cm"&gt;    RETURN: utf8 ile kodlanmış, NULL ile biten array&lt;/span&gt;
-&lt;span class="cm"&gt;*/&lt;/span&gt;
-&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;utf8_encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;wchar_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pwszWide&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;cbEncoded&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;cbEncoded&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;cbTemp&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;encoded_char&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
-    &lt;span class="kt"&gt;wchar_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pwcTemp&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="kt"&gt;char&lt;/span&gt;    &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pcTemp2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-    &lt;span class="c1"&gt;// realloc yapmak zorunda kalmamak için&lt;/span&gt;
-    &lt;span class="c1"&gt;// pwszWide üzerinden 1 tur geçip, kodlanmış&lt;/span&gt;
-    &lt;span class="c1"&gt;// veri için gerekli hafızayı hesaplayacağız.&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pwcTemp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pwszWide&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pwcTemp&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;pwcTemp&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;cbEncoded&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="n"&gt;utf8_encode_char&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pwcTemp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;encoded_char&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="p"&gt;}&lt;/span&gt;
-
-    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pszEncoded&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;malloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;cbEncoded&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; &lt;span class="c1"&gt;// +1 null&lt;/span&gt;
-
-    &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pwcTemp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pwszWide&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pcTemp2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pszEncoded&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pwcTemp&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;pwcTemp&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="n"&gt;cbTemp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;utf8_encode_char&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pwcTemp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;encoded_char&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-        &lt;span class="n"&gt;memcpy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pcTemp2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;encoded_char&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cbTemp&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-        &lt;span class="n"&gt;pcTemp2&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="n"&gt;cbTemp&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="p"&gt;}&lt;/span&gt;
-
-    &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pcTemp2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;// NULL terminator&lt;/span&gt;
-
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;pszEncoded&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-
-&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="p"&gt;{&lt;/span&gt;
-
-    &lt;span class="kt"&gt;wchar_t&lt;/span&gt; &lt;span class="n"&gt;example1&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sa"&gt;L&lt;/span&gt;&lt;span class="s"&gt;"İŞTE BUNLAR HEP TÜRKÇE KARAKTERLER: ÜĞİŞÇÖ"&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="kt"&gt;wchar_t&lt;/span&gt; &lt;span class="n"&gt;example2&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="mh"&gt;0xD55C&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0xAD6D&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0xC5B4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0x0&lt;/span&gt;&lt;span class="p"&gt;};&lt;/span&gt; &lt;span class="c1"&gt;// korece korece&lt;/span&gt;
-    &lt;span class="kt"&gt;wchar_t&lt;/span&gt; &lt;span class="n"&gt;example3&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="mh"&gt;0x65E5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0x672C&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0x8A9E&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0x0&lt;/span&gt;&lt;span class="p"&gt;};&lt;/span&gt; &lt;span class="c1"&gt;// japonca japon&lt;/span&gt;
-    &lt;span class="kt"&gt;wchar_t&lt;/span&gt; &lt;span class="n"&gt;example4&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="mh"&gt;0x233B4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0x0&lt;/span&gt;&lt;span class="p"&gt;};&lt;/span&gt;                &lt;span class="c1"&gt;// çince bir karater&lt;/span&gt;
-
-    &lt;span class="kt"&gt;FILE&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fopen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"examples.txt"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;"wb"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-    &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;cbEncoded&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pszEncoded&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;utf8_encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;example1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;cbEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="n"&gt;fprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"%s&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pszEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="n"&gt;free&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pszEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-    &lt;span class="n"&gt;pszEncoded&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;utf8_encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;example2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;cbEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="n"&gt;fprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"%s&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pszEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="n"&gt;free&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pszEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-    &lt;span class="n"&gt;pszEncoded&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;utf8_encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;example3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;cbEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="n"&gt;fprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"%s&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pszEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="n"&gt;free&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pszEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-    &lt;span class="n"&gt;pszEncoded&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;utf8_encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;example4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;cbEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="n"&gt;fprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"%s&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pszEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="n"&gt;free&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pszEncoded&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-    &lt;span class="n"&gt;fclose&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-
-&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
-
-
-&lt;p&gt;Öyle sanıyorum ki, yukarıdaki kodlarda optimize edilebilecek kısımlar vardır. Ancak,
-kolayca anlaşılabilr olması açısından, yapılabilecek optimizasyonlara dikkat etmedim.
-Faydalı bir yazı olmuştur diye ümit ediyorum.&lt;/p&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/utf8-kodlama.html</guid><pubDate>Fri, 07 Jun 2019 16:51:00 GMT</pubDate></item></channel></rss>
+&lt;/pre&gt;&lt;/div&gt;</description><guid>http://ysar.net/algoritma/huffman-kodlamasi.html</guid><pubDate>Mon, 10 Jun 2019 18:29:00 GMT</pubDate></item></channel></rss>

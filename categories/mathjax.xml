@@ -1,5 +1,268 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (mathjax ile ilgili yazılar)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/categories/mathjax.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Wed, 04 Mar 2020 20:19:08 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Büyük Sayı Algoritmaları - Bölme</title><link>http://ysar.net/algoritma/buyuk-sayi-islemleri-bolme.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Daha önceki yazılarda, değişken-genişlikteki doğal sayılar üzerinde
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (mathjax ile ilgili yazılar)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/categories/mathjax.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Sun, 08 Mar 2020 22:26:41 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Büyük Sayı Algoritmaları - Tam Sayılara Giriş</title><link>http://ysar.net/algoritma/buyuk-sayi-islemleri-tamsayilar.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Yazı dizisinin ilk 4 yazısında, doğal sayılar üzerinde işlem
+yapan temel fonksiyonlar yazdık. Genellikle, bu fonksiyonları
+doğrudan kullanmayacağız. Onun yerine, bu yazıdan itibaren
+ele alacağımız daha üst seviye fonksiyonları kullanacağız.Yeni
+fonksiyonlarımız, önceki yazılarda değinmediğimiz hafıza
+yönetimini sağlayacağı gibi, negatif sayılar üzerinde de
+işlem yapabilecek.&lt;/p&gt;
+&lt;p&gt;Bilgisayarlarla negatif sayıları işlemenin çeşitli yöntemleri var.
+Öncelikle, kısaca bu yöntemlerin üzerinden geçelim.&lt;/p&gt;
+&lt;h3&gt;İşaret ve Mutlak Değer (Signed Magnitude Representation - SMR)&lt;/h3&gt;
+&lt;p&gt;Yazı dilinde negatif sayının önüne eksi işareti koyduğumuz gibi,
+bu yöntemde de sayının başına eksi işareti koyuyoruz. Tabi ki,
+binary sistemde eksi işareti yok. Onun yerine, sayının en üst
+bitini 1 olarak ayarlayarak, sayıyı negatif yapacağız. Bu gösterimde,
+0 sayısı iki farklı şekilde (+0 ve -0) yazılabildiği için,
+&lt;code&gt;n&lt;/code&gt; bit kullanarak, &lt;code&gt;2^n - 1&lt;/code&gt; farklı sayı ifade edilebiliyor.
+Bu sayılar üzerinde aritmetik işlem yaparken, pozitif/negatif
+kontrolü yapmak gerekiyor. Bu düzenin kullanım alanına örnek
+olarak, &lt;code&gt;float&lt;/code&gt; türündeki sayıları verebiliriz.&lt;/p&gt;
+&lt;h3&gt;1'in Tümleyeni (One's Complement)&lt;/h3&gt;
+&lt;p&gt;Bu gösterimde, pozitif sayıların bitlerini tersine çevirerek, negatif
+sayıları ifade ediyoruz. Örneğin, 8 bitlik '00000001' sayısı +1'i
+ifade ederken, '11111110' sayısı ise -1'i ifade ediyor. SMR'de olduğu
+gibi, en üst biti kontrol ederek, sayının işaretini tespit edilebiliyor.
+Yine SMR'de olduğu gibi, sıfırın iki farklı gösterimi olduğundan, &lt;code&gt;n&lt;/code&gt;
+bit kullanarak, &lt;code&gt;2^n - 1&lt;/code&gt; farklı değer ifade edebiliyoruz. Rivayet
+odur ki, çok eski bilgisayarda bu yöntem kullanılırmış, ama çoğu
+modern bilgisayarda negatif tam sayılar için 2'nin tümleyeni düzeni
+kullanılıyor.&lt;/p&gt;
+&lt;h3&gt;2'nin Tümleyeni (Two's Complement)&lt;/h3&gt;
+&lt;p&gt;Bu yöntem üzerinde biraz daha fazla duracağım, çünkü modern
+bilgisayarlarda tam sayılar bu şekilde ifade ediliyor. Aşağıdaki
+tablodan, 8 bit signed bir tam sayının her bitinin değerini
+inceleyebilirsiniz.&lt;/p&gt;
+&lt;pre&gt;
++-------+------+-----+-----+-----+-----+-----+-----+-----+
+| Bit   | 7    | 6   | 5   | 4   | 3   | 2   | 1   | 0   |
++-------+------+-----+-----+-----+-----+-----+-----+-----+
+| İkili | -2^7 | 2^6 | 2^5 | 2^4 | 2^3 | 2^2 | 2^1 | 2^0 |
++-------+------+-----+-----+-----+-----+-----+-----+-----+
+| Onlu  | -128 | 64  | 32  | 16  | 8   | 4   | 2   | 1   |
++-------+------+-----+-----+-----+-----+-----+-----+-----+
+&lt;/pre&gt;
+
+&lt;p&gt;Bu yöntem bir farkla, 1'in tümleyeni ile aynı. 1'in tümleyeni
+yöntemi ile, bir sayının negatifini almak istediğinizde, tüm
+bitlerini tersine çevirmeniz gerekiyor. 2'nin tümleyeni yönteminde
+ise, tüm bitleri çevirip, sonuca 1 eklemeniz gerekiyor.&lt;/p&gt;
+&lt;p&gt;Bu yöntemin en büyük avantajı, modüler aritmetik kurallarını bozmuyor
+olması. Örneğin, \(127 + 1 \equiv -128 \mod 128 \). Aynı şekilde,
+signed integer değerleri arasında toplama yaparken, 127 ile 1 sayısını
+topladığınızda, &lt;code&gt;-128&lt;/code&gt; sonucunu elde edersiniz.&lt;/p&gt;
+&lt;pre&gt;
+  0 1 1 1 1 1 1 1
++ 0 0 0 0 0 0 0 1
+-----------------
+  1 0 0 0 0 0 0 0
+&lt;/pre&gt;
+
+&lt;p&gt;Toplama işlemi yaparken, sayıların pozitif olup olmadığına dikkat etmeksizin, işlem yapabiliriz.
+Aşağıdaki örnekte, +1 ile -1'in toplamını 0 olarak buluyoruz.&lt;/p&gt;
+&lt;pre&gt;
+  0 0 0 0 0 0 0 1 (+1)
++ 1 1 1 1 1 1 1 1 (-1)
+-----------------
+1 0 0 0 0 0 0 0 0
+&lt;/pre&gt;
+
+&lt;p&gt;Sonucun bir biti dışarıya taşdığı için, +1 ile -1 toplamından 0 sonucu elde
+ediyoruz. Çıkarma işlemi de, negatif sayı ile toplamaya eşdeğer olduğundan,
+yukarıdaki örneği birden bir çıkarma olarak da düşünebilirsiniz.&lt;/p&gt;
+&lt;p&gt;Bu düzenin yapısı gereği, toplama, çıkarma ve çarpma
+yaparken, sayıların pozitif olmasına dikkat edilmeksizin işlem yapılabilir.
+Bu avantaj işlemci üreticilerine cazip gelmiş olacak ki, signed işlem yapabilen
+çoğu işlemci bu düzeni kullanıyor.&lt;/p&gt;
+&lt;h3&gt;Kaydırılmış İkili (Offset Binary)&lt;/h3&gt;
+&lt;p&gt;Bu düzende, her sayıyı kendinden &lt;code&gt;n&lt;/code&gt; fazla bir
+sayı ile ifade ediyoruz. Örneğin, 8 bitlik signed
+integer için, &lt;code&gt;n&lt;/code&gt; 128 olsun.&lt;/p&gt;
+&lt;pre&gt;
++------+----------+
+|Sayı  | Kodlanışı|
++------+----------+
+| 127  | 255      |
+| 126  | 254      |
+| 1    | 129      |
+| 0    | 128      |
+| -1   | 127      |
+| -127 | 1        |
+| -128 | 0        |
++------+----------+
+&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;float&lt;/code&gt; türündeki sayıların exponent kısmı için, bu düzen kullanılıyor.&lt;/p&gt;
+&lt;h3&gt;Hangisini Kullanmalıyız&lt;/h3&gt;
+&lt;p&gt;Yazdığım ilk büyük sayı kütüphanesi için, 2'nin tümleyeni
+yöntemini tercih etmiştim. Dört işlemin kolaylığı konusu
+çok cazip gelmişti. Ancak, işlemcilerin yaptığı gibi
+sabit genişlikteki sayılarla ilgilenmediğimiz için,
+2'nin tümleyeni düzeninin avantajları çok da önemli
+olmuyor. Aynı zamanda, büyük sayıların mutlak
+değerini almak gerektiğinde, tüm sayının üzerinden
+geçip, tüm bitlerini tersine çevirip sonuca bir eklemek
+gerektiği için, oldukça uzun sürüyor. Bu bölme işlemi
+için büyük bir sorun, çünkü pozitif ve negatif sayılar
+arasında bölme yaparken, mutlak değer üzerinden
+bölme yapmak gerekiyor. Modüler aritmeği de bölme işlemi
+üzerinden yapacağımız için, 2'nin tümleyeni çok kötü
+bir tercih. Kendim acı bir şekilde tecrübe ettim. Bu nedenle,
+GMP kütüphanesinin yaptığı gibi, Signed Magnitude (SMR) düzenini
+kullanacağız.&lt;/p&gt;
+&lt;p&gt;Artık biraz kod yazabiliriz.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;alloc&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="n"&gt;bnz_t&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="n"&gt;bnz_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;bnz_ptr&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;bnz_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;bn_constptr&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Tam sayıları, dinamik array veri yapısında tutacağız. &lt;code&gt;bnz_t&lt;/code&gt;
+veri yapısının &lt;code&gt;alloc&lt;/code&gt; üyesi, kaç hanelik yer ayırdığımızı tutacak.
+&lt;code&gt;length&lt;/code&gt; üyesi, hem sayının kaç haneli (2^32lik tabanda) olduğunu
+hem de pozitif mi yoksa negatif mi olduğunu tutacak. Örneğin, &lt;code&gt;length&lt;/code&gt; -5 ise,
+sayının 5 haneli ve negatif olduğunu anlayacağız. Eğer &lt;code&gt;length&lt;/code&gt;
+0 ise, tamsayının da 0 olduğunu anlayacağız. Eğer &lt;code&gt;length&lt;/code&gt; sıfır
+değilse, ama &lt;code&gt;alloc&lt;/code&gt; 0 ise, hafızanın stack üzerinde ayrıldığını
+anlayacağız.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;bnz_t&lt;/code&gt;'yi kullanıma hazırlamak için, aşağıdaki fonksiyonu kullanacağız. &lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;bnz_init&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bnz_ptr&lt;/span&gt; &lt;span class="n"&gt;bnz&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;memset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bnz&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bnz_t&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;&lt;code&gt;bnz_init&lt;/code&gt; bir kez çağırıldıktan sonra, &lt;code&gt;bnz_t&lt;/code&gt; türü farklı sayıları tutmak için tekrar tekrar kullanılabilir.&lt;/p&gt;
+&lt;p&gt;Hafızada ayırdığımız yerin, &lt;code&gt;n&lt;/code&gt; haneli bir sayıyı tutabilecek kadar büyük olmasını temin etmek için, aşağıdaki makroyu kullanacağız.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#define BN_GROW(bn, n) ((n) &amp;gt; (bn)-&amp;gt;alloc ? \&lt;/span&gt;
+&lt;span class="cp"&gt;    bnz_resize((bn), (n)) \&lt;/span&gt;
+&lt;span class="cp"&gt;    : (bn)-&amp;gt;digits)&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Bu makro, eğer zaten yeterli yer ayrılmışsa, &lt;code&gt;digits&lt;/code&gt; üyesini
+döndürecek, aksi takdirde, &lt;code&gt;bnz_resize&lt;/code&gt; fonksiyonunu çağıracak.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;bn_xrealloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p_old&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p_new&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;realloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p_old&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="n"&gt;p_new&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;exit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;p_new&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;bn_xmalloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;malloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;exit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nf"&gt;bnz_resize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bnz_ptr&lt;/span&gt; &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;alloc&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;bn_xrealloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt;
+        &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;bn_xmalloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;alloc&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;&lt;code&gt;bn_xmalloc&lt;/code&gt; ve &lt;code&gt;bn_xrealloc&lt;/code&gt; fonksiyonları, &lt;code&gt;malloc&lt;/code&gt; ve &lt;code&gt;realloc&lt;/code&gt;
+kullanarak gerekli hafıza alanlarını ayıramazlarsa, hata koduyla
+programı sonlandırıyor. &lt;code&gt;bnz_resize&lt;/code&gt; fonksiyonu, daha önce
+ayrılmış bir hafıza alanı varsa, onu genişletiyor. Eğer daha
+önce bir hafıza ayrılmamışsa, yeni yer ayırıyor.&lt;/p&gt;
+&lt;p&gt;Büyük tamsayılara, signed integer değeri atamak için, aşağıdaki
+fonksiyonu kullanacağız.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="nf"&gt;bn_trim&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;current_size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;digits&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;current_size&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;current_size&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;current_size&lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;current_size&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;bnz_set_int&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bnz_ptr&lt;/span&gt; &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;num_digits&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn_digit_t&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;rp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;BN_GROW&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;num_digits&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;rp&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;BN_ABS&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;rp&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;// sayi positif&lt;/span&gt;
+        &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;bn_trim&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;num_digits&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="c1"&gt;// sayi negatif&lt;/span&gt;
+        &lt;span class="n"&gt;bn&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;bn_trim&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;num_digits&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;Eğer, &lt;code&gt;i&lt;/code&gt;'nin değeri sıfır ise, tek yapmamız gereken &lt;code&gt;length&lt;/code&gt;'i
+sıfıra atamak. &lt;code&gt;num_digits&lt;/code&gt;, &lt;code&gt;i&lt;/code&gt;'nin kaç hanede saklanacağını
+tutuyor. Eğer &lt;code&gt;sizeof(int) == sizeof(bn_digit_t)&lt;/code&gt; ise, bu değer
+1 olacak. Yeterli yer ayırdığımızdan emin olmak için, &lt;code&gt;BN_GROW&lt;/code&gt;
+makrosunu çağırıyoruz. &lt;code&gt;digits&lt;/code&gt; array'i içinde her zaman pozitif
+sayılar saklayacağımız için, mutlak değer alıyoruz. &lt;code&gt;bn_trim&lt;/code&gt;
+fonksiyonu ise, sayının başındaki sıfır haneleri silindikten
+sonra kalan hane sayısını veriyor. Tam sayılar üzerinde
+işlem yapacak algoritmaları &lt;code&gt;digits[length-1]&lt;/code&gt;'in
+sıfır olmadığı varsayımına göre çalıştıracağımız için,
+&lt;code&gt;bn_trim&lt;/code&gt; kullanarak, üstteki 0 hanelerini silmemiz gerekiyor.&lt;/p&gt;
+&lt;p&gt;Sonraki yazılarda, iki sayının mutlak değerlerini karşılaştırmamız
+gerekecek, bunun için, aşağıdaki fonksiyonları kullanacağız.&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;bn_cmp_n&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+        &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;opsize&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;bn_cmp_nn&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;op1size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;bn_digit_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bn_size_t&lt;/span&gt; &lt;span class="n"&gt;op2size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1size&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;op2size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1size&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;op2size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1size&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;op2size&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;bn_cmp_n&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;op1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;op2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;op1size&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+
+
+&lt;p&gt;İlk fonksiyon, uzunlukları eşit olan iki doğal sayıyı karşılaştırmaya yarıyor. İkinci fonksiyon
+ise, tüm uzunluklardaki doğal sayılar için kullanılabilir. İki doğal sayıyı karşılaştırırken,
+eğer birinin hane sayısı diğerinden büyükse, özel bir inceleme yapmadan, hane sayısı
+çok olanı büyük ilan edebiliriz. Hane sayılarının aynı olduğu durumlarda, üstten alta
+doğru haneleri kontrol etmemiz gerekiyor. Herhangi bir hanede farklılık olduğunda,
+sayıların hangisinin büyük olduğunu tespit edebiliriz. Eğer tüm haneleri eşitse,
+sayılar da eşit olmak zorunda. Bu iki fonksiyon da, birinci argüman büyükse 1,
+ikinci argüman büyükse -1, argümanlar eşit ise 0 döndürecek.&lt;/p&gt;
+&lt;p&gt;Gelecek yazılarda, tamsayılar üzerinde dört işlem yapacağız. Bunun için, daha önceki
+fonksiyonlardan faydalanmakla birlikte, işleme giren sayıların pozitif veya negatif
+olma durumlarına dikkat edeceğiz.&lt;/p&gt;
+&lt;h3&gt;Ek Kaynaklar&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Knuth D. Art of The Computer Programming Vol 2 Section 4.3.1&lt;/li&gt;
+&lt;li&gt;Wikipedia. &lt;a href="https://en.wikipedia.org/wiki/Signed_number_representations"&gt;Signed number representations&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/algoritma/buyuk-sayi-islemleri-tamsayilar.html</guid><pubDate>Sun, 08 Mar 2020 22:14:00 GMT</pubDate></item><item><title>Büyük Sayı Algoritmaları - Bölme</title><link>http://ysar.net/algoritma/buyuk-sayi-islemleri-bolme.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Daha önceki yazılarda, değişken-genişlikteki doğal sayılar üzerinde
 toplama, çıkarma ve çarpma algoritmalarına değinmiştik. Bu yazıda, D. Knuth'un
 &lt;em&gt;The Art of The Computer Programming&lt;/em&gt; kitabının 4.3.1'inci kısmında anlatılan
 &lt;em&gt;Algoritm D.&lt;/em&gt;'den bahsedeceğim. Bu algoritma, değişken-genişlikteki doğal
@@ -349,6 +612,4 @@ tanımlanan veri türlerini kullanacağımız için, önce o yazıyı okumanız�
 89261670696623633820136378418383684178734361726757&lt;br&gt;
 28112879812849979408065481931592621691275889832738&lt;br&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;a href="http://ysar.net/euler/euler-13.html"&gt;Devamını oku…&lt;/a&gt; (4 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/euler/euler-13.html</guid><pubDate>Thu, 23 Aug 2018 13:36:00 GMT</pubDate></item><item><title>SageMath</title><link>http://ysar.net/yazilim-dunyasi/sage-math.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Eğer bloğumu takip ediyorsanız, son birkaç haftadır Euler problemi çözümlerimi paylaştığımı biliyorsunuz. Euler Problemleri,
-programcılık problemleri olduğu kadar, matematik problemleri de sayılabilir. Bu yazıda, bu problemlerin çözümünde sıklıkla faydalandığım
-&lt;a href="http://www.sagemath.org/"&gt;SageMath&lt;/a&gt; programından bahsedeceğim. &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/yazilim-dunyasi/sage-math.html"&gt;Devamını oku…&lt;/a&gt; (6 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/yazilim-dunyasi/sage-math.html</guid><pubDate>Wed, 22 Aug 2018 22:01:00 GMT</pubDate></item></channel></rss>
+&lt;p&gt;&lt;a href="http://ysar.net/euler/euler-13.html"&gt;Devamını oku…&lt;/a&gt; (4 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/euler/euler-13.html</guid><pubDate>Thu, 23 Aug 2018 13:36:00 GMT</pubDate></item></channel></rss>
