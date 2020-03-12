@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (mathjax ile ilgili yazılar)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/categories/mathjax.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Sun, 08 Mar 2020 22:26:41 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Büyük Sayı Algoritmaları - Tam Sayılara Giriş</title><link>http://ysar.net/algoritma/buyuk-sayi-islemleri-tamsayilar.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Yazı dizisinin ilk 4 yazısında, doğal sayılar üzerinde işlem
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>YSAR.NET (mathjax ile ilgili yazılar)</title><link>http://ysar.net/</link><description></description><atom:link href="http://ysar.net/categories/mathjax.xml" type="application/rss+xml" rel="self"></atom:link><language>tr</language><lastBuildDate>Thu, 12 Mar 2020 15:25:47 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Büyük Sayı Algoritmaları - Metin Dönüşümleri</title><link>http://ysar.net/algoritma/buyuk-sayi-islemleri-metin.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Büyük sayı algoritmaları yazı dizisine, sayıdan metne,
+metinden sayıya dönüşüm fonksiyonları ile devam ediyoruz.
+Bu yazıda, onluk tabandaki metinler üzerinde işlem yapacağız.
+Bu fonksiyonlardan yola çıkarak, diğer sayı tabanlarında
+dönüşüm yapan fonksiyonlar da yazabilirsiniz.&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://ysar.net/algoritma/buyuk-sayi-islemleri-metin.html"&gt;Devamını oku…&lt;/a&gt; (8 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/algoritma/buyuk-sayi-islemleri-metin.html</guid><pubDate>Thu, 12 Mar 2020 15:25:00 GMT</pubDate></item><item><title>Büyük Sayı Algoritmaları - Tam Sayılara Giriş</title><link>http://ysar.net/algoritma/buyuk-sayi-islemleri-tamsayilar.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Yazı dizisinin ilk 4 yazısında, doğal sayılar üzerinde işlem
 yapan temel fonksiyonlar yazdık. Genellikle, bu fonksiyonları
 doğrudan kullanmayacağız. Onun yerine, bu yazıdan itibaren
 ele alacağımız daha üst seviye fonksiyonları kullanacağız.Yeni
@@ -602,14 +607,4 @@ tanımlanan veri türlerini kullanacağımız için, önce o yazıyı okumanız�
 &lt;div style="text-align:center;"&gt;13 → 40 → 20 → 10 → 5 → 16 → 8 → 4 → 2 → 1&lt;/div&gt;
 
 &lt;p&gt;13 ile başlayıp 1 ile biten bu dizinin 10 elemanlı olduğu görünüyor. Henüz kanıtlanamamış olsa da, tüm başlangıç sayılarının 1 sayısına ulaştığı düşünülüyor.&lt;/p&gt;
-&lt;p&gt;Bir milyonun altındaki hangi başlangıç sayısı ile en uzun dizi elde edilir? &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/euler/euler-14.html"&gt;Devamını oku…&lt;/a&gt; (3 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/euler/euler-14.html</guid><pubDate>Thu, 23 Aug 2018 23:21:00 GMT</pubDate></item><item><title>(Euler 13) C Programlama Dilinde Büyük Sayıları Toplama</title><link>http://ysar.net/euler/euler-13.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Aşağıdaki 100 adet 50 haneli sayının toplamının ilk 10 hanesini bulunuz.&lt;/p&gt;
-&lt;div style="font-family:'courier new';font-size:10pt;text-align:center;"&gt;
-37107287533902102798797998220837590246510135740250&lt;br&gt;
-46376937677490009712648124896970078050417018260538&lt;br&gt;
-74324986199524741059474233309513058123726617309629&lt;br&gt;
-91942213363574161572522430563301811072406154908250&lt;br&gt;
-23067588207539346171171980310421047513778063246676&lt;br&gt;
-89261670696623633820136378418383684178734361726757&lt;br&gt;
-28112879812849979408065481931592621691275889832738&lt;br&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;a href="http://ysar.net/euler/euler-13.html"&gt;Devamını oku…&lt;/a&gt; (4 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/euler/euler-13.html</guid><pubDate>Thu, 23 Aug 2018 13:36:00 GMT</pubDate></item></channel></rss>
+&lt;p&gt;Bir milyonun altındaki hangi başlangıç sayısı ile en uzun dizi elde edilir? &lt;/p&gt;&lt;p&gt;&lt;a href="http://ysar.net/euler/euler-14.html"&gt;Devamını oku…&lt;/a&gt; (3 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><category>mathjax</category><guid>http://ysar.net/euler/euler-14.html</guid><pubDate>Thu, 23 Aug 2018 23:21:00 GMT</pubDate></item></channel></rss>

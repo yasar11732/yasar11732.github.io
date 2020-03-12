@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Büyük Sayı Algoritmaları - Metin Dönüşümleri | YSAR.NET</title>
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900%7CUbuntu:300,400,500,700" rel="stylesheet">
+<link href="../assets/icons/foundation-icons.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/style.css" rel="stylesheet" type="text/css">
+<script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/algoritma/buyuk-sayi-islemleri-metin.html">
+<!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="buyuk-sayi-islemleri-tamsayilar.html" title="Büyük Sayı Algoritmaları - Tam Sayılara Giriş" type="text/html">
+<meta property="og:site_name" content="YSAR.NET">
+<meta property="og:title" content="Büyük Sayı Algoritmaları - Metin Dönüşümleri">
+<meta property="og:url" content="http://ysar.net/algoritma/buyuk-sayi-islemleri-metin.html">
+<meta property="og:description" content="Büyük sayı algoritmaları yazı dizisine, sayıdan metne,
+metinden sayıya dönüşüm fonksiyonları ile devam ediyoruz.
+Bu yazıda, onluk tabandaki metinler üzerinde işlem yapacağız.
+Bu fonksiyonlardan yola ç">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2020-03-12T18:25:00+03:00">
+<meta property="article:tag" content="mathjax">
+</head>
+<body>
+
+         
+    <header class="fixed-top"><div class="container">
+        <a href="http://ysar.net">
+            <img class="logo" src="../assets/img/Logo.svg"></a>
+        <div class="subtitle">Python, Yazılım ve Programlama</div>
+    <nav id="menu"><ul>
+<li class="fi-info"><a href="../yasar-arabaci.html">Hakkımda</a></li>
+            <li class="fi-social-github"><a href="https://github.com/yasar11732/">GitHub</a></li>
+            <li class="question"><a href="../soru-cevap.html">Soru-Cevap</a></li>
+            <li class="fi-rss"><a href="../rss.xml">RSS</a></li>
+        </ul></nav>
+</div>
+        
+    </header><main class="main-content"><article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 itemprop="headline name">Büyük Sayı Algoritmaları - Metin Dönüşümleri</h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Büyük sayı algoritmaları yazı dizisine, sayıdan metne,
+metinden sayıya dönüşüm fonksiyonları ile devam ediyoruz.
+Bu yazıda, onluk tabandaki metinler üzerinde işlem yapacağız.
+Bu fonksiyonlardan yola çıkarak, diğer sayı tabanlarında
+dönüşüm yapan fonksiyonlar da yazabilirsiniz.</p>
+<!-- TEASER_END -->
+
+<p>Projenin bu yazıya kadar olan kısmını <a href="https://github.com/yasar11732/LibBigNumber/archive/buyuk-sayi-islemleri-tamsayilar.zip">Github üzerinden indirebilirsiniz</a></p>
+<p>Öncelikle, onluk tabandaki metni, <code>bnz_t</code>'ye çeviren
+fonksiyonla başlayalım.</p>
+<pre class="code literal-block"><span></span><span class="kt">int</span> <span class="nf">bnz_set_ds</span><span class="p">(</span><span class="n">bnz_ptr</span> <span class="n">bnz</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">str</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">sign</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">str</span> <span class="o">==</span> <span class="sc">'-'</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">str</span><span class="o">++</span><span class="p">;</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">str</span> <span class="o">==</span> <span class="sc">'0'</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">str</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!*</span><span class="n">str</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">bnz</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">bn_size_t</span> <span class="n">length</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">str</span><span class="p">;</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">tmp</span><span class="o">++</span><span class="p">)</span>
+        <span class="n">length</span><span class="o">++</span><span class="p">;</span>
+
+    <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">mem</span> <span class="o">=</span> <span class="n">BN_GROW</span><span class="p">(</span><span class="n">bnz</span><span class="p">,</span> <span class="p">(</span><span class="n">bn_size_t</span><span class="p">)(</span><span class="n">length</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">/</span> <span class="n">BN_DIGIT_BITS</span> <span class="o">+</span> <span class="mi">1</span><span class="p">));</span>
+
+    <span class="n">length</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">mem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="n">c</span> <span class="o">=</span> <span class="o">*</span><span class="n">str</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">bn_digit_t</span> <span class="n">carry</span> <span class="o">=</span> <span class="n">bn_mul_n1</span><span class="p">(</span><span class="n">mem</span><span class="p">,</span> <span class="n">mem</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">length</span><span class="p">);</span>
+            <span class="n">carry</span> <span class="o">+=</span> <span class="n">bn_add_n1</span><span class="p">(</span><span class="n">mem</span><span class="p">,</span> <span class="n">mem</span><span class="p">,</span> <span class="n">c</span> <span class="o">-</span> <span class="sc">'0'</span><span class="p">,</span> <span class="n">length</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">carry</span><span class="p">)</span>
+                <span class="n">mem</span><span class="p">[</span><span class="n">length</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">carry</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">sign</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">bnz</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">=</span> <span class="o">-</span><span class="n">length</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">bnz</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">=</span> <span class="n">length</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Fonksiyon biraz uzun görünüyor, o yüzden parça parça inceleyelim.</p>
+<pre class="code literal-block"><span></span><span class="kt">int</span> <span class="n">sign</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">str</span> <span class="o">==</span> <span class="sc">'-'</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">str</span><span class="o">++</span><span class="p">;</span>
+    <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Eğer metin eksi işareti ile başlıyorsa, sayının negatif olduğunu hatırlamamız gerek.
+Eksi işaretini bulursak, bir adım ilerliyoruz.</p>
+<pre class="code literal-block"><span></span><span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">str</span> <span class="o">==</span> <span class="sc">'0'</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">str</span><span class="o">++</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Varsa, metnin başındaki sıfırları da atlayabiliriz.</p>
+<pre class="code literal-block"><span></span><span class="k">if</span> <span class="p">(</span><span class="o">!*</span><span class="n">str</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">bnz</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Eğer metin boş ise, sıfır döndüreceğiz.</p>
+<pre class="code literal-block"><span></span><span class="n">bn_size_t</span> <span class="n">length</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">str</span><span class="p">;</span>
+
+<span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">tmp</span><span class="o">++</span><span class="p">)</span>
+    <span class="n">length</span><span class="o">++</span><span class="p">;</span>
+</pre>
+
+
+<p>Bu kısımda metinde kaç karakter olduğunu sayıyoruz. Bunun için <code>strlen</code>
+de kullanabiliriz. Ayrı bir fonksiyon çağrısı kullanmamak için, basit bir
+döngü ile uzunluğu hesapladım.</p>
+<pre class="code literal-block"><span></span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">mem</span> <span class="o">=</span> <span class="n">BN_GROW</span><span class="p">(</span><span class="n">bnz</span><span class="p">,</span> <span class="p">(</span><span class="n">bn_size_t</span><span class="p">)(</span><span class="n">length</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">/</span> <span class="n">BN_DIGIT_BITS</span> <span class="o">+</span> <span class="mi">1</span><span class="p">));</span>
+</pre>
+
+
+<p>Onluk tabanda <code>n</code> haneli bir sayı, ikili tabanda <a href="https://www.wolframalpha.com/input/?i=log%2810%29%2Flog%282%29">yaklaşık 3.32n</a>
+haneli bir sayıya karşılık gelir. Metin içindeki karakter sayısını 4 ile
+çarparak, ihtiyacımız olan bit sayısının biraz fazlasını elde edebiliriz. Elde
+ettiğimiz sayıyı, <code>bn_digit_t</code>'nin bit sayısına böldüğümüzde, hafızada
+kaç hanelik yer açmamız gerektiğini tespit etmiş oluyoruz. C'de bölme
+işleminin sıfıra doğru yuvarlamasından dolayı, <code>+1</code> ekliyoruz. Böylece
+işlemin sonucunun sıfır olması ihtimalini ortadan kaldırıyoruz. </p>
+<pre class="code literal-block"><span></span><span class="n">length</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">mem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
+
+<span class="k">while</span> <span class="p">(</span><span class="n">c</span> <span class="o">=</span> <span class="o">*</span><span class="n">str</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">bn_digit_t</span> <span class="n">carry</span> <span class="o">=</span> <span class="n">bn_mul_n1</span><span class="p">(</span><span class="n">mem</span><span class="p">,</span> <span class="n">mem</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">length</span><span class="p">);</span>
+        <span class="n">carry</span> <span class="o">+=</span> <span class="n">bn_add_n1</span><span class="p">(</span><span class="n">mem</span><span class="p">,</span> <span class="n">mem</span><span class="p">,</span> <span class="n">c</span> <span class="o">-</span> <span class="sc">'0'</span><span class="p">,</span> <span class="n">length</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">carry</span><span class="p">)</span>
+            <span class="n">mem</span><span class="p">[</span><span class="n">length</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">carry</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Burası fonksiyonun kalbi. Metni soldan sağa doğru tarayıp,
+her bir karakter için, elimizdeki sayıyı 10 ile çarpıp, o karakterin
+değerini sayıya ekliyoruz. Aynı zamanda, <code>bn_mul_n1</code> ve <code>bn_add_n1</code>
+fonksiyonlarının <code>carry</code> döndürüp döndürmediğine dikkat etmemiz gerekiyor.
+Bu fonksiyonlardan <code>carry</code> dönmesi halinde, dönen değeri bir üst haneye
+taşımamız gerekiyor. Bu sayede, elde ettiğimiz sayının kaç haneli
+olduğunu da takip etmiş oluyoruz.</p>
+<pre class="code literal-block"><span></span><span class="k">if</span> <span class="p">(</span><span class="n">sign</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">bnz</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">=</span> <span class="o">-</span><span class="n">length</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+    <span class="n">bnz</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">=</span> <span class="n">length</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p><code>bnz</code>'nin hane sayısını ayarlarken, pozitif veya negatif olmasına dikkat ediyoruz.
+Böylece, <code>char* -&gt; bnz_t</code> dönüşümünü tamamlamış olduk.</p>
+<p><code>bnz_t -&gt; char*</code> dönüşümüne
+geçmeden önce <a href="buyuk-sayi-islemleri-bolme.html">bölme yazısında</a> atladığım, tek
+haneli sayı ile bölme fonksiyonuna ihtiyacımız olacak.</p>
+<pre class="code literal-block"><span></span><span class="n">bn_digit_t</span> <span class="nf">bn_div_n1</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">q</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op1</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">len</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="n">op2</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">bn_digit_t</span> <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">bn_size_t</span> <span class="n">i</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">len</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">bn_long_digit_t</span> <span class="n">u</span> <span class="o">=</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)</span><span class="n">carry</span> <span class="o">&lt;&lt;</span> <span class="n">BN_DIGIT_BITS</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">op1</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">bn_digit_t</span><span class="p">)(</span><span class="n">u</span> <span class="o">/</span> <span class="n">op2</span><span class="p">);</span>
+        <span class="n">carry</span> <span class="o">=</span> <span class="n">u</span> <span class="o">%</span> <span class="n">op2</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">carry</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Bu fonksiyon standart bölme fonksiyonuna göre oldukça sade, çünkü, bölen tek
+haneli olduğunda, önceki gibi bölümün tahmini değerini bulup düzeltmek yerine,
+doğrudan bölümü hesaplayabiliyoruz.</p>
+<p>Büyük sayıyı, metne çevirmek için, aşağıdaki fonksiyonu kullanacağız.</p>
+<pre class="code literal-block"><span></span><span class="kt">char</span> <span class="o">*</span><span class="nf">bnz_tods</span><span class="p">(</span><span class="n">bn_constptr</span> <span class="n">bnz</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">ds</span><span class="p">;</span>
+    <span class="n">bn_size_t</span> <span class="n">length</span> <span class="o">=</span> <span class="n">BN_ABS</span><span class="p">(</span><span class="n">bnz</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">length</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="n">ds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'0'</span><span class="p">;</span>
+        <span class="n">ds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'\0'</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">ds</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">length</span> <span class="o">*</span> <span class="n">BN_DIGIT_BITS</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+
+    <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">alloca</span><span class="p">(</span><span class="n">length</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">bn_digit_t</span><span class="p">));</span>
+
+    <span class="n">bn_size_t</span> <span class="n">i</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">tmp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">bnz</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="kt">char</span> <span class="o">*</span><span class="n">tds</span> <span class="o">=</span> <span class="n">ds</span><span class="p">;</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="n">length</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="o">*</span><span class="n">tds</span><span class="o">++</span> <span class="o">=</span> <span class="sc">'0'</span> <span class="o">+</span> <span class="n">bn_div_n1</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="n">bn_trim</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">length</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">bnz</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="o">*</span><span class="n">tds</span><span class="o">++</span> <span class="o">=</span> <span class="sc">'-'</span><span class="p">;</span>
+
+    <span class="o">*</span><span class="n">tds</span><span class="o">--</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="kt">char</span> <span class="o">*</span><span class="n">tds2</span> <span class="o">=</span> <span class="n">ds</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">tds2</span> <span class="o">&lt;</span> <span class="n">tds</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="o">*</span><span class="n">tds2</span><span class="p">;</span>
+        <span class="o">*</span><span class="n">tds2</span><span class="o">++</span> <span class="o">=</span> <span class="o">*</span><span class="n">tds</span><span class="p">;</span>
+        <span class="o">*</span><span class="n">tds</span><span class="o">--</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">ds</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Bu fonksiyonu da, küçük parçalar halinde inceleyelim.</p>
+<pre class="code literal-block"><span></span><span class="kt">char</span> <span class="o">*</span><span class="n">ds</span><span class="p">;</span>
+<span class="n">bn_size_t</span> <span class="n">length</span> <span class="o">=</span> <span class="n">BN_ABS</span><span class="p">(</span><span class="n">bnz</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">);</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">length</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+    <span class="n">ds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'0'</span><span class="p">;</span>
+    <span class="n">ds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'\0'</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">ds</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">ds</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">length</span> <span class="o">*</span> <span class="n">BN_DIGIT_BITS</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+</pre>
+
+
+<p>Burada, metnin kaç karakterden oluşacağını hesaplıyoruz. Eğer,
+<code>bnz</code>'nin uzunluğu sıfır ise, fonksiyondan erken çıkma şansımız var. Aksi takdirde,
+sayının toplam bit sayısını üçe bölerek, metnin karakter sayısını tahmini
+olarak tespit edebiliriz.</p>
+<pre class="code literal-block"><span></span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">alloca</span><span class="p">(</span><span class="n">length</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">bn_digit_t</span><span class="p">));</span>
+
+<span class="n">bn_size_t</span> <span class="n">i</span><span class="p">;</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">tmp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">bnz</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Fonksiyon orjinal sayı üzerinde herhangi bir değişiklik yapmayacağı için,
+sayıyı geçici bir alana kopyalamamız gerekiyor.</p>
+<pre class="code literal-block"><span></span><span class="kt">char</span> <span class="o">*</span><span class="n">tds</span> <span class="o">=</span> <span class="n">ds</span><span class="p">;</span>
+<span class="k">while</span> <span class="p">(</span><span class="n">length</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="o">*</span><span class="n">tds</span><span class="o">++</span> <span class="o">=</span> <span class="sc">'0'</span> <span class="o">+</span> <span class="n">bn_div_n1</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="n">bn_trim</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">length</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Döngünün her adımında sayıyı 10'a bölüp, kalanı metne ekliyoruz.
+Her bölme işleminden sonra, <code>tmp</code> içinde kaç karakter kaldığını kontrol
+ediyoruz. Böylece, döngüden çıkmamız mümkün olacak.</p>
+<pre class="code literal-block"><span></span><span class="k">if</span> <span class="p">(</span><span class="n">bnz</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="o">*</span><span class="n">tds</span><span class="o">++</span> <span class="o">=</span> <span class="sc">'-'</span><span class="p">;</span>
+</pre>
+
+
+<p>Eğer sayı negatif ise, sayının sonuna eksi işareti atıyoruz. Eksi
+işaretini daha sonra doğru yerine alacağız.</p>
+<pre class="code literal-block"><span></span><span class="o">*</span><span class="n">tds</span><span class="o">--</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</pre>
+
+
+<p>Metnin sonuna <code>null</code> atıp, işaretçiyi bir adım geri alıyoruz. <code>tds</code> bu adımda,
+metnin <code>null</code> değerinden önceki karakterine işaret ediyor.</p>
+<pre class="code literal-block"><span></span><span class="kt">char</span> <span class="o">*</span><span class="n">tds2</span> <span class="o">=</span> <span class="n">ds</span><span class="p">;</span>
+<span class="k">while</span> <span class="p">(</span><span class="n">tds2</span> <span class="o">&lt;</span> <span class="n">tds</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="o">*</span><span class="n">tds2</span><span class="p">;</span>
+    <span class="o">*</span><span class="n">tds2</span><span class="o">++</span> <span class="o">=</span> <span class="o">*</span><span class="n">tds</span><span class="p">;</span>
+    <span class="o">*</span><span class="n">tds</span><span class="o">--</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Metni oluştururken, küçük hanesinden büyük hanesine doğru oluşturduğumuz için,
+metni tersine çevirmemiz gerekiyor. Buradaki döngü ile bunu gerçekleştiriyoruz.</p>
+<p>Aşağıdaki gibi bir fonksiyonla, yukarıdaki dönüşümleri test edebiliriz.</p>
+<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">multiplication_test</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">str1</span> <span class="o">=</span> <span class="s">"171428254796861184094610329674505562801"</span><span class="p">;</span>
+    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">str2</span> <span class="o">=</span> <span class="s">"298502530806920071071164312285418709253"</span><span class="p">;</span>
+    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">str3</span><span class="p">;</span>
+
+    <span class="n">bnz_t</span> <span class="n">bn1</span><span class="p">,</span> <span class="n">bn2</span><span class="p">,</span> <span class="n">bn3</span><span class="p">;</span>
+    <span class="n">bnz_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">bn1</span><span class="p">);</span>
+    <span class="n">bnz_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">bn2</span><span class="p">);</span>
+    <span class="n">bnz_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">bn3</span><span class="p">);</span>
+
+    <span class="n">bnz_set_ds</span><span class="p">(</span><span class="o">&amp;</span><span class="n">bn1</span><span class="p">,</span> <span class="n">str1</span><span class="p">);</span>
+    <span class="n">bnz_set_ds</span><span class="p">(</span><span class="o">&amp;</span><span class="n">bn2</span><span class="p">,</span> <span class="n">str2</span><span class="p">);</span>
+
+    <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">mem</span> <span class="o">=</span> <span class="n">BN_GROW</span><span class="p">(</span><span class="o">&amp;</span><span class="n">bn3</span><span class="p">,</span> <span class="n">bn1</span><span class="p">.</span><span class="n">length</span> <span class="o">+</span> <span class="n">bn2</span><span class="p">.</span><span class="n">length</span><span class="p">);</span>
+
+    <span class="n">bn_mul_n</span><span class="p">(</span><span class="n">mem</span><span class="p">,</span> <span class="n">bn1</span><span class="p">.</span><span class="n">digits</span><span class="p">,</span> <span class="n">bn1</span><span class="p">.</span><span class="n">length</span><span class="p">,</span> <span class="n">bn2</span><span class="p">.</span><span class="n">digits</span><span class="p">,</span> <span class="n">bn2</span><span class="p">.</span><span class="n">length</span><span class="p">);</span>
+    <span class="n">bn3</span><span class="p">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">bn_trim</span><span class="p">(</span><span class="n">mem</span><span class="p">,</span> <span class="n">bn1</span><span class="p">.</span><span class="n">length</span> <span class="o">+</span> <span class="n">bn2</span><span class="p">.</span><span class="n">length</span><span class="p">);</span>
+
+    <span class="n">str3</span> <span class="o">=</span> <span class="n">bnz_tods</span><span class="p">(</span><span class="o">&amp;</span><span class="n">bn3</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%s * %s = %s"</span><span class="p">,</span> <span class="n">str1</span><span class="p">,</span> <span class="n">str2</span><span class="p">,</span> <span class="n">str3</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Eğer herşey yolunda giderse, bu fonksiyonun çıktısı aşağıdaki gibi olacak;</p>
+<pre>
+171428254796861184094610329674505562801 x 298502530806920071071164312285418709253 =
+ 51171767908676599055325833877649182072670634054758144917604139267629751297653
+</pre>
+
+<h3>Performans Üzerine Düşünceler</h3>
+<p>Bu başlık altında, yukarıdaki iki fonksiyon için yapılabilecek bazı
+optimizasyonlardan bahsedeceğim. İsterseniz bu kısmı atlayabilirsiniz,
+ancak, çok fazla okuma/yazma yapacaksanız,
+optimizasyonun ölçülebilir faydaları olduğunu göreceksiniz.</p>
+<p>Yapabileceğimiz ilk optimizasyon aşağıdaki döngü ile ilgili;</p>
+<pre class="code literal-block"><span></span><span class="k">while</span> <span class="p">(</span><span class="n">c</span> <span class="o">=</span> <span class="o">*</span><span class="n">str</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">bn_digit_t</span> <span class="n">carry</span> <span class="o">=</span> <span class="n">bn_mul_n1</span><span class="p">(</span><span class="n">mem</span><span class="p">,</span> <span class="n">mem</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">length</span><span class="p">);</span>
+        <span class="n">carry</span> <span class="o">+=</span> <span class="n">bn_add_n1</span><span class="p">(</span><span class="n">mem</span><span class="p">,</span> <span class="n">mem</span><span class="p">,</span> <span class="n">c</span> <span class="o">-</span> <span class="sc">'0'</span><span class="p">,</span> <span class="n">length</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">carry</span><span class="p">)</span>
+            <span class="n">mem</span><span class="p">[</span><span class="n">length</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">carry</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>           
+<span class="p">}</span>
+</pre>
+
+
+<p>Bu döngüde, metindeki her bir karakter için <code>bn_mul_n1</code> ve <code>bn_add_n1</code>fonksiyonları
+çalıştırılıyor. <code>bn_mul_n1</code> içinde, <code>length</code> adet çarpma işlemi yapılıyor. Benzer şekilde, <code>bn_add_n1</code>
+içinde ise, <code>length</code> adet toplama işlemi yapılıyor. İşlediğimiz sayı
+büyüdükçe, bu iki fonksiyonun ağırlığını hissetmeye başlarız. Bu iki fonksiyonu
+her karakterden sonra çağırmak yerine, metni küçük gruplar
+halinde işleyip, bu iki fonksiyonu her gruptan sonra birer kez çağırmak yeterli olacaktır.
+ <code>bn_digit_t</code> 32 bit iken, 9 haneli gruplar halinde çalışabiliriz.
+Bu optimizasyon ile birlikte, yukarıdaki fonksiyonun ilgili kısmı
+aşağıdaki hali alacaktır.</p>
+<pre class="code literal-block"><span></span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">mem</span> <span class="o">=</span> <span class="n">BN_GROW</span><span class="p">(</span><span class="n">bnz</span><span class="p">,</span> <span class="p">(</span><span class="n">bn_size_t</span><span class="p">)(</span><span class="n">length</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">/</span> <span class="n">BN_DIGIT_BITS</span> <span class="o">+</span> <span class="mi">1</span><span class="p">));</span>
+
+<span class="c1">// oncelikle metinde kalan karakter</span>
+<span class="c1">// sayısı 9'un katı olacak şekilde,</span>
+<span class="c1">// "length % 9" karakter</span>
+<span class="c1">// işlememiz gerekiyor</span>
+<span class="n">bn_size_t</span> <span class="n">rdigits</span> <span class="o">=</span> <span class="n">length</span> <span class="o">%</span> <span class="mi">9</span><span class="p">;</span>
+<span class="n">bn_digit_t</span> <span class="n">tmp_val</span><span class="p">;</span>
+<span class="n">bn_size_t</span> <span class="n">k</span><span class="p">;</span>
+
+<span class="n">tmp_val</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">rdigits</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">tmp_val</span> <span class="o">=</span> <span class="n">tmp_val</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="p">(</span><span class="o">*</span><span class="n">str</span><span class="o">++</span> <span class="o">-</span> <span class="sc">'0'</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// işlediğimiz haneleri sayıya ekle</span>
+<span class="n">mem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_val</span><span class="p">;</span>
+
+<span class="c1">// sayının şu anki uzunluğu</span>
+<span class="n">length</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+<span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">str</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// 9 karakter işle</span>
+    <span class="n">tmp_val</span> <span class="o">=</span> <span class="o">*</span><span class="n">str</span><span class="o">++</span> <span class="o">-</span> <span class="sc">'0'</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="mi">9</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">tmp_val</span> <span class="o">=</span> <span class="n">tmp_val</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="p">(</span><span class="o">*</span><span class="n">str</span><span class="o">++</span> <span class="o">-</span> <span class="sc">'0'</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// işlenilen 9 karakteri, asıl sonuca ekle</span>
+    <span class="c1">// Eski halinde 1 hane işlediğimiz için, mem = mem * 10^1 idi.</span>
+    <span class="c1">// Şimdi 9 hane işlediğimiz için, mem = mem * 10^9</span>
+    <span class="n">bn_digit_t</span> <span class="n">carry</span> <span class="o">=</span> <span class="n">bn_mul_n1</span><span class="p">(</span><span class="n">mem</span><span class="p">,</span> <span class="n">mem</span><span class="p">,</span> <span class="mi">1000000000</span><span class="p">,</span> <span class="n">length</span><span class="p">);</span>
+
+    <span class="c1">// Eskiden burada tek bir hanenin değerini ekliyorduk.</span>
+    <span class="c1">// Şimdi 9 hanenin toplam değerini ekliyoruz.</span>
+    <span class="n">carry</span> <span class="o">+=</span> <span class="n">bn_add_n1</span><span class="p">(</span><span class="n">mem</span><span class="p">,</span> <span class="n">mem</span><span class="p">,</span> <span class="n">tmp_val</span><span class="p">,</span> <span class="n">length</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">carry</span><span class="p">)</span>
+        <span class="n">mem</span><span class="p">[</span><span class="n">length</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">carry</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Yapılabilecek bir diğer optimizasyon da, <code>bnz_tods</code> içindeki, aşağıdaki
+döngü ile ilgili.</p>
+<pre class="code literal-block"><span></span><span class="kt">char</span> <span class="o">*</span><span class="n">tds2</span> <span class="o">=</span> <span class="n">ds</span><span class="p">;</span>
+<span class="k">while</span> <span class="p">(</span><span class="n">tds2</span> <span class="o">&lt;</span> <span class="n">tds</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="o">*</span><span class="n">tds2</span><span class="p">;</span>
+    <span class="o">*</span><span class="n">tds2</span><span class="o">++</span> <span class="o">=</span> <span class="o">*</span><span class="n">tds</span><span class="p">;</span>
+    <span class="o">*</span><span class="n">tds</span><span class="o">--</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Eğer onluk hane sayısı en baştan düzgün hesaplansaydı,
+fonksiyon sonunda metni ters çevirmek yerine, metni sağdan
+sola doğru oluşturabilirdik. Malesef, sadece sayının
+bit sayısına bakarak, onluk hane sayısını tespit
+etmek mümkün değil. Aşağıdaki tabloyu inceleyelim; </p>
+<pre>
++------------+-----------+-----------+-----------+
+| İkili H.S. | Min. Onlu | Max. Onlu | Onlu H.S. |
++------------+-----------+-----------+-----------+
+| 1          | 1         | 1         | 1         |
++------------+-----------+-----------+-----------+
+| 2          | 2         | 3         | 1         |
++------------+-----------+-----------+-----------+
+| 3          | 4         | 7         | 1         |
++------------+-----------+-----------+-----------+
+| 4          | 8         | 15        | 1-2 (%80) |
++------------+-----------+-----------+-----------+
+| 5          | 16        | 31        | 2         |
++------------+-----------+-----------+-----------+
+| 6          | 32        | 63        | 2         |
++------------+-----------+-----------+-----------+
+| 7          | 64        | 127       | 2-3 (%44) |
++------------+-----------+-----------+-----------+
+| 8          | 128       | 255       | 3         |
++------------+-----------+-----------+-----------+
+| 9          | 256       | 511       | 3         |
++------------+-----------+-----------+-----------+
+| 10         | 512       | 1023      | 3-4 (%4)  |
++------------+-----------+-----------+-----------+
+| 11         | 1024      | 2047      | 4         |
++------------+-----------+-----------+-----------+
+| 12         | 2048      | 4095      | 4         |
++------------+-----------+-----------+-----------+
+| 13         | 4096      | 8191      | 4         |
++------------+-----------+-----------+-----------+
+| 14         | 8192      | 16383     | 4-5 (%77) |
++------------+-----------+-----------+-----------+
+| 15         | 16384     | 32767     | 5         |
++------------+-----------+-----------+-----------+
+| 16         | 32768     | 65535     | 5         |
++------------+-----------+-----------+-----------+
+</pre>
+
+<p>Yukarıdaki tabloya göre, ikili hane sayısını
+bildiğimiz bir sayının, onluk hane sayısını
+yaklaşık %70 ihtimalle kesin olarak tespit edebiliriz.
+Kesin olarak tespit edemediğimiz durumlarda ise, iki
+ihtimalden birini seçmek zorundayız. Yukarıdaki tabloda,
+büyük sayının seçilmesi halinde, doğru tahminde bulunma
+oranını parantez içinde belirttim. Parantez içindeki
+değerleri incelediğimizde, ne küçük seçenek, ne de büyük
+seçenek diğerinden daha avantajlı görünüyor. Her zaman
+büyük seçeneği tercih ederek, %50 ihtimalle doğru tahminde
+bulunduğumuzu varsayarsak, toplamda <code>%70 + %30 * %50 = %85</code>
+ihtimalle, ikili hane sayısına bakarak, onluk hane sayısını tespit
+edebileceğimiz yönünde bir tahminde bulunabiliriz.</p>
+<p>C ile yukarıdaki tablonun son sütununu tespit etmek için, ikili
+hane sayısını \(\frac{ln 10}{ln 2} \approx 3.3219 \) sayısına
+bölmemiz gerekiyor. <code>float</code> sayılara ve bölme işlemine başvurmadan
+işlemin sonucunu aşağıdaki gibi bulabiliriz.</p>
+<pre class="code literal-block"><span></span><span class="p">(((</span><span class="n">bn_long_digit_t</span><span class="p">)</span><span class="n">nbits</span> <span class="o">*</span> <span class="mi">1292913986</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+</pre>
+
+
+<p>Devam etmeden önce, <code>1292913986</code> sayısını nasıl elde ettiğimize
+de değinelim. Bu sayı aslında <code>1 / 3.3219... * 2^32</code> sayısının aşağıya
+yuvarlanmış hali. İşlemi bu şekilde yapmak, genellikle <code>float</code> sayılar
+üzerinde bölme işlemi yapmaktan daha hızlı olacaktır.</p>
+<p>Yukarıdaki hesabın doğru sonuç vermesi için, bit sayısını da doğru
+hesaplamalıyız. Bunun için, daha önce tanımladığımız <code>nlz</code> fonksiyonunu
+kullanacağız.</p>
+<pre class="code literal-block"><span></span><span class="n">bn_size_t</span> <span class="n">nbits</span> <span class="o">=</span> <span class="n">length</span> <span class="o">*</span> <span class="n">BN_DIGIT_BITS</span> <span class="o">-</span> <span class="n">nlz</span><span class="p">(</span><span class="n">bnz</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">[</span><span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
+<span class="n">bn_size_t</span> <span class="n">ndecimals</span> <span class="o">=</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)</span><span class="n">nbits</span> <span class="o">*</span> <span class="mi">1292913986</span> <span class="o">&gt;&gt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span><span class="n">bnz</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">ndecimals</span><span class="o">++</span><span class="p">;</span>
+</pre>
+
+
+<p>Eğer sayı negatif ise, eksi işareti için de bir yer ayırdık.
+Fonksiyonun ilk halinde, metni soldan sağa oluşturuyorduk, artık sağdan sola
+oluşturabiliriz.</p>
+<pre class="code literal-block"><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">ndecimals</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+<span class="kt">char</span> <span class="o">*</span><span class="n">tds</span> <span class="o">=</span> <span class="n">ds</span> <span class="o">+</span> <span class="n">ndecimals</span><span class="p">;</span>
+<span class="o">*</span><span class="n">tds</span><span class="o">--</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="k">while</span> <span class="p">(</span><span class="n">length</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="o">*</span><span class="n">tds</span><span class="o">--</span> <span class="o">=</span> <span class="sc">'0'</span> <span class="o">+</span> <span class="n">bn_div_n1</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="n">bn_trim</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">length</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">if</span><span class="p">(</span><span class="n">bnz</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="o">*</span><span class="n">tds</span><span class="o">--</span> <span class="o">=</span> <span class="sc">'-'</span><span class="p">;</span>
+</pre>
+
+
+<p>Bu aşamada, yaklaşık %15 ihtimalle, metnin ilk karakterinde anlamsız bir
+değer olacaktır. Bunu düzeltmek için, hafızayı 1 karakter sola kaydırmamız gerek.</p>
+<pre class="code literal-block"><span></span><span class="k">if</span> <span class="p">(</span><span class="n">tds</span> <span class="o">==</span> <span class="n">ds</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">memmove</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="o">++</span><span class="n">tds</span><span class="p">,</span> <span class="n">ndecimals</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Böylece, bu optimizasyonu da uygulamaya geçirmiş olduk.</p>
+<p>Bir sonraki yazıda, doğal sayılar üzerinde yaptığımız dört işlemi
+kullanarak, tam sayılar üzerinde dört işlem yapan fonksiyonlarla devam
+edeceğiz.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><div class="pager">
+                <a href="buyuk-sayi-islemleri-tamsayilar.html" rel="prev" title="Büyük Sayı Algoritmaları - Tam Sayılara Giriş">Önceki yazı</a>
+        </div>
+
+    </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
+	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+        </script></article></main><script>
+  if(document.location.hostname == "ysar.net")
+  {
+      (function() {
+        var cx = '013136674562336859018:ouohwab0yku';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+      
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-44774134-1', 'auto');
+          ga('send', 'pageview');
+  }
+
+</script>
+</body>
+</html>
