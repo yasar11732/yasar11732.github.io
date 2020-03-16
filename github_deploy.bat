@@ -1,1 +1,1 @@
-nikola github_deploy
+"C:\Program Files\Git\bin\bash.exe" -c "nikola github_deploy
