@@ -212,10 +212,12 @@ Bir önceki yazıda, egzersiz olarak bıraktığım farklı büyüklükteki doğ
 	{
 		bn_digit_t carry = bn_add_n(result, op1, op2, n2);
 		if (n1 > n2)
-			carry = bn_add_n1(result + n2, op1 + n2, n1 - n2, carry);
+			carry = bn_add_n1(result + n2, op1 + n2, carry, n1 - n2);
 		
 		return carry;
 	}
+	
+**Not:** Yukarıdaki fonksiyonun orjinal halinde, `bn_add_n1` fonksiyonunun argümanları yanlış sıradaydı. 13.3.2020 tarihinde düzeltildi.
 
 Ek Kaynaklar
 ------------
