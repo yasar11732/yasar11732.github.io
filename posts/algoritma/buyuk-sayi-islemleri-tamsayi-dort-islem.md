@@ -1,5 +1,5 @@
 <!--
-.. date: 2020-03-13 11:50
+.. date: 2020-03-17 00:14
 .. description: 
 .. slug: buyuk-sayi-islemleri-tamsayi-dort-islem
 .. title: Büyük Sayı Algoritmaları - Tamsayılarda Dört İşlem
