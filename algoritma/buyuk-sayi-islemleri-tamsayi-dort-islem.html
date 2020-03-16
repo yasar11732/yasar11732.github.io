@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Büyük Sayı Algoritmaları - Tamsayılarda Dört İşlem | YSAR.NET</title>
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900%7CUbuntu:300,400,500,700" rel="stylesheet">
+<link href="../assets/icons/foundation-icons.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/style.css" rel="stylesheet" type="text/css">
+<script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://ysar.net/algoritma/buyuk-sayi-islemleri-tamsayi-dort-islem.html">
+<!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
+<link rel="prev" href="buyuk-sayi-islemleri-metin.html" title="Büyük Sayı Algoritmaları - Metin Dönüşümleri" type="text/html">
+<meta property="og:site_name" content="YSAR.NET">
+<meta property="og:title" content="Büyük Sayı Algoritmaları - Tamsayılarda Dört İşlem">
+<meta property="og:url" content="http://ysar.net/algoritma/buyuk-sayi-islemleri-tamsayi-dort-islem.html">
+<meta property="og:description" content="Daha önceki yazılarda, doğal sayılarda dört işlem algoritmalarına değinmiştik.
+Bu yazıda, önceden yazdığımız alt seviye fonksiyonları kullanarak, tam sayılar üzerinde
+dört işlem gerçekleştiren fonksiy">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2020-03-13T11:50:00+03:00">
+</head>
+<body>
+
+         
+    <header class="fixed-top"><div class="container">
+        <a href="http://ysar.net">
+            <img class="logo" src="../assets/img/Logo.svg"></a>
+        <div class="subtitle">Python, Yazılım ve Programlama</div>
+    <nav id="menu"><ul>
+<li class="fi-info"><a href="../yasar-arabaci.html">Hakkımda</a></li>
+            <li class="fi-social-github"><a href="https://github.com/yasar11732/">GitHub</a></li>
+            <li class="question"><a href="../soru-cevap.html">Soru-Cevap</a></li>
+            <li class="fi-rss"><a href="../rss.xml">RSS</a></li>
+        </ul></nav>
+</div>
+        
+    </header><main class="main-content"><article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 itemprop="headline name">Büyük Sayı Algoritmaları - Tamsayılarda Dört İşlem</h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Daha önceki yazılarda, doğal sayılarda dört işlem algoritmalarına değinmiştik.
+Bu yazıda, önceden yazdığımız alt seviye fonksiyonları kullanarak, tam sayılar üzerinde
+dört işlem gerçekleştiren fonksiyonları kodlayacağız.  <!-- TEASER_END --></p>
+<p>Projenin bu yazıya kadar olan kısmını <a href="https://github.com/yasar11732/LibBigNumber/archive/buyuk-sayi-islemleri-metin.zip">Github üzerinden indirebilirsiniz</a></p>
+<p>Tamsayılar üzerinde toplama yaparken, dört farklı durumla karşılaşabiliriz.</p>
+<ul>
+<li>
+<strong>Sayıların ikisi de pozitif:</strong> Doğal sayılarda toplama işlemi yapacağız.</li>
+<li>
+<strong>Sayılardan biri negatif, negatif olanın mutlak değeri küçük:</strong> Doğal sayılarda çıkarma yapacağız.</li>
+<li>
+<strong>Sayılardan biri negatif, negatif olanın mutlak değeri büyük:</strong> Negatif sayının mutlak değerinden,
+   diğer sayıyı çıkarıp, sonucu negatif olarak ayarlayacağız.</li>
+<li>
+<strong>Sayıların ikisi de negatif</strong>: Sayıların mutlak değerlerini toplayıp, sonucu negatif olarak ayarlayacağız.</li>
+</ul>
+<p>Bu dört durumu, aşağıdaki gibi iki duruma sadeleştirmek mümkün.</p>
+<ul>
+<li>
+<strong>Sayıların İşareti Aynı</strong>: Sayıların mutlak değerlerini topla, aynı işareti kullan.</li>
+<li>
+<strong>Sayıların İşareti Farklı</strong>: İlk sayının mutlak değerinden, ikinci sayının mutlak değerini
+   çıkar. Eğer sonuç pozitif ise, ilk sayının işaretini kullan, değilse, ilk sayının işaretinin
+   zıttını kullan.</li>
+</ul>
+<p>Bu algoritmayı kodlayabilmek için, mutlak değerler üzerinde toplama çıkarma yapan
+fonksiyonlara ihtiyacımız olacak.</p>
+<pre class="code literal-block"><span></span><span class="n">bn_size_t</span> <span class="nf">bnz_add_abs</span><span class="p">(</span><span class="n">bnz_ptr</span> <span class="n">result</span><span class="p">,</span> <span class="n">bnz_constptr</span> <span class="n">op1</span><span class="p">,</span> <span class="n">bnz_constptr</span> <span class="n">op2</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">bn_size_t</span> <span class="n">s1</span> <span class="o">=</span> <span class="n">BN_ABS</span><span class="p">(</span><span class="n">op1</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">);</span>
+    <span class="n">bn_size_t</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">BN_ABS</span><span class="p">(</span><span class="n">op2</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">);</span>
+    <span class="n">bn_digit_t</span> <span class="n">carry</span><span class="p">;</span>
+    <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">rp</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">s1</span> <span class="o">&lt;</span> <span class="n">s2</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">bnz_constptr</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">op1</span><span class="p">;</span>
+        <span class="n">op1</span> <span class="o">=</span> <span class="n">op2</span><span class="p">;</span>
+        <span class="n">op2</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">;</span>
+
+        <span class="n">bn_size_t</span> <span class="n">tmps</span> <span class="o">=</span> <span class="n">s1</span><span class="p">;</span>
+        <span class="n">s1</span> <span class="o">=</span> <span class="n">s2</span><span class="p">;</span>
+        <span class="n">s2</span> <span class="o">=</span> <span class="n">tmps</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">rp</span> <span class="o">=</span> <span class="n">BN_GROW</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">s1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">carry</span> <span class="o">=</span> <span class="n">bn_add_nn</span><span class="p">(</span><span class="n">rp</span><span class="p">,</span> <span class="n">op1</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">,</span> <span class="n">s1</span><span class="p">,</span> <span class="n">op2</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">,</span> <span class="n">s2</span><span class="p">);</span>
+
+    <span class="n">rp</span><span class="p">[</span><span class="n">s1</span><span class="p">]</span> <span class="o">=</span> <span class="n">carry</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">s1</span> <span class="o">+</span> <span class="n">carry</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Eğer argümanlardan ilki, diğerinden kısa ise, işaretçilerin yerlerini
+değiştiriyoruz, çünkü, <code>bn_add_nn</code> fonksiyonu ilk argümanın daha kısa
+olmadığını varsayıyor. Fonksiyondan, sonucun hane sayısını döndürüyoruz.</p>
+<pre class="code literal-block"><span></span><span class="n">bn_size_t</span> <span class="nf">bnz_sub_abs</span><span class="p">(</span><span class="n">bnz_ptr</span> <span class="n">result</span><span class="p">,</span> <span class="n">bnz_constptr</span> <span class="n">op1</span><span class="p">,</span> <span class="n">bnz_constptr</span> <span class="n">op2</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">s1</span> <span class="o">=</span> <span class="n">BN_ABS</span><span class="p">(</span><span class="n">op1</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">BN_ABS</span><span class="p">(</span><span class="n">op2</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">);</span>
+    <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">rp</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="n">cmp</span> <span class="o">=</span> <span class="n">bn_cmp_nn</span><span class="p">(</span><span class="n">op1</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">,</span> <span class="n">s1</span><span class="p">,</span> <span class="n">op2</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">,</span> <span class="n">s2</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">cmp</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">rp</span> <span class="o">=</span> <span class="n">BN_GROW</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">s1</span><span class="p">);</span>
+        <span class="n">bn_sub_nn</span><span class="p">(</span><span class="n">rp</span><span class="p">,</span> <span class="n">op1</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">,</span> <span class="n">s1</span><span class="p">,</span> <span class="n">op2</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">,</span> <span class="n">s2</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">bn_trim</span><span class="p">(</span><span class="n">rp</span><span class="p">,</span> <span class="n">s1</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">cmp</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">rp</span> <span class="o">=</span> <span class="n">BN_GROW</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">s2</span><span class="p">);</span>
+        <span class="n">bn_sub_nn</span><span class="p">(</span><span class="n">rp</span><span class="p">,</span> <span class="n">op2</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">op1</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">,</span> <span class="n">s1</span><span class="p">);</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">bn_trim</span><span class="p">(</span><span class="n">rp</span><span class="p">,</span> <span class="n">s2</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>İki sayının mutlak değerleri arasında çıkarma yaparken, hangisinin mutlak
+değerinin daha büyük olduğunu kontrol etmeliyiz. Bunun için, <a href="buyuk-sayi-islemleri-tamsayilar.html">daha önce tanımladığımız</a>
+<code>bn_cmp_nn</code> fonksiyonunu kullanacağız. Burada,
+<code>bn_cmp_nn</code> fonksiyonuna argüman olarak, sayıların uzunluklarının mutlak
+değerlerini göndermemiz gerekiyor. Böylece, mutlak değerler arasında karşılaştırma
+yapılmış oluyor. Karşılaştırma yaptıktan sonra, eğer birinci sayının büyük
+olduğunu tespit edersek, birinciden ikinciyi çıkarıp, pozitif uzunluk
+döndüreceğiz. Aksi takdirde, ikinciden birinciyi çıkarıp, negatif uzunluk
+döndüreceğiz. Sayıların eşit olması durumunda, sıfır uzunluk döndürmemiz yeterli.</p>
+<p>Yukarıdaki fonksiyonda, <code>bn_sub_n1</code> ve <code>bn_sub_nn</code> fonksiyonları kullandık,
+ancak, bunları daha önce kodlamamıştık. Yeri gelmişken, onları da kodlayalım.</p>
+<pre class="code literal-block"><span></span><span class="n">bn_digit_t</span> <span class="nf">bn_sub_n1</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">result</span><span class="p">,</span> <span class="k">const</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op1</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="n">op2</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">bn_size_t</span> <span class="n">i</span><span class="p">;</span>
+    <span class="n">bn_digit_t</span> <span class="n">carry</span> <span class="o">=</span> <span class="n">op1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">op2</span><span class="p">;</span>
+    <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">op1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">op2</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">bn_digit_t</span> <span class="n">a</span> <span class="o">=</span> <span class="n">op1</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="n">bn_digit_t</span> <span class="n">b</span> <span class="o">=</span> <span class="n">carry</span><span class="p">;</span>
+        <span class="n">carry</span> <span class="o">=</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">;</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">carry</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">bn_digit_t</span> <span class="nf">bn_sub_nn</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">result</span><span class="p">,</span> <span class="k">const</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op1</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">n1</span><span class="p">,</span> <span class="k">const</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op2</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">n2</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">bn_digit_t</span> <span class="n">carry</span> <span class="o">=</span> <span class="n">bn_sub_n</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">op1</span><span class="p">,</span> <span class="n">op2</span><span class="p">,</span> <span class="n">n2</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n1</span> <span class="o">&gt;</span> <span class="n">n2</span><span class="p">)</span>
+        <span class="n">carry</span> <span class="o">=</span> <span class="n">bn_sub_n1</span><span class="p">(</span><span class="n">result</span> <span class="o">+</span> <span class="n">n2</span><span class="p">,</span> <span class="n">op1</span> <span class="o">+</span> <span class="n">n2</span><span class="p">,</span> <span class="n">carry</span><span class="p">,</span> <span class="n">n1</span> <span class="o">-</span> <span class="n">n2</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="n">carry</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p><code>bnz_add_abs</code> ve <code>bnz_sub_abs</code> fonksiyonlarını kullanarak, <code>bn_add</code> fonksiyonunu aşağıdaki gibi yazabiliriz;</p>
+<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">bnz_add</span><span class="p">(</span><span class="n">bnz_ptr</span> <span class="n">result</span><span class="p">,</span> <span class="n">bnz_constptr</span> <span class="n">op1</span><span class="p">,</span> <span class="n">bnz_constptr</span> <span class="n">op2</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">bn_size_t</span> <span class="n">result_size</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">((</span><span class="n">op1</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">^</span> <span class="n">op2</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">result_size</span> <span class="o">=</span> <span class="n">bnz_add_abs</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">op1</span><span class="p">,</span> <span class="n">op2</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">result_size</span> <span class="o">=</span> <span class="n">bnz_sub_abs</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">op1</span><span class="p">,</span> <span class="n">op2</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">result</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">=</span> <span class="n">op1</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="nl">result_size</span> <span class="p">:</span> <span class="o">-</span><span class="n">result_size</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Bu fonksiyonda nispeten ilginç olan tek şey, <code>op1-&gt;length ^ op2-&gt;length</code> ifadesi.
+Bunu, sayıların işaretlerini karşılaştırmak için kullanıyoruz. Bu ifade, eğer
+sayıların işaretleri aynı ise pozitif, değil ise negatif sonuç döndürecek. Binary <code>xor</code>
+kurallarını ve <a href="buyuk-sayi-islemleri-tamsayilar.html">2'nin tümleyeni</a> düzenini düşünürseniz,
+<code>op1-&gt;length ^ op2-&gt;length</code> ifadesini anlamanız kolay olacaktır.</p>
+<p>Çıkarma fonksiyonu da aşağıdaki gibi kodlanabilir;</p>
+<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">bnz_sub</span><span class="p">(</span><span class="n">bnz_ptr</span> <span class="n">result</span><span class="p">,</span> <span class="n">bnz_constptr</span> <span class="n">op1</span><span class="p">,</span> <span class="n">bnz_constptr</span> <span class="n">op2</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">bn_size_t</span> <span class="n">result_size</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">op1</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">^</span> <span class="n">op2</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">result_size</span> <span class="o">=</span> <span class="n">bnz_sub_abs</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">op1</span><span class="p">,</span> <span class="n">op2</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">result_size</span> <span class="o">=</span> <span class="n">bnz_add_abs</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">op1</span><span class="p">,</span> <span class="n">op2</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">result</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">=</span> <span class="n">op1</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="nl">result_size</span> <span class="p">:</span> <span class="o">-</span><span class="n">result_size</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Bu fonksiyonun toplamadan tek farkı, işaretler aynı olduğunda çıkarma,
+farklı olduğunda toplama yapılıyor olması.</p>
+<p>Tamsayılarda çarpma işleminin mantığı, toplama çıkarmaya göre daha kolay.
+Doğal sayılarda çarpma işlemi yaptıktan sonra, işleçlerin işaretleri aynı ise
+sonucu pozitif, farklı ise negatif yapacağız.</p>
+<pre class="code literal-block"><span></span><span class="kt">void</span>
+<span class="nf">bnz_mul</span><span class="p">(</span><span class="n">bnz_t</span> <span class="o">*</span><span class="n">result</span><span class="p">,</span> <span class="n">bnz_constptr</span> <span class="n">op1</span><span class="p">,</span> <span class="n">bnz_constptr</span> <span class="n">op2</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">op1</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">op2</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">result</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">bn_size_t</span> <span class="n">op1_len</span> <span class="o">=</span> <span class="n">BN_ABS</span><span class="p">(</span><span class="n">op1</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">);</span>
+    <span class="n">bn_size_t</span> <span class="n">op2_len</span> <span class="o">=</span> <span class="n">BN_ABS</span><span class="p">(</span><span class="n">op2</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">);</span>
+
+    <span class="n">bn_size_t</span> <span class="n">len</span> <span class="o">=</span> <span class="n">op1_len</span> <span class="o">+</span> <span class="n">op2_len</span><span class="p">;</span>
+    <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">rp</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">result</span><span class="o">-&gt;</span><span class="n">digits</span> <span class="o">==</span> <span class="n">op1</span><span class="o">-&gt;</span><span class="n">digits</span> <span class="o">||</span> <span class="n">result</span><span class="o">-&gt;</span><span class="n">digits</span> <span class="o">==</span> <span class="n">op2</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">rp</span> <span class="o">=</span> <span class="n">bn_xmalloc</span><span class="p">(</span><span class="n">len</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">rp</span> <span class="o">=</span> <span class="n">BN_GROW</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">len</span><span class="p">);</span>
+    <span class="p">}</span>
+
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">op1_len</span> <span class="o">&gt;=</span> <span class="n">op2_len</span><span class="p">)</span>
+        <span class="n">bn_mul_n</span><span class="p">(</span><span class="n">rp</span><span class="p">,</span> <span class="n">op1</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">,</span> <span class="n">op1_len</span><span class="p">,</span> <span class="n">op2</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">,</span> <span class="n">op2_len</span><span class="p">);</span>
+    <span class="k">else</span>
+        <span class="n">bn_mul_n</span><span class="p">(</span><span class="n">rp</span><span class="p">,</span> <span class="n">op2</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">,</span> <span class="n">op2_len</span><span class="p">,</span> <span class="n">op1</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">,</span> <span class="n">op1_len</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">rp</span> <span class="o">!=</span> <span class="n">result</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">free</span><span class="p">(</span><span class="n">result</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">);</span>
+        <span class="n">result</span><span class="o">-&gt;</span><span class="n">digits</span> <span class="o">=</span> <span class="n">rp</span><span class="p">;</span>
+        <span class="n">result</span><span class="o">-&gt;</span><span class="n">alloc</span> <span class="o">=</span> <span class="n">len</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">len</span> <span class="o">=</span> <span class="n">bn_trim</span><span class="p">(</span><span class="n">rp</span><span class="p">,</span> <span class="n">len</span><span class="p">);</span>
+
+    <span class="n">result</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">=</span> <span class="p">(</span><span class="n">op1</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">^</span> <span class="n">op2</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="o">-</span><span class="nl">len</span> <span class="p">:</span> <span class="n">len</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Kısaca birkaç noktaya değineyim;</p>
+<pre class="code literal-block"><span></span><span class="k">if</span> <span class="p">(</span><span class="n">op1</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">op2</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">result</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Burada, işleçlerden biri sıfırsa, başka bir işlem yapmadan, sonucu sıfıra ayarlıyoruz.</p>
+<pre class="code literal-block"><span></span><span class="n">bn_size_t</span> <span class="n">len</span> <span class="o">=</span> <span class="n">op1_len</span> <span class="o">+</span> <span class="n">op2_len</span><span class="p">;</span>
+<span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">rp</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">result</span><span class="o">-&gt;</span><span class="n">digits</span> <span class="o">==</span> <span class="n">op1</span><span class="o">-&gt;</span><span class="n">digits</span> <span class="o">||</span> <span class="n">result</span><span class="o">-&gt;</span><span class="n">digits</span> <span class="o">==</span> <span class="n">op2</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">rp</span> <span class="o">=</span> <span class="n">bn_xmalloc</span><span class="p">(</span><span class="n">len</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+    <span class="n">rp</span> <span class="o">=</span> <span class="n">BN_GROW</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">len</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>İşleçlerin biri, aynı zamanda sonuç olarak verilmiş olabilir (Örn. bnz_mul(a, a, b) -&gt; a = a x b). Bunu
+test etmek için, işaretçileri karşılaştırıyoruz. Eğer çakışma tespit edersek, hafızada yeni yer
+açmak zorundayız. Aksi halde, var olan alanı kullanacağız.</p>
+<pre class="code literal-block"><span></span><span class="k">if</span> <span class="p">(</span><span class="n">rp</span> <span class="o">!=</span> <span class="n">result</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">result</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">);</span>
+    <span class="n">result</span><span class="o">-&gt;</span><span class="n">digits</span> <span class="o">=</span> <span class="n">rp</span><span class="p">;</span>
+    <span class="n">result</span><span class="o">-&gt;</span><span class="n">alloc</span> <span class="o">=</span> <span class="n">len</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Eğer başlangıçta hafızada yeni bir yer açmış isek, <code>result</code>'ı bu alanı kullanacak şekilde ayarlamak gerekiyor.
+Fonksiyonun geri kalanında yeni birşey yok.</p>
+<p>Bölme işlemine geçmeden önce, bölmenin sonucu tam sayı olmadığında, nasıl yuvarlayacağımıza karar vermemiz
+gerekiyor. Bu konuda 3 farklı standart var.</p>
+<ul>
+<li>
+<strong>Sıfıra Doğru Yuvarlama:</strong> Bu yöntemde, sayının noktadan sonraki kısmını siliyoruz.</li>
+<li>
+<strong>Pozitif Sonsuza Yuvarlama:</strong> Bu yöntemde, sayıyı yukarıya yuvarlıyoruz.</li>
+<li>
+<strong>Negatif Sonsuza Yuvarlama:</strong> Bu yöntemde, sayıyı aşağıya yuvarlıyoruz.</li>
+</ul>
+<p>Bu yazı için, sıfıra doğru yuvarlama yöntemini seçeceğim. Aşağıdaki tabloda, farklı bölen/bölünenler
+için, bölüm ve kalanın olması gerektiği değerleri görebilirsiniz.</p>
+<pre>
++---------+-------+-------+-------+
+| Bölünen | Bölen | Bölüm | Kalan |
++---------+-------+-------+-------+
+|  3      |  2    |  1    | 1     |
++---------+-------+-------+-------+
+|  3      | -2    | -1    | 1     |
++---------+-------+-------+-------+
+| -3      |  2    | -1    | -1    |
++---------+-------+-------+-------+
+| -3      | -2    |  1    | -1    |
++---------+-------+-------+-------+
+</pre>
+
+<p>Kodlarımız da aşağıdaki gibi;</p>
+<pre class="code literal-block"><span></span><span class="kt">int</span> <span class="nf">bnz_div</span><span class="p">(</span><span class="n">bnz_ptr</span> <span class="n">q</span><span class="p">,</span> <span class="n">bnz_ptr</span> <span class="n">r</span><span class="p">,</span> <span class="n">bnz_constptr</span> <span class="n">n</span><span class="p">,</span> <span class="n">bnz_constptr</span> <span class="n">d</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">bn_size_t</span>
+        <span class="n">nlen</span><span class="p">,</span> <span class="c1">// bolunen uzunluk</span>
+        <span class="n">dlen</span><span class="p">,</span> <span class="c1">// bolen uzunluk</span>
+        <span class="n">qlen</span><span class="p">,</span> <span class="c1">// bolum uzunluk</span>
+        <span class="n">qsign</span><span class="p">,</span> <span class="c1">// bolum isareti (negatifse bolum negatif)</span>
+        <span class="n">nsign</span><span class="p">,</span> <span class="c1">// bolunen isareti (1 ise bolunen negatif)</span>
+        <span class="n">i</span><span class="p">;</span>
+
+    <span class="c1">// bolum ve kalan icin isaretci</span>
+    <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">qp</span><span class="p">,</span> <span class="o">*</span><span class="n">rp</span><span class="p">;</span>
+
+    <span class="c1">// bolunen ve bolen uzunluklari</span>
+    <span class="n">nlen</span> <span class="o">=</span> <span class="n">n</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">;</span>
+    <span class="n">dlen</span> <span class="o">=</span> <span class="n">d</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">;</span>
+
+    <span class="c1">// sifirla bolme </span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">dlen</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">fputs</span><span class="p">(</span><span class="s">"Division By Zero"</span><span class="p">,</span> <span class="n">stderr</span><span class="p">);</span>
+        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// bolunen sifir</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">nlen</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="n">q</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="n">r</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// bolum isareti</span>
+    <span class="n">qsign</span> <span class="o">=</span> <span class="n">nlen</span> <span class="o">^</span> <span class="n">dlen</span><span class="p">;</span>
+
+    <span class="c1">// bolunen isareti</span>
+    <span class="n">nsign</span> <span class="o">=</span> <span class="n">n</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// bolen ve bolunen uzunluklari mutlak degeri</span>
+    <span class="n">dlen</span> <span class="o">=</span> <span class="n">BN_ABS</span><span class="p">(</span><span class="n">dlen</span><span class="p">);</span>
+    <span class="n">nlen</span> <span class="o">=</span> <span class="n">nsign</span> <span class="o">?</span> <span class="o">-</span><span class="nl">nlen</span> <span class="p">:</span> <span class="n">nlen</span><span class="p">;</span>
+
+    <span class="c1">// bolunen bolenden kucuk</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">nlen</span> <span class="o">&lt;</span> <span class="n">dlen</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">BN_GROW</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">nlen</span><span class="p">);</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">nlen</span><span class="p">;</span>
+            <span class="k">while</span> <span class="p">(</span><span class="o">--</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">r</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="p">}</span>
+            <span class="n">r</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">=</span> <span class="n">n</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="o">-</span><span class="nl">nlen</span> <span class="p">:</span> <span class="n">nlen</span><span class="p">;</span>
+
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">q</span><span class="p">)</span>
+            <span class="n">q</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// bolum max. uzunluk</span>
+    <span class="n">qlen</span> <span class="o">=</span> <span class="n">nlen</span> <span class="o">-</span> <span class="n">dlen</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="c1">// eger bolum verildiyse, uzunlugu ayarla</span>
+    <span class="c1">// verilmediyse, gecici yer ac</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">q</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">qp</span> <span class="o">=</span> <span class="n">BN_GROW</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">qlen</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">qp</span> <span class="o">=</span> <span class="n">bn_xmalloc</span><span class="p">(</span><span class="n">qlen</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// eger kalan verildiyse, uzunlugu ayarla</span>
+    <span class="c1">// verilmediyse, gecici yer ac.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">rp</span> <span class="o">=</span> <span class="n">BN_GROW</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">dlen</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">rp</span> <span class="o">=</span> <span class="n">bn_xmalloc</span><span class="p">(</span><span class="n">dlen</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// bn_div_n icin, bolen en az 2 haneli olmali</span>
+    <span class="c1">// degilse, bn_div_n1'i kullanmak zorundayız.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">dlen</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="o">*</span><span class="n">rp</span> <span class="o">=</span> <span class="n">bn_div_n1</span><span class="p">(</span><span class="n">qp</span><span class="p">,</span> <span class="n">n</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">,</span> <span class="n">nlen</span><span class="p">,</span> <span class="n">d</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+    <span class="k">else</span>
+        <span class="n">bn_div_n</span><span class="p">(</span><span class="n">qp</span><span class="p">,</span> <span class="n">rp</span><span class="p">,</span> <span class="n">n</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">,</span> <span class="n">nlen</span><span class="p">,</span> <span class="n">d</span><span class="o">-&gt;</span><span class="n">digits</span><span class="p">,</span> <span class="n">dlen</span><span class="p">);</span>
+
+
+    <span class="c1">// kalanin uzunlugunu hesapla</span>
+    <span class="n">bn_size_t</span> <span class="n">rlen</span> <span class="o">=</span> <span class="n">bn_trim</span><span class="p">(</span><span class="n">rp</span><span class="p">,</span> <span class="n">dlen</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">r</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">=</span> <span class="n">nsign</span> <span class="o">?</span> <span class="o">-</span><span class="nl">rlen</span> <span class="p">:</span> <span class="n">rlen</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="c1">// eger kalan istenmediyse,</span>
+        <span class="c1">// gecici hafizayi birakabiliriz.</span>
+        <span class="n">free</span><span class="p">(</span><span class="n">rp</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// bolum icin uzunluk ayarla</span>
+    <span class="n">qlen</span> <span class="o">=</span> <span class="n">bn_trim</span><span class="p">(</span><span class="n">qp</span><span class="p">,</span> <span class="n">qlen</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">q</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">q</span><span class="o">-&gt;</span><span class="n">length</span> <span class="o">=</span> <span class="n">qsign</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">?</span> <span class="o">-</span><span class="nl">qlen</span> <span class="p">:</span> <span class="n">qlen</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="c1">// eger bolum istenmediyse</span>
+        <span class="c1">// gecici alani birakabiliriz.</span>
+        <span class="n">free</span><span class="p">(</span><span class="n">qp</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">rlen</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+
+
+<p>Yukarıdaki fonksiyon uzun gorunse de, karmasik birşey yok. Açıklayıcı notları
+satır aralarında bulabilirsiniz.</p>
+<p>Bu yazı ile, kütüphanenin temel kısımlarını bitirmiş olduk. Bir sonraki yazıda,
+tam sayılardaki dört işlem fonksiyonları için test yazacağız.</p>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><div class="pager">
+                <a href="buyuk-sayi-islemleri-metin.html" rel="prev" title="Büyük Sayı Algoritmaları - Metin Dönüşümleri">Önceki yazı</a>
+        </div>
+
+    </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
+	</script></article></main><script>
+  if(document.location.hostname == "ysar.net")
+  {
+      (function() {
+        var cx = '013136674562336859018:ouohwab0yku';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+      })();
+      
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-44774134-1', 'auto');
+          ga('send', 'pageview');
+  }
+
+</script>
+</body>
+</html>

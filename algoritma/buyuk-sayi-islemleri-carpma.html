@@ -240,13 +240,14 @@ x    17
 <span class="p">{</span>
     <span class="n">bn_digit_t</span> <span class="n">carry</span> <span class="o">=</span> <span class="n">bn_add_n</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">op1</span><span class="p">,</span> <span class="n">op2</span><span class="p">,</span> <span class="n">n2</span><span class="p">);</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">n1</span> <span class="o">&gt;</span> <span class="n">n2</span><span class="p">)</span>
-        <span class="n">carry</span> <span class="o">=</span> <span class="n">bn_add_n1</span><span class="p">(</span><span class="n">result</span> <span class="o">+</span> <span class="n">n2</span><span class="p">,</span> <span class="n">op1</span> <span class="o">+</span> <span class="n">n2</span><span class="p">,</span> <span class="n">n1</span> <span class="o">-</span> <span class="n">n2</span><span class="p">,</span> <span class="n">carry</span><span class="p">);</span>
+        <span class="n">carry</span> <span class="o">=</span> <span class="n">bn_add_n1</span><span class="p">(</span><span class="n">result</span> <span class="o">+</span> <span class="n">n2</span><span class="p">,</span> <span class="n">op1</span> <span class="o">+</span> <span class="n">n2</span><span class="p">,</span> <span class="n">carry</span><span class="p">,</span> <span class="n">n1</span> <span class="o">-</span> <span class="n">n2</span><span class="p">);</span>
 
     <span class="k">return</span> <span class="n">carry</span><span class="p">;</span>
 <span class="p">}</span>
 </pre>
 
 
+<p><strong>Not:</strong> Yukarıdaki fonksiyonun orjinal halinde, <code>bn_add_n1</code> fonksiyonunun argümanları yanlış sıradaydı. 13.3.2020 tarihinde düzeltildi.</p>
 <h3>Ek Kaynaklar</h3>
 <ul>
 <li>Knuth D. Art of The Computer Programming Vol 2 Section 4.3.1</li>
