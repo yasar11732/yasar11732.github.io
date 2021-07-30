@@ -1,9 +1,10 @@
 <!--
-.. date: 2018/07/28 21:13:00
-.. slug: euler-6
 .. title: (Euler 6) Ardışık Sayıların Toplamı 
+.. slug: euler-6
+.. date: 2018/07/28 21:13:00
+.. tags: 
 .. description: Ardışık doğal sayıların toplamını ve ardışık sayıların karelerini toplamını alacağız.
-.. tags: mathjax
+.. has_math: yes
 -->
 
 İlk 10 doğal sayının karelerinin toplamı

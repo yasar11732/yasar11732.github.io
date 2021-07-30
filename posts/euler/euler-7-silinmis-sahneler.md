@@ -1,9 +1,10 @@
 <!--
-.. date: 2018/08/07 21:25:00
-.. slug: euler-7-silinmis-sahneler
 .. title: (Euler 7) 10001. Asal Sayı (SİLİNMİŞ SAHNELER)
+.. slug: euler-7-silinmis-sahneler
+.. date: 2018/08/07 21:25:00
+.. tags: 
 .. description: Euler 7 çözümü ilk denemesi
-.. tags: mathjax
+.. has_math: yes
 -->
 
 Bu yazıya 7. Euler Probleminin çözümüyle ilgili birşeyler yazma niyetiyle başlamıştım. Ancak, yazdıkça

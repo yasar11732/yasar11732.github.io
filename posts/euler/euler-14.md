@@ -1,9 +1,10 @@
 <!--
-.. date: 2018/08/24 02:21:00
-.. slug: euler-14
 .. title: (Euler 14) En Uzun Collatz Dizisi
+.. slug: euler-14
+.. date: 2018/08/24 02:21:00
+.. tags: 
 .. description: Başlangıcı bir milyondan daha küçük olan en uzun Collatz dizisini bulacağız.
-.. tags: mathjax
+.. has_math: yes
 -->
 
 Aşağıdaki yinelemeli dizi pozitif tamsayılar kümesi için tanımlanmıştır:

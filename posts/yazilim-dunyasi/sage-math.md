@@ -1,9 +1,10 @@
 <!--
-.. date: 2018/08/23 01:01:00
-.. slug: sage-math
 .. title: SageMath
+.. slug: sage-math
+.. date: 2018/08/23 01:01:00
+.. tags: 
 .. description: Python temelli, açık kaynak matematik yazılımı SageMath tanıtımı
-.. tags: mathjax
+.. has_math: yes
 -->
 
 Eğer bloğumu takip ediyorsanız, son birkaç haftadır Euler problemi çözümlerimi paylaştığımı biliyorsunuz. Euler Problemleri,

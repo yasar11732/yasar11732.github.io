@@ -1,9 +1,9 @@
 <!--
-.. date: 2020-02-26 22:44
-.. description: 
-.. slug: buyuk-sayi-islemleri-carpma
 .. title: Büyük Sayı Algoritmaları - Çarpma
-.. tags: mathjax
+.. slug: buyuk-sayi-islemleri-carpma
+.. date: 2020-02-26 22:44
+.. tags: 
+.. has_math: yes
 -->
 
 [Bir önceki yazıda](buyuk-sayi-islemleri-toplama-cikarma.html), n-haneli doğal sayılar üzerinde toplama

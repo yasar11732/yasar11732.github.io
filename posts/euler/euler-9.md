@@ -1,9 +1,10 @@
 <!--
-.. date: 2018/08/16 21:38:00
-.. slug: euler-9
 .. title: (Euler 9) Pisagor Üçlüsü
+.. slug: euler-9
+.. date: 2018/08/16 21:38:00
+.. tags: 
 .. description: Toplamı 1000 eden Pisagor üçlüsünü bulacağız
-.. tags: mathjax
+.. has_math: yes
 -->
 
 Pisagor üçlüsü \\(a^2 + b^2 = c^2\\) eşiliğini sağlayan \\(a < b < c\\) üçlüsüne verilen isimdir. Örneğin, \\(3^2 + 4^2 = 9+16 = 25 = 5^2\\) gibi.

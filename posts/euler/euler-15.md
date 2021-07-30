@@ -1,9 +1,10 @@
 <!--
-.. date: 2018/08/24 17:55:00
-.. slug: euler-15
 .. title: (Euler 15) Izgara Üzerindeki Yollar
+.. slug: euler-15
+.. date: 2018/08/24 17:55:00
+.. tags: 
 .. description: 20x20 ızgarada, köşeden köşeye kaç farklı yoldan gidilebilir?
-.. tags: mathjax
+.. has_math: yes
 -->
 
 2x2 ızgaranın sol üst köşesinden başlayarak, ve sadece sağa veya aşağıya hareket ederek, sağ alt köşeye tam olarak 6 yol vardır.

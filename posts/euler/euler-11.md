@@ -1,9 +1,10 @@
 <!--
-.. date: 2018/08/20 21:59:00
-.. slug: euler-11
 .. title: (Euler 11) 11. Euler Problemi Çözümü
+.. slug: euler-11
+.. date: 2018/08/20 21:59:00
+.. tags: 
 .. description: 20x20 dizilmiş sayıların içinde, yatay, dikey veya çapraz olarak ardışık 4 sayının çarpımı en fazla kaç olabilir?
-.. tags: mathjax
+.. has_math: yes
 -->
 
 Aşağıdaki 20x20 şeklinde dizilmiş sayılardan, köşegen üzerinde bulunan 4 tanesi kırmızıyla işaretlenmiştir.

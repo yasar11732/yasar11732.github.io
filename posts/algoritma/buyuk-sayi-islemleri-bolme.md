@@ -1,9 +1,9 @@
 <!--
-.. date: 2020-03-04 23:18
-.. description: 
-.. slug: buyuk-sayi-islemleri-bolme
 .. title: Büyük Sayı Algoritmaları - Bölme
-.. tags: mathjax
+.. slug: buyuk-sayi-islemleri-bolme
+.. date: 2020-03-04 23:18
+.. tags: 
+.. has_math: yes
 -->
 
 Daha önceki yazılarda, değişken-genişlikteki doğal sayılar üzerinde

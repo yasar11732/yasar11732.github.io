@@ -1,9 +1,10 @@
 <!--
-.. date: 2018/08/20 00:57:00
-.. slug: euler-10
 .. title: (Euler 10) Asal Sayılar Toplamı
+.. slug: euler-10
+.. date: 2018/08/20 00:57:00
+.. tags: 
 .. description: 2 milyondan küçük asal sayıları toplayacağız
-.. tags: mathjax
+.. has_math: yes
 -->
 
 10'dan küçük asal sayıların toplamı \\(2 + 3 + 5 + 7 = 17\\) dir.

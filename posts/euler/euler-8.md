@@ -1,9 +1,10 @@
 <!--
-.. date: 2018/08/09 00:40:00
-.. slug: euler-8
 .. title: (Euler 8) Çarpımı en büyük alt dizi
+.. slug: euler-8
+.. date: 2018/08/09 00:40:00
+.. tags: 
 .. description: Bir dizi sayı içerisinde, çarpımı en yüksek alt diziyi bulacağız
-.. tags: mathjax
+.. has_math: yes
 -->
 
 

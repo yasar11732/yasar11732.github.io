@@ -21,7 +21,7 @@ BLOG_AUTHOR = "Ya\u015far Arabac\u0131"  # (translatable)
 BLOG_TITLE = "YSAR.NET"  # (translatable)
 # This is the main URL for your site. It will be used
 # in a prominent link
-SITE_URL = "http://ysar.net/"
+SITE_URL = "https://yasar11732.github.io/"
 # This is the URL where nikola's output will be deployed.
 # If not set, defaults to SITE_URL
 # BASE_URL = "http://ysar.net/"
@@ -136,7 +136,7 @@ TIMEZONE = "Europe/Istanbul"
 
 # Date format used to display post dates.
 # (str used by datetime.datetime.strftime)
-DATE_FORMAT = '%Y-%m-%d'
+DATE_FORMAT = 'yyyy-MM-dd'
 
 # While nikola can select a sensible locale for each language,
 # sometimes explicit control can come handy.
@@ -535,7 +535,7 @@ COMMENT_SYSTEM_ID = ""
 # This can be disabled on a per-page/post basis by adding
 #    .. pretty_url: False
 # to the metadata
-# PRETTY_URLS = False
+PRETTY_URLS = False
 
 # If True, publish future dated posts right away instead of scheduling them.
 # Defaults to False.
@@ -725,7 +725,7 @@ BODY_END = """
 
 # If you hate "Filenames with Capital Letters and Spaces.md", you should
 # set this to true.
-UNSLUGIFY_TITLES = True
+FILE_METADATA_UNSLUGIFY_TITLES = True
 
 # Additional metadata that is added to a post when creating a new_post
 # ADDITIONAL_METADATA = {}

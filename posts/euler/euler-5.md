@@ -1,9 +1,10 @@
 <!--
-.. date: 2018/07/26 21:13:00
-.. slug: euler-5
 .. title: (Euler 5) EBOB EKOK
+.. slug: euler-5
+.. date: 2018/07/26 21:13:00
+.. tags: 
 .. description: Birden fazla sayının en küçük ortak katını hesaplayacağız.
-.. tags: mathjax
+.. has_math: yes
 -->
 
 1den 10a kadar tüm sayılara kalansız bölünebilen en küçük sayı 2520'dir. 1den 20ye kadar tüm sayılara kalansız bölünebilen

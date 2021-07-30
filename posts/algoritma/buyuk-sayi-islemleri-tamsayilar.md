@@ -1,9 +1,9 @@
 <!--
-.. date: 2020-03-09 01:14
-.. description: 
-.. slug: buyuk-sayi-islemleri-tamsayilar
 .. title: Büyük Sayı Algoritmaları - Tam Sayılara Giriş
-.. tags: mathjax
+.. slug: buyuk-sayi-islemleri-tamsayilar
+.. date: 2020-03-09 01:14
+.. tags: 
+.. has_math: yes
 -->
 
 Yazı dizisinin ilk 4 yazısında, doğal sayılar üzerinde işlem

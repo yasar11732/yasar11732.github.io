@@ -1,9 +1,10 @@
 <!--
-.. date: 2018/08/23 16:36:00
-.. slug: euler-13
 .. title: (Euler 13) C Programlama Dilinde Büyük Sayıları Toplama
+.. slug: euler-13
+.. date: 2018/08/23 16:36:00
+.. tags: 
 .. description: 100 adet 50 basamaklı sayının toplamının ilk 10 hanesini bulacağız
-.. tags: mathjax
+.. has_math: yes
 -->
 
 Aşağıdaki 100 adet 50 haneli sayının toplamının ilk 10 hanesini bulunuz.

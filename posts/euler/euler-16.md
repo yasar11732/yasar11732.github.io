@@ -1,9 +1,10 @@
 <!--
-.. date: 2018/08/26 19:47:00
-.. slug: euler-16
 .. title: (Euler 16) Büyük Üslü Sayının Haneleri Toplamı
+.. slug: euler-16
+.. date: 2018/08/26 19:47:00
+.. tags: 
 .. description: 2'nin 
-.. tags: mathjax
+.. has_math: yes
 -->
 
 \\(2^{15} = 32768\\) ve rakamları toplamı \\(3 + 2 + 7 + 6 + 8 = 26\\).

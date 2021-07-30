@@ -1,9 +1,9 @@
 <!--
-.. date: 2020-03-04 01:28
-.. description: 
-.. slug: rastgele-sayi-uretici
 .. title: Rastgele Sayı Üretici
-.. tags: mathjax
+.. slug: rastgele-sayi-uretici
+.. date: 2020-03-04 01:28
+.. tags: 
+.. has_math: yes
 -->
 
 Merhabalar,

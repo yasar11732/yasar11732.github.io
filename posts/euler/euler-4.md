@@ -1,9 +1,10 @@
 <!--
-.. date: 2018/07/24 23:10:00
-.. slug: euler-4
 .. title: (Euler 4) Palindrom
+.. slug: euler-4
+.. date: 2018/07/24 23:10:00
+.. tags: 
 .. description: 3 haneli iki sayının çarpımı olan en büyük palindromu bulacağız
-.. tags: mathjax
+.. has_math: yes
 -->
 
 Palindrom bir sayı, hem baştan hem sondan aynı şekilde okunur. İki adet iki basamaklı sayının çarpımı ile elde edilebilecek en büyük palidrom \\(9009 = 91 × 99\\).

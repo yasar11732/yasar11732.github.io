@@ -1,9 +1,10 @@
 <!--
-.. date: 2018/07/18 23:21:00
-.. slug: euler-2
 .. title: (Euler 2) Çift Fibonacci Sayıları
+.. slug: euler-2
+.. date: 2018/07/18 23:21:00
+.. tags: 
 .. description: Çift fibonacci sayılarını toplayacağız.
-.. tags: mathjax
+.. has_math: yes
 -->
 
 [Project Eulerdeki 2 numaralı problem](https://projecteuler.net/problem=2) şu şekilde; Fibonacci dizisinde her bir sayı, kendinden

@@ -1,9 +1,10 @@
 <!--
-.. date: 2018/08/22 18:06:00
-.. slug: euler-12
 .. title: (Euler 12) Üçgen Sayılar ve Bölenlerinin Sayısı
+.. slug: euler-12
+.. date: 2018/08/22 18:06:00
+.. tags: 
 .. description: Bölenlerinin sayısı 500'den fazla olan en küçük üçgen sayıyı bulacağız
-.. tags: mathjax
+.. has_math: yes
 -->
 
 Üçgen sayılar sayı dizisi, doğal sayılar eklenerek oluşturulur. Örneğin, 7. üçgen sayı 1 + 2 + 3 + 4 + 5 + 6 + 7 = 28 olur.

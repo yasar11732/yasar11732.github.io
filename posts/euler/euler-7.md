@@ -1,9 +1,10 @@
 <!--
-.. date: 2018/08/07 21:40:00
-.. slug: euler-7
 .. title: (Euler 7) 10001. Asal Sayı
+.. slug: euler-7
+.. date: 2018/08/07 21:40:00
+.. tags: 
 .. description: Belli Bir Sıradaki Asal Sayıyı Bulacağız
-.. tags: mathjax
+.. has_math: yes
 -->
 
 

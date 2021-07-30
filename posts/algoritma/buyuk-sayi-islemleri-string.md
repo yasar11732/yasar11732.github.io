@@ -1,9 +1,9 @@
 <!--
-.. date: 2020-03-12 18:25
-.. description: 
-.. slug: buyuk-sayi-islemleri-metin
 .. title: Büyük Sayı Algoritmaları - Metin Dönüşümleri
-.. tags: mathjax
+.. slug: buyuk-sayi-islemleri-metin
+.. date: 2020-03-12 18:25
+.. tags: 
+.. has_math: yes
 -->
 
 Büyük sayı algoritmaları yazı dizisine, sayıdan metne,

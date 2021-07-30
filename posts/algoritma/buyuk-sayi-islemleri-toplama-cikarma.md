@@ -1,9 +1,9 @@
 <!--
-.. date: 2020-02-23 18:28
-.. description: 
-.. slug: buyuk-sayi-islemleri-toplama-cikarma
 .. title: Büyük Sayı Algoritmaları - Toplama / Çıkarma
-.. tags: mathjax
+.. slug: buyuk-sayi-islemleri-toplama-cikarma
+.. date: 2020-02-23 18:28
+.. tags: 
+.. has_math: yes
 -->
 
 Bu yazıda n-haneli iki doğal sayı üzerinde toplama/çıkarma işlemi yapararak,

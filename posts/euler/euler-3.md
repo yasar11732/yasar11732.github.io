@@ -1,9 +1,10 @@
 <!--
-.. date: 2018/07/21 00:21:00
-.. slug: euler-3
 .. title: (Euler 3) Asal Çarpanlara Ayırma
+.. slug: euler-3
+.. date: 2018/07/21 00:21:00
+.. tags: 
 .. description: Büyük bir sayıyı etkin bir biçimde asal çarpanlara ayıracağız.
-.. tags: mathjax
+.. has_math: yes
 -->
 
 [Project Eulerdeki 3 numaralı problem](https://projecteuler.net/problem=3) şu şekilde; \\(13195\\) sayısının asal çarpanları \\(5\\), \\(7\\), \\(13\\) ve \\(29\\)'dur.

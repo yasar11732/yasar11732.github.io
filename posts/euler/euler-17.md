@@ -1,9 +1,10 @@
 <!--
-.. date: 2018/09/01 20:40:00
-.. slug: euler-17
 .. title: (Euler 17) Sayıların Harf Sayısı
+.. slug: euler-17
+.. date: 2018/09/01 20:40:00
+.. tags: 
 .. description: Sayıları Yazıya dönüştürecek bir program yazımı
-.. tags: mathjax
+.. has_math: yes
 -->
 
 (Problemin orjinali İngilizce kelimeler üzerine kurulu, ben çevirirken Türkçeleştirdim.)
