@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="RFC2231'de Gösterilen Kodlamanın C Dilinde Uygulanması">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/yazilim-dunyasi/rfc2231.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/yazilim-dunyasi/rfc2231.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="urlencode-utf8-data.html" title="C Programlama Dilinde UTF8 Veriyi URL Kodlama" type="text/html">
 <link rel="next" href="content-disposition-satirinda-us-ascii-harici-karakterler.html" title="Content-Disposition Satırında US-ASCII Harici Karakterler Nasıl Kodlanmalı" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="RFC2231 Kodlaması">
-<meta property="og:url" content="http://ysar.net/yazilim-dunyasi/rfc2231.html">
-<meta property="og:description" content="RFC2231'de Gösterilen Kodlamanın C Dilinde Uygulanması">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2019-06-01T21:10:00+03:00">
 </head>
 <body>
 
@@ -56,114 +50,543 @@ kullandım. POSIX sistemlerde bunun yerine <code>iconv</code> kullanılabilir.</
 <li>UTF-8</li>
 </ul>
 <p> </p>
-<pre class="code literal-block"><span></span><span class="kt">char</span> <span class="n">base16</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="sc">'0'</span><span class="p">,</span><span class="sc">'1'</span><span class="p">,</span><span class="sc">'2'</span><span class="p">,</span><span class="sc">'3'</span><span class="p">,</span><span class="sc">'4'</span><span class="p">,</span><span class="sc">'5'</span><span class="p">,</span><span class="sc">'6'</span><span class="p">,</span><span class="sc">'7'</span><span class="p">,</span><span class="sc">'8'</span><span class="p">,</span><span class="sc">'9'</span><span class="p">,</span><span class="sc">'A'</span><span class="p">,</span><span class="sc">'B'</span><span class="p">,</span><span class="sc">'C'</span><span class="p">,</span><span class="sc">'D'</span><span class="p">,</span><span class="sc">'E'</span><span class="p">,</span><span class="sc">'F'</span> <span class="p">};</span>
-
-<span class="kt">char</span> <span class="n">special_chars</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="sc">' '</span><span class="p">,</span> <span class="sc">'*'</span><span class="p">,</span> <span class="sc">'\''</span><span class="p">,</span> <span class="sc">'%'</span><span class="p">,</span> <span class="sc">'('</span><span class="p">,</span><span class="sc">')'</span><span class="p">,</span><span class="sc">'&lt;'</span><span class="p">,</span><span class="sc">'&gt;'</span><span class="p">,</span><span class="sc">'@'</span><span class="p">,</span><span class="sc">','</span><span class="p">,</span>
-    <span class="sc">';'</span><span class="p">,</span><span class="sc">':'</span><span class="p">,</span><span class="sc">'\\'</span><span class="p">,</span><span class="sc">'"'</span><span class="p">,</span><span class="sc">'/'</span><span class="p">,</span><span class="sc">'['</span><span class="p">,</span><span class="sc">']'</span><span class="p">,</span><span class="sc">'?'</span><span class="p">,</span><span class="sc">'='</span>
-<span class="p">};</span>
-
-<span class="kt">int</span> <span class="nf">should_encode</span><span class="p">(</span><span class="kt">char</span> <span class="n">c</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="c1">// bir utf8 byte'ı % ile kodlanmalı mı?</span>
-    <span class="c1">// evet  -&gt; 1</span>
-    <span class="c1">// hayir -&gt; 0</span>
-
-    <span class="c1">// 7 bit üzeri ascii</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
-
-    <span class="c1">// kontrol karakterleri</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&lt;</span> <span class="sc">' '</span> <span class="o">||</span> <span class="n">c</span> <span class="o">==</span> <span class="mi">127</span><span class="p">)</span>
-        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
-
-    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">special_chars</span><span class="p">);</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">special_chars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">c</span><span class="p">)</span>
-            <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="kt">unsigned</span> <span class="kt">long</span> <span class="nf">encoded_size</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">utf8data</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="k">for</span> <span class="p">(</span> <span class="p">;</span> <span class="o">*</span><span class="n">utf8data</span> <span class="o">!=</span> <span class="sc">'\0'</span><span class="p">;</span> <span class="n">utf8data</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">should_encode</span><span class="p">(</span><span class="o">*</span><span class="n">utf8data</span><span class="p">))</span>
-            <span class="n">size</span> <span class="o">+=</span> <span class="mi">3</span><span class="p">;</span>
-        <span class="k">else</span>
-            <span class="n">size</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="n">size</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// NULL için</span>
-
-    <span class="k">return</span> <span class="n">size</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="kt">char</span> <span class="o">*</span><span class="nf">utf8Encode</span><span class="p">(</span><span class="n">LPWSTR</span> <span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">len</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">char</span> <span class="o">*</span><span class="n">encoded</span><span class="p">;</span>
-    <span class="kt">size_t</span> <span class="n">cchInputLength</span> <span class="o">=</span> <span class="n">wcslen</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// +1 null için</span>
-
-    <span class="o">*</span><span class="n">len</span> <span class="o">=</span> <span class="n">WideCharToMultiByte</span><span class="p">(</span><span class="mi">65001</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">cchInputLength</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
-    <span class="n">encoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="o">*</span><span class="n">len</span><span class="p">);</span>
-    <span class="n">WideCharToMultiByte</span><span class="p">(</span><span class="mi">65001</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">cchInputLength</span><span class="p">,</span> <span class="n">encoded</span><span class="p">,</span> <span class="o">*</span><span class="n">len</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
-
-    <span class="k">return</span> <span class="n">encoded</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="kt">char</span> <span class="o">*</span><span class="nf">rfc2231_utf8_encode</span><span class="p">(</span><span class="n">LPWSTR</span> <span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">len</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">static</span> <span class="kt">char</span> <span class="n">_hdr</span><span class="p">[]</span> <span class="o">=</span> <span class="s">"utf-8</span><span class="se">\'\'</span><span class="s">"</span><span class="p">;</span>
-
-    <span class="kt">char</span> <span class="o">*</span><span class="n">utf8encoded</span> <span class="o">=</span> <span class="n">utf8Encode</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">len</span><span class="p">);</span>
-    <span class="o">*</span><span class="n">len</span> <span class="o">=</span> <span class="n">encoded_size</span><span class="p">(</span><span class="n">utf8encoded</span><span class="p">);</span>
-    <span class="kt">char</span> <span class="o">*</span><span class="n">param_encoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="o">*</span><span class="n">len</span> <span class="o">+</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">_hdr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
-
-    <span class="n">memcpy</span><span class="p">(</span><span class="n">param_encoded</span><span class="p">,</span> <span class="n">_hdr</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">_hdr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
-
-    <span class="kt">char</span> <span class="o">*</span><span class="n">temp</span> <span class="o">=</span> <span class="n">param_encoded</span> <span class="o">+</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">_hdr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
-
-    <span class="kt">char</span> <span class="o">*</span><span class="n">temp2</span> <span class="o">=</span> <span class="n">utf8encoded</span><span class="p">;</span>
-
-    <span class="k">for</span> <span class="p">(;</span> <span class="o">*</span><span class="n">temp2</span> <span class="o">!=</span> <span class="sc">'\0'</span><span class="p">;</span> <span class="n">temp2</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">should_encode</span><span class="p">(</span><span class="o">*</span><span class="n">temp2</span><span class="p">))</span>
-        <span class="p">{</span>
-            <span class="o">*</span><span class="n">temp</span><span class="o">++</span> <span class="o">=</span> <span class="sc">'%'</span><span class="p">;</span>
-            <span class="o">*</span><span class="n">temp</span><span class="o">++</span> <span class="o">=</span> <span class="n">base16</span><span class="p">[(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)(</span><span class="o">*</span><span class="n">temp2</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">];</span>
-            <span class="o">*</span><span class="n">temp</span><span class="o">++</span> <span class="o">=</span> <span class="n">base16</span><span class="p">[(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)(</span><span class="o">*</span><span class="n">temp2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xF</span><span class="p">];</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="o">*</span><span class="n">temp</span><span class="o">++</span> <span class="o">=</span> <span class="o">*</span><span class="n">temp2</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="o">*</span><span class="n">temp</span> <span class="o">=</span> <span class="sc">'\0'</span><span class="p">;</span>
-
-    <span class="n">free</span><span class="p">(</span><span class="n">utf8encoded</span><span class="p">);</span>
-
-    <span class="k">return</span> <span class="n">param_encoded</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="kt">int</span> <span class="n">WINAPI</span> <span class="nf">wWinMain</span><span class="p">(</span><span class="n">HINSTANCE</span> <span class="n">hInstance</span><span class="p">,</span> <span class="n">HINSTANCE</span> <span class="n">hPrevInstance</span><span class="p">,</span>
-    <span class="n">PWSTR</span> <span class="n">pCmdLine</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nCmdShow</span><span class="p">)</span>
-<span class="p">{</span>   
-    <span class="kt">int</span> <span class="n">buffersize</span><span class="p">;</span>
-    <span class="kt">char</span> <span class="o">*</span><span class="n">encoded</span> <span class="o">=</span> <span class="n">rfc2231_utf8_encode</span><span class="p">(</span><span class="sa">L</span><span class="s">"Yaşar Arabacı.png"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">buffersize</span><span class="p">);</span>
-    <span class="kt">FILE</span> <span class="o">*</span><span class="n">f</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"encodelen.txt"</span><span class="p">,</span> <span class="s">"wb"</span><span class="p">);</span>
-
-    <span class="n">fwrite</span><span class="p">(</span><span class="n">encoded</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">buffersize</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">f</span><span class="p">);</span> <span class="c1">// -1 NULL için</span>
-
-    <span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
-
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-1"><code data-line-number="  1"></code></a></td>
+<td class="code"><code><span class="kt">char</span> <span class="n">base16</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="sc">'0'</span><span class="p">,</span><span class="sc">'1'</span><span class="p">,</span><span class="sc">'2'</span><span class="p">,</span><span class="sc">'3'</span><span class="p">,</span><span class="sc">'4'</span><span class="p">,</span><span class="sc">'5'</span><span class="p">,</span><span class="sc">'6'</span><span class="p">,</span><span class="sc">'7'</span><span class="p">,</span><span class="sc">'8'</span><span class="p">,</span><span class="sc">'9'</span><span class="p">,</span><span class="sc">'A'</span><span class="p">,</span><span class="sc">'B'</span><span class="p">,</span><span class="sc">'C'</span><span class="p">,</span><span class="sc">'D'</span><span class="p">,</span><span class="sc">'E'</span><span class="p">,</span><span class="sc">'F'</span> <span class="p">};</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-2"><code data-line-number="  2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-3"><code data-line-number="  3"></code></a></td>
+<td class="code"><code><span class="kt">char</span> <span class="n">special_chars</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-4"><code data-line-number="  4"></code></a></td>
+<td class="code"><code>    <span class="sc">' '</span><span class="p">,</span> <span class="sc">'*'</span><span class="p">,</span> <span class="sc">'\''</span><span class="p">,</span> <span class="sc">'%'</span><span class="p">,</span> <span class="sc">'('</span><span class="p">,</span><span class="sc">')'</span><span class="p">,</span><span class="sc">'&lt;'</span><span class="p">,</span><span class="sc">'&gt;'</span><span class="p">,</span><span class="sc">'@'</span><span class="p">,</span><span class="sc">','</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-5"><code data-line-number="  5"></code></a></td>
+<td class="code"><code>    <span class="sc">';'</span><span class="p">,</span><span class="sc">':'</span><span class="p">,</span><span class="sc">'\\'</span><span class="p">,</span><span class="sc">'"'</span><span class="p">,</span><span class="sc">'/'</span><span class="p">,</span><span class="sc">'['</span><span class="p">,</span><span class="sc">']'</span><span class="p">,</span><span class="sc">'?'</span><span class="p">,</span><span class="sc">'='</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-6"><code data-line-number="  6"></code></a></td>
+<td class="code"><code><span class="p">};</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-7"><code data-line-number="  7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-8"><code data-line-number="  8"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">should_encode</span><span class="p">(</span><span class="kt">char</span> <span class="n">c</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-9"><code data-line-number="  9"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-10"><code data-line-number=" 10"></code></a></td>
+<td class="code"><code>    <span class="c1">// bir utf8 byte'ı % ile kodlanmalı mı?</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-11"><code data-line-number=" 11"></code></a></td>
+<td class="code"><code>    <span class="c1">// evet  -&gt; 1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-12"><code data-line-number=" 12"></code></a></td>
+<td class="code"><code>    <span class="c1">// hayir -&gt; 0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-13"><code data-line-number=" 13"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-14"><code data-line-number=" 14"></code></a></td>
+<td class="code"><code>    <span class="c1">// 7 bit üzeri ascii</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-15"><code data-line-number=" 15"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-16"><code data-line-number=" 16"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-17"><code data-line-number=" 17"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-18"><code data-line-number=" 18"></code></a></td>
+<td class="code"><code>    <span class="c1">// kontrol karakterleri</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-19"><code data-line-number=" 19"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&lt;</span> <span class="sc">' '</span> <span class="o">||</span> <span class="n">c</span> <span class="o">==</span> <span class="mi">127</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-20"><code data-line-number=" 20"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-21"><code data-line-number=" 21"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-22"><code data-line-number=" 22"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-23"><code data-line-number=" 23"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">special_chars</span><span class="p">);</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-24"><code data-line-number=" 24"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-25"><code data-line-number=" 25"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="n">special_chars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">c</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-26"><code data-line-number=" 26"></code></a></td>
+<td class="code"><code>            <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-27"><code data-line-number=" 27"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-28"><code data-line-number=" 28"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-29"><code data-line-number=" 29"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-30"><code data-line-number=" 30"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-31"><code data-line-number=" 31"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-32"><code data-line-number=" 32"></code></a></td>
+<td class="code"><code><span class="kt">unsigned</span> <span class="kt">long</span> <span class="nf">encoded_size</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">utf8data</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-33"><code data-line-number=" 33"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-34"><code data-line-number=" 34"></code></a></td>
+<td class="code"><code>    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-35"><code data-line-number=" 35"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-36"><code data-line-number=" 36"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span> <span class="p">;</span> <span class="o">*</span><span class="n">utf8data</span> <span class="o">!=</span> <span class="sc">'\0'</span><span class="p">;</span> <span class="n">utf8data</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-37"><code data-line-number=" 37"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-38"><code data-line-number=" 38"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="n">should_encode</span><span class="p">(</span><span class="o">*</span><span class="n">utf8data</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-39"><code data-line-number=" 39"></code></a></td>
+<td class="code"><code>            <span class="n">size</span> <span class="o">+=</span> <span class="mi">3</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-40"><code data-line-number=" 40"></code></a></td>
+<td class="code"><code>        <span class="k">else</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-41"><code data-line-number=" 41"></code></a></td>
+<td class="code"><code>            <span class="n">size</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-42"><code data-line-number=" 42"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-43"><code data-line-number=" 43"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-44"><code data-line-number=" 44"></code></a></td>
+<td class="code"><code>    <span class="n">size</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// NULL için</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-45"><code data-line-number=" 45"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-46"><code data-line-number=" 46"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">size</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-47"><code data-line-number=" 47"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-48"><code data-line-number=" 48"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-49"><code data-line-number=" 49"></code></a></td>
+<td class="code"><code><span class="kt">char</span> <span class="o">*</span><span class="nf">utf8Encode</span><span class="p">(</span><span class="n">LPWSTR</span> <span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">len</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-50"><code data-line-number=" 50"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-51"><code data-line-number=" 51"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">encoded</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-52"><code data-line-number=" 52"></code></a></td>
+<td class="code"><code>    <span class="kt">size_t</span> <span class="n">cchInputLength</span> <span class="o">=</span> <span class="n">wcslen</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// +1 null için</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-53"><code data-line-number=" 53"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-54"><code data-line-number=" 54"></code></a></td>
+<td class="code"><code>    <span class="o">*</span><span class="n">len</span> <span class="o">=</span> <span class="n">WideCharToMultiByte</span><span class="p">(</span><span class="mi">65001</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">cchInputLength</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-55"><code data-line-number=" 55"></code></a></td>
+<td class="code"><code>    <span class="n">encoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="o">*</span><span class="n">len</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-56"><code data-line-number=" 56"></code></a></td>
+<td class="code"><code>    <span class="n">WideCharToMultiByte</span><span class="p">(</span><span class="mi">65001</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">cchInputLength</span><span class="p">,</span> <span class="n">encoded</span><span class="p">,</span> <span class="o">*</span><span class="n">len</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-57"><code data-line-number=" 57"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-58"><code data-line-number=" 58"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">encoded</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-59"><code data-line-number=" 59"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-60"><code data-line-number=" 60"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-61"><code data-line-number=" 61"></code></a></td>
+<td class="code"><code><span class="kt">char</span> <span class="o">*</span><span class="nf">rfc2231_utf8_encode</span><span class="p">(</span><span class="n">LPWSTR</span> <span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">len</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-62"><code data-line-number=" 62"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-63"><code data-line-number=" 63"></code></a></td>
+<td class="code"><code>    <span class="k">static</span> <span class="kt">char</span> <span class="n">_hdr</span><span class="p">[]</span> <span class="o">=</span> <span class="s">"utf-8</span><span class="se">\'\'</span><span class="s">"</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-64"><code data-line-number=" 64"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-65"><code data-line-number=" 65"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">utf8encoded</span> <span class="o">=</span> <span class="n">utf8Encode</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">len</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-66"><code data-line-number=" 66"></code></a></td>
+<td class="code"><code>    <span class="o">*</span><span class="n">len</span> <span class="o">=</span> <span class="n">encoded_size</span><span class="p">(</span><span class="n">utf8encoded</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-67"><code data-line-number=" 67"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">param_encoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="o">*</span><span class="n">len</span> <span class="o">+</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">_hdr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-68"><code data-line-number=" 68"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-69"><code data-line-number=" 69"></code></a></td>
+<td class="code"><code>    <span class="n">memcpy</span><span class="p">(</span><span class="n">param_encoded</span><span class="p">,</span> <span class="n">_hdr</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">_hdr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-70"><code data-line-number=" 70"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-71"><code data-line-number=" 71"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">temp</span> <span class="o">=</span> <span class="n">param_encoded</span> <span class="o">+</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">_hdr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-72"><code data-line-number=" 72"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-73"><code data-line-number=" 73"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">temp2</span> <span class="o">=</span> <span class="n">utf8encoded</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-74"><code data-line-number=" 74"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-75"><code data-line-number=" 75"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(;</span> <span class="o">*</span><span class="n">temp2</span> <span class="o">!=</span> <span class="sc">'\0'</span><span class="p">;</span> <span class="n">temp2</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-76"><code data-line-number=" 76"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-77"><code data-line-number=" 77"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="n">should_encode</span><span class="p">(</span><span class="o">*</span><span class="n">temp2</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-78"><code data-line-number=" 78"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-79"><code data-line-number=" 79"></code></a></td>
+<td class="code"><code>            <span class="o">*</span><span class="n">temp</span><span class="o">++</span> <span class="o">=</span> <span class="sc">'%'</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-80"><code data-line-number=" 80"></code></a></td>
+<td class="code"><code>            <span class="o">*</span><span class="n">temp</span><span class="o">++</span> <span class="o">=</span> <span class="n">base16</span><span class="p">[(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)(</span><span class="o">*</span><span class="n">temp2</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-81"><code data-line-number=" 81"></code></a></td>
+<td class="code"><code>            <span class="o">*</span><span class="n">temp</span><span class="o">++</span> <span class="o">=</span> <span class="n">base16</span><span class="p">[(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)(</span><span class="o">*</span><span class="n">temp2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xF</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-82"><code data-line-number=" 82"></code></a></td>
+<td class="code"><code>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-83"><code data-line-number=" 83"></code></a></td>
+<td class="code"><code>            <span class="o">*</span><span class="n">temp</span><span class="o">++</span> <span class="o">=</span> <span class="o">*</span><span class="n">temp2</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-84"><code data-line-number=" 84"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-85"><code data-line-number=" 85"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-86"><code data-line-number=" 86"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-87"><code data-line-number=" 87"></code></a></td>
+<td class="code"><code>    <span class="o">*</span><span class="n">temp</span> <span class="o">=</span> <span class="sc">'\0'</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-88"><code data-line-number=" 88"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-89"><code data-line-number=" 89"></code></a></td>
+<td class="code"><code>    <span class="n">free</span><span class="p">(</span><span class="n">utf8encoded</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-90"><code data-line-number=" 90"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-91"><code data-line-number=" 91"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">param_encoded</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-92"><code data-line-number=" 92"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-93"><code data-line-number=" 93"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-94"><code data-line-number=" 94"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="n">WINAPI</span> <span class="nf">wWinMain</span><span class="p">(</span><span class="n">HINSTANCE</span> <span class="n">hInstance</span><span class="p">,</span> <span class="n">HINSTANCE</span> <span class="n">hPrevInstance</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-95"><code data-line-number=" 95"></code></a></td>
+<td class="code"><code>    <span class="n">PWSTR</span> <span class="n">pCmdLine</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nCmdShow</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-96"><code data-line-number=" 96"></code></a></td>
+<td class="code"><code><span class="p">{</span>   
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-97"><code data-line-number=" 97"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">buffersize</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-98"><code data-line-number=" 98"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">encoded</span> <span class="o">=</span> <span class="n">rfc2231_utf8_encode</span><span class="p">(</span><span class="sa">L</span><span class="s">"Yaşar Arabacı.png"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">buffersize</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-99"><code data-line-number=" 99"></code></a></td>
+<td class="code"><code>    <span class="kt">FILE</span> <span class="o">*</span><span class="n">f</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"encodelen.txt"</span><span class="p">,</span> <span class="s">"wb"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-100"><code data-line-number="100"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-101"><code data-line-number="101"></code></a></td>
+<td class="code"><code>    <span class="n">fwrite</span><span class="p">(</span><span class="n">encoded</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">buffersize</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">f</span><span class="p">);</span> <span class="c1">// -1 NULL için</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-102"><code data-line-number="102"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-103"><code data-line-number="103"></code></a></td>
+<td class="code"><code>    <span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-104"><code data-line-number="104"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-105"><code data-line-number="105"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-106"><code data-line-number="106"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rfc2231.html#-107"><code data-line-number="107"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 </div>
     </div>
     <aside class="postpromonav"><nav><div class="pager">

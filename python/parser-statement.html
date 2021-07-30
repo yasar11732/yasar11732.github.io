@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Daha önceki yazılarda yazmaya başladığımız Parser'ı bitiriyoruz.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/parser-statement.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/parser-statement.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="parser-yardimci-fonksiyonlar.html" title="Parser - Yardımcı Fonksiyonlar" type="text/html">
 <link rel="next" href="python-package-statistics.html" title="Python Package Statistics" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Parser - Statement">
-<meta property="og:url" content="http://ysar.net/python/parser-statement.html">
-<meta property="og:description" content="Daha önceki yazılarda yazmaya başladığımız Parser'ı bitiriyoruz.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2013-10-16T22:16:00+03:00">
 </head>
 <body>
 
@@ -51,64 +45,224 @@ zamanda bir statement olabilir. Ancak, her statement bir expression olamaz. Mese
 tanımlar, ama <code>if</code> statement'ı bir expression diyemeyiz.</p>
 <p>Statement'ları parse edebilmek için, statement başlatan sembollerimize özel bir <code>std</code> metodu tanımlayacağız. Örneğin, if statement
 yapmak için gerekli olan sembolü, sembol tablosuna ekleyelim: <!-- TEASER_END --></p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">statement</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">std</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_symbol</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">beginStatement</span> <span class="o">=</span> <span class="bp">True</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_symbol</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">std</span> <span class="o">=</span> <span class="n">std</span>
-
-
-<span class="k">def</span> <span class="nf">ifStatement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">Expression</span><span class="p">()</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">_advance</span><span class="p">([</span><span class="s2">":"</span><span class="p">])</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">_advance</span><span class="p">([</span><span class="s2">"NEWLINE"</span><span class="p">])</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">second</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">Block</span><span class="p">()</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">"else"</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">_advance</span><span class="p">([</span><span class="s2">"else"</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">_advance</span><span class="p">([</span><span class="s2">":"</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">_advance</span><span class="p">([</span><span class="s2">"NEWLINE"</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">third</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">Block</span><span class="p">()</span>
-    <span class="k">return</span> <span class="bp">self</span>
-
-<span class="n">statement</span><span class="p">(</span><span class="s2">"if"</span><span class="p">,</span> <span class="n">ifStatement</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">statement</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">std</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="bp">self</span><span class="o">.</span><span class="n">_symbol</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">beginStatement</span> <span class="o">=</span> <span class="kc">True</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="bp">self</span><span class="o">.</span><span class="n">_symbol</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">std</span> <span class="o">=</span> <span class="n">std</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">ifStatement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">Expression</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">_advance</span><span class="p">([</span><span class="s2">":"</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">_advance</span><span class="p">([</span><span class="s2">"NEWLINE"</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="bp">self</span><span class="o">.</span><span class="n">second</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">Block</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">"else"</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">_advance</span><span class="p">([</span><span class="s2">"else"</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">_advance</span><span class="p">([</span><span class="s2">":"</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">_advance</span><span class="p">([</span><span class="s2">"NEWLINE"</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">third</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">Block</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="bp">self</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="n">statement</span><span class="p">(</span><span class="s2">"if"</span><span class="p">,</span> <span class="n">ifStatement</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Tahmin edeceğiniz gibi, bunlar <code>_prepareSymTable</code> metodunun içine gidiyor.</p>
 <p><code>ifStatement</code>, önce, bir expression alıp bunu ilk ögesi olarak ayarlıyor. Daha sonra, bir ":" ve bir "NEWLINE" sembolü ilerledikten
 sonra, ikinci elemanını bulmak için Parser metodunun <code>Block</code> metodunu çağırıyor.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">Block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_advance</span><span class="p">([</span><span class="s2">"INDENT"</span><span class="p">])</span>
-    <span class="n">stmts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Statements</span><span class="p">()</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_advance</span><span class="p">([</span><span class="s2">"DEDENT"</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">stmts</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">Block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="bp">self</span><span class="o">.</span><span class="n">_advance</span><span class="p">([</span><span class="s2">"INDENT"</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="n">stmts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Statements</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="bp">self</span><span class="o">.</span><span class="n">_advance</span><span class="p">([</span><span class="s2">"DEDENT"</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">stmts</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu, <code>Parser</code> sınıfının bir metodu olacak. Önce bir indent ilerliyor, sonra bir statement listesi alıyor, sonra bir dedent daha
 ilerleyip, statement listesini döndürüyor. Ben, Python gibi, indentation tabanlı block'lar yapmak istedim. Siz isterseniz block'larınızı
 "{" ile başlatıp, "}" ile bitirebilirsiniz.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">Statements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="n">statements</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"END"</span><span class="p">,</span><span class="s2">"DEDENT"</span><span class="p">]:</span>
-            <span class="k">break</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Statement</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">s</span><span class="p">:</span>
-            <span class="n">statements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">statements</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">Statements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="n">statements</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"END"</span><span class="p">,</span><span class="s2">"DEDENT"</span><span class="p">]:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>            <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Statement</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">s</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code>            <span class="n">statements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-9"><code data-line-number="9"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">statements</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Çok açıklayacak birşey yok, END veya DEDENT görene kadar, bir statement parse edip, bunları listeye koyup gönderiyoruz.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">Statement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span>
-    <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">beginStatement</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_advance</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> 
-    <span class="n">ex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_advance</span><span class="p">([</span><span class="s2">"NEWLINE"</span><span class="p">,</span><span class="s2">"END"</span><span class="p">,</span><span class="s2">"DEDENT"</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">ex</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">Statement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">beginStatement</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">_advance</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> 
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="n">ex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>    <span class="bp">self</span><span class="o">.</span><span class="n">_advance</span><span class="p">([</span><span class="s2">"NEWLINE"</span><span class="p">,</span><span class="s2">"END"</span><span class="p">,</span><span class="s2">"DEDENT"</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">ex</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Eğer, geçerli token bir statement başlangıcıysa, onun std metodunun sonucunu döndürüyoruz, eğer değilse, bir expression parse edip, sonra
 bir "NEWLINE", "END" veya "DEDENT" ilerleyip, sonucu döndürüyoruz. Eğer expression parse edildiğinde geçerli token bunlardan bir tanesi
@@ -123,20 +277,68 @@ else:
 </pre>
 
 <p>Test etmek için kullandığımız kodlar:</p>
-<pre class="code literal-block"><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
-    <span class="n">tokenq</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
-
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"test.txt"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya</span><span class="p">:</span>
-        <span class="n">myinput</span> <span class="o">=</span> <span class="n">dosya</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-
-    <span class="n">mylexer</span> <span class="o">=</span> <span class="n">Lexer</span><span class="p">(</span><span class="n">myinput</span><span class="p">,</span> <span class="n">tokenq</span><span class="p">)</span>
-    <span class="n">mylexer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-
-    <span class="n">myparser</span> <span class="o">=</span> <span class="n">Parser</span><span class="p">(</span><span class="n">tokenq</span><span class="p">)</span>
-
-    <span class="k">print</span> <span class="s2">"parse result:"</span><span class="p">,</span><span class="n">myparser</span><span class="o">.</span><span class="n">Statements</span><span class="p">()</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="n">tokenq</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"test.txt"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>        <span class="n">myinput</span> <span class="o">=</span> <span class="n">dosya</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="n">mylexer</span> <span class="o">=</span> <span class="n">Lexer</span><span class="p">(</span><span class="n">myinput</span><span class="p">,</span> <span class="n">tokenq</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">mylexer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="n">myparser</span> <span class="o">=</span> <span class="n">Parser</span><span class="p">(</span><span class="n">tokenq</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-statement.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span> <span class="s2">"parse result:"</span><span class="p">,</span><span class="n">myparser</span><span class="o">.</span><span class="n">Statements</span><span class="p">()</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Ve sonuç:</p>
 <pre>

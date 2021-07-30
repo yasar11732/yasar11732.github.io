@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
@@ -10,19 +10,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/windows/winhttp-ile-dosya-indirme.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/windows/winhttp-ile-dosya-indirme.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="clipboard.html" title="Windows Api İle Clipboard'dan Metin Okuma" type="text/html">
 <link rel="next" href="../yazilim-dunyasi/urlencode-utf8-data.html" title="C Programlama Dilinde UTF8 Veriyi URL Kodlama" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="WinHTTP İle İnternetten Dosya İndirme">
-<meta property="og:url" content="http://ysar.net/windows/winhttp-ile-dosya-indirme.html">
-<meta property="og:description" content="Merhabalar,
-Son günlerde olduğu gibi, windows platformuna özgü küçük programlar paylaşmaya devam ediyorum. Aşağıdaki örnekte, winhttp ile kullanarak
-internetten dosya indirme örneği bulabilirsiniz. Bi">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2019-05-26T22:45:00+03:00">
 </head>
 <body>
 
@@ -63,160 +55,773 @@ bağlı kalmadan, programı çeşitli windows sürümlerine taşıyabileceğimi 
 <li>WinHttpCrackUrl nasıl çalışır</li>
 </ul>
 <p> </p>
-<pre class="code literal-block"><span></span><span class="cp">#define WINDOWS_LEAN_AND_MEAN</span>
-<span class="cp">#include</span> <span class="cpf">&lt;windows.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt; // fopen, fclose</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;winhttp.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;wchar.h&gt; // _wcsicmp</span><span class="cp"></span>
-
-<span class="cp">#pragma comment(lib,"winhttp")</span>
-
-
-<span class="kt">void</span> <span class="o">*</span><span class="nf">winhttp_download</span><span class="p">(</span><span class="n">HINTERNET</span> <span class="n">hSession</span><span class="p">,</span> <span class="n">LPCWSTR</span> <span class="n">url</span><span class="p">,</span> <span class="n">LPDWORD</span> <span class="n">cbDownloaded</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">hSession</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span> <span class="n">url</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
-
-    <span class="cm">/*</span>
-<span class="cm">    Öncelikle, url'i parçalara ayırarak, scheme</span>
-<span class="cm">    ve hostname ve path değerlerini elde etmemiz gerekiyor</span>
-<span class="cm">    bunun için WinHttpCrackUrl fonksiyonunu kullanacağız</span>
-<span class="cm">    */</span>
-    <span class="n">URL_COMPONENTS</span> <span class="n">urlComp</span><span class="p">;</span>
-    <span class="n">WCHAR</span> <span class="n">scheme</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-    <span class="n">WCHAR</span> <span class="n">host</span><span class="p">[</span><span class="mi">256</span><span class="p">];</span>
-
-    <span class="c1">// kullanmadan önce, urlComp'u sıfırlamamız gerekiyor</span>
-    <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">urlComp</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">urlComp</span><span class="p">));</span>
-
-    <span class="c1">// bunu yapmak mecburi</span>
-    <span class="n">urlComp</span><span class="p">.</span><span class="n">dwStructSize</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">urlComp</span><span class="p">);</span>
-
-    <span class="c1">// protokol bilgisini tutacak buffer'ın</span>
-    <span class="c1">// adresini ve büyüklüğünü belirtiyoruz.</span>
-    <span class="n">urlComp</span><span class="p">.</span><span class="n">lpszScheme</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">scheme</span><span class="p">;</span>
-    <span class="n">urlComp</span><span class="p">.</span><span class="n">dwSchemeLength</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
-
-    <span class="c1">// hostname bilgisini tutacak buffer'ın</span>
-    <span class="c1">// adresini ve büyüklüğünü belirtiyoruz.</span>
-    <span class="n">urlComp</span><span class="p">.</span><span class="n">lpszHostName</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">host</span><span class="p">;</span>
-    <span class="n">urlComp</span><span class="p">.</span><span class="n">dwHostNameLength</span> <span class="o">=</span> <span class="mi">256</span><span class="p">;</span>
-
-    <span class="c1">// path bilgisi için ekstra bir buffer</span>
-    <span class="c1">// kullanmayacağız. WinHttp crack url</span>
-    <span class="c1">// bize bir pointer sağlaması için,</span>
-    <span class="c1">// dwUrlPathLength elemanına 0'dan farklı</span>
-    <span class="c1">// bir değer vermek gerekiyor</span>
-    <span class="n">urlComp</span><span class="p">.</span><span class="n">dwUrlPathLength</span> <span class="o">=</span> <span class="p">(</span><span class="n">DWORD</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">WinHttpCrackUrl</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">wcslen</span><span class="p">(</span><span class="n">url</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">urlComp</span><span class="p">))</span>
-        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
-
-    <span class="n">INTERNET_PORT</span> <span class="n">port</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-    <span class="n">DWORD</span> <span class="n">flags</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="n">_wcsicmp</span><span class="p">(</span><span class="sa">L</span><span class="s">"HTTPS"</span><span class="p">,</span><span class="n">scheme</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">port</span> <span class="o">=</span> <span class="n">INTERNET_DEFAULT_HTTPS_PORT</span><span class="p">;</span>
-        <span class="n">flags</span> <span class="o">=</span> <span class="n">WINHTTP_FLAG_SECURE</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="n">_wcsicmp</span><span class="p">(</span><span class="sa">L</span><span class="s">"HTTP"</span><span class="p">,</span> <span class="n">scheme</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">port</span> <span class="o">=</span> <span class="n">INTERNET_DEFAULT_HTTP_PORT</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="n">port</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
-
-    <span class="n">HANDLE</span> <span class="n">hConnect</span> <span class="o">=</span> <span class="n">WinHttpConnect</span><span class="p">(</span><span class="n">hSession</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">hConnect</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">WCHAR</span> <span class="o">*</span><span class="n">accept_types</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="s">"*/*"</span><span class="p">,</span> <span class="nb">NULL</span> <span class="p">};</span>
-
-        <span class="n">HANDLE</span> <span class="n">hRequest</span> <span class="o">=</span> <span class="n">WinHttpOpenRequest</span><span class="p">(</span>
-            <span class="n">hConnect</span><span class="p">,</span> <span class="sa">L</span><span class="s">"GET"</span><span class="p">,</span> <span class="n">urlComp</span><span class="p">.</span><span class="n">lpszUrlPath</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span>
-            <span class="n">WINHTTP_NO_REFERER</span><span class="p">,</span> <span class="n">accept_types</span><span class="p">,</span> <span class="n">flags</span><span class="p">);</span>
-
-        <span class="k">if</span> <span class="p">(</span><span class="n">hRequest</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">BOOL</span> <span class="n">bResult</span> <span class="o">=</span> <span class="n">WinHttpSendRequest</span><span class="p">(</span><span class="n">hRequest</span><span class="p">,</span>
-                <span class="n">WINHTTP_NO_ADDITIONAL_HEADERS</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
-                <span class="n">WINHTTP_NO_REQUEST_DATA</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-
-            <span class="k">if</span> <span class="p">(</span><span class="n">bResult</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">bResult</span> <span class="o">=</span> <span class="n">WinHttpReceiveResponse</span><span class="p">(</span><span class="n">hRequest</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">bResult</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="n">DWORD</span> <span class="n">cap</span> <span class="o">=</span> <span class="mi">4096</span><span class="p">;</span>
-                    <span class="kt">char</span> <span class="o">*</span><span class="n">downloaded_data</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">cap</span><span class="p">);</span>
-                    <span class="n">DWORD</span> <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-                    <span class="n">DWORD</span> <span class="n">dbDownloaded</span><span class="p">;</span>
-                    <span class="k">while</span> <span class="p">(</span><span class="n">WinHttpReadData</span><span class="p">(</span><span class="n">hRequest</span><span class="p">,</span>
-                        <span class="n">downloaded_data</span> <span class="o">+</span> <span class="n">pos</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">dbDownloaded</span><span class="p">))</span>
-                    <span class="p">{</span>
-                        <span class="k">if</span> <span class="p">(</span><span class="n">dbDownloaded</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-                            <span class="k">break</span><span class="p">;</span>
-
-                        <span class="n">pos</span> <span class="o">+=</span> <span class="n">dbDownloaded</span><span class="p">;</span>
-
-                        <span class="k">if</span> <span class="p">(</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">4097</span> <span class="o">&gt;</span> <span class="n">cap</span><span class="p">)</span>
-                        <span class="p">{</span>
-                            <span class="n">cap</span> <span class="o">=</span> <span class="n">cap</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
-                            <span class="n">downloaded_data</span> <span class="o">=</span> <span class="n">realloc</span><span class="p">(</span><span class="n">downloaded_data</span><span class="p">,</span> <span class="n">cap</span><span class="p">);</span>
-                        <span class="p">}</span>
-
-                    <span class="p">}</span>
-                    <span class="o">*</span><span class="n">cbDownloaded</span> <span class="o">=</span> <span class="n">pos</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">downloaded_data</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-
-            <span class="n">WinHttpCloseHandle</span><span class="p">(</span><span class="n">hRequest</span><span class="p">);</span>
-        <span class="p">}</span>
-
-        <span class="n">WinHttpCloseHandle</span><span class="p">(</span><span class="n">hConnect</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
-
-<span class="p">}</span>
-<span class="kt">int</span> <span class="n">WINAPI</span> <span class="nf">wWinMain</span><span class="p">(</span><span class="n">HINSTANCE</span> <span class="n">hInstance</span><span class="p">,</span> <span class="n">HINSTANCE</span> <span class="n">hPrevInstance</span><span class="p">,</span>
-    <span class="n">PWSTR</span> <span class="n">pCmdLine</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nCmdShow</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">HINTERNET</span> <span class="n">hSession</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">,</span>
-        <span class="n">hConnect</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">,</span>
-        <span class="n">hRequest</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-
-    <span class="n">hSession</span> <span class="o">=</span> <span class="n">WinHttpOpen</span><span class="p">(</span><span class="sa">L</span><span class="s">"Agent Smith"</span><span class="p">,</span>
-        <span class="n">WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY</span><span class="p">,</span>
-        <span class="n">WINHTTP_NO_PROXY_NAME</span><span class="p">,</span>
-        <span class="n">WINHTTP_NO_PROXY_BYPASS</span><span class="p">,</span>
-        <span class="mi">0</span><span class="p">);</span>
-
-    <span class="n">WCHAR</span> <span class="o">*</span><span class="n">url</span> <span class="o">=</span>
-        <span class="sa">L</span><span class="s">"https://ysar.net/windows/windows-api-ile-ekran-goruntusu.html"</span><span class="p">;</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="n">hSession</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="kt">FILE</span> <span class="o">*</span><span class="n">fpOutput</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"test.html"</span><span class="p">,</span> <span class="s">"w"</span><span class="p">);</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">fpOutput</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">DWORD</span> <span class="n">downloaded</span><span class="p">;</span>
-            <span class="kt">void</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="n">winhttp_download</span><span class="p">(</span><span class="n">hSession</span><span class="p">,</span>
-                <span class="n">url</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">downloaded</span><span class="p">);</span>
-            <span class="n">fwrite</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">downloaded</span><span class="p">,</span> <span class="n">fpOutput</span><span class="p">);</span>
-            <span class="n">free</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
-            <span class="n">fclose</span><span class="p">(</span><span class="n">fpOutput</span><span class="p">);</span>
-        <span class="p">}</span>
-
-        <span class="n">WinHttpCloseHandle</span><span class="p">(</span><span class="n">hSession</span><span class="p">);</span>
-    <span class="p">}</span>
-
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-
-<span class="p">}</span>
-</pre>
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-1"><code data-line-number="  1"></code></a></td>
+<td class="code"><code><span class="cp">#define WINDOWS_LEAN_AND_MEAN</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-2"><code data-line-number="  2"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;windows.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-3"><code data-line-number="  3"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt; // fopen, fclose</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-4"><code data-line-number="  4"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;winhttp.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-5"><code data-line-number="  5"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;wchar.h&gt; // _wcsicmp</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-6"><code data-line-number="  6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-7"><code data-line-number="  7"></code></a></td>
+<td class="code"><code><span class="cp">#pragma comment(lib,"winhttp")</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-8"><code data-line-number="  8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-9"><code data-line-number="  9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-10"><code data-line-number=" 10"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="o">*</span><span class="nf">winhttp_download</span><span class="p">(</span><span class="n">HINTERNET</span> <span class="n">hSession</span><span class="p">,</span> <span class="n">LPCWSTR</span> <span class="n">url</span><span class="p">,</span> <span class="n">LPDWORD</span> <span class="n">cbDownloaded</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-11"><code data-line-number=" 11"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-12"><code data-line-number=" 12"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">hSession</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span> <span class="n">url</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-13"><code data-line-number=" 13"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-14"><code data-line-number=" 14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-15"><code data-line-number=" 15"></code></a></td>
+<td class="code"><code>    <span class="cm">/*</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-16"><code data-line-number=" 16"></code></a></td>
+<td class="code"><code><span class="cm">    Öncelikle, url'i parçalara ayırarak, scheme</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-17"><code data-line-number=" 17"></code></a></td>
+<td class="code"><code><span class="cm">    ve hostname ve path değerlerini elde etmemiz gerekiyor</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-18"><code data-line-number=" 18"></code></a></td>
+<td class="code"><code><span class="cm">    bunun için WinHttpCrackUrl fonksiyonunu kullanacağız</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-19"><code data-line-number=" 19"></code></a></td>
+<td class="code"><code><span class="cm">    */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-20"><code data-line-number=" 20"></code></a></td>
+<td class="code"><code>    <span class="n">URL_COMPONENTS</span> <span class="n">urlComp</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-21"><code data-line-number=" 21"></code></a></td>
+<td class="code"><code>    <span class="n">WCHAR</span> <span class="n">scheme</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-22"><code data-line-number=" 22"></code></a></td>
+<td class="code"><code>    <span class="n">WCHAR</span> <span class="n">host</span><span class="p">[</span><span class="mi">256</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-23"><code data-line-number=" 23"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-24"><code data-line-number=" 24"></code></a></td>
+<td class="code"><code>    <span class="c1">// kullanmadan önce, urlComp'u sıfırlamamız gerekiyor</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-25"><code data-line-number=" 25"></code></a></td>
+<td class="code"><code>    <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">urlComp</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">urlComp</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-26"><code data-line-number=" 26"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-27"><code data-line-number=" 27"></code></a></td>
+<td class="code"><code>    <span class="c1">// bunu yapmak mecburi</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-28"><code data-line-number=" 28"></code></a></td>
+<td class="code"><code>    <span class="n">urlComp</span><span class="p">.</span><span class="n">dwStructSize</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">urlComp</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-29"><code data-line-number=" 29"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-30"><code data-line-number=" 30"></code></a></td>
+<td class="code"><code>    <span class="c1">// protokol bilgisini tutacak buffer'ın</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-31"><code data-line-number=" 31"></code></a></td>
+<td class="code"><code>    <span class="c1">// adresini ve büyüklüğünü belirtiyoruz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-32"><code data-line-number=" 32"></code></a></td>
+<td class="code"><code>    <span class="n">urlComp</span><span class="p">.</span><span class="n">lpszScheme</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">scheme</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-33"><code data-line-number=" 33"></code></a></td>
+<td class="code"><code>    <span class="n">urlComp</span><span class="p">.</span><span class="n">dwSchemeLength</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-34"><code data-line-number=" 34"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-35"><code data-line-number=" 35"></code></a></td>
+<td class="code"><code>    <span class="c1">// hostname bilgisini tutacak buffer'ın</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-36"><code data-line-number=" 36"></code></a></td>
+<td class="code"><code>    <span class="c1">// adresini ve büyüklüğünü belirtiyoruz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-37"><code data-line-number=" 37"></code></a></td>
+<td class="code"><code>    <span class="n">urlComp</span><span class="p">.</span><span class="n">lpszHostName</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">host</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-38"><code data-line-number=" 38"></code></a></td>
+<td class="code"><code>    <span class="n">urlComp</span><span class="p">.</span><span class="n">dwHostNameLength</span> <span class="o">=</span> <span class="mi">256</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-39"><code data-line-number=" 39"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-40"><code data-line-number=" 40"></code></a></td>
+<td class="code"><code>    <span class="c1">// path bilgisi için ekstra bir buffer</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-41"><code data-line-number=" 41"></code></a></td>
+<td class="code"><code>    <span class="c1">// kullanmayacağız. WinHttp crack url</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-42"><code data-line-number=" 42"></code></a></td>
+<td class="code"><code>    <span class="c1">// bize bir pointer sağlaması için,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-43"><code data-line-number=" 43"></code></a></td>
+<td class="code"><code>    <span class="c1">// dwUrlPathLength elemanına 0'dan farklı</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-44"><code data-line-number=" 44"></code></a></td>
+<td class="code"><code>    <span class="c1">// bir değer vermek gerekiyor</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-45"><code data-line-number=" 45"></code></a></td>
+<td class="code"><code>    <span class="n">urlComp</span><span class="p">.</span><span class="n">dwUrlPathLength</span> <span class="o">=</span> <span class="p">(</span><span class="n">DWORD</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-46"><code data-line-number=" 46"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-47"><code data-line-number=" 47"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">WinHttpCrackUrl</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">wcslen</span><span class="p">(</span><span class="n">url</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">urlComp</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-48"><code data-line-number=" 48"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-49"><code data-line-number=" 49"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-50"><code data-line-number=" 50"></code></a></td>
+<td class="code"><code>    <span class="n">INTERNET_PORT</span> <span class="n">port</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-51"><code data-line-number=" 51"></code></a></td>
+<td class="code"><code>    <span class="n">DWORD</span> <span class="n">flags</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-52"><code data-line-number=" 52"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-53"><code data-line-number=" 53"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">_wcsicmp</span><span class="p">(</span><span class="sa">L</span><span class="s">"HTTPS"</span><span class="p">,</span><span class="n">scheme</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-54"><code data-line-number=" 54"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-55"><code data-line-number=" 55"></code></a></td>
+<td class="code"><code>        <span class="n">port</span> <span class="o">=</span> <span class="n">INTERNET_DEFAULT_HTTPS_PORT</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-56"><code data-line-number=" 56"></code></a></td>
+<td class="code"><code>        <span class="n">flags</span> <span class="o">=</span> <span class="n">WINHTTP_FLAG_SECURE</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-57"><code data-line-number=" 57"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-58"><code data-line-number=" 58"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-59"><code data-line-number=" 59"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">_wcsicmp</span><span class="p">(</span><span class="sa">L</span><span class="s">"HTTP"</span><span class="p">,</span> <span class="n">scheme</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-60"><code data-line-number=" 60"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-61"><code data-line-number=" 61"></code></a></td>
+<td class="code"><code>        <span class="n">port</span> <span class="o">=</span> <span class="n">INTERNET_DEFAULT_HTTP_PORT</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-62"><code data-line-number=" 62"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-63"><code data-line-number=" 63"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-64"><code data-line-number=" 64"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">port</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-65"><code data-line-number=" 65"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-66"><code data-line-number=" 66"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-67"><code data-line-number=" 67"></code></a></td>
+<td class="code"><code>    <span class="n">HANDLE</span> <span class="n">hConnect</span> <span class="o">=</span> <span class="n">WinHttpConnect</span><span class="p">(</span><span class="n">hSession</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-68"><code data-line-number=" 68"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">hConnect</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-69"><code data-line-number=" 69"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-70"><code data-line-number=" 70"></code></a></td>
+<td class="code"><code>        <span class="n">WCHAR</span> <span class="o">*</span><span class="n">accept_types</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="s">"*/*"</span><span class="p">,</span> <span class="nb">NULL</span> <span class="p">};</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-71"><code data-line-number=" 71"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-72"><code data-line-number=" 72"></code></a></td>
+<td class="code"><code>        <span class="n">HANDLE</span> <span class="n">hRequest</span> <span class="o">=</span> <span class="n">WinHttpOpenRequest</span><span class="p">(</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-73"><code data-line-number=" 73"></code></a></td>
+<td class="code"><code>            <span class="n">hConnect</span><span class="p">,</span> <span class="sa">L</span><span class="s">"GET"</span><span class="p">,</span> <span class="n">urlComp</span><span class="p">.</span><span class="n">lpszUrlPath</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-74"><code data-line-number=" 74"></code></a></td>
+<td class="code"><code>            <span class="n">WINHTTP_NO_REFERER</span><span class="p">,</span> <span class="n">accept_types</span><span class="p">,</span> <span class="n">flags</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-75"><code data-line-number=" 75"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-76"><code data-line-number=" 76"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="n">hRequest</span><span class="p">)</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-77"><code data-line-number=" 77"></code></a></td>
+<td class="code"><code>            <span class="n">BOOL</span> <span class="n">bResult</span> <span class="o">=</span> <span class="n">WinHttpSendRequest</span><span class="p">(</span><span class="n">hRequest</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-78"><code data-line-number=" 78"></code></a></td>
+<td class="code"><code>                <span class="n">WINHTTP_NO_ADDITIONAL_HEADERS</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-79"><code data-line-number=" 79"></code></a></td>
+<td class="code"><code>                <span class="n">WINHTTP_NO_REQUEST_DATA</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-80"><code data-line-number=" 80"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-81"><code data-line-number=" 81"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="p">(</span><span class="n">bResult</span><span class="p">)</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-82"><code data-line-number=" 82"></code></a></td>
+<td class="code"><code>                <span class="n">bResult</span> <span class="o">=</span> <span class="n">WinHttpReceiveResponse</span><span class="p">(</span><span class="n">hRequest</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-83"><code data-line-number=" 83"></code></a></td>
+<td class="code"><code>                <span class="k">if</span> <span class="p">(</span><span class="n">bResult</span><span class="p">)</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-84"><code data-line-number=" 84"></code></a></td>
+<td class="code"><code>                    <span class="n">DWORD</span> <span class="n">cap</span> <span class="o">=</span> <span class="mi">4096</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-85"><code data-line-number=" 85"></code></a></td>
+<td class="code"><code>                    <span class="kt">char</span> <span class="o">*</span><span class="n">downloaded_data</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">cap</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-86"><code data-line-number=" 86"></code></a></td>
+<td class="code"><code>                    <span class="n">DWORD</span> <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-87"><code data-line-number=" 87"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-88"><code data-line-number=" 88"></code></a></td>
+<td class="code"><code>                    <span class="n">DWORD</span> <span class="n">dbDownloaded</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-89"><code data-line-number=" 89"></code></a></td>
+<td class="code"><code>                    <span class="k">while</span> <span class="p">(</span><span class="n">WinHttpReadData</span><span class="p">(</span><span class="n">hRequest</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-90"><code data-line-number=" 90"></code></a></td>
+<td class="code"><code>                        <span class="n">downloaded_data</span> <span class="o">+</span> <span class="n">pos</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">dbDownloaded</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-91"><code data-line-number=" 91"></code></a></td>
+<td class="code"><code>                    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-92"><code data-line-number=" 92"></code></a></td>
+<td class="code"><code>                        <span class="k">if</span> <span class="p">(</span><span class="n">dbDownloaded</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-93"><code data-line-number=" 93"></code></a></td>
+<td class="code"><code>                            <span class="k">break</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-94"><code data-line-number=" 94"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-95"><code data-line-number=" 95"></code></a></td>
+<td class="code"><code>                        <span class="n">pos</span> <span class="o">+=</span> <span class="n">dbDownloaded</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-96"><code data-line-number=" 96"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-97"><code data-line-number=" 97"></code></a></td>
+<td class="code"><code>                        <span class="k">if</span> <span class="p">(</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">4097</span> <span class="o">&gt;</span> <span class="n">cap</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-98"><code data-line-number=" 98"></code></a></td>
+<td class="code"><code>                        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-99"><code data-line-number=" 99"></code></a></td>
+<td class="code"><code>                            <span class="n">cap</span> <span class="o">=</span> <span class="n">cap</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-100"><code data-line-number="100"></code></a></td>
+<td class="code"><code>                            <span class="n">downloaded_data</span> <span class="o">=</span> <span class="n">realloc</span><span class="p">(</span><span class="n">downloaded_data</span><span class="p">,</span> <span class="n">cap</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-101"><code data-line-number="101"></code></a></td>
+<td class="code"><code>                        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-102"><code data-line-number="102"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-103"><code data-line-number="103"></code></a></td>
+<td class="code"><code>                    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-104"><code data-line-number="104"></code></a></td>
+<td class="code"><code>                    <span class="o">*</span><span class="n">cbDownloaded</span> <span class="o">=</span> <span class="n">pos</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-105"><code data-line-number="105"></code></a></td>
+<td class="code"><code>                    <span class="k">return</span> <span class="n">downloaded_data</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-106"><code data-line-number="106"></code></a></td>
+<td class="code"><code>                <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-107"><code data-line-number="107"></code></a></td>
+<td class="code"><code>            <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-108"><code data-line-number="108"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-109"><code data-line-number="109"></code></a></td>
+<td class="code"><code>            <span class="n">WinHttpCloseHandle</span><span class="p">(</span><span class="n">hRequest</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-110"><code data-line-number="110"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-111"><code data-line-number="111"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-112"><code data-line-number="112"></code></a></td>
+<td class="code"><code>        <span class="n">WinHttpCloseHandle</span><span class="p">(</span><span class="n">hConnect</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-113"><code data-line-number="113"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-114"><code data-line-number="114"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-115"><code data-line-number="115"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-116"><code data-line-number="116"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-117"><code data-line-number="117"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-118"><code data-line-number="118"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="n">WINAPI</span> <span class="nf">wWinMain</span><span class="p">(</span><span class="n">HINSTANCE</span> <span class="n">hInstance</span><span class="p">,</span> <span class="n">HINSTANCE</span> <span class="n">hPrevInstance</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-119"><code data-line-number="119"></code></a></td>
+<td class="code"><code>    <span class="n">PWSTR</span> <span class="n">pCmdLine</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nCmdShow</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-120"><code data-line-number="120"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-121"><code data-line-number="121"></code></a></td>
+<td class="code"><code>    <span class="n">HINTERNET</span> <span class="n">hSession</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-122"><code data-line-number="122"></code></a></td>
+<td class="code"><code>        <span class="n">hConnect</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-123"><code data-line-number="123"></code></a></td>
+<td class="code"><code>        <span class="n">hRequest</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-124"><code data-line-number="124"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-125"><code data-line-number="125"></code></a></td>
+<td class="code"><code>    <span class="n">hSession</span> <span class="o">=</span> <span class="n">WinHttpOpen</span><span class="p">(</span><span class="sa">L</span><span class="s">"Agent Smith"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-126"><code data-line-number="126"></code></a></td>
+<td class="code"><code>        <span class="n">WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-127"><code data-line-number="127"></code></a></td>
+<td class="code"><code>        <span class="n">WINHTTP_NO_PROXY_NAME</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-128"><code data-line-number="128"></code></a></td>
+<td class="code"><code>        <span class="n">WINHTTP_NO_PROXY_BYPASS</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-129"><code data-line-number="129"></code></a></td>
+<td class="code"><code>        <span class="mi">0</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-130"><code data-line-number="130"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-131"><code data-line-number="131"></code></a></td>
+<td class="code"><code>    <span class="n">WCHAR</span> <span class="o">*</span><span class="n">url</span> <span class="o">=</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-132"><code data-line-number="132"></code></a></td>
+<td class="code"><code>        <span class="sa">L</span><span class="s">"https://ysar.net/windows/windows-api-ile-ekran-goruntusu.html"</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-133"><code data-line-number="133"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-134"><code data-line-number="134"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">hSession</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-135"><code data-line-number="135"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-136"><code data-line-number="136"></code></a></td>
+<td class="code"><code>        <span class="kt">FILE</span> <span class="o">*</span><span class="n">fpOutput</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"test.html"</span><span class="p">,</span> <span class="s">"w"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-137"><code data-line-number="137"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="n">fpOutput</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-138"><code data-line-number="138"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-139"><code data-line-number="139"></code></a></td>
+<td class="code"><code>            <span class="n">DWORD</span> <span class="n">downloaded</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-140"><code data-line-number="140"></code></a></td>
+<td class="code"><code>            <span class="kt">void</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="n">winhttp_download</span><span class="p">(</span><span class="n">hSession</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-141"><code data-line-number="141"></code></a></td>
+<td class="code"><code>                <span class="n">url</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">downloaded</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-142"><code data-line-number="142"></code></a></td>
+<td class="code"><code>            <span class="n">fwrite</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">downloaded</span><span class="p">,</span> <span class="n">fpOutput</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-143"><code data-line-number="143"></code></a></td>
+<td class="code"><code>            <span class="n">free</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-144"><code data-line-number="144"></code></a></td>
+<td class="code"><code>            <span class="n">fclose</span><span class="p">(</span><span class="n">fpOutput</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-145"><code data-line-number="145"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-146"><code data-line-number="146"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-147"><code data-line-number="147"></code></a></td>
+<td class="code"><code>        <span class="n">WinHttpCloseHandle</span><span class="p">(</span><span class="n">hSession</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-148"><code data-line-number="148"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-149"><code data-line-number="149"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-150"><code data-line-number="150"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-151"><code data-line-number="151"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-152"><code data-line-number="152"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="winhttp-ile-dosya-indirme.html#-153"><code data-line-number="153"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 </div>
     </div>
     <aside class="postpromonav"><nav><div class="pager">

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
@@ -10,19 +10,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/algoritma/utf8-kodlama.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/algoritma/utf8-kodlama.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="../python/senkronizasyon-araci-olarak-dosyalar.html" title="Senkronizasyon Aracı Olarak Dosyalar" type="text/html">
 <link rel="next" href="huffman-kodlamasi.html" title="Huffman Kodlaması" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="UTF-8 Kodlama Algoritması">
-<meta property="og:url" content="http://ysar.net/algoritma/utf8-kodlama.html">
-<meta property="og:description" content="RFC2231 Kodlaması başlıklı yazıda, wchar_t türündeki
-bir string'i utf8 olarak kodlamak için işletim sisteminin sağladığı fonksiyonları kullanmıştım. Ancak,
-daha sonra, kodlama egzersizi olarak wchar_t">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2019-06-07T19:51:00+03:00">
 </head>
 <body>
 
@@ -58,32 +50,108 @@ kodluyoruz. Dolayısıyla, karakter kodu 127 ve altı için, UTF8 kodlama ile us
 ise 0 olarak ayarlanıp, kalan bitler kodlama amaçlı kullanılıyor. Devamında gelen octetlerin ise, hepsinin
 en üst biti 1, onu takip eden bit ise 0 olarak ayarlanıp, kalan bitler kodlama amaçlı kullanılıyor.
 RFC'deki örnek tabloyu buraya kopyalıyorum.</p>
-<pre class="code literal-block"><span></span>   Karakter Kodu Aralığı  |        UTF-8 octet dizilimi
-         (hexadecimal)    |              (binary)
-      --------------------+---------------------------------------------
-      0000 0000-0000 007F | 0xxxxxxx
-      0000 0080-0000 07FF | 110xxxxx 10xxxxxx
-      0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx
-      0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">   Karakter Kodu Aralığı  |        UTF-8 octet dizilimi</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">         (hexadecimal)    |              (binary)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="err">      --------------------+---------------------------------------------</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="err">      0000 0000-0000 007F | 0xxxxxxx</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="err">      0000 0080-0000 07FF | 110xxxxx 10xxxxxx</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="err">      0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="err">      0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Şimdi adım adım, UTF8 kodlama algoritmasının aşamalarına geçeceğiz. Aşamalara geçmeden
 önce, işimizi daha anlaşılır yapabilmek için, tanımlamalarımızı yapalım.</p>
-<pre class="code literal-block"><span></span><span class="cp">#define UTF8_OCTET1_MAX 0x7F</span>
-<span class="cp">#define UTF8_OCTET2_MAX 0x7FF</span>
-<span class="cp">#define UTF8_OCTET3_MAX 0xFFFF</span>
-<span class="cp">#define UTF8_OCTET4_MAX 0x10FFFF</span>
-
-<span class="cp">#define UTF8_SEQUENCE1_START 0x00</span>
-<span class="cp">#define UTF8_SEQUENCE2_START 0xC0</span>
-<span class="cp">#define UTF8_SEQUENCE3_START 0xE0</span>
-<span class="cp">#define UTF8_SEQUENCE4_START 0xF0</span>
-
-<span class="cp">#define UTF8_CONTINUATION_BYTE 0x80</span>
-<span class="cp">#define UTF8_CONTINUATION_BYTE_MASK 0x3F</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="cp">#define UTF8_OCTET1_MAX 0x7F</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="cp">#define UTF8_OCTET2_MAX 0x7FF</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="cp">#define UTF8_OCTET3_MAX 0xFFFF</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="cp">#define UTF8_OCTET4_MAX 0x10FFFF</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="cp">#define UTF8_SEQUENCE1_START 0x00</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="cp">#define UTF8_SEQUENCE2_START 0xC0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="cp">#define UTF8_SEQUENCE3_START 0xE0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="cp">#define UTF8_SEQUENCE4_START 0xF0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="cp">#define UTF8_CONTINUATION_BYTE 0x80</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="cp">#define UTF8_CONTINUATION_BYTE_MASK 0x3F</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>İlk 4 tanım, sırasıyla 1 octet, 2 octet, 3 octet ve 4 octet ile kodlanabilecek karakter
 kodlarının üst sınırını belirtiyor. Bu sayılarını doğrudan örnek tablodan kopyaladım.
@@ -97,46 +165,170 @@ tanımlanan değeri, bir sayının en alttaki 6 bitini maskelemek için kullanac
 <p>Şimdi adım adım, algoritmayı inceleyelim. Birinci adım olarak, karakterin kaç octet
 ile kodlanacağını hesaplayacağız. Bunun için mümkün olan en düşük octet sayının
 kullanacağız.  </p>
-<pre class="code literal-block"><span></span><span class="c1">// 1. Gerekli Octet Sayısını Hesapla</span>
-<span class="kt">size_t</span> <span class="n">cbOctet</span> <span class="o">=</span> <span class="mi">1</span>  
-               <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET1_MAX</span><span class="p">)</span>
-               <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET2_MAX</span><span class="p">)</span>
-               <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET3_MAX</span><span class="p">)</span>
-               <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET4_MAX</span><span class="p">);</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="c1">// 1. Gerekli Octet Sayısını Hesapla</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="kt">size_t</span> <span class="n">cbOctet</span> <span class="o">=</span> <span class="mi">1</span>  
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>               <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET1_MAX</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>               <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET2_MAX</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>               <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET3_MAX</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>               <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET4_MAX</span><span class="p">);</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yukarıdaki örnekte, eğer <code>UTF8_OCTET4_MAX</code>'dan büyük bir karakter kodu
 ile karşılaşırsak, <code>cbOctet</code> 5 olacak. En fazla 4 octet kullanabileceğimiz
 için, bu durumu hata durumu olarak değerlendireceğiz. İkinci adımda ise,
 kullanılacak octet'lerin, üst bitleri tabloda gösterildiği şekilde ayarlayacağız.</p>
-<pre class="code literal-block"><span></span><span class="c1">// 2a. Başlangıç octet'inin üst bitlerini ayala</span>
-<span class="k">switch</span> <span class="p">(</span><span class="n">cbOctet</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
-        <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE1_START</span><span class="p">;</span>
-        <span class="k">break</span><span class="p">;</span>
-    <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
-        <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE2_START</span><span class="p">;</span>
-        <span class="k">break</span><span class="p">;</span>
-    <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
-        <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE3_START</span><span class="p">;</span>
-        <span class="k">break</span><span class="p">;</span>
-    <span class="k">case</span> <span class="mi">4</span><span class="o">:</span>
-        <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE4_START</span><span class="p">;</span>
-        <span class="k">break</span><span class="p">;</span>
-    <span class="k">default</span><span class="o">:</span> <span class="c1">// utf8 ile kodlanamayacak bir karakter varsa, 0 döndür</span>
-        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="c1">// 2b. devam octetlerinin üst bitlerini ayarla</span>
-<span class="kt">size_t</span> <span class="n">i</span><span class="p">;</span>
-<span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">cbOctet</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_CONTINUATION_BYTE</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="c1">// 2a. Başlangıç octet'inin üst bitlerini ayala</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="k">switch</span> <span class="p">(</span><span class="n">cbOctet</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>        <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE1_START</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>        <span class="k">break</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE2_START</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="k">break</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE3_START</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="k">break</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="k">case</span> <span class="mi">4</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>        <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE4_START</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="k">break</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="k">default</span><span class="o">:</span> <span class="c1">// utf8 ile kodlanamayacak bir karakter varsa, 0 döndür</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><span class="c1">// 2b. devam octetlerinin üst bitlerini ayarla</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="kt">size_t</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code><span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">cbOctet</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>    <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_CONTINUATION_BYTE</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>İkinci adımda çok ilginç birşey yok. Her bir octet'in üst bitlerini
 olması gerektiği gibi ayarlayıp, kalan bitlerini sıfırladık. Üçüncü
@@ -147,163 +339,759 @@ yapmak için, en baştaki octet dışında, <code>UTF8_CONTINUATION_BYTE_MASK</c
 ile alttaki 6 biti seçip, karakter kodunu 6 bit sağa kaydıracağız.
 En baştaki octet'e gelindiğinde, sadece ihtiyacımız olan bitler
 kaldığı için, herhangi bir maskeleme yapmamıza gerek yok.</p>
-<pre class="code literal-block"><span></span><span class="c1">// 3. Son octetten başa doğru, bitleri</span>
-<span class="c1">// doldur. Her devam octet'inde 6'şar</span>
-<span class="c1">// bit kullanacağız. Geriye kalan bitler</span>
-<span class="c1">// teknik olarak başlangıç octet'ine</span>
-<span class="c1">// sığmak zorunda</span>
-<span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">cbOctet</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">|=</span> <span class="n">c</span> <span class="o">&amp;</span> <span class="n">UTF8_CONTINUATION_BYTE_MASK</span><span class="p">;</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">|=</span> <span class="n">c</span><span class="p">;</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="c1">// 3. Son octetten başa doğru, bitleri</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="c1">// doldur. Her devam octet'inde 6'şar</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="c1">// bit kullanacağız. Geriye kalan bitler</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="c1">// teknik olarak başlangıç octet'ine</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="c1">// sığmak zorunda</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">cbOctet</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">|=</span> <span class="n">c</span> <span class="o">&amp;</span> <span class="n">UTF8_CONTINUATION_BYTE_MASK</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="n">c</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">|=</span> <span class="n">c</span><span class="p">;</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Böylece, tek bir unicode karakteri, utf8 olarak kodlamış olduk. Bu işlemi
 bir string üzerinde gerçekleştirmek için, sırayla tüm karakleri yukarıdaki
 şekilde kodlamak yeterli. Örnek programın son hali aşağıdaki gibi olacak.</p>
-<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt; // malloc</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;string.h&gt; // memcpy</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;  // fopen, fwrite, fclose</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;wchar.h&gt;  // wchar_t</span><span class="cp"></span>
-
-<span class="cp">#define UTF8_OCTET1_MAX 0x7F</span>
-<span class="cp">#define UTF8_OCTET2_MAX 0x7FF</span>
-<span class="cp">#define UTF8_OCTET3_MAX 0xFFFF</span>
-<span class="cp">#define UTF8_OCTET4_MAX 0x10FFFF</span>
-
-<span class="cp">#define UTF8_SEQUENCE1_START 0x00</span>
-<span class="cp">#define UTF8_SEQUENCE2_START 0xC0</span>
-<span class="cp">#define UTF8_SEQUENCE3_START 0xE0</span>
-<span class="cp">#define UTF8_SEQUENCE4_START 0xF0</span>
-
-<span class="cp">#define UTF8_CONTINUATION_BYTE 0x80</span>
-<span class="cp">#define UTF8_CONTINUATION_BYTE_MASK 0x3F</span>
-
-<span class="kt">size_t</span> <span class="nf">utf8_encode_char</span><span class="p">(</span><span class="kt">wchar_t</span> <span class="n">c</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">result</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
-<span class="p">{</span>
-    <span class="c1">// 1. Gerekli Octet Sayısını Hesapla</span>
-    <span class="kt">size_t</span> <span class="n">cbOctet</span> <span class="o">=</span> <span class="mi">1</span>  
-                   <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET1_MAX</span><span class="p">)</span>
-                   <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET2_MAX</span><span class="p">)</span>
-                   <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET3_MAX</span><span class="p">)</span>
-                   <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET4_MAX</span><span class="p">);</span>
-
-
-    <span class="c1">// 2a. Başlangıç octet'inin üst bitlerini ayala</span>
-    <span class="k">switch</span> <span class="p">(</span><span class="n">cbOctet</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
-            <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE1_START</span><span class="p">;</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
-            <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE2_START</span><span class="p">;</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
-            <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE3_START</span><span class="p">;</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="k">case</span> <span class="mi">4</span><span class="o">:</span>
-            <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE4_START</span><span class="p">;</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="k">default</span><span class="o">:</span> <span class="c1">// utf8 ile kodlanamayacak bir karakter varsa, 0 döndür</span>
-            <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="c1">// 2b. devam octetlerinin üst bitlerini ayarla</span>
-    <span class="kt">size_t</span> <span class="n">i</span><span class="p">;</span>
-    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">cbOctet</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_CONTINUATION_BYTE</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="c1">// 3. Son octetten başa doğru, bitleri</span>
-    <span class="c1">// doldur. Her devam octet'inde 6'şar</span>
-    <span class="c1">// bit kullanacağız. Geriye kalan bitler</span>
-    <span class="c1">// teknik olarak başlangıç octet'ine</span>
-    <span class="c1">// sığmak zorunda</span>
-    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">cbOctet</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">|=</span> <span class="n">c</span> <span class="o">&amp;</span> <span class="n">UTF8_CONTINUATION_BYTE_MASK</span><span class="p">;</span>
-        <span class="n">c</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">|=</span> <span class="n">c</span><span class="p">;</span>
-
-    <span class="k">return</span> <span class="n">cbOctet</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="cm">/*</span>
-<span class="cm">    IN: wchar_t *pwszWide: NULL ile biten, wchar_t stringi</span>
-<span class="cm">    OUT: size_t *cbEncoded : Kodlamış string'in boyutu</span>
-
-<span class="cm">    RETURN: utf8 ile kodlanmış, NULL ile biten array</span>
-<span class="cm">*/</span>
-<span class="kt">char</span> <span class="o">*</span><span class="nf">utf8_encode</span><span class="p">(</span><span class="kt">wchar_t</span> <span class="o">*</span><span class="n">pwszWide</span><span class="p">,</span> <span class="kt">size_t</span> <span class="o">*</span><span class="n">cbEncoded</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="o">*</span><span class="n">cbEncoded</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="kt">size_t</span> <span class="n">cbTemp</span><span class="p">;</span>
-    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">encoded_char</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
-    <span class="kt">wchar_t</span> <span class="o">*</span><span class="n">pwcTemp</span><span class="p">;</span>
-    <span class="kt">char</span>    <span class="o">*</span><span class="n">pcTemp2</span><span class="p">;</span>
-
-    <span class="c1">// realloc yapmak zorunda kalmamak için</span>
-    <span class="c1">// pwszWide üzerinden 1 tur geçip, kodlanmış</span>
-    <span class="c1">// veri için gerekli hafızayı hesaplayacağız.</span>
-    <span class="k">for</span><span class="p">(</span><span class="n">pwcTemp</span> <span class="o">=</span> <span class="n">pwszWide</span><span class="p">;</span> <span class="o">*</span><span class="n">pwcTemp</span><span class="p">;</span> <span class="n">pwcTemp</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="o">*</span><span class="n">cbEncoded</span> <span class="o">+=</span> <span class="n">utf8_encode_char</span><span class="p">(</span><span class="o">*</span><span class="n">pwcTemp</span><span class="p">,</span> <span class="n">encoded_char</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="kt">char</span> <span class="o">*</span><span class="n">pszEncoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="o">*</span><span class="n">cbEncoded</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span> <span class="c1">// +1 null</span>
-
-    <span class="k">for</span><span class="p">(</span><span class="n">pwcTemp</span> <span class="o">=</span> <span class="n">pwszWide</span><span class="p">,</span> <span class="n">pcTemp2</span> <span class="o">=</span> <span class="n">pszEncoded</span><span class="p">;</span> <span class="o">*</span><span class="n">pwcTemp</span><span class="p">;</span> <span class="n">pwcTemp</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">cbTemp</span> <span class="o">=</span> <span class="n">utf8_encode_char</span><span class="p">(</span><span class="o">*</span><span class="n">pwcTemp</span><span class="p">,</span> <span class="n">encoded_char</span><span class="p">);</span>
-        <span class="n">memcpy</span><span class="p">(</span><span class="n">pcTemp2</span><span class="p">,</span> <span class="n">encoded_char</span><span class="p">,</span> <span class="n">cbTemp</span><span class="p">);</span>
-        <span class="n">pcTemp2</span> <span class="o">+=</span> <span class="n">cbTemp</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="o">*</span><span class="n">pcTemp2</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// NULL terminator</span>
-
-    <span class="k">return</span> <span class="n">pszEncoded</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
-<span class="p">{</span>
-
-    <span class="kt">wchar_t</span> <span class="n">example1</span><span class="p">[]</span> <span class="o">=</span> <span class="sa">L</span><span class="s">"İŞTE BUNLAR HEP TÜRKÇE KARAKTERLER: ÜĞİŞÇÖ"</span><span class="p">;</span>
-    <span class="kt">wchar_t</span> <span class="n">example2</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0xD55C</span><span class="p">,</span> <span class="mh">0xAD6D</span><span class="p">,</span> <span class="mh">0xC5B4</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">};</span> <span class="c1">// korece korece</span>
-    <span class="kt">wchar_t</span> <span class="n">example3</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x65E5</span><span class="p">,</span> <span class="mh">0x672C</span><span class="p">,</span> <span class="mh">0x8A9E</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">};</span> <span class="c1">// japonca japon</span>
-    <span class="kt">wchar_t</span> <span class="n">example4</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x233B4</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">};</span>                <span class="c1">// çince bir karater</span>
-
-    <span class="kt">FILE</span> <span class="o">*</span><span class="n">f</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"examples.txt"</span><span class="p">,</span><span class="s">"wb"</span><span class="p">);</span>
-
-    <span class="kt">size_t</span> <span class="n">cbEncoded</span><span class="p">;</span>
-    <span class="kt">char</span> <span class="o">*</span><span class="n">pszEncoded</span> <span class="o">=</span> <span class="n">utf8_encode</span><span class="p">(</span><span class="n">example1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cbEncoded</span><span class="p">);</span>
-    <span class="n">fprintf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pszEncoded</span><span class="p">);</span>
-    <span class="n">free</span><span class="p">(</span><span class="n">pszEncoded</span><span class="p">);</span>
-
-    <span class="n">pszEncoded</span> <span class="o">=</span> <span class="n">utf8_encode</span><span class="p">(</span><span class="n">example2</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cbEncoded</span><span class="p">);</span>
-    <span class="n">fprintf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pszEncoded</span><span class="p">);</span>
-    <span class="n">free</span><span class="p">(</span><span class="n">pszEncoded</span><span class="p">);</span>
-
-    <span class="n">pszEncoded</span> <span class="o">=</span> <span class="n">utf8_encode</span><span class="p">(</span><span class="n">example3</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cbEncoded</span><span class="p">);</span>
-    <span class="n">fprintf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pszEncoded</span><span class="p">);</span>
-    <span class="n">free</span><span class="p">(</span><span class="n">pszEncoded</span><span class="p">);</span>
-
-    <span class="n">pszEncoded</span> <span class="o">=</span> <span class="n">utf8_encode</span><span class="p">(</span><span class="n">example4</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cbEncoded</span><span class="p">);</span>
-    <span class="n">fprintf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pszEncoded</span><span class="p">);</span>
-    <span class="n">free</span><span class="p">(</span><span class="n">pszEncoded</span><span class="p">);</span>
-
-    <span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
-
-
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-1"><code data-line-number="  1"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt; // malloc</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-2"><code data-line-number="  2"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;string.h&gt; // memcpy</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-3"><code data-line-number="  3"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;  // fopen, fwrite, fclose</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-4"><code data-line-number="  4"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;wchar.h&gt;  // wchar_t</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-5"><code data-line-number="  5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-6"><code data-line-number="  6"></code></a></td>
+<td class="code"><code><span class="cp">#define UTF8_OCTET1_MAX 0x7F</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-7"><code data-line-number="  7"></code></a></td>
+<td class="code"><code><span class="cp">#define UTF8_OCTET2_MAX 0x7FF</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-8"><code data-line-number="  8"></code></a></td>
+<td class="code"><code><span class="cp">#define UTF8_OCTET3_MAX 0xFFFF</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-9"><code data-line-number="  9"></code></a></td>
+<td class="code"><code><span class="cp">#define UTF8_OCTET4_MAX 0x10FFFF</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-10"><code data-line-number=" 10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-11"><code data-line-number=" 11"></code></a></td>
+<td class="code"><code><span class="cp">#define UTF8_SEQUENCE1_START 0x00</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-12"><code data-line-number=" 12"></code></a></td>
+<td class="code"><code><span class="cp">#define UTF8_SEQUENCE2_START 0xC0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-13"><code data-line-number=" 13"></code></a></td>
+<td class="code"><code><span class="cp">#define UTF8_SEQUENCE3_START 0xE0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-14"><code data-line-number=" 14"></code></a></td>
+<td class="code"><code><span class="cp">#define UTF8_SEQUENCE4_START 0xF0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-15"><code data-line-number=" 15"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-16"><code data-line-number=" 16"></code></a></td>
+<td class="code"><code><span class="cp">#define UTF8_CONTINUATION_BYTE 0x80</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-17"><code data-line-number=" 17"></code></a></td>
+<td class="code"><code><span class="cp">#define UTF8_CONTINUATION_BYTE_MASK 0x3F</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-18"><code data-line-number=" 18"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-19"><code data-line-number=" 19"></code></a></td>
+<td class="code"><code><span class="kt">size_t</span> <span class="nf">utf8_encode_char</span><span class="p">(</span><span class="kt">wchar_t</span> <span class="n">c</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">result</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-20"><code data-line-number=" 20"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-21"><code data-line-number=" 21"></code></a></td>
+<td class="code"><code>    <span class="c1">// 1. Gerekli Octet Sayısını Hesapla</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-22"><code data-line-number=" 22"></code></a></td>
+<td class="code"><code>    <span class="kt">size_t</span> <span class="n">cbOctet</span> <span class="o">=</span> <span class="mi">1</span>  
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-23"><code data-line-number=" 23"></code></a></td>
+<td class="code"><code>                   <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET1_MAX</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-24"><code data-line-number=" 24"></code></a></td>
+<td class="code"><code>                   <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET2_MAX</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-25"><code data-line-number=" 25"></code></a></td>
+<td class="code"><code>                   <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET3_MAX</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-26"><code data-line-number=" 26"></code></a></td>
+<td class="code"><code>                   <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="n">UTF8_OCTET4_MAX</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-27"><code data-line-number=" 27"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-28"><code data-line-number=" 28"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-29"><code data-line-number=" 29"></code></a></td>
+<td class="code"><code>    <span class="c1">// 2a. Başlangıç octet'inin üst bitlerini ayala</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-30"><code data-line-number=" 30"></code></a></td>
+<td class="code"><code>    <span class="k">switch</span> <span class="p">(</span><span class="n">cbOctet</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-31"><code data-line-number=" 31"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-32"><code data-line-number=" 32"></code></a></td>
+<td class="code"><code>        <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-33"><code data-line-number=" 33"></code></a></td>
+<td class="code"><code>            <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE1_START</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-34"><code data-line-number=" 34"></code></a></td>
+<td class="code"><code>            <span class="k">break</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-35"><code data-line-number=" 35"></code></a></td>
+<td class="code"><code>        <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-36"><code data-line-number=" 36"></code></a></td>
+<td class="code"><code>            <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE2_START</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-37"><code data-line-number=" 37"></code></a></td>
+<td class="code"><code>            <span class="k">break</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-38"><code data-line-number=" 38"></code></a></td>
+<td class="code"><code>        <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-39"><code data-line-number=" 39"></code></a></td>
+<td class="code"><code>            <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE3_START</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-40"><code data-line-number=" 40"></code></a></td>
+<td class="code"><code>            <span class="k">break</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-41"><code data-line-number=" 41"></code></a></td>
+<td class="code"><code>        <span class="k">case</span> <span class="mi">4</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-42"><code data-line-number=" 42"></code></a></td>
+<td class="code"><code>            <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_SEQUENCE4_START</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-43"><code data-line-number=" 43"></code></a></td>
+<td class="code"><code>            <span class="k">break</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-44"><code data-line-number=" 44"></code></a></td>
+<td class="code"><code>        <span class="k">default</span><span class="o">:</span> <span class="c1">// utf8 ile kodlanamayacak bir karakter varsa, 0 döndür</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-45"><code data-line-number=" 45"></code></a></td>
+<td class="code"><code>            <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-46"><code data-line-number=" 46"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-47"><code data-line-number=" 47"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-48"><code data-line-number=" 48"></code></a></td>
+<td class="code"><code>    <span class="c1">// 2b. devam octetlerinin üst bitlerini ayarla</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-49"><code data-line-number=" 49"></code></a></td>
+<td class="code"><code>    <span class="kt">size_t</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-50"><code data-line-number=" 50"></code></a></td>
+<td class="code"><code>    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">cbOctet</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-51"><code data-line-number=" 51"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-52"><code data-line-number=" 52"></code></a></td>
+<td class="code"><code>        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">UTF8_CONTINUATION_BYTE</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-53"><code data-line-number=" 53"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-54"><code data-line-number=" 54"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-55"><code data-line-number=" 55"></code></a></td>
+<td class="code"><code>    <span class="c1">// 3. Son octetten başa doğru, bitleri</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-56"><code data-line-number=" 56"></code></a></td>
+<td class="code"><code>    <span class="c1">// doldur. Her devam octet'inde 6'şar</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-57"><code data-line-number=" 57"></code></a></td>
+<td class="code"><code>    <span class="c1">// bit kullanacağız. Geriye kalan bitler</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-58"><code data-line-number=" 58"></code></a></td>
+<td class="code"><code>    <span class="c1">// teknik olarak başlangıç octet'ine</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-59"><code data-line-number=" 59"></code></a></td>
+<td class="code"><code>    <span class="c1">// sığmak zorunda</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-60"><code data-line-number=" 60"></code></a></td>
+<td class="code"><code>    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">cbOctet</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-61"><code data-line-number=" 61"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-62"><code data-line-number=" 62"></code></a></td>
+<td class="code"><code>        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">|=</span> <span class="n">c</span> <span class="o">&amp;</span> <span class="n">UTF8_CONTINUATION_BYTE_MASK</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-63"><code data-line-number=" 63"></code></a></td>
+<td class="code"><code>        <span class="n">c</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-64"><code data-line-number=" 64"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-65"><code data-line-number=" 65"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-66"><code data-line-number=" 66"></code></a></td>
+<td class="code"><code>    <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">|=</span> <span class="n">c</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-67"><code data-line-number=" 67"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-68"><code data-line-number=" 68"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">cbOctet</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-69"><code data-line-number=" 69"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-70"><code data-line-number=" 70"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-71"><code data-line-number=" 71"></code></a></td>
+<td class="code"><code><span class="cm">/*</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-72"><code data-line-number=" 72"></code></a></td>
+<td class="code"><code><span class="cm">    IN: wchar_t *pwszWide: NULL ile biten, wchar_t stringi</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-73"><code data-line-number=" 73"></code></a></td>
+<td class="code"><code><span class="cm">    OUT: size_t *cbEncoded : Kodlamış string'in boyutu</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-74"><code data-line-number=" 74"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-75"><code data-line-number=" 75"></code></a></td>
+<td class="code"><code><span class="cm">    RETURN: utf8 ile kodlanmış, NULL ile biten array</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-76"><code data-line-number=" 76"></code></a></td>
+<td class="code"><code><span class="cm">*/</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-77"><code data-line-number=" 77"></code></a></td>
+<td class="code"><code><span class="kt">char</span> <span class="o">*</span><span class="nf">utf8_encode</span><span class="p">(</span><span class="kt">wchar_t</span> <span class="o">*</span><span class="n">pwszWide</span><span class="p">,</span> <span class="kt">size_t</span> <span class="o">*</span><span class="n">cbEncoded</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-78"><code data-line-number=" 78"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-79"><code data-line-number=" 79"></code></a></td>
+<td class="code"><code>    <span class="o">*</span><span class="n">cbEncoded</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-80"><code data-line-number=" 80"></code></a></td>
+<td class="code"><code>    <span class="kt">size_t</span> <span class="n">cbTemp</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-81"><code data-line-number=" 81"></code></a></td>
+<td class="code"><code>    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">encoded_char</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-82"><code data-line-number=" 82"></code></a></td>
+<td class="code"><code>    <span class="kt">wchar_t</span> <span class="o">*</span><span class="n">pwcTemp</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-83"><code data-line-number=" 83"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span>    <span class="o">*</span><span class="n">pcTemp2</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-84"><code data-line-number=" 84"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-85"><code data-line-number=" 85"></code></a></td>
+<td class="code"><code>    <span class="c1">// realloc yapmak zorunda kalmamak için</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-86"><code data-line-number=" 86"></code></a></td>
+<td class="code"><code>    <span class="c1">// pwszWide üzerinden 1 tur geçip, kodlanmış</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-87"><code data-line-number=" 87"></code></a></td>
+<td class="code"><code>    <span class="c1">// veri için gerekli hafızayı hesaplayacağız.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-88"><code data-line-number=" 88"></code></a></td>
+<td class="code"><code>    <span class="k">for</span><span class="p">(</span><span class="n">pwcTemp</span> <span class="o">=</span> <span class="n">pwszWide</span><span class="p">;</span> <span class="o">*</span><span class="n">pwcTemp</span><span class="p">;</span> <span class="n">pwcTemp</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-89"><code data-line-number=" 89"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-90"><code data-line-number=" 90"></code></a></td>
+<td class="code"><code>        <span class="o">*</span><span class="n">cbEncoded</span> <span class="o">+=</span> <span class="n">utf8_encode_char</span><span class="p">(</span><span class="o">*</span><span class="n">pwcTemp</span><span class="p">,</span> <span class="n">encoded_char</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-91"><code data-line-number=" 91"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-92"><code data-line-number=" 92"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-93"><code data-line-number=" 93"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">pszEncoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="o">*</span><span class="n">cbEncoded</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span> <span class="c1">// +1 null</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-94"><code data-line-number=" 94"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-95"><code data-line-number=" 95"></code></a></td>
+<td class="code"><code>    <span class="k">for</span><span class="p">(</span><span class="n">pwcTemp</span> <span class="o">=</span> <span class="n">pwszWide</span><span class="p">,</span> <span class="n">pcTemp2</span> <span class="o">=</span> <span class="n">pszEncoded</span><span class="p">;</span> <span class="o">*</span><span class="n">pwcTemp</span><span class="p">;</span> <span class="n">pwcTemp</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-96"><code data-line-number=" 96"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-97"><code data-line-number=" 97"></code></a></td>
+<td class="code"><code>        <span class="n">cbTemp</span> <span class="o">=</span> <span class="n">utf8_encode_char</span><span class="p">(</span><span class="o">*</span><span class="n">pwcTemp</span><span class="p">,</span> <span class="n">encoded_char</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-98"><code data-line-number=" 98"></code></a></td>
+<td class="code"><code>        <span class="n">memcpy</span><span class="p">(</span><span class="n">pcTemp2</span><span class="p">,</span> <span class="n">encoded_char</span><span class="p">,</span> <span class="n">cbTemp</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-99"><code data-line-number=" 99"></code></a></td>
+<td class="code"><code>        <span class="n">pcTemp2</span> <span class="o">+=</span> <span class="n">cbTemp</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-100"><code data-line-number="100"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-101"><code data-line-number="101"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-102"><code data-line-number="102"></code></a></td>
+<td class="code"><code>    <span class="o">*</span><span class="n">pcTemp2</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// NULL terminator</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-103"><code data-line-number="103"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-104"><code data-line-number="104"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">pszEncoded</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-105"><code data-line-number="105"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-106"><code data-line-number="106"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-107"><code data-line-number="107"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-108"><code data-line-number="108"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-109"><code data-line-number="109"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-110"><code data-line-number="110"></code></a></td>
+<td class="code"><code>    <span class="kt">wchar_t</span> <span class="n">example1</span><span class="p">[]</span> <span class="o">=</span> <span class="sa">L</span><span class="s">"İŞTE BUNLAR HEP TÜRKÇE KARAKTERLER: ÜĞİŞÇÖ"</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-111"><code data-line-number="111"></code></a></td>
+<td class="code"><code>    <span class="kt">wchar_t</span> <span class="n">example2</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0xD55C</span><span class="p">,</span> <span class="mh">0xAD6D</span><span class="p">,</span> <span class="mh">0xC5B4</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">};</span> <span class="c1">// korece korece</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-112"><code data-line-number="112"></code></a></td>
+<td class="code"><code>    <span class="kt">wchar_t</span> <span class="n">example3</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x65E5</span><span class="p">,</span> <span class="mh">0x672C</span><span class="p">,</span> <span class="mh">0x8A9E</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">};</span> <span class="c1">// japonca japon</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-113"><code data-line-number="113"></code></a></td>
+<td class="code"><code>    <span class="kt">wchar_t</span> <span class="n">example4</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x233B4</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">};</span>                <span class="c1">// çince bir karater</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-114"><code data-line-number="114"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-115"><code data-line-number="115"></code></a></td>
+<td class="code"><code>    <span class="kt">FILE</span> <span class="o">*</span><span class="n">f</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"examples.txt"</span><span class="p">,</span><span class="s">"wb"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-116"><code data-line-number="116"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-117"><code data-line-number="117"></code></a></td>
+<td class="code"><code>    <span class="kt">size_t</span> <span class="n">cbEncoded</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-118"><code data-line-number="118"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">pszEncoded</span> <span class="o">=</span> <span class="n">utf8_encode</span><span class="p">(</span><span class="n">example1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cbEncoded</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-119"><code data-line-number="119"></code></a></td>
+<td class="code"><code>    <span class="n">fprintf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pszEncoded</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-120"><code data-line-number="120"></code></a></td>
+<td class="code"><code>    <span class="n">free</span><span class="p">(</span><span class="n">pszEncoded</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-121"><code data-line-number="121"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-122"><code data-line-number="122"></code></a></td>
+<td class="code"><code>    <span class="n">pszEncoded</span> <span class="o">=</span> <span class="n">utf8_encode</span><span class="p">(</span><span class="n">example2</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cbEncoded</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-123"><code data-line-number="123"></code></a></td>
+<td class="code"><code>    <span class="n">fprintf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pszEncoded</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-124"><code data-line-number="124"></code></a></td>
+<td class="code"><code>    <span class="n">free</span><span class="p">(</span><span class="n">pszEncoded</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-125"><code data-line-number="125"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-126"><code data-line-number="126"></code></a></td>
+<td class="code"><code>    <span class="n">pszEncoded</span> <span class="o">=</span> <span class="n">utf8_encode</span><span class="p">(</span><span class="n">example3</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cbEncoded</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-127"><code data-line-number="127"></code></a></td>
+<td class="code"><code>    <span class="n">fprintf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pszEncoded</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-128"><code data-line-number="128"></code></a></td>
+<td class="code"><code>    <span class="n">free</span><span class="p">(</span><span class="n">pszEncoded</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-129"><code data-line-number="129"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-130"><code data-line-number="130"></code></a></td>
+<td class="code"><code>    <span class="n">pszEncoded</span> <span class="o">=</span> <span class="n">utf8_encode</span><span class="p">(</span><span class="n">example4</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cbEncoded</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-131"><code data-line-number="131"></code></a></td>
+<td class="code"><code>    <span class="n">fprintf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pszEncoded</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-132"><code data-line-number="132"></code></a></td>
+<td class="code"><code>    <span class="n">free</span><span class="p">(</span><span class="n">pszEncoded</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-133"><code data-line-number="133"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-134"><code data-line-number="134"></code></a></td>
+<td class="code"><code>    <span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-135"><code data-line-number="135"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-136"><code data-line-number="136"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="utf8-kodlama.html#-137"><code data-line-number="137"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Öyle sanıyorum ki, yukarıdaki kodlarda optimize edilebilecek kısımlar vardır. Ancak,
 kolayca anlaşılabilr olması açısından, yapılabilecek optimizasyonlara dikkat etmedim.

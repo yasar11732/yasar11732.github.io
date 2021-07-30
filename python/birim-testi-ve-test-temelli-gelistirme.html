@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Python kullanarak birim testi nasıl yapılır? Test odaklı yazılım geliştirme yöntemi nedir? Örnekleriyle bu yazıda anlatılıyor.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/birim-testi-ve-test-temelli-gelistirme.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/birim-testi-ve-test-temelli-gelistirme.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="web-sayfalarindan-veri-okumak.html" title="HTMLParser ve urllib ile Web Sayfalarından Bilgi Almak" type="text/html">
 <link rel="next" href="djangoda-tembel-reverse.html" title="Django'da Tembel Reverse" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Python'da Birim Testi ve Test Temelli Geliştirme">
-<meta property="og:url" content="http://ysar.net/python/birim-testi-ve-test-temelli-gelistirme.html">
-<meta property="og:description" content="Python kullanarak birim testi nasıl yapılır? Test odaklı yazılım geliştirme yöntemi nedir? Örnekleriyle bu yazıda anlatılıyor.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2011-08-21T23:30:00+03:00">
 </head>
 <body>
 
@@ -119,27 +113,75 @@ döndüren bir fonksiyon örneği yapmak geldi. Testleri yazmaya başlamadan
 <p>Artık istediklerimizi bildiğimize testlerimizi yazmaya başlayabiliriz.
 Önce unittest modülünü içe aktarıp, TestCase sınıfından, yeni bir sınıf
 türetmeliyiz. (alt sınıf oluşturmalıyız.)</p>
-<pre class="code literal-block"><span></span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
-<span class="c1">### En güzel unittest'i bulmaya çalış :)</span>
-
-<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">sys</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="c1">### En güzel unittest'i bulmaya çalış :)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Ben platforma uygunluk konusunda biraz takıntılı olduğum için çok
 uzattım. Size isterseniz basit bir "import unittest" ile unittest
 modülünü içe aktarabilirsiniz. Şimdi ilk testimizi yazalım. Bu ilk test
 aptal testi olacak. Fonsiyonumuz aptal mı onu test edeceğiz :)</p>
-<pre class="code literal-block"><span></span><span class="c1"># unittest içe aktarma burada olacak</span>
-<span class="c1"># sonra da hayali modülü dahil etmeliyim. Bunu daha yazmadım :)</span>
-<span class="kn">import</span> <span class="nn">Hesaplayici</span>
-<span class="k">class</span> <span class="nc">HesaplaTestler</span><span class="p">(</span><span class="n">UnitTest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">testAptal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">"Aptal testi"</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Hesaplayici</span><span class="o">.</span><span class="n">hesapla</span><span class="p">(</span><span class="s2">"2+2"</span><span class="p">),</span><span class="mi">4</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="c1"># unittest içe aktarma burada olacak</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="c1"># sonra da hayali modülü dahil etmeliyim. Bunu daha yazmadım :)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">Hesaplayici</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">HesaplaTestler</span><span class="p">(</span><span class="n">UnitTest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">testAptal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>        <span class="s2">"Aptal testi"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Hesaplayici</span><span class="o">.</span><span class="n">hesapla</span><span class="p">(</span><span class="s2">"2+2"</span><span class="p">),</span><span class="mi">4</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada dikkat edilmesi gerek tek şey, metod ismine test ile başlamış
 olmam. Metodun çalışması için, isminin test ile başlaması gerekiyor.
@@ -168,14 +210,38 @@ FAILED (failures=1)
 <p>Tek tek açıklamalara girmeden, bendeki testlerin son halini buraya
 yapıştırıyorum. Satır aralarındaki açıklamaların yeterli olacağını
 düşünüyorum.</p>
-<pre class="code literal-block"><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
-<span class="c1">### En güzel unittest'i bulmaya çalış :)</span>
-
-<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="c1"># -*- coding: utf-8 -*-</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">sys</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="c1">### En güzel unittest'i bulmaya çalış :)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yukarıdaki basit örnekler, kendi testlerinizi yazmaya başlamak için
 yeterli olacaktır. Artık elinizde testler olduğuna göre, fonksiyonunuzu
@@ -187,96 +253,453 @@ zarar veriyorsa, testler hata vererek size bunu bildirecek. Siz de
 hatayı düzeltebileceksiniz.</p>
 <p>Bu da benim bu testlere göre yazmış olduğum fonksiyon. Bende tüm
 testlerden geçti.</p>
-<pre class="code literal-block"><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">import</span> <span class="nn">re</span>
-
-<span class="k">class</span> <span class="nc">kotuGirdi</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">"Yanlış girdi kullandınız!"</span>
-
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__unicode__</span><span class="p">()</span>
-
-
-<span class="k">def</span> <span class="nf">hesapla</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
-    <span class="c1"># Önce boşlukları temizle</span>
-    <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">" "</span><span class="p">,</span><span class="s2">""</span><span class="p">)</span>
-
-    <span class="c1"># girdi doğru mu?</span>
-    <span class="c1"># basta "-" veya "+" opsiyonel</span>
-    <span class="c1"># sonra bir sayı</span>
-    <span class="c1"># sonra, sayılar ve islemler devam ediyor</span>
-    <span class="c1"># son olarak da bir sayı var</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">"^[-+]?\d[-+*/\d]+\d$"</span><span class="p">,</span><span class="n">string</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">kotuGirdi</span>
-
-    <span class="c1"># İşlem operatöründen sonra, * veya / olamaz -&gt; 5 +* 2</span>
-    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">"[-+*/][*/]+"</span><span class="p">,</span><span class="n">string</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">kotuGirdi</span>
-
-    <span class="c1"># Yanyana ikiden fazla işlem operatörü olamaz</span>
-    <span class="c1"># İki tane olması mümkün -&gt; 10 / -3,</span>
-
-    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">"[-+*/]{3,}"</span><span class="p">,</span><span class="n">string</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">kotuGirdi</span>
-
-    <span class="c1"># Sayılarla islecleri ayıralım:</span>
-    <span class="n">sayilar</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">islecler</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">son_tip</span> <span class="o">=</span> <span class="s2">"islec"</span>
-    <span class="n">gecici</span> <span class="o">=</span> <span class="s2">""</span>
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">)):</span>
-
-        <span class="c1"># son karşılaştığımız bir sayıysa</span>
-        <span class="k">if</span> <span class="n">son_tip</span> <span class="o">==</span> <span class="s2">"sayi"</span><span class="p">:</span>
-
-            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">"\d"</span><span class="p">,</span><span class="n">string</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
-                <span class="n">gecici</span> <span class="o">+=</span> <span class="n">string</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">sayilar</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">gecici</span><span class="p">))</span>
-                <span class="n">islecler</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">string</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-                <span class="n">son_tip</span> <span class="o">=</span> <span class="s2">"islec"</span>
-        <span class="k">elif</span> <span class="n">son_tip</span> <span class="o">==</span> <span class="s2">"islec"</span><span class="p">:</span>
-
-            <span class="c1"># en son bir işleç gördüysek, yeni bir sayı oluşturmaya başlayabiliriz.</span>
-            <span class="n">gecici</span> <span class="o">=</span> <span class="n">string</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="n">son_tip</span> <span class="o">=</span> <span class="s2">"sayi"</span>
-
-    <span class="c1"># En son gecicide kalan sayıyı da ekleyelim</span>
-
-    <span class="n">sayilar</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">gecici</span><span class="p">))</span>
-
-    <span class="c1"># İşlem tanımları</span>
-    <span class="n">islemler</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"+"</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">,</span>
-    <span class="s2">"-"</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="p">:</span> <span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">,</span>
-    <span class="s2">"*"</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">,</span>
-    <span class="s2">"/"</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">y</span>
-    <span class="p">}</span>
-
-    <span class="c1"># çarpma ve bölme işlemi önceliği</span>
-
-    <span class="k">while</span> <span class="s2">"*"</span> <span class="ow">in</span> <span class="n">islecler</span> <span class="ow">or</span> <span class="s2">"/"</span> <span class="ow">in</span> <span class="n">islecler</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">islecler</span><span class="p">)):</span>
-            <span class="k">if</span> <span class="n">islecler</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"*"</span><span class="p">,</span><span class="s2">"/"</span><span class="p">]:</span>
-                <span class="n">islem</span> <span class="o">=</span> <span class="n">islemler</span><span class="p">[</span><span class="n">islecler</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
-
-                <span class="n">sonuc</span> <span class="o">=</span> <span class="n">islem</span><span class="p">(</span><span class="n">sayilar</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">sayilar</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
-                <span class="n">sayilar</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">sonuc</span><span class="p">]</span>
-                <span class="n">islecler</span> <span class="o">=</span> <span class="n">islecler</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">islecler</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
-                <span class="k">break</span>
-
-    <span class="c1"># Kalan toplama çıkarmalar:</span>
-
-    <span class="n">sonuc</span> <span class="o">=</span> <span class="n">sayilar</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">sayilar</span><span class="p">)):</span>
-        <span class="n">islem</span> <span class="o">=</span> <span class="n">islemler</span><span class="p">[</span><span class="n">islecler</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
-        <span class="n">sonuc</span> <span class="o">=</span> <span class="n">islem</span><span class="p">(</span><span class="n">sonuc</span><span class="p">,</span><span class="n">sayilar</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">sonuc</span>
-</pre>
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="c1"># -*- coding: utf-8 -*-</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">re</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">kotuGirdi</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="s2">"Yanlış girdi kullandınız!"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__unicode__</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">hesapla</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="c1"># Önce boşlukları temizle</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">" "</span><span class="p">,</span><span class="s2">""</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="c1"># girdi doğru mu?</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>    <span class="c1"># basta "-" veya "+" opsiyonel</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>    <span class="c1"># sonra bir sayı</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>    <span class="c1"># sonra, sayılar ve islemler devam ediyor</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>    <span class="c1"># son olarak da bir sayı var</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">"^[-+]?\d[-+*/\d]+\d$"</span><span class="p">,</span><span class="n">string</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>        <span class="k">raise</span> <span class="n">kotuGirdi</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>    <span class="c1"># İşlem operatöründen sonra, * veya / olamaz -&gt; 5 +* 2</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">"[-+*/][*/]+"</span><span class="p">,</span><span class="n">string</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>        <span class="k">raise</span> <span class="n">kotuGirdi</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>    <span class="c1"># Yanyana ikiden fazla işlem operatörü olamaz</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>    <span class="c1"># İki tane olması mümkün -&gt; 10 / -3,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">"[-+*/]{3,}"</span><span class="p">,</span><span class="n">string</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>        <span class="k">raise</span> <span class="n">kotuGirdi</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>    <span class="c1"># Sayılarla islecleri ayıralım:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code>    <span class="n">sayilar</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code>    <span class="n">islecler</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-38"><code data-line-number="38"></code></a></td>
+<td class="code"><code>    <span class="n">son_tip</span> <span class="o">=</span> <span class="s2">"islec"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-39"><code data-line-number="39"></code></a></td>
+<td class="code"><code>    <span class="n">gecici</span> <span class="o">=</span> <span class="s2">""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-40"><code data-line-number="40"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-41"><code data-line-number="41"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">)):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-42"><code data-line-number="42"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-43"><code data-line-number="43"></code></a></td>
+<td class="code"><code>        <span class="c1"># son karşılaştığımız bir sayıysa</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-44"><code data-line-number="44"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">son_tip</span> <span class="o">==</span> <span class="s2">"sayi"</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-45"><code data-line-number="45"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-46"><code data-line-number="46"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">"\d"</span><span class="p">,</span><span class="n">string</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-47"><code data-line-number="47"></code></a></td>
+<td class="code"><code>                <span class="n">gecici</span> <span class="o">+=</span> <span class="n">string</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-48"><code data-line-number="48"></code></a></td>
+<td class="code"><code>            <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-49"><code data-line-number="49"></code></a></td>
+<td class="code"><code>                <span class="n">sayilar</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">gecici</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-50"><code data-line-number="50"></code></a></td>
+<td class="code"><code>                <span class="n">islecler</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">string</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-51"><code data-line-number="51"></code></a></td>
+<td class="code"><code>                <span class="n">son_tip</span> <span class="o">=</span> <span class="s2">"islec"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-52"><code data-line-number="52"></code></a></td>
+<td class="code"><code>        <span class="k">elif</span> <span class="n">son_tip</span> <span class="o">==</span> <span class="s2">"islec"</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-53"><code data-line-number="53"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-54"><code data-line-number="54"></code></a></td>
+<td class="code"><code>            <span class="c1"># en son bir işleç gördüysek, yeni bir sayı oluşturmaya başlayabiliriz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-55"><code data-line-number="55"></code></a></td>
+<td class="code"><code>            <span class="n">gecici</span> <span class="o">=</span> <span class="n">string</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-56"><code data-line-number="56"></code></a></td>
+<td class="code"><code>            <span class="n">son_tip</span> <span class="o">=</span> <span class="s2">"sayi"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-57"><code data-line-number="57"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-58"><code data-line-number="58"></code></a></td>
+<td class="code"><code>    <span class="c1"># En son gecicide kalan sayıyı da ekleyelim</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-59"><code data-line-number="59"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-60"><code data-line-number="60"></code></a></td>
+<td class="code"><code>    <span class="n">sayilar</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">gecici</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-61"><code data-line-number="61"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-62"><code data-line-number="62"></code></a></td>
+<td class="code"><code>    <span class="c1"># İşlem tanımları</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-63"><code data-line-number="63"></code></a></td>
+<td class="code"><code>    <span class="n">islemler</span> <span class="o">=</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-64"><code data-line-number="64"></code></a></td>
+<td class="code"><code>    <span class="s2">"+"</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-65"><code data-line-number="65"></code></a></td>
+<td class="code"><code>    <span class="s2">"-"</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="p">:</span> <span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-66"><code data-line-number="66"></code></a></td>
+<td class="code"><code>    <span class="s2">"*"</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-67"><code data-line-number="67"></code></a></td>
+<td class="code"><code>    <span class="s2">"/"</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">y</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-68"><code data-line-number="68"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-69"><code data-line-number="69"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-70"><code data-line-number="70"></code></a></td>
+<td class="code"><code>    <span class="c1"># çarpma ve bölme işlemi önceliği</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-71"><code data-line-number="71"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-72"><code data-line-number="72"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="s2">"*"</span> <span class="ow">in</span> <span class="n">islecler</span> <span class="ow">or</span> <span class="s2">"/"</span> <span class="ow">in</span> <span class="n">islecler</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-73"><code data-line-number="73"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">islecler</span><span class="p">)):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-74"><code data-line-number="74"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">islecler</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"*"</span><span class="p">,</span><span class="s2">"/"</span><span class="p">]:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-75"><code data-line-number="75"></code></a></td>
+<td class="code"><code>                <span class="n">islem</span> <span class="o">=</span> <span class="n">islemler</span><span class="p">[</span><span class="n">islecler</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-76"><code data-line-number="76"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-77"><code data-line-number="77"></code></a></td>
+<td class="code"><code>                <span class="n">sonuc</span> <span class="o">=</span> <span class="n">islem</span><span class="p">(</span><span class="n">sayilar</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">sayilar</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-78"><code data-line-number="78"></code></a></td>
+<td class="code"><code>                <span class="n">sayilar</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">sonuc</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-79"><code data-line-number="79"></code></a></td>
+<td class="code"><code>                <span class="n">islecler</span> <span class="o">=</span> <span class="n">islecler</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">islecler</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-80"><code data-line-number="80"></code></a></td>
+<td class="code"><code>                <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-81"><code data-line-number="81"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-82"><code data-line-number="82"></code></a></td>
+<td class="code"><code>    <span class="c1"># Kalan toplama çıkarmalar:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-83"><code data-line-number="83"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-84"><code data-line-number="84"></code></a></td>
+<td class="code"><code>    <span class="n">sonuc</span> <span class="o">=</span> <span class="n">sayilar</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-85"><code data-line-number="85"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-86"><code data-line-number="86"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">sayilar</span><span class="p">)):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-87"><code data-line-number="87"></code></a></td>
+<td class="code"><code>        <span class="n">islem</span> <span class="o">=</span> <span class="n">islemler</span><span class="p">[</span><span class="n">islecler</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-88"><code data-line-number="88"></code></a></td>
+<td class="code"><code>        <span class="n">sonuc</span> <span class="o">=</span> <span class="n">islem</span><span class="p">(</span><span class="n">sonuc</span><span class="p">,</span><span class="n">sayilar</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birim-testi-ve-test-temelli-gelistirme.html#-89"><code data-line-number="89"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">sonuc</span>
+</code></td>
+</tr>
+</table></div>
 </div>
     </div>
     <aside class="postpromonav"><nav><div class="pager">

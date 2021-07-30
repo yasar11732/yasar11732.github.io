@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="C Programlama Dilinde Basit Bir Şablon Programı">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/yazilim-dunyasi/sablon-doldurucu.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/yazilim-dunyasi/sablon-doldurucu.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="../euler/euler-16.html" title="(Euler 16) Büyük Üslü Sayının Haneleri Toplamı" type="text/html">
 <link rel="next" href="c-array-ve-string.html" title="C Programlama Dilinde Array İndeksi ve Pointer Aritmetiği" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="C ile Komut Okuyan ve Şablon Dolduran Program">
-<meta property="og:url" content="http://ysar.net/yazilim-dunyasi/sablon-doldurucu.html">
-<meta property="og:description" content="C Programlama Dilinde Basit Bir Şablon Programı">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2018-08-31T00:15:00+03:00">
 </head>
 <body>
 
@@ -48,279 +42,1319 @@
 Euler problemlerinin çözümünü, problemin varoluş gayesine uygun olsun diye C Programla Dili ile yaptım. Bu esnada, C ile program yazma konusunda nostaljik bir keyif
 aldım. Birkaç gündür C ile değişik küçük programlar deniyorum. Yaptığım programlardan birini, blog yazımda paylaşayım diye düşündüm. Aşağıdaki program <code>{*</code> ve <code>*}</code>
 tagları arasındaki komutları çalıştırıp, metin belgesinde yerine koyan basit bir şablon doldurma programı. Girdisini standart girdiden alıyor, çıktısını standart çıktıya veriyor.</p>
-<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;sys/types.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;sys/wait.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp"></span>
-
-<span class="cm">/* longest possible command */</span>
-<span class="cp">#define BUFFERSIZE 4096</span>
-
-<span class="k">typedef</span> <span class="k">struct</span> <span class="n">_parser</span> <span class="p">{</span>
-    <span class="kt">char</span> <span class="n">data</span><span class="p">[</span><span class="n">BUFFERSIZE</span><span class="p">];</span>
-    <span class="kt">int</span> <span class="n">num_data</span><span class="p">;</span>
-
-    <span class="kt">char</span> <span class="o">*</span><span class="n">args</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
-    <span class="kt">int</span> <span class="n">num_args</span><span class="p">;</span>
-
-    <span class="kt">int</span> <span class="n">argc</span><span class="p">;</span>
-    <span class="k">const</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">**</span><span class="n">argv</span><span class="p">;</span>
-
-    <span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">state</span><span class="p">)(</span><span class="k">struct</span> <span class="n">_parser</span> <span class="o">*</span><span class="p">);</span>
-
-<span class="p">}</span> <span class="n">Parser</span><span class="p">;</span>
-
-<span class="kt">void</span> <span class="nf">parser_double_quotes</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="p">);</span>
-<span class="kt">void</span> <span class="nf">parser_single_quotes</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="p">);</span>
-<span class="kt">void</span> <span class="nf">parser_normal_state</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="p">);</span>
-<span class="kt">void</span> <span class="nf">parser_seen_asteriks</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="p">);</span>
-<span class="kt">void</span> <span class="nf">parser_end_of_token</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="p">);</span>
-
-<span class="kt">void</span> <span class="nf">parser_variable_state</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">position</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">c</span><span class="p">;</span>
-
-    <span class="k">for</span><span class="p">(</span><span class="n">c</span> <span class="o">=</span> <span class="n">getc</span><span class="p">(</span><span class="n">stdin</span><span class="p">);</span> <span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span><span class="sc">'9'</span><span class="p">;</span> <span class="n">c</span><span class="o">=</span><span class="n">getc</span><span class="p">(</span><span class="n">stdin</span><span class="p">))</span>
-    <span class="p">{</span>
-        <span class="n">position</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">position</span> <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">-</span> <span class="sc">'0'</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="n">ungetc</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">stdin</span><span class="p">);</span>
-
-    <span class="n">p</span><span class="o">-&gt;</span><span class="n">args</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_args</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">args</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_args</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
-    <span class="n">p</span><span class="o">-&gt;</span><span class="n">args</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_args</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">argv</span><span class="p">[</span><span class="n">position</span><span class="p">];</span>
-    <span class="n">p</span><span class="o">-&gt;</span><span class="n">num_args</span><span class="o">++</span><span class="p">;</span>
-
-    <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_normal_state</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="kt">void</span> <span class="nf">parser_finalize</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span>
-<span class="p">{</span>
-
-    <span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span><span class="p">]</span>  <span class="o">!=</span> <span class="sc">'\0'</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'\0'</span><span class="p">;</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="n">p</span><span class="o">-&gt;</span><span class="n">num_args</span><span class="o">--</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="n">p</span><span class="o">-&gt;</span><span class="n">args</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_args</span><span class="p">]</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-    <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-<span class="p">}</span>
-
-<span class="kt">void</span> <span class="nf">parser_seen_asteriks</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">getc</span><span class="p">(</span><span class="n">stdin</span><span class="p">);</span>
-    <span class="k">switch</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">case</span> <span class="sc">'}'</span><span class="o">:</span>
-            <span class="n">parser_finalize</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
-            <span class="k">return</span><span class="p">;</span>
-        <span class="k">default</span><span class="o">:</span>
-            <span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'*'</span><span class="p">;</span>
-            <span class="n">ungetc</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">stdin</span><span class="p">);</span>
-            <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_normal_state</span><span class="p">;</span>
-            <span class="k">return</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kt">void</span> <span class="nf">parser_single_quotes</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">getc</span><span class="p">(</span><span class="n">stdin</span><span class="p">);</span>
-    <span class="k">switch</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">case</span> <span class="nl">EOF</span><span class="p">:</span>
-            <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"Invalid Input"</span><span class="p">);</span>
-            <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
-        <span class="k">case</span> <span class="sc">'\''</span><span class="o">:</span>
-            <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_end_of_token</span><span class="p">;</span>
-            <span class="k">return</span><span class="p">;</span>
-        <span class="k">default</span><span class="o">:</span>
-            <span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kt">void</span> <span class="nf">parser_double_quotes</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">getc</span><span class="p">(</span><span class="n">stdin</span><span class="p">);</span>
-    <span class="k">switch</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">case</span> <span class="nl">EOF</span><span class="p">:</span>
-            <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"Invalid Input"</span><span class="p">);</span>
-            <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
-        <span class="k">case</span> <span class="sc">'"'</span><span class="o">:</span>
-            <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_end_of_token</span><span class="p">;</span>
-            <span class="k">return</span><span class="p">;</span>
-        <span class="k">default</span><span class="o">:</span>
-            <span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kt">void</span> <span class="nf">parser_end_of_token</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span>
-<span class="p">{</span>
-
-    <span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="sc">'\0'</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="c1">// empty token, return to normal state;</span>
-        <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_normal_state</span><span class="p">;</span>
-        <span class="k">return</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'\0'</span><span class="p">;</span>
-
-    <span class="n">p</span><span class="o">-&gt;</span><span class="n">args</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_args</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span><span class="p">]);</span>
-<span class="p">}</span>
-
-<span class="kt">void</span> <span class="nf">parser_normal_state</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">getc</span><span class="p">(</span><span class="n">stdin</span><span class="p">);</span>
-    <span class="k">switch</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">case</span> <span class="sc">'\\'</span><span class="o">:</span>
-            <span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">getc</span><span class="p">(</span><span class="n">stdin</span><span class="p">);</span>
-            <span class="k">return</span><span class="p">;</span>
-        <span class="k">case</span> <span class="sc">' '</span><span class="o">:</span>
-            <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_end_of_token</span><span class="p">;</span>
-            <span class="k">return</span><span class="p">;</span>
-        <span class="k">case</span> <span class="sc">'*'</span><span class="o">:</span>
-            <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_seen_asteriks</span><span class="p">;</span>
-            <span class="k">return</span><span class="p">;</span>
-        <span class="k">case</span> <span class="sc">'"'</span><span class="o">:</span>
-            <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_double_quotes</span><span class="p">;</span>
-            <span class="k">return</span><span class="p">;</span>
-        <span class="k">case</span> <span class="sc">'\''</span><span class="o">:</span>
-            <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_single_quotes</span><span class="p">;</span>
-            <span class="k">return</span><span class="p">;</span>
-        <span class="k">case</span> <span class="sc">'$'</span><span class="o">:</span>
-            <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_variable_state</span><span class="p">;</span>
-            <span class="k">return</span><span class="p">;</span>
-        <span class="k">case</span> <span class="nl">EOF</span><span class="p">:</span>
-            <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"Invalid Input"</span><span class="p">);</span>
-            <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
-        <span class="k">default</span><span class="o">:</span>
-            <span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kt">void</span> <span class="nf">expand_command</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">pid_t</span> <span class="n">processId</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">status</span><span class="p">;</span>
-
-    <span class="c1">// initialize parser state</span>
-    <span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">p</span><span class="o">-&gt;</span><span class="n">num_args</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="n">p</span><span class="o">-&gt;</span><span class="n">args</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_args</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
-    <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_normal_state</span><span class="p">;</span>
-
-    <span class="k">while</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="n">processId</span> <span class="o">=</span> <span class="n">fork</span><span class="p">();</span>
-
-    <span class="k">if</span><span class="p">(</span><span class="n">processId</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">processId</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">execvp</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">args</span><span class="p">);</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="n">wait</span><span class="p">(</span><span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">status</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"Subprocess failed."</span><span class="p">);</span>
-            <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-<span class="p">}</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">c</span><span class="p">;</span>
-    <span class="n">Parser</span> <span class="n">p</span><span class="p">;</span>
-    <span class="n">p</span><span class="p">.</span><span class="n">argc</span> <span class="o">=</span> <span class="n">argc</span><span class="p">;</span>
-    <span class="n">p</span><span class="p">.</span><span class="n">argv</span> <span class="o">=</span> <span class="n">argv</span><span class="p">;</span>
-
-    <span class="k">while</span><span class="p">((</span><span class="n">c</span> <span class="o">=</span> <span class="n">getc</span><span class="p">(</span><span class="n">stdin</span><span class="p">))</span> <span class="o">!=</span> <span class="n">EOF</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'{'</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">getc</span><span class="p">(</span><span class="n">stdin</span><span class="p">);</span>
-            <span class="k">if</span><span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="sc">'*'</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">fflush</span><span class="p">(</span><span class="n">stdout</span><span class="p">);</span>
-                <span class="n">expand_command</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="p">);</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="n">EOF</span><span class="p">){</span>
-                <span class="n">putchar</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="n">putchar</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
-                <span class="n">putchar</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-            <span class="p">}</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="n">putchar</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
-        <span class="p">}</span>   
-    <span class="p">}</span>
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-1"><code data-line-number="  1"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-2"><code data-line-number="  2"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-3"><code data-line-number="  3"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;sys/types.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-4"><code data-line-number="  4"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;sys/wait.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-5"><code data-line-number="  5"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-6"><code data-line-number="  6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-7"><code data-line-number="  7"></code></a></td>
+<td class="code"><code><span class="cm">/* longest possible command */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-8"><code data-line-number="  8"></code></a></td>
+<td class="code"><code><span class="cp">#define BUFFERSIZE 4096</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-9"><code data-line-number="  9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-10"><code data-line-number=" 10"></code></a></td>
+<td class="code"><code><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_parser</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-11"><code data-line-number=" 11"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="n">data</span><span class="p">[</span><span class="n">BUFFERSIZE</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-12"><code data-line-number=" 12"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">num_data</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-13"><code data-line-number=" 13"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-14"><code data-line-number=" 14"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">args</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-15"><code data-line-number=" 15"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">num_args</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-16"><code data-line-number=" 16"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-17"><code data-line-number=" 17"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">argc</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-18"><code data-line-number=" 18"></code></a></td>
+<td class="code"><code>    <span class="k">const</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">**</span><span class="n">argv</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-19"><code data-line-number=" 19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-20"><code data-line-number=" 20"></code></a></td>
+<td class="code"><code>    <span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">state</span><span class="p">)(</span><span class="k">struct</span> <span class="n">_parser</span> <span class="o">*</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-21"><code data-line-number=" 21"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-22"><code data-line-number=" 22"></code></a></td>
+<td class="code"><code><span class="p">}</span> <span class="n">Parser</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-23"><code data-line-number=" 23"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-24"><code data-line-number=" 24"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">parser_double_quotes</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-25"><code data-line-number=" 25"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">parser_single_quotes</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-26"><code data-line-number=" 26"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">parser_normal_state</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-27"><code data-line-number=" 27"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">parser_seen_asteriks</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-28"><code data-line-number=" 28"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">parser_end_of_token</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-29"><code data-line-number=" 29"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-30"><code data-line-number=" 30"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">parser_variable_state</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-31"><code data-line-number=" 31"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-32"><code data-line-number=" 32"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">position</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-33"><code data-line-number=" 33"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">c</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-34"><code data-line-number=" 34"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-35"><code data-line-number=" 35"></code></a></td>
+<td class="code"><code>    <span class="k">for</span><span class="p">(</span><span class="n">c</span> <span class="o">=</span> <span class="n">getc</span><span class="p">(</span><span class="n">stdin</span><span class="p">);</span> <span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span><span class="sc">'9'</span><span class="p">;</span> <span class="n">c</span><span class="o">=</span><span class="n">getc</span><span class="p">(</span><span class="n">stdin</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-36"><code data-line-number=" 36"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-37"><code data-line-number=" 37"></code></a></td>
+<td class="code"><code>        <span class="n">position</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">position</span> <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">-</span> <span class="sc">'0'</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-38"><code data-line-number=" 38"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-39"><code data-line-number=" 39"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-40"><code data-line-number=" 40"></code></a></td>
+<td class="code"><code>    <span class="n">ungetc</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">stdin</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-41"><code data-line-number=" 41"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-42"><code data-line-number=" 42"></code></a></td>
+<td class="code"><code>    <span class="n">p</span><span class="o">-&gt;</span><span class="n">args</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_args</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">args</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_args</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-43"><code data-line-number=" 43"></code></a></td>
+<td class="code"><code>    <span class="n">p</span><span class="o">-&gt;</span><span class="n">args</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_args</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">argv</span><span class="p">[</span><span class="n">position</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-44"><code data-line-number=" 44"></code></a></td>
+<td class="code"><code>    <span class="n">p</span><span class="o">-&gt;</span><span class="n">num_args</span><span class="o">++</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-45"><code data-line-number=" 45"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-46"><code data-line-number=" 46"></code></a></td>
+<td class="code"><code>    <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_normal_state</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-47"><code data-line-number=" 47"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-48"><code data-line-number=" 48"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-49"><code data-line-number=" 49"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">parser_finalize</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-50"><code data-line-number=" 50"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-51"><code data-line-number=" 51"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-52"><code data-line-number=" 52"></code></a></td>
+<td class="code"><code>    <span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span><span class="p">]</span>  <span class="o">!=</span> <span class="sc">'\0'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-53"><code data-line-number=" 53"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-54"><code data-line-number=" 54"></code></a></td>
+<td class="code"><code>        <span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'\0'</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-55"><code data-line-number=" 55"></code></a></td>
+<td class="code"><code>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-56"><code data-line-number=" 56"></code></a></td>
+<td class="code"><code>        <span class="n">p</span><span class="o">-&gt;</span><span class="n">num_args</span><span class="o">--</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-57"><code data-line-number=" 57"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-58"><code data-line-number=" 58"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-59"><code data-line-number=" 59"></code></a></td>
+<td class="code"><code>    <span class="n">p</span><span class="o">-&gt;</span><span class="n">args</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_args</span><span class="p">]</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-60"><code data-line-number=" 60"></code></a></td>
+<td class="code"><code>    <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-61"><code data-line-number=" 61"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-62"><code data-line-number=" 62"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-63"><code data-line-number=" 63"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-64"><code data-line-number=" 64"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">parser_seen_asteriks</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-65"><code data-line-number=" 65"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-66"><code data-line-number=" 66"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">getc</span><span class="p">(</span><span class="n">stdin</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-67"><code data-line-number=" 67"></code></a></td>
+<td class="code"><code>    <span class="k">switch</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-68"><code data-line-number=" 68"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-69"><code data-line-number=" 69"></code></a></td>
+<td class="code"><code>        <span class="k">case</span> <span class="sc">'}'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-70"><code data-line-number=" 70"></code></a></td>
+<td class="code"><code>            <span class="n">parser_finalize</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-71"><code data-line-number=" 71"></code></a></td>
+<td class="code"><code>            <span class="k">return</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-72"><code data-line-number=" 72"></code></a></td>
+<td class="code"><code>        <span class="k">default</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-73"><code data-line-number=" 73"></code></a></td>
+<td class="code"><code>            <span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'*'</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-74"><code data-line-number=" 74"></code></a></td>
+<td class="code"><code>            <span class="n">ungetc</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">stdin</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-75"><code data-line-number=" 75"></code></a></td>
+<td class="code"><code>            <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_normal_state</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-76"><code data-line-number=" 76"></code></a></td>
+<td class="code"><code>            <span class="k">return</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-77"><code data-line-number=" 77"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-78"><code data-line-number=" 78"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-79"><code data-line-number=" 79"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-80"><code data-line-number=" 80"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">parser_single_quotes</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-81"><code data-line-number=" 81"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-82"><code data-line-number=" 82"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">getc</span><span class="p">(</span><span class="n">stdin</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-83"><code data-line-number=" 83"></code></a></td>
+<td class="code"><code>    <span class="k">switch</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-84"><code data-line-number=" 84"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-85"><code data-line-number=" 85"></code></a></td>
+<td class="code"><code>        <span class="k">case</span> <span class="nl">EOF</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-86"><code data-line-number=" 86"></code></a></td>
+<td class="code"><code>            <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"Invalid Input"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-87"><code data-line-number=" 87"></code></a></td>
+<td class="code"><code>            <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-88"><code data-line-number=" 88"></code></a></td>
+<td class="code"><code>        <span class="k">case</span> <span class="sc">'\''</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-89"><code data-line-number=" 89"></code></a></td>
+<td class="code"><code>            <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_end_of_token</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-90"><code data-line-number=" 90"></code></a></td>
+<td class="code"><code>            <span class="k">return</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-91"><code data-line-number=" 91"></code></a></td>
+<td class="code"><code>        <span class="k">default</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-92"><code data-line-number=" 92"></code></a></td>
+<td class="code"><code>            <span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-93"><code data-line-number=" 93"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-94"><code data-line-number=" 94"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-95"><code data-line-number=" 95"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-96"><code data-line-number=" 96"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">parser_double_quotes</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-97"><code data-line-number=" 97"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-98"><code data-line-number=" 98"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">getc</span><span class="p">(</span><span class="n">stdin</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-99"><code data-line-number=" 99"></code></a></td>
+<td class="code"><code>    <span class="k">switch</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-100"><code data-line-number="100"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-101"><code data-line-number="101"></code></a></td>
+<td class="code"><code>        <span class="k">case</span> <span class="nl">EOF</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-102"><code data-line-number="102"></code></a></td>
+<td class="code"><code>            <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"Invalid Input"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-103"><code data-line-number="103"></code></a></td>
+<td class="code"><code>            <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-104"><code data-line-number="104"></code></a></td>
+<td class="code"><code>        <span class="k">case</span> <span class="sc">'"'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-105"><code data-line-number="105"></code></a></td>
+<td class="code"><code>            <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_end_of_token</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-106"><code data-line-number="106"></code></a></td>
+<td class="code"><code>            <span class="k">return</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-107"><code data-line-number="107"></code></a></td>
+<td class="code"><code>        <span class="k">default</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-108"><code data-line-number="108"></code></a></td>
+<td class="code"><code>            <span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-109"><code data-line-number="109"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-110"><code data-line-number="110"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-111"><code data-line-number="111"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-112"><code data-line-number="112"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">parser_end_of_token</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-113"><code data-line-number="113"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-114"><code data-line-number="114"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-115"><code data-line-number="115"></code></a></td>
+<td class="code"><code>    <span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="sc">'\0'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-116"><code data-line-number="116"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-117"><code data-line-number="117"></code></a></td>
+<td class="code"><code>        <span class="c1">// empty token, return to normal state;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-118"><code data-line-number="118"></code></a></td>
+<td class="code"><code>        <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_normal_state</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-119"><code data-line-number="119"></code></a></td>
+<td class="code"><code>        <span class="k">return</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-120"><code data-line-number="120"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-121"><code data-line-number="121"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-122"><code data-line-number="122"></code></a></td>
+<td class="code"><code>    <span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'\0'</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-123"><code data-line-number="123"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-124"><code data-line-number="124"></code></a></td>
+<td class="code"><code>    <span class="n">p</span><span class="o">-&gt;</span><span class="n">args</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_args</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span><span class="p">]);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-125"><code data-line-number="125"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-126"><code data-line-number="126"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-127"><code data-line-number="127"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">parser_normal_state</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-128"><code data-line-number="128"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-129"><code data-line-number="129"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">getc</span><span class="p">(</span><span class="n">stdin</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-130"><code data-line-number="130"></code></a></td>
+<td class="code"><code>    <span class="k">switch</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-131"><code data-line-number="131"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-132"><code data-line-number="132"></code></a></td>
+<td class="code"><code>        <span class="k">case</span> <span class="sc">'\\'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-133"><code data-line-number="133"></code></a></td>
+<td class="code"><code>            <span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">getc</span><span class="p">(</span><span class="n">stdin</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-134"><code data-line-number="134"></code></a></td>
+<td class="code"><code>            <span class="k">return</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-135"><code data-line-number="135"></code></a></td>
+<td class="code"><code>        <span class="k">case</span> <span class="sc">' '</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-136"><code data-line-number="136"></code></a></td>
+<td class="code"><code>            <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_end_of_token</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-137"><code data-line-number="137"></code></a></td>
+<td class="code"><code>            <span class="k">return</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-138"><code data-line-number="138"></code></a></td>
+<td class="code"><code>        <span class="k">case</span> <span class="sc">'*'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-139"><code data-line-number="139"></code></a></td>
+<td class="code"><code>            <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_seen_asteriks</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-140"><code data-line-number="140"></code></a></td>
+<td class="code"><code>            <span class="k">return</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-141"><code data-line-number="141"></code></a></td>
+<td class="code"><code>        <span class="k">case</span> <span class="sc">'"'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-142"><code data-line-number="142"></code></a></td>
+<td class="code"><code>            <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_double_quotes</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-143"><code data-line-number="143"></code></a></td>
+<td class="code"><code>            <span class="k">return</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-144"><code data-line-number="144"></code></a></td>
+<td class="code"><code>        <span class="k">case</span> <span class="sc">'\''</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-145"><code data-line-number="145"></code></a></td>
+<td class="code"><code>            <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_single_quotes</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-146"><code data-line-number="146"></code></a></td>
+<td class="code"><code>            <span class="k">return</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-147"><code data-line-number="147"></code></a></td>
+<td class="code"><code>        <span class="k">case</span> <span class="sc">'$'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-148"><code data-line-number="148"></code></a></td>
+<td class="code"><code>            <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_variable_state</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-149"><code data-line-number="149"></code></a></td>
+<td class="code"><code>            <span class="k">return</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-150"><code data-line-number="150"></code></a></td>
+<td class="code"><code>        <span class="k">case</span> <span class="nl">EOF</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-151"><code data-line-number="151"></code></a></td>
+<td class="code"><code>            <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"Invalid Input"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-152"><code data-line-number="152"></code></a></td>
+<td class="code"><code>            <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-153"><code data-line-number="153"></code></a></td>
+<td class="code"><code>        <span class="k">default</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-154"><code data-line-number="154"></code></a></td>
+<td class="code"><code>            <span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-155"><code data-line-number="155"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-156"><code data-line-number="156"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-157"><code data-line-number="157"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-158"><code data-line-number="158"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">expand_command</span><span class="p">(</span><span class="n">Parser</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-159"><code data-line-number="159"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-160"><code data-line-number="160"></code></a></td>
+<td class="code"><code>    <span class="kt">pid_t</span> <span class="n">processId</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-161"><code data-line-number="161"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">status</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-162"><code data-line-number="162"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-163"><code data-line-number="163"></code></a></td>
+<td class="code"><code>    <span class="c1">// initialize parser state</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-164"><code data-line-number="164"></code></a></td>
+<td class="code"><code>    <span class="n">p</span><span class="o">-&gt;</span><span class="n">num_data</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-165"><code data-line-number="165"></code></a></td>
+<td class="code"><code>    <span class="n">p</span><span class="o">-&gt;</span><span class="n">num_args</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-166"><code data-line-number="166"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-167"><code data-line-number="167"></code></a></td>
+<td class="code"><code>    <span class="n">p</span><span class="o">-&gt;</span><span class="n">args</span><span class="p">[</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">num_args</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-168"><code data-line-number="168"></code></a></td>
+<td class="code"><code>    <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="n">parser_normal_state</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-169"><code data-line-number="169"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-170"><code data-line-number="170"></code></a></td>
+<td class="code"><code>    <span class="k">while</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-171"><code data-line-number="171"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-172"><code data-line-number="172"></code></a></td>
+<td class="code"><code>        <span class="n">p</span><span class="o">-&gt;</span><span class="n">state</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-173"><code data-line-number="173"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-174"><code data-line-number="174"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-175"><code data-line-number="175"></code></a></td>
+<td class="code"><code>    <span class="n">processId</span> <span class="o">=</span> <span class="n">fork</span><span class="p">();</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-176"><code data-line-number="176"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-177"><code data-line-number="177"></code></a></td>
+<td class="code"><code>    <span class="k">if</span><span class="p">(</span><span class="n">processId</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-178"><code data-line-number="178"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-179"><code data-line-number="179"></code></a></td>
+<td class="code"><code>        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-180"><code data-line-number="180"></code></a></td>
+<td class="code"><code>    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">processId</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-181"><code data-line-number="181"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-182"><code data-line-number="182"></code></a></td>
+<td class="code"><code>        <span class="n">execvp</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">args</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-183"><code data-line-number="183"></code></a></td>
+<td class="code"><code>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-184"><code data-line-number="184"></code></a></td>
+<td class="code"><code>        <span class="n">wait</span><span class="p">(</span><span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-185"><code data-line-number="185"></code></a></td>
+<td class="code"><code>        <span class="k">if</span><span class="p">(</span><span class="n">status</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-186"><code data-line-number="186"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-187"><code data-line-number="187"></code></a></td>
+<td class="code"><code>            <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"Subprocess failed."</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-188"><code data-line-number="188"></code></a></td>
+<td class="code"><code>            <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-189"><code data-line-number="189"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-190"><code data-line-number="190"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-191"><code data-line-number="191"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-192"><code data-line-number="192"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-193"><code data-line-number="193"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-194"><code data-line-number="194"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-195"><code data-line-number="195"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-196"><code data-line-number="196"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">c</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-197"><code data-line-number="197"></code></a></td>
+<td class="code"><code>    <span class="n">Parser</span> <span class="n">p</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-198"><code data-line-number="198"></code></a></td>
+<td class="code"><code>    <span class="n">p</span><span class="p">.</span><span class="n">argc</span> <span class="o">=</span> <span class="n">argc</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-199"><code data-line-number="199"></code></a></td>
+<td class="code"><code>    <span class="n">p</span><span class="p">.</span><span class="n">argv</span> <span class="o">=</span> <span class="n">argv</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-200"><code data-line-number="200"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-201"><code data-line-number="201"></code></a></td>
+<td class="code"><code>    <span class="k">while</span><span class="p">((</span><span class="n">c</span> <span class="o">=</span> <span class="n">getc</span><span class="p">(</span><span class="n">stdin</span><span class="p">))</span> <span class="o">!=</span> <span class="n">EOF</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-202"><code data-line-number="202"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-203"><code data-line-number="203"></code></a></td>
+<td class="code"><code>        <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'{'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-204"><code data-line-number="204"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-205"><code data-line-number="205"></code></a></td>
+<td class="code"><code>            <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">getc</span><span class="p">(</span><span class="n">stdin</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-206"><code data-line-number="206"></code></a></td>
+<td class="code"><code>            <span class="k">if</span><span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="sc">'*'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-207"><code data-line-number="207"></code></a></td>
+<td class="code"><code>            <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-208"><code data-line-number="208"></code></a></td>
+<td class="code"><code>                <span class="n">fflush</span><span class="p">(</span><span class="n">stdout</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-209"><code data-line-number="209"></code></a></td>
+<td class="code"><code>                <span class="n">expand_command</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-210"><code data-line-number="210"></code></a></td>
+<td class="code"><code>            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="n">EOF</span><span class="p">){</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-211"><code data-line-number="211"></code></a></td>
+<td class="code"><code>                <span class="n">putchar</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-212"><code data-line-number="212"></code></a></td>
+<td class="code"><code>                <span class="k">break</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-213"><code data-line-number="213"></code></a></td>
+<td class="code"><code>            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-214"><code data-line-number="214"></code></a></td>
+<td class="code"><code>                <span class="n">putchar</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-215"><code data-line-number="215"></code></a></td>
+<td class="code"><code>                <span class="n">putchar</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-216"><code data-line-number="216"></code></a></td>
+<td class="code"><code>            <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-217"><code data-line-number="217"></code></a></td>
+<td class="code"><code>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-218"><code data-line-number="218"></code></a></td>
+<td class="code"><code>            <span class="n">putchar</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-219"><code data-line-number="219"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>   
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-220"><code data-line-number="220"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-221"><code data-line-number="221"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-222"><code data-line-number="222"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-223"><code data-line-number="223"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Programın iki ayrı modu var. Normal modunda standart girdiden okuduğu karakterleri, standart çıktıya kopyalıyor. Eğer <code>{*</code> tagı görürse,
 bir Sonlu Durum Makinesi (En. State Machine) olarak çalışıp, komutu argümanlarına ayırıyor. Eğer <code>$2</code> gibi bir işaret görürse, komut
 satırından aldığı değişkeni komuta argüman olarak veriyor. Tek ve Çift tırnak içerisinde ise, boşluklara ve diğer özel karakterlere
 dikkat etmeden ayrıştırma yapıyor. Örneğin, bu programa aşağıdaki metin belgesini girdi olarak verirsek;</p>
-<pre class="code literal-block"><span></span>Merhaba, ben {* whoami *}.
-Şu an tarih: {* date +"%d-%m-%y" *}
-
-Alın size bir inek
-
-{* cowsay "Blog yazisinda bir inek mi?" *}
-
-Bu da bir alıntı.
-{* fortune *}
-
-Komut satırından aldığım argümanları, çağırdım programlarda kullanabiliyorum.
-
-{* echo "yasar arabaci"  $1 $0 *}
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="n">Merhaba</span><span class="p">,</span> <span class="n">ben</span> <span class="err">{</span><span class="o">*</span> <span class="n">whoami</span> <span class="o">*</span><span class="err">}</span><span class="p">.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="err">Ş</span><span class="n">u</span> <span class="n">an</span> <span class="n">tarih</span><span class="p">:</span> <span class="err">{</span><span class="o">*</span> <span class="nb">date</span> <span class="o">+</span><span class="ss">"%d-%m-%y"</span> <span class="o">*</span><span class="err">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="n">Alın</span> <span class="k">size</span> <span class="n">bir</span> <span class="n">inek</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="err">{</span><span class="o">*</span> <span class="n">cowsay</span> <span class="ss">"Blog yazisinda bir inek mi?"</span> <span class="o">*</span><span class="err">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="n">Bu</span> <span class="n">da</span> <span class="n">bir</span> <span class="n">alıntı</span><span class="p">.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="err">{</span><span class="o">*</span> <span class="n">fortune</span> <span class="o">*</span><span class="err">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="n">Komut</span> <span class="n">satırından</span> <span class="n">aldığım</span> <span class="n">argümanları</span><span class="p">,</span> <span class="err">ç</span><span class="n">ağırdım</span> <span class="n">programlarda</span> <span class="n">kullanabiliyorum</span><span class="p">.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="err">{</span><span class="o">*</span> <span class="n">echo</span> <span class="ss">"yasar arabaci"</span>  <span class="err">$</span><span class="mi">1</span> <span class="err">$</span><span class="mi">0</span> <span class="o">*</span><span class="err">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>şu hale dönüştürebiliyor;</p>
-<pre class="code literal-block"><span></span>Merhaba, ben vagrant
-.
-Şu an tarih: 30-08-18
-
-
-Alın size bir inek
-
- _____________________________
-&lt; Blog yazisinda bir inek mi? &gt;
- -----------------------------
-        \   ^__^
-         \  (oo)\_______
-            (__)\       )\/\
-                ||----w |
-                ||     ||
-
-
-Bu da bir alıntı.
-Alimony and bribes will engage a large share of your wealth.
-
-
-Komut satırından aldığım argümanları, çağırdım programlarda kullanabiliyorum.
-
-yasar arabaci test1 ./command_expand
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="n">Merhaba</span><span class="p">,</span> <span class="n">ben</span> <span class="n">vagrant</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="err">Ş</span><span class="n">u</span> <span class="n">an</span> <span class="n">tarih</span><span class="p">:</span> <span class="mi">30</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">18</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="n">Alın</span> <span class="k">size</span> <span class="n">bir</span> <span class="n">inek</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code> <span class="n">_____________________________</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="o">&lt;</span> <span class="n">Blog</span> <span class="n">yazisinda</span> <span class="n">bir</span> <span class="n">inek</span> <span class="n">mi</span><span class="o">?</span> <span class="o">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code> <span class="c1">-----------------------------</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="err">\</span>   <span class="o">^</span><span class="n">__</span><span class="o">^</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>         <span class="err">\</span>  <span class="p">(</span><span class="n">oo</span><span class="p">)</span><span class="err">\</span><span class="n">_______</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>            <span class="p">(</span><span class="n">__</span><span class="p">)</span><span class="err">\</span>       <span class="p">)</span><span class="err">\</span><span class="o">/</span><span class="err">\</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>                <span class="o">||</span><span class="c1">----w |</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>                <span class="o">||</span>     <span class="o">||</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="n">Bu</span> <span class="n">da</span> <span class="n">bir</span> <span class="n">alıntı</span><span class="p">.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code><span class="n">Alimony</span> <span class="k">and</span> <span class="n">bribes</span> <span class="n">will</span> <span class="n">engage</span> <span class="n">a</span> <span class="k">large</span> <span class="k">share</span> <span class="k">of</span> <span class="n">your</span> <span class="n">wealth</span><span class="p">.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code><span class="n">Komut</span> <span class="n">satırından</span> <span class="n">aldığım</span> <span class="n">argümanları</span><span class="p">,</span> <span class="err">ç</span><span class="n">ağırdım</span> <span class="n">programlarda</span> <span class="n">kullanabiliyorum</span><span class="p">.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sablon-doldurucu.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code><span class="n">yasar</span> <span class="n">arabaci</span> <span class="n">test1</span> <span class="p">.</span><span class="o">/</span><span class="n">command_expand</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu programı kendi statik site oluşturucu programımı yapma gayesi ile yazmıştım. O projede ne kadar ileri giderim şimdilik bilemiyorum.</p>
 </div>

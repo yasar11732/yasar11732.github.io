@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="description" content="Python'da mantıksal &quot;and&quot; ve &quot;or&quot; bağlaçlarının özellikleriyle alakalı bir yazı.">
+<meta name="description" content="Python'da mantıksal &quot;and&quot; ve &quot;or&quot; bağlaçlarının özellikleriyle alakalı bir yazı. ">
 <meta name="viewport" content="width=device-width">
 <title>Python'da and ve or | YSAR.NET</title>
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900%7CUbuntu:300,400,500,700" rel="stylesheet">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/and-ve-or.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/and-ve-or.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="asal-yolculuk.html" title="Python'da Asal Sayı Bulma Algoritmaları ve Bunların Evrimi" type="text/html">
 <link rel="next" href="cesitli-yazilim-gelistirme-desenleri.html" title="Python ile Çeşitli Yazılım Geliştirme Desenleri (Design Patterns)" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Python'da and ve or">
-<meta property="og:url" content="http://ysar.net/python/and-ve-or.html">
-<meta property="og:description" content="Python'da mantıksal &quot;and&quot; ve &quot;or&quot; bağlaçlarının özellikleriyle alakalı bir yazı.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2011-09-06T10:57:00+03:00">
 </head>
 <body>
 
@@ -53,90 +47,351 @@ döndürür. Eğer yanlış öğe bulamazsa, son öğeyi döndürür. Yanlış o
 değerlendirilebilecek öğeler, boş <code>str</code>, <code>list</code>, <code>dict</code> nesneleri, 0, False veya <code>None</code>
 olabilir. Bunların dışında neredeyse herşey doğru olarak
 değerlendirilir.</p>
-<pre class="code literal-block"><span></span><span class="s2">"K = 'b' olur, tüm öğeler doğru olduğu için, son öge döndürülür."</span>
-<span class="n">K</span> <span class="o">=</span> <span class="s2">"a"</span> <span class="ow">and</span> <span class="s2">"b"</span>
-
-<span class="s2">"K = 0 olur. İlk yanlış öge olduğu için 0 döner."</span>
-<span class="n">K</span> <span class="o">=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="s2">"b"</span>
-
-<span class="s2">" K = 0 olur, İki yanlış öge olsa da, ilk yanlış öğe olan 0 döndü."</span>
-<span class="n">K</span> <span class="o">=</span> <span class="s2">"a"</span> <span class="ow">and</span> <span class="mi">0</span> <span class="ow">and</span> <span class="s2">""</span> <span class="ow">and</span> <span class="s2">"c"</span>
-
-<span class="k">def</span> <span class="nf">x</span><span class="p">():</span>
-    <span class="k">print</span> <span class="s2">"x fonksiyonu"</span>
-    <span class="k">return</span> <span class="bp">True</span>
-
-<span class="s2">"0 döner, x() çalışmaz. İlk öge yanlış olduğu için, ikinci öge degerlendirilmeye çalışılmaz."</span>
-<span class="mi">0</span> <span class="ow">and</span> <span class="n">x</span><span class="p">()</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="s2">"K = 'b' olur, tüm öğeler doğru olduğu için, son öge döndürülür."</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="n">K</span> <span class="o">=</span> <span class="s2">"a"</span> <span class="ow">and</span> <span class="s2">"b"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="s2">"K = 0 olur. İlk yanlış öge olduğu için 0 döner."</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="n">K</span> <span class="o">=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="s2">"b"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="s2">" K = 0 olur, İki yanlış öge olsa da, ilk yanlış öğe olan 0 döndü."</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="n">K</span> <span class="o">=</span> <span class="s2">"a"</span> <span class="ow">and</span> <span class="mi">0</span> <span class="ow">and</span> <span class="s2">""</span> <span class="ow">and</span> <span class="s2">"c"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">x</span><span class="p">():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span> <span class="s2">"x fonksiyonu"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="kc">True</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="s2">"0 döner, x() çalışmaz. İlk öge yanlış olduğu için, ikinci öge degerlendirilmeye çalışılmaz."</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="mi">0</span> <span class="ow">and</span> <span class="n">x</span><span class="p">()</span>
+</code></td>
+</tr>
+</table></div>
 
 <h4>or</h4>
 <p><code>and</code> yapısının tersine <code>or</code> yapısı ilk doğru
 ögeyi döndürmeye çalışır.</p>
-<pre class="code literal-block"><span></span><span class="s2">"K = [] olur, tüm öğeler yanlış olduğu için, son öğe döner."</span>
-<span class="n">K</span> <span class="o">=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">[]</span>
-
-<span class="s2">"K = 'b' olur. 'b' ilk doğru öğedir."</span>
-<span class="n">K</span> <span class="o">=</span> <span class="s1">'b'</span> <span class="ow">or</span> <span class="mi">0</span>
-
-<span class="s2">" K = 'a' olur, 'a' ilk doğru öğedir."</span>
-<span class="n">K</span> <span class="o">=</span> <span class="bp">None</span> <span class="ow">or</span> <span class="p">{}</span> <span class="ow">or</span> <span class="bp">False</span> <span class="ow">or</span> <span class="s2">"a"</span> <span class="ow">or</span> <span class="s2">"c"</span>
-
-<span class="k">def</span> <span class="nf">x</span><span class="p">():</span>
-    <span class="k">print</span> <span class="s2">"x fonksiyonu"</span>
-    <span class="k">return</span> <span class="bp">True</span>
-
-<span class="s2">"0 yanlış olarak değerlendirildiği için, x() fonksiyonu çalışır ve değeri döndürülür."</span>
-<span class="mi">0</span> <span class="ow">or</span> <span class="n">x</span><span class="p">()</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="s2">"K = [] olur, tüm öğeler yanlış olduğu için, son öğe döner."</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="n">K</span> <span class="o">=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="s2">"K = 'b' olur. 'b' ilk doğru öğedir."</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="n">K</span> <span class="o">=</span> <span class="s1">'b'</span> <span class="ow">or</span> <span class="mi">0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="s2">" K = 'a' olur, 'a' ilk doğru öğedir."</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="n">K</span> <span class="o">=</span> <span class="kc">None</span> <span class="ow">or</span> <span class="p">{}</span> <span class="ow">or</span> <span class="kc">False</span> <span class="ow">or</span> <span class="s2">"a"</span> <span class="ow">or</span> <span class="s2">"c"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">x</span><span class="p">():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span> <span class="s2">"x fonksiyonu"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="kc">True</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="s2">"0 yanlış olarak değerlendirildiği için, x() fonksiyonu çalışır ve değeri döndürülür."</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="mi">0</span> <span class="ow">or</span> <span class="n">x</span><span class="p">()</span>
+</code></td>
+</tr>
+</table></div>
 
 <h4>Zincirleme</h4>
 <p><code>and</code> ve <code>or</code> zincirlendiğinde soldan sağa
 doğru, sırasıyla değerlendirme yapılır.</p>
-<pre class="code literal-block"><span></span><span class="s2">" 'yasar' döner. 1 and 'yasar', 'yasar' olarak değerlendirilir. </span>
-<span class="s2">"'yasar' or 'b', 'yasar' olarak değerlendirilir. "</span>
-<span class="mi">1</span> <span class="ow">and</span> <span class="s2">"yasar"</span> <span class="ow">or</span> <span class="s2">"b"</span>
-
-<span class="sd">"""</span>
-<span class="sd">'osman' döner.</span>
-<span class="sd">0 and 'yasar', 0 olarak değerlendirilir. Dönen 0, 'osman' ile karşılaştırılır.</span>
-<span class="sd">0 or 'osman', 'osman' olarak değerlendirilir ve bu değer döner. </span>
-<span class="sd">"""</span>
-<span class="mi">0</span> <span class="ow">and</span> <span class="s2">"yasar"</span> <span class="ow">or</span> <span class="s2">"osman"</span>
-
-<span class="sd">"""</span>
-<span class="sd">1 döner. </span>
-<span class="sd">1 or 'yasar', 1 olarak değerlendirilir. Dönen 1 ile 'osman' karşılaştırılır.</span>
-<span class="sd">1 and 'osman', 1 olarak değerlendirilir.</span>
-<span class="sd">"""</span>
-<span class="mi">1</span> <span class="ow">or</span> <span class="s2">"yasar"</span> <span class="ow">and</span> <span class="s2">"osman"</span>
-
-<span class="sd">"""</span>
-<span class="sd">'osman' döner.</span>
-<span class="sd">0 or 'yasar' =&gt; 'yasar'</span>
-<span class="sd">'yasar' and 'osman' =&gt; 'osman'</span>
-<span class="sd">"""</span>
-<span class="mi">0</span> <span class="ow">or</span> <span class="s2">"yasar"</span> <span class="ow">and</span> <span class="s2">"osman"</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="s2">" 'yasar' döner. 1 and 'yasar', 'yasar' olarak değerlendirilir. </span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="s2">"'yasar' or 'b', 'yasar' olarak değerlendirilir. "</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="mi">1</span> <span class="ow">and</span> <span class="s2">"yasar"</span> <span class="ow">or</span> <span class="s2">"b"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="sd">'osman' döner.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="sd">0 and 'yasar', 0 olarak değerlendirilir. Dönen 0, 'osman' ile karşılaştırılır.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="sd">0 or 'osman', 'osman' olarak değerlendirilir ve bu değer döner. </span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="mi">0</span> <span class="ow">and</span> <span class="s2">"yasar"</span> <span class="ow">or</span> <span class="s2">"osman"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="sd">1 döner. </span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="sd">1 or 'yasar', 1 olarak değerlendirilir. Dönen 1 ile 'osman' karşılaştırılır.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="sd">1 and 'osman', 1 olarak değerlendirilir.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><span class="mi">1</span> <span class="ow">or</span> <span class="s2">"yasar"</span> <span class="ow">and</span> <span class="s2">"osman"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><span class="sd">'osman' döner.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="sd">0 or 'yasar' =&gt; 'yasar'</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code><span class="sd">'yasar' and 'osman' =&gt; 'osman'</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code><span class="mi">0</span> <span class="ow">or</span> <span class="s2">"yasar"</span> <span class="ow">and</span> <span class="s2">"osman"</span>
+</code></td>
+</tr>
+</table></div>
 
 <h4>If Yapısıyla and-or kullanımı</h4>
 <p><code>and</code> ve <code>or</code>, <code>if</code> yapısıyla
 birlikte kullanıldığında, bunlardan dönen değer, if ile değerlendirilir.</p>
-<pre class="code literal-block"><span></span><span class="c1"># If içerisine girmez. '' and "b" den '' döner, if bunu yanlış olarak değerlendirir.</span>
-<span class="k">if</span> <span class="s1">''</span> <span class="ow">and</span> <span class="s2">"b"</span>
-
-<span class="c1"># If içerisine girer. "" or "b" den "b" döner. if "b"yi doğru olarak değerlendirir.</span>
-<span class="k">if</span> <span class="s2">""</span> <span class="ow">or</span> <span class="s2">"b"</span>
-
-<span class="c1"># If içerisine girmez. 0 or None içinde doğru öğe olmadığı için, son öğe olan None döner.</span>
-<span class="k">if</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">None</span>
-
-<span class="c1"># If içerisine girmez. 0 or None, 0 döndürür. 0 yanlış olarak değerlendirilir.</span>
-<span class="k">if</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">None</span>
-</pre>
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="c1"># If içerisine girmez. '' and "b" den '' döner, if bunu yanlış olarak değerlendirir.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="k">if</span> <span class="s1">''</span> <span class="ow">and</span> <span class="s2">"b"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="c1"># If içerisine girer. "" or "b" den "b" döner. if "b"yi doğru olarak değerlendirir.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="k">if</span> <span class="s2">""</span> <span class="ow">or</span> <span class="s2">"b"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="c1"># If içerisine girmez. 0 or None içinde doğru öğe olmadığı için, son öğe olan None döner.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="k">if</span> <span class="mi">0</span> <span class="ow">or</span> <span class="kc">None</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="c1"># If içerisine girmez. 0 or None, 0 döndürür. 0 yanlış olarak değerlendirilir.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="and-ve-or.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="k">if</span> <span class="mi">0</span> <span class="ow">and</span> <span class="kc">None</span>
+</code></td>
+</tr>
+</table></div>
 </div>
     </div>
     <aside class="postpromonav"><nav><div class="pager">

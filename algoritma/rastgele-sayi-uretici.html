@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
@@ -10,21 +10,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/algoritma/rastgele-sayi-uretici.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/algoritma/rastgele-sayi-uretici.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="buyuk-sayi-islemleri-carpma.html" title="Büyük Sayı Algoritmaları - Çarpma" type="text/html">
 <link rel="next" href="buyuk-sayi-islemleri-bolme.html" title="Büyük Sayı Algoritmaları - Bölme" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Rastgele Sayı Üretici">
-<meta property="og:url" content="http://ysar.net/algoritma/rastgele-sayi-uretici.html">
-<meta property="og:description" content="Merhabalar,
-Multi-precision doğal sayılarda bölme yapan bir fonksiyonu test etmek için, C'deki rand()
-fonksiyonu ile rastgele sayı oluştururken, oluşturduğum sayıların
-yeterince rastgele olmadığına (a">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2020-03-04T01:28:00+03:00">
-<meta property="article:tag" content="mathjax">
 </head>
 <body>
 
@@ -58,89 +48,413 @@ bir rastgele sayı üretici oluşturdum.</p>
 <p>Bu rastgele sayı üreticinin özelliği, küçük sayılara daha fazla ağırlık veriyor olması. Dolayısı ile,
 uniform dağılımda sayılar üretmiyor. Kriptografi alanında kullanılmaması gerektiğini de özellikle
 vurgulamak istiyorum. Kodlar aşağıdaki gibi;</p>
-<pre class="code literal-block"><span></span><span class="cp">#if defined(__GNUC__)</span>
-<span class="cp">#define nlz(x) __builtin_clz(x)</span>
-<span class="cp">#elif defined(_MSC_VER)</span>
-<span class="cp">#define nlz(x) __lzcnt(x)</span>
-<span class="cp">#else</span>
-<span class="kt">int</span> <span class="nf">nlz</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">value</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">value</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-        <span class="n">value</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="k">return</span> <span class="mi">32</span> <span class="o">-</span> <span class="n">i</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="cp">#endif</span>
-
-<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
-
-<span class="k">typedef</span> <span class="kt">int32_t</span> <span class="n">bn_size_t</span><span class="p">;</span>
-<span class="k">typedef</span> <span class="kt">uint32_t</span> <span class="n">bn_digit_t</span><span class="p">;</span>
-
-<span class="k">struct</span> <span class="n">rngstate</span>
-<span class="p">{</span>
-    <span class="kt">uint8_t</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="mi">256</span><span class="p">];</span>
-<span class="p">};</span>
-
-<span class="k">static</span> <span class="k">struct</span> <span class="n">rngstate</span> <span class="n">RNGSTATE</span><span class="p">;</span>
-
-<span class="kt">void</span> <span class="nf">init_rng</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">key</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">keysize</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
-    <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
-    <span class="kt">uint8_t</span> <span class="n">j</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">256</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">256</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">j</span> <span class="o">+=</span> <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="n">keysize</span><span class="p">];</span>
-        <span class="kt">int</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-        <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
-        <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kt">uint8_t</span> <span class="nf">myarc4</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
-    <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">j</span> <span class="o">+=</span> <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">RNGSTATE</span><span class="p">.</span><span class="n">i</span><span class="p">];</span>
-    <span class="kt">uint8_t</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">RNGSTATE</span><span class="p">.</span><span class="n">i</span><span class="p">];</span>
-    <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">RNGSTATE</span><span class="p">.</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">RNGSTATE</span><span class="p">.</span><span class="n">j</span><span class="p">];</span>
-    <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">RNGSTATE</span><span class="p">.</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
-    <span class="k">return</span> <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[(</span><span class="kt">uint8_t</span><span class="p">)(</span><span class="n">RNGSTATE</span><span class="p">.</span><span class="n">i</span> <span class="o">+</span> <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">j</span><span class="p">)];</span>
-<span class="p">}</span>
-
-<span class="kt">void</span> <span class="nf">fill_random</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">arr</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">len</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">do</span> <span class="p">{</span>
-        <span class="n">bn_digit_t</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="n">bn_digit_t</span> <span class="n">k</span> <span class="o">=</span> <span class="n">myarc4</span><span class="p">()</span> <span class="o">%</span> <span class="mi">33</span><span class="p">;</span>
-        <span class="n">bn_digit_t</span> <span class="n">_nlz</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
-
-        <span class="k">while</span> <span class="p">(</span><span class="n">_nlz</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mi">32</span> <span class="o">-</span> <span class="n">k</span><span class="p">))</span>
-        <span class="p">{</span>
-            <span class="kt">int</span> <span class="n">shift</span> <span class="o">=</span> <span class="p">(</span><span class="n">_nlz</span> <span class="o">+</span> <span class="n">k</span><span class="p">)</span> <span class="o">-</span> <span class="mi">32</span><span class="p">;</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">shift</span> <span class="o">&gt;</span> <span class="mi">8</span><span class="p">)</span>
-                <span class="n">shift</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
-
-            <span class="kt">int</span> <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">shift</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
-            <span class="n">num</span> <span class="o">=</span> <span class="p">(</span><span class="n">num</span> <span class="o">&lt;&lt;</span> <span class="n">shift</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">myarc4</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">mask</span><span class="p">);</span>
-            <span class="n">_nlz</span> <span class="o">=</span> <span class="n">nlz</span><span class="p">(</span><span class="n">num</span><span class="p">);</span>
-        <span class="p">}</span>
-
-        <span class="n">arr</span><span class="p">[</span><span class="o">--</span><span class="n">len</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span><span class="p">;</span>
-
-    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">len</span><span class="p">);</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="cp">#if defined(__GNUC__)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="cp">#define nlz(x) __builtin_clz(x)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="cp">#elif defined(_MSC_VER)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="cp">#define nlz(x) __lzcnt(x)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="cp">#else</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">nlz</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">value</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">value</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="n">value</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">32</span> <span class="o">-</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="cp">#endif</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><span class="k">typedef</span> <span class="kt">int32_t</span> <span class="n">bn_size_t</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="k">typedef</span> <span class="kt">uint32_t</span> <span class="n">bn_digit_t</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><span class="k">struct</span> <span class="n">rngstate</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>    <span class="kt">uint8_t</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="mi">256</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code><span class="p">};</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code><span class="k">static</span> <span class="k">struct</span> <span class="n">rngstate</span> <span class="n">RNGSTATE</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">init_rng</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">key</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">keysize</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>    <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>    <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>    <span class="kt">uint8_t</span> <span class="n">j</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">256</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code>        <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-38"><code data-line-number="38"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-39"><code data-line-number="39"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-40"><code data-line-number="40"></code></a></td>
+<td class="code"><code>    <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-41"><code data-line-number="41"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">256</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-42"><code data-line-number="42"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-43"><code data-line-number="43"></code></a></td>
+<td class="code"><code>        <span class="n">j</span> <span class="o">+=</span> <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="n">keysize</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-44"><code data-line-number="44"></code></a></td>
+<td class="code"><code>        <span class="kt">int</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-45"><code data-line-number="45"></code></a></td>
+<td class="code"><code>        <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-46"><code data-line-number="46"></code></a></td>
+<td class="code"><code>        <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-47"><code data-line-number="47"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-48"><code data-line-number="48"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-49"><code data-line-number="49"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-50"><code data-line-number="50"></code></a></td>
+<td class="code"><code><span class="kt">uint8_t</span> <span class="nf">myarc4</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-51"><code data-line-number="51"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-52"><code data-line-number="52"></code></a></td>
+<td class="code"><code>    <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-53"><code data-line-number="53"></code></a></td>
+<td class="code"><code>    <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">j</span> <span class="o">+=</span> <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">RNGSTATE</span><span class="p">.</span><span class="n">i</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-54"><code data-line-number="54"></code></a></td>
+<td class="code"><code>    <span class="kt">uint8_t</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">RNGSTATE</span><span class="p">.</span><span class="n">i</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-55"><code data-line-number="55"></code></a></td>
+<td class="code"><code>    <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">RNGSTATE</span><span class="p">.</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">RNGSTATE</span><span class="p">.</span><span class="n">j</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-56"><code data-line-number="56"></code></a></td>
+<td class="code"><code>    <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[</span><span class="n">RNGSTATE</span><span class="p">.</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-57"><code data-line-number="57"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">s</span><span class="p">[(</span><span class="kt">uint8_t</span><span class="p">)(</span><span class="n">RNGSTATE</span><span class="p">.</span><span class="n">i</span> <span class="o">+</span> <span class="n">RNGSTATE</span><span class="p">.</span><span class="n">j</span><span class="p">)];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-58"><code data-line-number="58"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-59"><code data-line-number="59"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-60"><code data-line-number="60"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">fill_random</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">arr</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">len</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-61"><code data-line-number="61"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-62"><code data-line-number="62"></code></a></td>
+<td class="code"><code>    <span class="k">do</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-63"><code data-line-number="63"></code></a></td>
+<td class="code"><code>        <span class="n">bn_digit_t</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-64"><code data-line-number="64"></code></a></td>
+<td class="code"><code>        <span class="n">bn_digit_t</span> <span class="n">k</span> <span class="o">=</span> <span class="n">myarc4</span><span class="p">()</span> <span class="o">%</span> <span class="mi">33</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-65"><code data-line-number="65"></code></a></td>
+<td class="code"><code>        <span class="n">bn_digit_t</span> <span class="n">_nlz</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-66"><code data-line-number="66"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-67"><code data-line-number="67"></code></a></td>
+<td class="code"><code>        <span class="k">while</span> <span class="p">(</span><span class="n">_nlz</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mi">32</span> <span class="o">-</span> <span class="n">k</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-68"><code data-line-number="68"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-69"><code data-line-number="69"></code></a></td>
+<td class="code"><code>            <span class="kt">int</span> <span class="n">shift</span> <span class="o">=</span> <span class="p">(</span><span class="n">_nlz</span> <span class="o">+</span> <span class="n">k</span><span class="p">)</span> <span class="o">-</span> <span class="mi">32</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-70"><code data-line-number="70"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="p">(</span><span class="n">shift</span> <span class="o">&gt;</span> <span class="mi">8</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-71"><code data-line-number="71"></code></a></td>
+<td class="code"><code>                <span class="n">shift</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-72"><code data-line-number="72"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-73"><code data-line-number="73"></code></a></td>
+<td class="code"><code>            <span class="kt">int</span> <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">shift</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-74"><code data-line-number="74"></code></a></td>
+<td class="code"><code>            <span class="n">num</span> <span class="o">=</span> <span class="p">(</span><span class="n">num</span> <span class="o">&lt;&lt;</span> <span class="n">shift</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">myarc4</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">mask</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-75"><code data-line-number="75"></code></a></td>
+<td class="code"><code>            <span class="n">_nlz</span> <span class="o">=</span> <span class="n">nlz</span><span class="p">(</span><span class="n">num</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-76"><code data-line-number="76"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-77"><code data-line-number="77"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-78"><code data-line-number="78"></code></a></td>
+<td class="code"><code>        <span class="n">arr</span><span class="p">[</span><span class="o">--</span><span class="n">len</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-79"><code data-line-number="79"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-80"><code data-line-number="80"></code></a></td>
+<td class="code"><code>    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">len</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="rastgele-sayi-uretici.html#-81"><code data-line-number="81"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada kullanmak isteyebileceğiniz iki fonksiyon var; <code>fill_random</code> ve <code>myarc4</code>. <code>myarc4</code> fonksiyonu
 RC4 şifrelemeden esinlenerek(!) yazdım. Her çağrıldığında, rastgele 8 bit bir değer döndürüyor. Ancak,
@@ -164,7 +478,7 @@ sahip rastgele sayılar üretmek isterseniz işinize yarayabileceğini düşün�
         </div>
 
     </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
-	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script></article></main><script>
   if(document.location.hostname == "ysar.net")

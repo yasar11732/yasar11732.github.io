@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Django'da yönetici (admin) sayfaları nasıl oluşuturulur? Uygulamalar yönetici paneline nasıl kaydedilir? Django yönetici panelinde otomatik alan doldurma nasıl yapılır?">
@@ -11,17 +11,11 @@
 <link href="../../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/django-blog-uygulamasi/yonetici-paneli.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/django-blog-uygulamasi/yonetici-paneli.html">
 <!--[if lt IE 9]><script src="../../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="uygulama-modeller.html" title="Django ile Blog Geliştirme - Modeller" type="text/html">
 <link rel="next" href="../django-abstract-model.html" title="Django'da Abstract Modeller" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Django ile Blog Geliştirme - Yönetici Paneli">
-<meta property="og:url" content="http://ysar.net/python/django-blog-uygulamasi/yonetici-paneli.html">
-<meta property="og:description" content="Django'da yönetici (admin) sayfaları nasıl oluşuturulur? Uygulamalar yönetici paneline nasıl kaydedilir? Django yönetici panelinde otomatik alan doldurma nasıl yapılır?">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2011-08-07T20:21:00+03:00">
 </head>
 <body>
 
@@ -71,9 +65,11 @@ yanlışlıkla sildiğinizi düşünüyorsanız, şunları kontrol edin:</p>
 <p>Eğer bunların hepsi varsa, admin sitesi kullanıma hazır demektir. Eğer
 admin sitesini yeni aktifleştirdiyseniz, şu komutu vererek veritabanında
 admin sitesi için gerekli olan tabloları oluşturun:</p>
-<pre class="code literal-block"><span></span>python manage.py syncdb
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">python manage.py syncdb</span>
+</code></td>
+</tr></table></div>
 
 <p>Bu komut eğer daha önce bir yönetici hesabı oluşturmadıysanız, bir
 yönetici hesabı oluşturmanızı isteyecek. Gerekli bilgileri girerek
@@ -83,15 +79,43 @@ hangi link üzerinden ulaşılacağını django'ya bildirmedik. URL
 tanımlaması yapması konusuna daha sonra değineceğiz. Şimdilik, proje ana
 dizininiz içindeki urls modülünde, admin uygulaması için gereken
 değişiklikleri yapın, urls modülünüzün şu şekilde görünmesi gerekiyor.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">django.conf.urls.defaults</span> <span class="kn">import</span> <span class="n">patterns</span><span class="p">,</span> <span class="n">include</span><span class="p">,</span> <span class="n">url</span>
-<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
-<span class="n">admin</span><span class="o">.</span><span class="n">autodiscover</span><span class="p">()</span>
-
-<span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span>
-    <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">'^admin/'</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">)),</span>
-<span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.conf.urls.defaults</span> <span class="kn">import</span> <span class="n">patterns</span><span class="p">,</span> <span class="n">include</span><span class="p">,</span> <span class="n">url</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="n">admin</span><span class="o">.</span><span class="n">autodiscover</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">'^admin/'</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">)),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Artık admin panelimiz kullanıma hazır. Ancak, admin panelinin düzgün
 görünmesi için gereken statik dosyalar yerinde olmayabilir. <em>settings</em>
@@ -104,9 +128,11 @@ dosyalarınızı tuttuğunuz dizinin içerisinde, admin ismindeki bir klasöre
 kopyalamalısınız. Artık admin siteniz kullanıma hazır. Eğer geliştirme
 sunucunuz açık değilse, projenizin ana dizini içerisindeyken şu komutu
 verin:</p>
-<pre class="code literal-block"><span></span>python manage.py runserver
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">python manage.py runserver</span>
+</code></td>
+</tr></table></div>
 
 <p>Bu sizin için <a href="http://localhost:8000">http://localhost:8000</a> adresinde bir sunucu oluşturacak.
 Eğer, o adrese giderseniz, size gittiğiniz adresin tanımladığınız
@@ -128,15 +154,19 @@ uygulamanın) içerisinde admin.py isimli boş bir dosya oluşturun. Admin
 uygulaması, bizim uygulamamızı kaydetmek için bu dosyanın içeriğini
 kullanacak. Şimdi modülümüzü yazmaya başlayalım. Öncelikle modülümüzün
 içerisine django'nun admin uygulamasını dahil etmemiz gerekiyor.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+</code></td>
+</tr></table></div>
 
 <p>Daha sonra admin sitesine kayıt edeceğimiz modelleri modülümüze dahil
 etmeliyiz.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">makale</span><span class="p">,</span> <span class="n">etiket</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">makale</span><span class="p">,</span> <span class="n">etiket</span>
+</code></td>
+</tr></table></div>
 
 <p>Artık modellerimizi admin sitesine kayıt edebiliriz. Bunun için
 modülümüze dahil ettiğimiz admin paketinin içerisindeki sites modülünde
@@ -145,10 +175,18 @@ paketini modülümüze dahil ederken, bu paketin __init__ modülü, bizim
 için sites.AdminSite'ye işaret eden bir kısayol olarak "site"
 değişkenini tanımladı. Bu yüzden kayıt işlemini şu şekilde
 gerçekleştirebiliriz.</p>
-<pre class="code literal-block"><span></span><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">makale</span><span class="p">)</span>
-<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">etiket</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">makale</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">etiket</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada, <em>makale</em> ve <em>etiket</em> argümanlarının tırnak içinde olmadığına
 dikkat edin. Bu metoda argüman olarak models.Model'den kalıtım alan bir
@@ -162,16 +200,48 @@ modelimizdeki slug alanını her seferinde doldurmak sıkıntı verici bir
 durum olabilir. Bu yüzden, admin sitesinin slug alanlarını otomatik
 olarak doldurmasını isteyeceğiz. Önce kodu görelim, sonra açıklamalarını
 yapacağım:</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">makale</span><span class="p">,</span> <span class="n">etiket</span>
-<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
-
-<span class="k">class</span> <span class="nc">MakaleAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
-    <span class="n">prepopulated_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"slug"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"baslik"</span><span class="p">,)}</span>
-
-<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">makale</span><span class="p">,</span><span class="n">MakaleAdmin</span><span class="p">)</span>
-<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">etiket</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">makale</span><span class="p">,</span> <span class="n">etiket</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">MakaleAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="n">prepopulated_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"slug"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"baslik"</span><span class="p">,)}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">makale</span><span class="p">,</span><span class="n">MakaleAdmin</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yonetici-paneli.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">etiket</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada admin paketi/uygulaması içerisindeki ModelAdmin sınıfından
 kalıtım alan (php'deki extends gibi) makale adında bir sınıf oluşturduk.

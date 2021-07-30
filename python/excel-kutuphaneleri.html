@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Python ile Excel dosyalarını okumak veya excel dosyası yazmak için bu yazıyı okuyun. Kısa ve öz yazı size gereken temelleri verecek.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/excel-kutuphaneleri.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/excel-kutuphaneleri.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="matematik-araclari-kutuphanesi.html" title="Python için Matematik Araçları Kütüphanesi" type="text/html">
 <link rel="next" href="soket-programlama-ve-multiprocessing.html" title="Python ile soket programlama ve multiprocessing modülü" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Python ve Excel Kütüphaneleri">
-<meta property="og:url" content="http://ysar.net/python/excel-kutuphaneleri.html">
-<meta property="og:description" content="Python ile Excel dosyalarını okumak veya excel dosyası yazmak için bu yazıyı okuyun. Kısa ve öz yazı size gereken temelleri verecek.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2011-10-11T04:12:00+03:00">
 </head>
 <body>
 
@@ -84,49 +78,181 @@ fonksiyonu kullanılıyor. Bu fonksiyona ilk argüman olarak dosya yolunu
 verirseniz, o dosyayı okuyup, ilişkili bir <code>xlrd.Book</code>
 sınıfı döndürüyor. Dolayısıyla bu dosyayla çalışmak için dönüş değerini
 bir değişkene atamalısınız.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">xlrd</span> <span class="kn">import</span> <span class="n">open_workbook</span>
-<span class="n">a</span> <span class="o">=</span> <span class="n">open_workbook</span><span class="p">(</span><span class="s2">"birexceldosyasi.xls"</span><span class="p">)</span>
-
-<span class="c1"># alternatif olarak:</span>
-
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"birexceldosyasi.xls"</span><span class="p">,</span><span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya</span><span class="p">:</span>
-    <span class="c1"># dosyayı binary olarak açtığımıza dikkat ediniz.</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">open_workbook</span><span class="p">(</span><span class="n">file_contents</span><span class="o">=</span><span class="n">dosya</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-
-<span class="c1"># Ayrıca, file_contents olarak mmap objesi de verebilirsiniz.</span>
-<span class="c1"># bkz: http://docs.python.org/library/mmap.html</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">xlrd</span> <span class="kn">import</span> <span class="n">open_workbook</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">=</span> <span class="n">open_workbook</span><span class="p">(</span><span class="s2">"birexceldosyasi.xls"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="c1"># alternatif olarak:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"birexceldosyasi.xls"</span><span class="p">,</span><span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="c1"># dosyayı binary olarak açtığımıza dikkat ediniz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">a</span> <span class="o">=</span> <span class="n">open_workbook</span><span class="p">(</span><span class="n">file_contents</span><span class="o">=</span><span class="n">dosya</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="c1"># Ayrıca, file_contents olarak mmap objesi de verebilirsiniz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="c1"># bkz: http://docs.python.org/library/mmap.html</span>
+</code></td>
+</tr>
+</table></div>
 
 <h5>Çalışma Kitabında Gezinme</h5>
 <p>Bir çalışma kitabı açtıktan sonra, muhtemelen bu dosyanın içerisinde
 gezinip bazı satır ve sütünlardan bilgi almak isteyeceksiniz. Bunun için
 <code>xlrd.Book</code> objesinin bazı metotlarından yararlanacağız,
 aşağıdaki örneği inceleyelim.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">xlrd</span> <span class="kn">import</span> <span class="n">open_workbook</span>
-
-<span class="n">a</span> <span class="o">=</span> <span class="n">open_workbook</span><span class="p">(</span><span class="s2">"dosyaadi.xls"</span><span class="p">)</span>
-
-<span class="c1"># Bir çalışma kitabı, birkaç farklı çalışma sayfadan oluşur. Her sayfada farklı bir tablo vardır.</span>
-<span class="c1"># bunlara erişmek için xlrd.Book.sheets() metodunu kullanabiliriz.</span>
-
-<span class="k">for</span> <span class="n">sayfa</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">sheets</span><span class="p">():</span>
-    <span class="c1"># Bu satırda sayfa değişkenine bir xlrd.sheet objesi atandı.</span>
-
-    <span class="k">print</span> <span class="s2">"Çalışma sayfası: "</span> <span class="o">+</span> <span class="n">sayfa</span><span class="o">.</span><span class="n">name</span>
-
-    <span class="c1"># sayfadaki satır sayısına nrows ile ulaşıyoruz.</span>
-    <span class="k">for</span> <span class="n">satir</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sayfa</span><span class="o">.</span><span class="n">nrows</span><span class="p">):</span>
-        <span class="n">degerler</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="c1"># Sütün sayısına ncols üzerinden ulaşıyoruz</span>
-        <span class="k">for</span> <span class="n">sutun</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sayfa</span><span class="o">.</span><span class="n">ncols</span><span class="p">):</span>
-            <span class="c1"># cell metodu bize bir hücre döndürüyor, value ile değer okuyoruz.</span>
-            <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sayfa</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">satir</span><span class="p">,</span> <span class="n">sutun</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-        <span class="k">print</span> <span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">degerler</span><span class="p">)</span>
-    <span class="k">print</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">xlrd</span> <span class="kn">import</span> <span class="n">open_workbook</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">=</span> <span class="n">open_workbook</span><span class="p">(</span><span class="s2">"dosyaadi.xls"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="c1"># Bir çalışma kitabı, birkaç farklı çalışma sayfadan oluşur. Her sayfada farklı bir tablo vardır.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="c1"># bunlara erişmek için xlrd.Book.sheets() metodunu kullanabiliriz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">sayfa</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">sheets</span><span class="p">():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="c1"># Bu satırda sayfa değişkenine bir xlrd.sheet objesi atandı.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span> <span class="s2">"Çalışma sayfası: "</span> <span class="o">+</span> <span class="n">sayfa</span><span class="o">.</span><span class="n">name</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="c1"># sayfadaki satır sayısına nrows ile ulaşıyoruz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">satir</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sayfa</span><span class="o">.</span><span class="n">nrows</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="n">degerler</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>        <span class="c1"># Sütün sayısına ncols üzerinden ulaşıyoruz</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">sutun</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sayfa</span><span class="o">.</span><span class="n">ncols</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>            <span class="c1"># cell metodu bize bir hücre döndürüyor, value ile değer okuyoruz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>            <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sayfa</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">satir</span><span class="p">,</span> <span class="n">sutun</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>        <span class="nb">print</span> <span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">degerler</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span>
+</code></td>
+</tr>
+</table></div>
 
 <h5>Çalışma Kitabını İncelemek</h5>
 <p><code>open_book()</code> ile dönen xlrd.Book sınıfı bir çalışma
@@ -139,20 +265,68 @@ Nasıl sheet_by_index metoduyla belli bir sıradaki çalışma sayfasını
 alabiliyorsak, sheet_by_name metodunu kullanarak, belli bir isimdeki
 çalışma sayfasını alabiliriz. Ayrıca, <code>sheets</code> metodu da
 tüm çalışma sayfalarının bir listesini döndürür.</p>
-<pre class="code literal-block"><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">open_book</span><span class="p">(</span><span class="s2">"birexceldosyasi.xls"</span><span class="p">)</span>
-
-<span class="c1"># Index'e göre sayfaları alma</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">nsheets</span><span class="p">):</span>
-    <span class="k">print</span> <span class="n">a</span><span class="o">.</span><span class="n">sheet_by_index</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-
-<span class="c1"># Isime göre sayfaları alma</span>
-<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">sheets_names</span><span class="p">():</span>
-    <span class="k">print</span> <span class="n">a</span><span class="o">.</span><span class="n">sheet_by_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">sayfa</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">sheets</span><span class="p">():</span>
-    <span class="k">print</span> <span class="n">sheet</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">=</span> <span class="n">open_book</span><span class="p">(</span><span class="s2">"birexceldosyasi.xls"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="c1"># Index'e göre sayfaları alma</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">nsheets</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span> <span class="n">a</span><span class="o">.</span><span class="n">sheet_by_index</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="c1"># Isime göre sayfaları alma</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">sheets_names</span><span class="p">():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span> <span class="n">a</span><span class="o">.</span><span class="n">sheet_by_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">sayfa</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">sheets</span><span class="p">():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span> <span class="n">sheet</span>
+</code></td>
+</tr>
+</table></div>
 
 <h5>Çalışma Sayfasını İncelemek</h5>
 <p>Yukarıda bahsedilen herhangi bir metot ile elde edeceğiniz
@@ -160,43 +334,159 @@ tüm çalışma sayfalarının bir listesini döndürür.</p>
 tüm bilgileri tutar. Bu objenin <code>name</code> özelliği bu sayfanın
 adını tutar. <code>ncols</code> ve <code>nrows</code> ise sırasıyla
 bu sayfadaki sütun ve satır sayısına karşılık gelir.</p>
-<pre class="code literal-block"><span></span><span class="n">sayfa</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">sheet_by_index</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">satir_no</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sayfa</span><span class="o">.</span><span class="n">nrows</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">sutun_no</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sayfa</span><span class="o">.</span><span class="n">ncols</span><span class="p">):</span>
-        <span class="k">print</span> <span class="n">sayfa</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">satir_no</span><span class="p">,</span> <span class="n">sutun_no</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">sayfa</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">sheet_by_index</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">satir_no</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sayfa</span><span class="o">.</span><span class="n">nrows</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">sutun_no</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sayfa</span><span class="o">.</span><span class="n">ncols</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>        <span class="nb">print</span> <span class="n">sayfa</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">satir_no</span><span class="p">,</span> <span class="n">sutun_no</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+</code></td>
+</tr>
+</table></div>
 
 <h5>Sayfa İçeriğinin Topluca Alınması</h5>
 <p>Yukarıda üstünkörü bahsettiğim hücre hücre erişim dışında, bir gurup
 hücredeki bilgileri toplu halde de alabilirsiniz.</p>
-<pre class="code literal-block"><span></span><span class="c1"># import'lar burada ...</span>
-<span class="n">a</span> <span class="o">=</span> <span class="n">open_workbook</span><span class="p">(</span><span class="s2">"bir dosya"</span><span class="p">)</span>
-<span class="n">sayfa0</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">sheet_by_index</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="c1"># col ve row sırasıyla bir sütun ve satır döndürür. (cell objeleri listesi olarak)</span>
-
-<span class="n">satir0</span> <span class="o">=</span> <span class="n">sayfa0</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">sutun0</span> <span class="o">=</span> <span class="n">sayfa0</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="c1"># row_slice ve col_slice ise, belli bir satır ve sütunun bir dilimini döndürür.</span>
-
-<span class="c1"># 1. satirin 5. sütundan itibaren olan kısmı</span>
-<span class="n">k</span> <span class="o">=</span> <span class="n">sayfa</span><span class="o">.</span><span class="n">row_slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
-
-<span class="c1"># 1. (sayfaya 0'dan başlayarak..) satirin 5 ile 10 sütünları arası</span>
-<span class="n">g</span> <span class="o">=</span> <span class="n">sayfa0</span><span class="o">.</span><span class="n">row_slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
-
-<span class="c1"># col_slice'de aynı şekilde çalışıyor.</span>
-
-<span class="c1"># row_values ve col_values, yukardaki row_slice ve col_slice gibidir.</span>
-<span class="c1"># ancak, xlrd.sheet.Cell objesi yerine, direk hücrenin değerlerinin</span>
-<span class="c1"># bir listesini döndürür.</span>
-
-<span class="c1"># İlk satirdaki tüm hücrelerin değerleri</span>
-<span class="n">birinci_satir_degerleri</span> <span class="o">=</span> <span class="n">sayfa0</span><span class="o">.</span><span class="n">row_values</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="c1"># import'lar burada ...</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">=</span> <span class="n">open_workbook</span><span class="p">(</span><span class="s2">"bir dosya"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="n">sayfa0</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">sheet_by_index</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="c1"># col ve row sırasıyla bir sütun ve satır döndürür. (cell objeleri listesi olarak)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="n">satir0</span> <span class="o">=</span> <span class="n">sayfa0</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="n">sutun0</span> <span class="o">=</span> <span class="n">sayfa0</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="c1"># row_slice ve col_slice ise, belli bir satır ve sütunun bir dilimini döndürür.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="c1"># 1. satirin 5. sütundan itibaren olan kısmı</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="n">k</span> <span class="o">=</span> <span class="n">sayfa</span><span class="o">.</span><span class="n">row_slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="c1"># 1. (sayfaya 0'dan başlayarak..) satirin 5 ile 10 sütünları arası</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="n">g</span> <span class="o">=</span> <span class="n">sayfa0</span><span class="o">.</span><span class="n">row_slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="c1"># col_slice'de aynı şekilde çalışıyor.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><span class="c1"># row_values ve col_values, yukardaki row_slice ve col_slice gibidir.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="c1"># ancak, xlrd.sheet.Cell objesi yerine, direk hücrenin değerlerinin</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code><span class="c1"># bir listesini döndürür.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code><span class="c1"># İlk satirdaki tüm hücrelerin değerleri</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code><span class="n">birinci_satir_degerleri</span> <span class="o">=</span> <span class="n">sayfa0</span><span class="o">.</span><span class="n">row_values</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <h4>Sonuç Olarak</h4>
 <p>xlrd kütüphanesinin burada bahsetmediğim birkaç özelliği daha var, ama
@@ -204,9 +494,18 @@ ben detaylara girmeden konuya giriş yapmış olmak istediğimden, sadece
 temel özelliklere değindim. İleriki zamanlarda,xlwt ve xlutils ile
 ilgili açıklamaları da blog'uma eklemek istiyorum, ama zaman ne
 getirecek bilemeyiz.</p>
-<pre class="code literal-block"><span></span>"Working with Excel files
-in Python"
-</pre>
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">"Working with Excel files</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="excel-kutuphaneleri.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">in Python"</span>
+</code></td>
+</tr>
+</table></div>
 </div>
     </div>
     <aside class="postpromonav"><nav><div class="pager">

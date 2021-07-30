@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="UnicodeDecodeError neden olur, nasıl düzeltilir?">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/unicode-decode-error-ordinal-not-in-range.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/unicode-decode-error-ordinal-not-in-range.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="python-paket-istatistik-ekleme.html" title="Python Paket İstatistikleri - Ekleme" type="text/html">
 <link rel="next" href="../algoritma/4-renk-teoremi-ve-harita-boyama.html" title="4 renk teoremi ve harita boyama" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="UnicodeDecodeError - ordinal not in range(128)">
-<meta property="og:url" content="http://ysar.net/python/unicode-decode-error-ordinal-not-in-range.html">
-<meta property="og:description" content="UnicodeDecodeError neden olur, nasıl düzeltilir?">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2013-10-21T21:44:00+03:00">
 </head>
 <body>
 
@@ -88,15 +82,43 @@ olan karakter var, decode edemedim. Hatırlarsanız, ascii kodlamasında sadece 
 <p>Bu hatadan kurtulmak için, Unicode kullanmamız gereken durumlarda, elimizdeki <code>str</code> objesini doğru kodlamayla
 decode etmemiz gerekiyor. İşimiz bittikten sonra da, tekrar encode edip, o şekilde kaydetmeliyiz. Örneğin, elimizde
 utf-8 ile kodlanmış bir dosya var, ve bu dosya üzerinde işlem yapmak istiyoruz:</p>
-<pre class="code literal-block"><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"dosya.txt"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya</span><span class="p">:</span>
-    <span class="n">icerik</span> <span class="o">=</span> <span class="n">dosya</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span>
-
-<span class="c1"># icerikle bisiler yap</span>
-
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"dosya.txt"</span><span class="p">,</span><span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya</span><span class="p">:</span>
-    <span class="n">dosya</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">icerik</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">))</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="unicode-decode-error-ordinal-not-in-range.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"dosya.txt"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="unicode-decode-error-ordinal-not-in-range.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="n">icerik</span> <span class="o">=</span> <span class="n">dosya</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="unicode-decode-error-ordinal-not-in-range.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="unicode-decode-error-ordinal-not-in-range.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="c1"># icerikle bisiler yap</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="unicode-decode-error-ordinal-not-in-range.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="unicode-decode-error-ordinal-not-in-range.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"dosya.txt"</span><span class="p">,</span><span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="unicode-decode-error-ordinal-not-in-range.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>    <span class="n">dosya</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">icerik</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">))</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Böylece, doğru kodlamayı kullandığımız sürece, hiçbir problemle karşılaşmayız.</p>
 <p>Bu encoding/decoding hatalarının en kolay oluşabileceği durumlar, internet üzerinden veri okunan durumlar. Bazen
@@ -107,10 +129,18 @@ bir html dosyası aldığımızda, karşı server bize HTTP header'ları içeris
 bir header gönderebilir. Eğer, bu header'ı aldıysak, işimiz çok kolay, utf8 ile decode edip, dosya üzerinde çalışabiliriz.
 Ancak, her zaman karşıdaki sunucu bize kodlama bilgisini sağlamayabilir. Bu gibi durumlarda, html belgesi içindeki, meta
 taglarının içinde doğru kodlamayı aramalıyız. Şunlar gibi birşey aramamız gerekiyor:</p>
-<pre class="code literal-block"><span></span><span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">"utf-8"</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">meta</span> <span class="na">http-equiv</span><span class="o">=</span><span class="s">"Content-Type"</span> <span class="na">content</span><span class="o">=</span><span class="s">"text/html; charset=utf-8"</span><span class="p">&gt;</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="unicode-decode-error-ordinal-not-in-range.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">"utf-8"</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="unicode-decode-error-ordinal-not-in-range.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="p">&lt;</span><span class="nt">meta</span> <span class="na">http-equiv</span><span class="o">=</span><span class="s">"Content-Type"</span> <span class="na">content</span><span class="o">=</span><span class="s">"text/html; charset=utf-8"</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada ana fikir, herhangi bir html belgesinin üst kısmının ascii kullanarak decode edilebileceği. Eğer
 bu yöntemle de doğru kodlamayı bulamazsanız, yapmanız gereken şey o siteyi tasarlayan arkadaşlara negatif enerji göndermek.</p>

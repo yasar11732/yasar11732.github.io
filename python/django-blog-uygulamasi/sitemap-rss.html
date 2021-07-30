@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Django'da google site haritası (sitemap.xml) nasıl yapılır? Rss nasıl yapılır?">
@@ -11,17 +11,11 @@
 <link href="../../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/django-blog-uygulamasi/sitemap-rss.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/django-blog-uygulamasi/sitemap-rss.html">
 <!--[if lt IE 9]><script src="../../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="template.html" title="Django ile Blog Geliştirme - Şablonlar" type="text/html">
 <link rel="next" href="../dotcloud.html" title="Django sunucusu olarak dotcloud" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Django ile Blog Geliştirme - Rss ve Site Haritası">
-<meta property="og:url" content="http://ysar.net/python/django-blog-uygulamasi/sitemap-rss.html">
-<meta property="og:description" content="Django'da google site haritası (sitemap.xml) nasıl yapılır? Rss nasıl yapılır?">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2011-08-10T22:20:00+03:00">
 </head>
 <body>
 
@@ -58,52 +52,228 @@ gerekli açıklamaları yapacağımdan dolayı, bu örnekleri kendi projenize
 kolaylıkla uygulayabileceğinizi düşünüyorum. Atladığım bir nokta varsa,
 aşağıda gördüğünüz yorumlardan beni uyarırsanız sevinirim. Şimdi rss ile
 ilgili olan kodları görelim:</p>
-<pre class="code literal-block"><span></span><span class="c1"># -*- coding:utf-8 -*-</span>
-<span class="kn">from</span> <span class="nn">django.contrib.syndication.views</span> <span class="kn">import</span> <span class="n">Feed</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">get_object_or_404</span>
-<span class="kn">from</span> <span class="nn">portal.blog.models</span> <span class="kn">import</span> <span class="n">Post</span><span class="p">,</span> <span class="n">Tag</span>
-
-<span class="k">class</span> <span class="nc">LatestPosts</span><span class="p">(</span><span class="n">Feed</span><span class="p">):</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="s2">"yasar11732: En Son Yazılar"</span>
-    <span class="n">link</span> <span class="o">=</span> <span class="s2">"/"</span>
-    <span class="n">description</span> <span class="o">=</span> <span class="s2">"Yeni yazilarin güncellemeleri"</span>
-
-    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">yayinlandi</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"-pub_date"</span><span class="p">)[:</span><span class="mi">5</span><span class="p">]</span>
-
-    <span class="k">def</span> <span class="nf">item_title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">item</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">item</span><span class="o">.</span><span class="n">title</span>
-
-    <span class="k">def</span> <span class="nf">item_description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">item</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">item</span><span class="o">.</span><span class="n">abstract</span>
-    <span class="k">def</span> <span class="nf">item_pubdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">item</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">item</span><span class="o">.</span><span class="n">pub_date</span>
-
-<span class="k">class</span> <span class="nc">TagFeed</span><span class="p">(</span><span class="n">Feed</span><span class="p">):</span>
-
-    <span class="k">def</span> <span class="nf">get_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">request</span><span class="p">,</span><span class="n">tag</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Tag</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">tag</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">obj</span><span class="p">):</span>
-
-        <span class="k">return</span> <span class="s2">"yasar11732: </span><span class="si">%s</span><span class="s2"> ile ilgili makaleler"</span> <span class="o">%</span> <span class="n">obj</span><span class="o">.</span><span class="n">text</span>
-    <span class="k">def</span> <span class="nf">item_description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">obj</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">abstract</span>
-
-    <span class="k">def</span> <span class="nf">link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">obj</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">"/tag/</span><span class="si">%s</span><span class="s2">/"</span> <span class="o">%</span> <span class="n">obj</span><span class="o">.</span><span class="n">text</span>
-
-    <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">"</span><span class="si">%s</span><span class="s2"> ile ilgili tum yazilar"</span> <span class="o">%</span> <span class="n">obj</span><span class="o">.</span><span class="n">text</span>
-
-    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">obj</span><span class="p">):</span>
-
-        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">post_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">yayinlandi</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"-pub_date"</span><span class="p">)[:</span><span class="mi">15</span><span class="p">]</span>
-
-    <span class="k">def</span> <span class="nf">item_pubdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">item</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">item</span><span class="o">.</span><span class="n">pub_date</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="c1"># -*- coding:utf-8 -*-</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.contrib.syndication.views</span> <span class="kn">import</span> <span class="n">Feed</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">get_object_or_404</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">portal.blog.models</span> <span class="kn">import</span> <span class="n">Post</span><span class="p">,</span> <span class="n">Tag</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">LatestPosts</span><span class="p">(</span><span class="n">Feed</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="n">title</span> <span class="o">=</span> <span class="s2">"yasar11732: En Son Yazılar"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">link</span> <span class="o">=</span> <span class="s2">"/"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="n">description</span> <span class="o">=</span> <span class="s2">"Yeni yazilarin güncellemeleri"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">yayinlandi</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"-pub_date"</span><span class="p">)[:</span><span class="mi">5</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">item_title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">item</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">item</span><span class="o">.</span><span class="n">title</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">item_description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">item</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">item</span><span class="o">.</span><span class="n">abstract</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">item_pubdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">item</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">item</span><span class="o">.</span><span class="n">pub_date</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">TagFeed</span><span class="p">(</span><span class="n">Feed</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">get_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">request</span><span class="p">,</span><span class="n">tag</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Tag</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">tag</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">obj</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="s2">"yasar11732: </span><span class="si">%s</span><span class="s2"> ile ilgili makaleler"</span> <span class="o">%</span> <span class="n">obj</span><span class="o">.</span><span class="n">text</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">item_description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">obj</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">abstract</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">obj</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="s2">"/tag/</span><span class="si">%s</span><span class="s2">/"</span> <span class="o">%</span> <span class="n">obj</span><span class="o">.</span><span class="n">text</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="s2">"</span><span class="si">%s</span><span class="s2"> ile ilgili tum yazilar"</span> <span class="o">%</span> <span class="n">obj</span><span class="o">.</span><span class="n">text</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-38"><code data-line-number="38"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-39"><code data-line-number="39"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">obj</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-40"><code data-line-number="40"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-41"><code data-line-number="41"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">post_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">yayinlandi</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"-pub_date"</span><span class="p">)[:</span><span class="mi">15</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-42"><code data-line-number="42"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-43"><code data-line-number="43"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">item_pubdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">item</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-44"><code data-line-number="44"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">item</span><span class="o">.</span><span class="n">pub_date</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu modül, uygulamızın içerisinde herhangi bir isimle kayıtlı olabilir.
 Bunu url tanımlamasına nasıl kaydedeceğimize birazdan değineceğim. Bu
@@ -159,13 +329,33 @@ bekliyor. Ben modellerimde get_absolute_url metodu tanımladığım için,
 item_link metodu yazmaya gerek duymadım.</p>
 <p>Url tanımlaması yaparken, örnekte yazdığımız sınıfların views.py'de
 yazdığımız işlevlerden bir farkı yok.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">feeds</span> <span class="kn">import</span> <span class="n">LatestPosts</span><span class="p">,</span> <span class="n">TagFeed</span>
-<span class="n">urlpatterns</span> <span class="o">+=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span>
-    <span class="p">(</span><span class="sa">r</span><span class="s1">'^rss/$'</span><span class="p">,</span> <span class="n">LatestPosts</span><span class="p">()),</span>
- <span class="p">(</span><span class="sa">r</span><span class="s1">'^tag/(?P[^/]+)/rss/$'</span><span class="p">,</span> <span class="n">TagFeed</span><span class="p">()),</span>
-<span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">feeds</span> <span class="kn">import</span> <span class="n">LatestPosts</span><span class="p">,</span> <span class="n">TagFeed</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">urlpatterns</span> <span class="o">+=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="p">(</span><span class="sa">r</span><span class="s1">'^rss/$'</span><span class="p">,</span> <span class="n">LatestPosts</span><span class="p">()),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code> <span class="p">(</span><span class="sa">r</span><span class="s1">'^tag/(?P[^/]+)/rss/$'</span><span class="p">,</span> <span class="n">TagFeed</span><span class="p">()),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada, url'lerimiz için geriçağırım (callback) işlevi olarak biraz önce
 yazdığımız sınıfların birer örneklerini (parentezlere dikkat edin!)
@@ -173,48 +363,184 @@ atıyoruz. Gerisini Feed sınıfından türettiğimiz sınıflarımız hallediyo
 Artık rss beslemelerimiz çalışır vaziyetteler.</p>
 <p>Site haritası yapmak da, rss beslemesi yapmak kadar kolay, kodları
 görelim :</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">django.contrib.sitemaps</span> <span class="kn">import</span> <span class="n">Sitemap</span>
-<span class="kn">from</span> <span class="nn">portal.blog.models</span> <span class="kn">import</span> <span class="n">Post</span><span class="p">,</span> <span class="n">Tag</span>
-
-<span class="k">class</span> <span class="nc">PostSitemap</span><span class="p">(</span><span class="n">Sitemap</span><span class="p">):</span>
-  <span class="n">changefreq</span> <span class="o">=</span> <span class="s2">"never"</span>
-    <span class="n">priority</span> <span class="o">=</span> <span class="mf">0.5</span>
-
-    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">yayinlandi</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">lastmod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">obj</span><span class="p">):</span>
-      <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">pub_date</span>
-
-<span class="k">class</span> <span class="nc">TagSitemap</span><span class="p">(</span><span class="n">Sitemap</span><span class="p">):</span>
-
-    <span class="n">changefreq</span> <span class="o">=</span> <span class="s2">"weekly"</span>
-   <span class="n">priority</span> <span class="o">=</span> <span class="s2">"0.4"</span>
-
-    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">Tag</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">lastmod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">obj</span><span class="p">):</span>
-      <span class="n">posts</span> <span class="o">=</span>  <span class="n">obj</span><span class="o">.</span><span class="n">post_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">'-pub_date'</span><span class="p">)</span>
-       <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">posts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-           <span class="k">return</span> <span class="n">posts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">pub_date</span>
-        <span class="k">else</span><span class="p">:</span>
-           <span class="k">return</span> <span class="bp">None</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.contrib.sitemaps</span> <span class="kn">import</span> <span class="n">Sitemap</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">portal.blog.models</span> <span class="kn">import</span> <span class="n">Post</span><span class="p">,</span> <span class="n">Tag</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">PostSitemap</span><span class="p">(</span><span class="n">Sitemap</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>  <span class="n">changefreq</span> <span class="o">=</span> <span class="s2">"never"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="n">priority</span> <span class="o">=</span> <span class="mf">0.5</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">yayinlandi</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">lastmod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">obj</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>      <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">pub_date</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">TagSitemap</span><span class="p">(</span><span class="n">Sitemap</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="n">changefreq</span> <span class="o">=</span> <span class="s2">"weekly"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>   <span class="n">priority</span> <span class="o">=</span> <span class="s2">"0.4"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">Tag</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">lastmod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">obj</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>      <span class="n">posts</span> <span class="o">=</span>  <span class="n">obj</span><span class="o">.</span><span class="n">post_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">'-pub_date'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>       <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">posts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>           <span class="k">return</span> <span class="n">posts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">pub_date</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>        <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>           <span class="k">return</span> <span class="kc">None</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Site haritası oluşturmak, rss beslemesi oluşturmaya çok benzer
 olduğundan örnek kodları gösterip bırakıyorum. Siz okuyucuların genel
 fikri aldığını düşünüyorum. Url yapılandırması da şu şekilde:</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">sitemaps</span> <span class="kn">import</span> <span class="n">PostSitemap</span><span class="p">,</span> <span class="n">TagSitemap</span>
-<span class="n">sitemaps</span> <span class="o">=</span> <span class="p">{</span>
-<span class="s1">'posts'</span> <span class="p">:</span> <span class="n">PostSitemap</span><span class="p">,</span>
-<span class="s1">'tags'</span> <span class="p">:</span> <span class="n">TagSitemap</span><span class="p">,</span>
-<span class="p">}</span>
-<span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span>
-  <span class="p">(</span><span class="sa">r</span><span class="s1">'^sitemap\.xml$'</span><span class="p">,</span> <span class="s1">'django.contrib.sitemaps.views.sitemap'</span><span class="p">,</span> <span class="p">{</span><span class="s1">'sitemaps'</span> <span class="p">:</span> <span class="n">sitemaps</span><span class="p">}),</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">sitemaps</span> <span class="kn">import</span> <span class="n">PostSitemap</span><span class="p">,</span> <span class="n">TagSitemap</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">sitemaps</span> <span class="o">=</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="s1">'posts'</span> <span class="p">:</span> <span class="n">PostSitemap</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="s1">'tags'</span> <span class="p">:</span> <span class="n">TagSitemap</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sitemap-rss.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>  <span class="p">(</span><span class="sa">r</span><span class="s1">'^sitemap\.xml$'</span><span class="p">,</span> <span class="s1">'django.contrib.sitemaps.views.sitemap'</span><span class="p">,</span> <span class="p">{</span><span class="s1">'sitemaps'</span> <span class="p">:</span> <span class="n">sitemaps</span><span class="p">}),</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada, rss beslemesi örneğinden farklı olarak, yazdığımız sınıfları
 geriçağırım metodu olara değil, django'nun sitemaps paketinin görünüm

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Blog yazılımlarında ilgili makale bulmak için çeşitli yöntemler var. Bu yazıda, dökümanlar arasında benzerlik skoru oluşturan bir algoritma denemesi yapılıyor.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/algoritma/benzer-yazi-analizi.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/algoritma/benzer-yazi-analizi.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="../python/djangoda-paket-yoneticisi.html" title="Django Modelleriyle Paket Yöneticisi" type="text/html">
 <link rel="next" href="benzer-yazi-analizi-2.html" title="Benzer Yazı Analizi 2" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Benzer yazı analizi 1">
-<meta property="og:url" content="http://ysar.net/algoritma/benzer-yazi-analizi.html">
-<meta property="og:description" content="Blog yazılımlarında ilgili makale bulmak için çeşitli yöntemler var. Bu yazıda, dökümanlar arasında benzerlik skoru oluşturan bir algoritma denemesi yapılıyor.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2011-08-19T11:13:00+03:00">
 </head>
 <body>
 
@@ -54,82 +48,378 @@ alternative way to search MEDLINE</a> adlı makalede kosinüs katsayısı
 görmüştüm bu formülü, ama çıkartamıyorum şimdi :) ) ve denemeye karar
 verdim. Şimdilik, kelime ağırlıklarını formüle eklemeden bir deneme
 yaptım. Şu şekilde bir python dosyası ortaya çıktı: <!-- TEASER_END --></p>
-<pre class="code literal-block"><span></span><span class="c1"># -*- coding:utf-8 -*-</span>
-<span class="kn">from</span> <span class="nn">django.utils.html</span> <span class="kn">import</span> <span class="n">strip_tags</span>
-
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
-<span class="n">PROJE_DIZINI</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
-<span class="n">UST_DIZIN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">PROJE_DIZINI</span> <span class="o">+</span> <span class="s2">"/../"</span><span class="p">)</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"DJANGO_SETTINGS_MODULE"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"similarity.settings"</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">UST_DIZIN</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">Post</span>
-
-<span class="c1"># Son makaleden geriye sarıcaz!</span>
-
-<span class="n">sonMakale</span> <span class="o">=</span> <span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">latest</span><span class="p">(</span><span class="s2">"pub_date"</span><span class="p">)</span>
-
-<span class="n">i</span> <span class="o">=</span> <span class="n">sonMakale</span><span class="o">.</span><span class="n">id</span>
-<span class="n">imla</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"."</span><span class="p">,</span><span class="s2">","</span><span class="p">,</span><span class="s2">"?"</span><span class="p">,</span><span class="s2">"!"</span><span class="p">,</span><span class="s2">"</span><span class="se">\"</span><span class="s2">"</span><span class="p">,</span><span class="s2">"</span><span class="se">\'</span><span class="s2">"</span><span class="p">,</span><span class="s2">":"</span><span class="p">,</span><span class="s2">";"</span><span class="p">]</span>
-<span class="k">def</span> <span class="nf">kelimeleriAl</span><span class="p">(</span><span class="n">post_objesi</span><span class="p">):</span>
-    <span class="n">tumu</span> <span class="o">=</span> <span class="nb">unicode</span><span class="p">(</span><span class="n">post_objesi</span><span class="o">.</span><span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="nb">unicode</span><span class="p">(</span><span class="n">post_objesi</span><span class="o">.</span><span class="n">abstract</span><span class="p">)</span> <span class="o">+</span> <span class="nb">unicode</span><span class="p">(</span><span class="n">post_objesi</span><span class="o">.</span><span class="n">post</span><span class="p">)</span>
-    <span class="n">tumu</span> <span class="o">=</span> <span class="n">strip_tags</span><span class="p">(</span><span class="n">tumu</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">karakter</span> <span class="ow">in</span> <span class="n">imla</span><span class="p">:</span>
-        <span class="n">tumu</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">karakter</span><span class="p">,</span><span class="s2">""</span><span class="p">)</span>
-    <span class="n">kelimeler</span> <span class="o">=</span> <span class="n">tumu</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">)</span>
-    <span class="n">tekil</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">kelime</span> <span class="ow">in</span> <span class="n">kelimeler</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">kelime</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tekil</span><span class="p">:</span>
-            <span class="n">tekil</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kelime</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">tekil</span>
-
-<span class="n">benzerlikler</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">while</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span>
-    <span class="n">birisi</span> <span class="o">=</span> <span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
-    <span class="n">birisi</span> <span class="o">=</span> <span class="n">kelimeleriAl</span><span class="p">(</span><span class="n">birisi</span><span class="p">)</span>
-    <span class="k">while</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">tumKelimeler</span> <span class="o">=</span> <span class="n">birisi</span>
-
-        <span class="n">oburu</span> <span class="o">=</span> <span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">j</span><span class="p">)</span>
-        <span class="n">oburu</span> <span class="o">=</span> <span class="n">kelimeleriAl</span><span class="p">(</span><span class="n">oburu</span><span class="p">)</span>
-
-
-
-        <span class="k">for</span> <span class="n">kelime</span> <span class="ow">in</span> <span class="n">oburu</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">kelime</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tumKelimeler</span><span class="p">:</span>
-                <span class="n">tumKelimeler</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kelime</span><span class="p">)</span>
-
-        <span class="c1"># vektör oluştur!</span>
-        <span class="n">birisi_vektor</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">oburu_vektor</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">kelime</span> <span class="ow">in</span> <span class="n">tumKelimeler</span><span class="p">:</span>
-            <span class="n">birisi_vektor</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kelime</span> <span class="ow">in</span> <span class="n">birisi</span> <span class="ow">and</span> <span class="mi">1</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
-            <span class="n">oburu_vektor</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kelime</span> <span class="ow">in</span> <span class="n">oburu</span> <span class="ow">and</span> <span class="mi">1</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
-
-        <span class="n">toplam</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="c1"># Formül karelerini almamızı istiyor</span>
-        <span class="c1"># ancak, 0 ve 1 sayılarının kareleri almak çok mantıklı gelmedi</span>
-
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">tumKelimeler</span><span class="p">)):</span>
-            <span class="n">toplam</span> <span class="o">+=</span> <span class="n">birisi_vektor</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">oburu_vektor</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
-
-        <span class="n">birisi_toplami</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">sayi</span> <span class="ow">in</span> <span class="n">birisi_vektor</span><span class="p">:</span>
-            <span class="n">birisi_toplami</span> <span class="o">+=</span> <span class="n">sayi</span>
-
-        <span class="n">oburu_toplami</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">sayi</span> <span class="ow">in</span> <span class="n">oburu_vektor</span><span class="p">:</span>
-            <span class="n">oburu_toplami</span> <span class="o">+=</span> <span class="n">sayi</span>
-
-        <span class="n">bolen</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">birisi_toplami</span> <span class="o">*</span> <span class="n">oburu_toplami</span><span class="p">)</span>
-        <span class="n">benzerlikler</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">i</span><span class="p">),</span> <span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">j</span><span class="p">),</span> <span class="n">toplam</span><span class="o">/</span><span class="n">bolen</span><span class="p">))</span>
-        <span class="n">j</span> <span class="o">-=</span> <span class="mi">1</span>
-    <span class="n">i</span> <span class="o">-=</span> <span class="mi">1</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">([</span> <span class="s2">"</span><span class="si">%s</span><span class="s2"> ve </span><span class="si">%s</span><span class="s2"> =&gt; </span><span class="si">%2f</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">benzerlikler</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">])]))</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="c1"># -*- coding:utf-8 -*-</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.utils.html</span> <span class="kn">import</span> <span class="n">strip_tags</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">os</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">sys</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="n">PROJE_DIZINI</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="n">UST_DIZIN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">PROJE_DIZINI</span> <span class="o">+</span> <span class="s2">"/../"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"DJANGO_SETTINGS_MODULE"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"similarity.settings"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">UST_DIZIN</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">Post</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="c1"># Son makaleden geriye sarıcaz!</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="n">sonMakale</span> <span class="o">=</span> <span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">latest</span><span class="p">(</span><span class="s2">"pub_date"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><span class="n">i</span> <span class="o">=</span> <span class="n">sonMakale</span><span class="o">.</span><span class="n">id</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="n">imla</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"."</span><span class="p">,</span><span class="s2">","</span><span class="p">,</span><span class="s2">"?"</span><span class="p">,</span><span class="s2">"!"</span><span class="p">,</span><span class="s2">"</span><span class="se">\"</span><span class="s2">"</span><span class="p">,</span><span class="s2">"</span><span class="se">\'</span><span class="s2">"</span><span class="p">,</span><span class="s2">":"</span><span class="p">,</span><span class="s2">";"</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">kelimeleriAl</span><span class="p">(</span><span class="n">post_objesi</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>    <span class="n">tumu</span> <span class="o">=</span> <span class="n">unicode</span><span class="p">(</span><span class="n">post_objesi</span><span class="o">.</span><span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="n">unicode</span><span class="p">(</span><span class="n">post_objesi</span><span class="o">.</span><span class="n">abstract</span><span class="p">)</span> <span class="o">+</span> <span class="n">unicode</span><span class="p">(</span><span class="n">post_objesi</span><span class="o">.</span><span class="n">post</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>    <span class="n">tumu</span> <span class="o">=</span> <span class="n">strip_tags</span><span class="p">(</span><span class="n">tumu</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">karakter</span> <span class="ow">in</span> <span class="n">imla</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>        <span class="n">tumu</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">karakter</span><span class="p">,</span><span class="s2">""</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>    <span class="n">kelimeler</span> <span class="o">=</span> <span class="n">tumu</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>    <span class="n">tekil</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">kelime</span> <span class="ow">in</span> <span class="n">kelimeler</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">kelime</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tekil</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>            <span class="n">tekil</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kelime</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">tekil</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code><span class="n">benzerlikler</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code><span class="k">while</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>    <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>    <span class="n">birisi</span> <span class="o">=</span> <span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>    <span class="n">birisi</span> <span class="o">=</span> <span class="n">kelimeleriAl</span><span class="p">(</span><span class="n">birisi</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code>        <span class="n">tumKelimeler</span> <span class="o">=</span> <span class="n">birisi</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-38"><code data-line-number="38"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-39"><code data-line-number="39"></code></a></td>
+<td class="code"><code>        <span class="n">oburu</span> <span class="o">=</span> <span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">j</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-40"><code data-line-number="40"></code></a></td>
+<td class="code"><code>        <span class="n">oburu</span> <span class="o">=</span> <span class="n">kelimeleriAl</span><span class="p">(</span><span class="n">oburu</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-41"><code data-line-number="41"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-42"><code data-line-number="42"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-43"><code data-line-number="43"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-44"><code data-line-number="44"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">kelime</span> <span class="ow">in</span> <span class="n">oburu</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-45"><code data-line-number="45"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">kelime</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tumKelimeler</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-46"><code data-line-number="46"></code></a></td>
+<td class="code"><code>                <span class="n">tumKelimeler</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kelime</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-47"><code data-line-number="47"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-48"><code data-line-number="48"></code></a></td>
+<td class="code"><code>        <span class="c1"># vektör oluştur!</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-49"><code data-line-number="49"></code></a></td>
+<td class="code"><code>        <span class="n">birisi_vektor</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-50"><code data-line-number="50"></code></a></td>
+<td class="code"><code>        <span class="n">oburu_vektor</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-51"><code data-line-number="51"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">kelime</span> <span class="ow">in</span> <span class="n">tumKelimeler</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-52"><code data-line-number="52"></code></a></td>
+<td class="code"><code>            <span class="n">birisi_vektor</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kelime</span> <span class="ow">in</span> <span class="n">birisi</span> <span class="ow">and</span> <span class="mi">1</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-53"><code data-line-number="53"></code></a></td>
+<td class="code"><code>            <span class="n">oburu_vektor</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kelime</span> <span class="ow">in</span> <span class="n">oburu</span> <span class="ow">and</span> <span class="mi">1</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-54"><code data-line-number="54"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-55"><code data-line-number="55"></code></a></td>
+<td class="code"><code>        <span class="n">toplam</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-56"><code data-line-number="56"></code></a></td>
+<td class="code"><code>        <span class="c1"># Formül karelerini almamızı istiyor</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-57"><code data-line-number="57"></code></a></td>
+<td class="code"><code>        <span class="c1"># ancak, 0 ve 1 sayılarının kareleri almak çok mantıklı gelmedi</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-58"><code data-line-number="58"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-59"><code data-line-number="59"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">tumKelimeler</span><span class="p">)):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-60"><code data-line-number="60"></code></a></td>
+<td class="code"><code>            <span class="n">toplam</span> <span class="o">+=</span> <span class="n">birisi_vektor</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">oburu_vektor</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-61"><code data-line-number="61"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-62"><code data-line-number="62"></code></a></td>
+<td class="code"><code>        <span class="n">birisi_toplami</span> <span class="o">=</span> <span class="mi">0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-63"><code data-line-number="63"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">sayi</span> <span class="ow">in</span> <span class="n">birisi_vektor</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-64"><code data-line-number="64"></code></a></td>
+<td class="code"><code>            <span class="n">birisi_toplami</span> <span class="o">+=</span> <span class="n">sayi</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-65"><code data-line-number="65"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-66"><code data-line-number="66"></code></a></td>
+<td class="code"><code>        <span class="n">oburu_toplami</span> <span class="o">=</span> <span class="mi">0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-67"><code data-line-number="67"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">sayi</span> <span class="ow">in</span> <span class="n">oburu_vektor</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-68"><code data-line-number="68"></code></a></td>
+<td class="code"><code>            <span class="n">oburu_toplami</span> <span class="o">+=</span> <span class="n">sayi</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-69"><code data-line-number="69"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-70"><code data-line-number="70"></code></a></td>
+<td class="code"><code>        <span class="n">bolen</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">birisi_toplami</span> <span class="o">*</span> <span class="n">oburu_toplami</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-71"><code data-line-number="71"></code></a></td>
+<td class="code"><code>        <span class="n">benzerlikler</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">i</span><span class="p">),</span> <span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">j</span><span class="p">),</span> <span class="n">toplam</span><span class="o">/</span><span class="n">bolen</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-72"><code data-line-number="72"></code></a></td>
+<td class="code"><code>        <span class="n">j</span> <span class="o">-=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-73"><code data-line-number="73"></code></a></td>
+<td class="code"><code>    <span class="n">i</span> <span class="o">-=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="benzer-yazi-analizi.html#-74"><code data-line-number="74"></code></a></td>
+<td class="code"><code><span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">([</span> <span class="s2">"</span><span class="si">%s</span><span class="s2"> ve </span><span class="si">%s</span><span class="s2"> =&gt; </span><span class="si">%2f</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">benzerlikler</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">])]))</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bahsettiğim yazıda geçen formülü birebir uygulamaya çalıştım.
 <em>kelimeleriAl</em> fonksiyonunda, bir makelede geçen tüm tekil kelimeleri

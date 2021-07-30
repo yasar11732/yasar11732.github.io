@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Python'daki __init__ gibi fonksiyonların amacı, java'da olduğu gibi mouse ve key listener yapma, PyQT olayları, raise kullanmanın amacı, map, filter, global fonksiyonlarının amacı anlatıldı.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/birkac-soruya-cevap.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/birkac-soruya-cevap.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="djangoda-aggregate-and-annotate.html" title="Django'da Aggregate ve Annotate" type="text/html">
 <link rel="next" href="str-objesini-genisletmek.html" title="Python'da str Objesini Genişletmek" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Python Hakkında Birkaç Soruya Cevap">
-<meta property="og:url" content="http://ysar.net/python/birkac-soruya-cevap.html">
-<meta property="og:description" content="Python'daki __init__ gibi fonksiyonların amacı, java'da olduğu gibi mouse ve key listener yapma, PyQT olayları, raise kullanmanın amacı, map, filter, global fonksiyonlarının amacı anlatıldı.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2011-08-29T20:43:00+03:00">
 </head>
 <body>
 
@@ -80,88 +74,336 @@ adını tutar. Çalışma anında ilk çalıştırılan modülün adı "__main__
 olur. Gerek doğrudan, gerekse dolaylı olarak içe aktarılan diğer
 modülüllerin adı ise, paket_adı.modül_adı gibi noktalı gösterim olur.
 Sınıfların adı ise, nasıl tanımladıysanız, o şekildedir.</p>
-<pre class="code literal-block"><span></span><span class="sd">"""</span>
-<span class="sd">bisiler.py</span>
-<span class="sd">Eğer bu modül, doğrudan çalıştırıldıysa, bisiler_yap fonksiyonunu çalıştırıyor.</span>
-<span class="sd">Eğer import ile içe aktarıldıysa, hiçbirşey yapılmıyor.</span>
-<span class="sd">"""</span>
-<span class="k">class</span> <span class="nc">a</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">benim_adim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
-<span class="sd">"""</span>
-<span class="sd">&gt;&gt;&gt; b = a()</span>
-<span class="sd">&gt;&gt;&gt;b.benim_adim()</span>
-<span class="sd">'a'</span>
-<span class="sd">&gt;&gt;&gt;b.__name__</span>
-<span class="sd">AttributeError: a instance has no attribute __name__</span>
-<span class="sd">&gt;&gt;&gt; Sınıf instance'ı (tr:örnek) için __name__ tanımlı değildir.</span>
-<span class="sd">"""</span>
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
-    <span class="n">bisiler_yap</span><span class="p">()</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="sd">bisiler.py</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="sd">Eğer bu modül, doğrudan çalıştırıldıysa, bisiler_yap fonksiyonunu çalıştırıyor.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="sd">Eğer import ile içe aktarıldıysa, hiçbirşey yapılmıyor.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">a</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">benim_adim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="sd">&gt;&gt;&gt; b = a()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="sd">&gt;&gt;&gt;b.benim_adim()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="sd">'a'</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="sd">&gt;&gt;&gt;b.__name__</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="sd">AttributeError: a instance has no attribute __name__</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="sd">&gt;&gt;&gt; Sınıf instance'ı (tr:örnek) için __name__ tanımlı değildir.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>    <span class="n">bisiler_yap</span><span class="p">()</span>
+</code></td>
+</tr>
+</table></div>
 
 <p><strong>__file__:</strong> Bu değişken, bir modülün dosya yolunu tutar.</p>
-<pre class="code literal-block"><span></span><span class="sd">"""</span>
-<span class="sd">os_nerde.py</span>
-<span class="sd">Bu modül, doğrudan çalıştırıldığında, ekrana os modülünün dosya yolunu</span>
-<span class="sd">basar.</span>
-<span class="sd">"""</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="sd">os_nerde.py</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="sd">Bu modül, doğrudan çalıştırıldığında, ekrana os modülünün dosya yolunu</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="sd">basar.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">os</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p><strong>__package__:</strong> Bu değişken, bir modülün hangi pakete ait olduğunun
 bilgisini tutar. Eğer modül hiçbir paketin içerisinde değilse, <em>None</em>
 döndürür.</p>
-<pre class="code literal-block"><span></span><span class="sd">"""</span>
-<span class="sd">hangi_paket.py</span>
-<span class="sd">"""</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
-<span class="k">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">__package__</span><span class="p">)</span>
-<span class="c1"># None</span>
-<span class="k">print</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">__package__</span><span class="p">)</span>
-<span class="c1"># django.db.models</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="sd">hangi_paket.py</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">os</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">__package__</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="c1"># None</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code><span class="nb">print</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">__package__</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-9"><code data-line-number="9"></code></a></td>
+<td class="code"><code><span class="c1"># django.db.models</span>
+</code></td>
+</tr>
+</table></div>
 
 <p><strong>__doc__:</strong> Bu değişken, bir modülün belgelendirmesini döndürür.
 Modül içerisinde iki tırnak arasında (tek satırlık belgelendirme) veya 2
 tane 3 tırnak arasında (çok satırlı belgelendirme) arasında kalan
 yazılar, o modülün belgelendirmesini oluşturur. __doc__değişkeni
 aynı zamanda, fonksiyonlar, sınıflar ve metotlar için de tanımlıdır.</p>
-<pre class="code literal-block"><span></span><span class="sd">"""</span>
-<span class="sd">os_belgeleri.py</span>
-<span class="sd">"""</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="k">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
-<span class="c1">#OS routines for Mac, NT, or Posix depending on what system we're on.</span>
-<span class="c1">#</span>
-<span class="c1">#This exports:</span>
-<span class="c1">#  - all functions from posix, nt, os2, or ce, e.g. unlink, stat, etc.</span>
-<span class="c1">#  - os.path is one of the modules posixpath, or ntpath</span>
-<span class="c1">#  - os.name is 'posix', 'nt', 'os2', 'ce' or 'riscos'</span>
-<span class="c1">#  - os.curdir is a string representing the current directory ('.' or ':')</span>
-<span class="c1">#  - os.pardir is a string representing the parent directory ('..' or '::')</span>
-<span class="c1">#  - os.sep is the (or a most common) pathname separator ('/' or ':' or '\\')</span>
-<span class="c1">#  - os.extsep is the extension separator ('.' or '/')</span>
-<span class="c1">#  - os.altsep is the alternate pathname separator (None or '/')</span>
-<span class="c1">#  - os.pathsep is the component separator used in $PATH etc</span>
-<span class="c1">#  - os.linesep is the line separator in text files ('\r' or '\n' or '\r\n')</span>
-<span class="c1">#  - os.defpath is the default search path for executables</span>
-<span class="c1">#  - os.devnull is the file path of the null device ('/dev/null', etc.)</span>
-<span class="c1">#</span>
-<span class="c1">#Programs that import and use 'os' stand a better chance of being</span>
-<span class="c1">#portable between different platforms.  Of course, they must then</span>
-<span class="c1">#only use functions that are defined by all platforms (e.g., unlink</span>
-<span class="c1">#and opendir), and leave all pathname manipulation to os.path</span>
-<span class="c1">#(e.g., split and join).</span>
-<span class="c1">#</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="sd">os_belgeleri.py</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">os</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="c1">#OS routines for Mac, NT, or Posix depending on what system we're on.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="c1">#</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="c1">#This exports:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="c1">#  - all functions from posix, nt, os2, or ce, e.g. unlink, stat, etc.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="c1">#  - os.path is one of the modules posixpath, or ntpath</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="c1">#  - os.name is 'posix', 'nt', 'os2', 'ce' or 'riscos'</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="c1">#  - os.curdir is a string representing the current directory ('.' or ':')</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="c1">#  - os.pardir is a string representing the parent directory ('..' or '::')</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="c1">#  - os.sep is the (or a most common) pathname separator ('/' or ':' or '\\')</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="c1">#  - os.extsep is the extension separator ('.' or '/')</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="c1">#  - os.altsep is the alternate pathname separator (None or '/')</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><span class="c1">#  - os.pathsep is the component separator used in $PATH etc</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="c1">#  - os.linesep is the line separator in text files ('\r' or '\n' or '\r\n')</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code><span class="c1">#  - os.defpath is the default search path for executables</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><span class="c1">#  - os.devnull is the file path of the null device ('/dev/null', etc.)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="c1">#</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code><span class="c1">#Programs that import and use 'os' stand a better chance of being</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code><span class="c1">#portable between different platforms.  Of course, they must then</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code><span class="c1">#only use functions that are defined by all platforms (e.g., unlink</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code><span class="c1">#and opendir), and leave all pathname manipulation to os.path</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code><span class="c1">#(e.g., split and join).</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code><span class="c1">#</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Aklıma gelen özel değişkenler bunlar. Bunlardan başka var mıydı emin
 değilim.</p>
@@ -186,51 +428,195 @@ sonra bu örneği döndürür.</p>
 sınıf örneği oluşturulduktan hemen sonra çağırılır. Çok sık kullanılan
 bir sınıf metodudur. Sınıf örneğinin kullanıma hazır olması için gereken
 tüm işlemler <code>__init__()</code> metodu içerisinde yapılır.</p>
-<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">Foo</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">"yeni bir sınıf örneği oluşturulduğunda, bu örneğin _sayi özelliği 10 olarak atanır."</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_sayi</span> <span class="o">=</span> <span class="mi">10</span>
-
-<span class="k">class</span> <span class="nc">Bar</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sayi</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
-        <span class="sd">"""</span>
-<span class="sd">        bu sınıfı oluşturuken, sayıyı değiştirmenize izin verir. Öntanımlı değeri 10dur</span>
-<span class="sd">        a = Bar()</span>
-<span class="sd">        b = Bar(20)</span>
-<span class="sd">        a._sayi =&gt; 10</span>
-<span class="sd">        b._sayi =&gt; 20</span>
-<span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_sayi</span> <span class="o">=</span> <span class="n">sayi</span>
-
-<span class="k">class</span> <span class="nc">keyword_args</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="s2">"Oluşturulduğu anda aldığı kelime argümanları kendi özelliği olarak ayarlar."</span>
-        <span class="k">for</span> <span class="n">anahtar</span><span class="p">,</span> <span class="n">deger</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">anahtar</span><span class="p">,</span><span class="n">deger</span><span class="p">)</span>
-
-<span class="n">a</span> <span class="o">=</span> <span class="n">keyword_args</span><span class="p">(</span><span class="n">hebele</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span><span class="n">hubele</span> <span class="o">=</span> <span class="s2">"yazi"</span><span class="p">,</span> <span class="n">hubelop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
-<span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">hebele</span><span class="p">)</span>
-<span class="c1"># 2 çıktısı basar.</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Foo</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>        <span class="s2">"yeni bir sınıf örneği oluşturulduğunda, bu örneğin _sayi özelliği 10 olarak atanır."</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">_sayi</span> <span class="o">=</span> <span class="mi">10</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Bar</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sayi</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="sd">        bu sınıfı oluşturuken, sayıyı değiştirmenize izin verir. Öntanımlı değeri 10dur</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="sd">        a = Bar()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="sd">        b = Bar(20)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="sd">        a._sayi =&gt; 10</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="sd">        b._sayi =&gt; 20</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="sd">        """</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">_sayi</span> <span class="o">=</span> <span class="n">sayi</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">keyword_args</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>        <span class="s2">"Oluşturulduğu anda aldığı kelime argümanları kendi özelliği olarak ayarlar."</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">anahtar</span><span class="p">,</span> <span class="n">deger</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">anahtar</span><span class="p">,</span><span class="n">deger</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">=</span> <span class="n">keyword_args</span><span class="p">(</span><span class="n">hebele</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span><span class="n">hubele</span> <span class="o">=</span> <span class="s2">"yazi"</span><span class="p">,</span> <span class="n">hubelop</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code><span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">hebele</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code><span class="c1"># 2 çıktısı basar.</span>
+</code></td>
+</tr>
+</table></div>
 
 <p><strong>__getitem__() ve __setitem__():</strong>köşeli parantez gösterimiyle
 anahtar alma ve anahtar ayarlama işlemlerinde çağırılır.
 <code>b = a[5]</code> gibi bir ifade kullandığınızda, Python bunu
 <code>b = a.__getitem__(5)</code> şeklinde çalıştırır.</p>
-<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">Foo</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_sozluk</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">anahtar</span><span class="p">,</span><span class="n">deger</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_sozluk</span><span class="p">[</span><span class="n">anahtar</span><span class="p">]</span> <span class="o">=</span> <span class="n">deger</span>
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">anahtar</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sozluk</span><span class="p">[</span><span class="n">anahtar</span><span class="p">]</span>
-
-<span class="n">a</span> <span class="o">=</span> <span class="n">Foo</span><span class="p">()</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">25</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"yirmibes"</span> <span class="c1"># Aslında burada a.__setitem__(25,"yirmibes") çalıştırılıyor</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">25</span><span class="p">]</span> <span class="c1"># burada da a.__getitem__(25) çalıştırılıyor.</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Foo</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">_sozluk</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">anahtar</span><span class="p">,</span><span class="n">deger</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">_sozluk</span><span class="p">[</span><span class="n">anahtar</span><span class="p">]</span> <span class="o">=</span> <span class="n">deger</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">anahtar</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sozluk</span><span class="p">[</span><span class="n">anahtar</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">=</span> <span class="n">Foo</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="n">a</span><span class="p">[</span><span class="mi">25</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"yirmibes"</span> <span class="c1"># Aslında burada a.__setitem__(25,"yirmibes") çalıştırılıyor</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">25</span><span class="p">]</span> <span class="c1"># burada da a.__getitem__(25) çalıştırılıyor.</span>
+</code></td>
+</tr>
+</table></div>
 
 <p><strong>__add__() ve __mul__():</strong>Bunlar, iki obje toplanırken veya
 çarpılırken kullanılır. Örneğin <code>a + b</code> yazdığınızda,
@@ -239,23 +625,83 @@ aslında çalışan şey <code>a.__add__(b)</code> fonksiyon çağrısıdır.</p
 obje karşılaştırılırken kullanılır. Çoğu zaman <code>True</code> ya da
 <code>False</code> döndürürler. Örneğin, <code>if a == b</code>
 python tarafından <code>if a.__eq__(b)</code> şeklinde yorumlanır.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
-<span class="k">class</span> <span class="nc">BasariSansi</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">oran</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">oran</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">True</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">False</span>
-    <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">oran</span><span class="p">):</span>
-        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">oran</span><span class="p">)</span>
-<span class="n">a</span> <span class="o">=</span> <span class="n">BasariSansi</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">"1/3 şansın yaver gitti!"</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">"Şansın yaver gitmedi!"</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">BasariSansi</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">oran</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">oran</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>            <span class="k">return</span> <span class="kc">True</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>        <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>            <span class="k">return</span> <span class="kc">False</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">oran</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">oran</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">=</span> <span class="n">BasariSansi</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span><span class="p">(</span><span class="s2">"1/3 şansın yaver gitti!"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span><span class="p">(</span><span class="s2">"Şansın yaver gitmedi!"</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <h5>Sonuç olarak</h5>
 <p>Python'un en büyük zenginliklerinden birisi de, bize birçok konuda
@@ -273,62 +719,226 @@ Bindings</a> makalesini buldum. Bu makalede anlatılana göre, Tkinter
 objelerine bind metoduyla geriçağırım fonksiyonu eklenebiliyor. İlk
 argüman, olay türünü, ikinci argüman ise, çağırılacak fonksiyonu
 gösteriyor.</p>
-<pre class="code literal-block"><span></span><span class="c1"># Kaynak: http://www.pythonware.com/media/data/an-introduction-to-tkinter.pdf</span>
-<span class="kn">from</span> <span class="nn">Tkinter</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="n">uygulama</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
-
-<span class="k">def</span> <span class="nf">mouseOlayi</span><span class="p">(</span><span class="n">olay</span><span class="p">):</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2"> x </span><span class="si">%s</span><span class="s2"> noktasına tıklandı"</span> <span class="o">%</span> <span class="p">(</span><span class="n">olay</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="n">olay</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
-
-<span class="n">frame</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="n">uygulama</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">frame</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="n">MouseOlayi</span><span class="p">)</span>
-<span class="n">frame</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
-
-<span class="n">uygulama</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="c1"># Kaynak: http://www.pythonware.com/media/data/an-introduction-to-tkinter.pdf</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">Tkinter</span> <span class="kn">import</span> <span class="o">*</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="n">uygulama</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">mouseOlayi</span><span class="p">(</span><span class="n">olay</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2"> x </span><span class="si">%s</span><span class="s2"> noktasına tıklandı"</span> <span class="o">%</span> <span class="p">(</span><span class="n">olay</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="n">olay</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="n">frame</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="n">uygulama</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="n">frame</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="n">MouseOlayi</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="n">frame</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="n">uygulama</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bunun detaylarına yukarıda verdiğim linkden bakabilirsiniz.</p>
 <h5>PyQt Olayları</h5>
 <p>PyQt'de farklı olaylarla uğraşmanın birkaç farklı yolu. Bunlardan bir
 tanesi şöyle birşey:</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">PyQt4.QtCore</span> <span class="kn">import</span> <span class="o">*</span> 
-<span class="kn">from</span> <span class="nn">PyQt4.QtGui</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="k">class</span> <span class="nc">BenimYaziAlani</span><span class="p">(</span><span class="n">QLineEdit</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="n">QEvent</span><span class="o">.</span><span class="n">KeyPress</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">SIGNAL</span><span class="p">(</span><span class="s2">"TusaBasildi"</span><span class="p">),</span><span class="n">event</span><span class="o">.</span><span class="n">key</span><span class="p">())</span>
-<span class="k">class</span> <span class="nc">Uygulama</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">QMainWindow</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">yazi_alani</span> <span class="o">=</span> <span class="n">BenimYaziAlani</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yazi_alani</span><span class="p">,</span><span class="n">SIGNAL</span><span class="p">(</span><span class="s2">"TusaBasildi"</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">basilan_tus</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">basilan_tus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">tus</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2"> tusuna basildi"</span> <span class="o">%</span> <span class="n">tus</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">PyQt4.QtCore</span> <span class="kn">import</span> <span class="o">*</span> 
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">PyQt4.QtGui</span> <span class="kn">import</span> <span class="o">*</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">BenimYaziAlani</span><span class="p">(</span><span class="n">QLineEdit</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="n">QEvent</span><span class="o">.</span><span class="n">KeyPress</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>            <span class="bp">self</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">SIGNAL</span><span class="p">(</span><span class="s2">"TusaBasildi"</span><span class="p">),</span><span class="n">event</span><span class="o">.</span><span class="n">key</span><span class="p">())</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Uygulama</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="n">QMainWindow</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">yazi_alani</span> <span class="o">=</span> <span class="n">BenimYaziAlani</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yazi_alani</span><span class="p">,</span><span class="n">SIGNAL</span><span class="p">(</span><span class="s2">"TusaBasildi"</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">basilan_tus</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">basilan_tus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">tus</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2"> tusuna basildi"</span> <span class="o">%</span> <span class="n">tus</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <h4>Python'da <code>raise</code> ne işe yarar</h4>
 <p>Python'da raise, bir hata yükseltmek için kullanılır. Daha sonra
 istenirse, bu hata try..except bloğuyla yakalanabilir.</p>
-<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">CokAcayipHata</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="k">pass</span>
-
-<span class="k">def</span> <span class="nf">basitToplama</span><span class="p">(</span><span class="n">ilk_sayi</span><span class="p">,</span><span class="n">ikinci_sayi</span><span class="p">):</span>
-    <span class="s2">"İki sayıyı toplar, argüman olarak sayı verilmediyse hata verir!"</span>
-    <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">ilk_sayi</span><span class="p">,</span><span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">ikinci_sayi</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">ilk_sayi</span> <span class="o">+</span> <span class="n">ikinci_sayi</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">CokAcayipHata</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">sonuc</span> <span class="o">=</span> <span class="n">basitToplama</span><span class="p">(</span><span class="s2">"osman"</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">CokAcayipHata</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">"Çok acayip bir hata oluştu, öyle böyle değil!"</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">CokAcayipHata</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="k">pass</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">basitToplama</span><span class="p">(</span><span class="n">ilk_sayi</span><span class="p">,</span><span class="n">ikinci_sayi</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="s2">"İki sayıyı toplar, argüman olarak sayı verilmediyse hata verir!"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">ilk_sayi</span><span class="p">,</span><span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">ikinci_sayi</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">ilk_sayi</span> <span class="o">+</span> <span class="n">ikinci_sayi</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="k">raise</span> <span class="n">CokAcayipHata</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="n">sonuc</span> <span class="o">=</span> <span class="n">basitToplama</span><span class="p">(</span><span class="s2">"osman"</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="k">except</span> <span class="n">CokAcayipHata</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span><span class="p">(</span><span class="s2">"Çok acayip bir hata oluştu, öyle böyle değil!"</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <h4>Python'da <code>map()</code> ve <code>filter()</code> fonksiyonları ne işe yarar?</h4>
 <h5><code>map()</code></h5>
@@ -336,39 +946,131 @@ istenirse, bu hata try..except bloğuyla yakalanabilir.</p>
 ikinci argümanı olarak sırayla elemanlarını alabileceği bir nesne alır.
 Bu nesnenin her elemanını fonksiyona sokar ve sonucunu bir liste olarak
 döndürür.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">mumdur</span><span class="p">(</span><span class="n">kac</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">kac</span><span class="p">)</span> <span class="o">+</span> <span class="s2">" mumdur"</span>
-<span class="n">a</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">mumdur</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">15</span><span class="p">])</span>
-
-<span class="c1">#a = ["1 mumdur","2 mumdur","5 mumdur","15 mumdur"]</span>
-<span class="sd">"""</span>
-<span class="sd">map(mumdur,[1,2,5,15]) aşağıdaki şeyin kısa yoludur:</span>
-<span class="sd">"""</span>
-<span class="n">bos_liste</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">15</span><span class="p">]:</span>
-    <span class="n">bos_liste</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mumdur</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">mumdur</span><span class="p">(</span><span class="n">kac</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">kac</span><span class="p">)</span> <span class="o">+</span> <span class="s2">" mumdur"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">mumdur</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">15</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="c1">#a = ["1 mumdur","2 mumdur","5 mumdur","15 mumdur"]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="sd">map(mumdur,[1,2,5,15]) aşağıdaki şeyin kısa yoludur:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="n">bos_liste</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">15</span><span class="p">]:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="n">bos_liste</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mumdur</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+</code></td>
+</tr>
+</table></div>
 
 <h5><code>filter()</code></h5>
 <p><code>filter()</code> fonksiyonu, ilk argümanı olarak bir fonksiyon,
 ikinci argümanı olarak sırayla elemanlarını alabileceği bir nesne alır.
 Bu nesnenin her elemanını fonksiyona sokar ve fonksiyonun sonucunun True
 olduğu elemanları bir liste olarak döndürür.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">cift_sayi</span><span class="p">(</span><span class="n">kac</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">kac</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">True</span> <span class="ow">or</span> <span class="bp">False</span>
-<span class="n">a</span> <span class="o">=</span> <span class="n">fillter</span><span class="p">(</span><span class="n">cift_sayi</span><span class="p">,</span><span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
-
-<span class="c1">#a = [0,2,4,6,8]</span>
-<span class="sd">"""</span>
-<span class="sd">filter(cift_sayi,xrange(0,10)) aşağıdaki şeyin kısa yoludur:</span>
-<span class="sd">"""</span>
-<span class="n">bos_liste</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">cift_sayi</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
-        <span class="n">bos_liste</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">cift_sayi</span><span class="p">(</span><span class="n">kac</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">kac</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="kc">True</span> <span class="ow">or</span> <span class="kc">False</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">=</span> <span class="n">fillter</span><span class="p">(</span><span class="n">cift_sayi</span><span class="p">,</span><span class="n">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="c1">#a = [0,2,4,6,8]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="sd">filter(cift_sayi,xrange(0,10)) aşağıdaki şeyin kısa yoludur:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="n">bos_liste</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">cift_sayi</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="n">bos_liste</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <h4>
 <code>global</code> kelimesi ne işe yarar</h4>
@@ -377,18 +1079,63 @@ değişkenler, yerel değişken olur. Buralarda tanımlı olan değişkenler, bu
 kod bloklarının dışında tanımlı değildir. Böyle kod bloklarının
 içersinde tanımladığınız değişkenin tüm modül içerisinde kullanılabilir
 olması için, <code>global</code> kullanılır.</p>
-<pre class="code literal-block"><span></span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">def</span> <span class="nf">yerel</span><span class="p">(</span><span class="n">asdf</span><span class="p">):</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">asdf</span>
-<span class="k">def</span> <span class="nf">genel</span><span class="p">(</span><span class="n">asdf</span><span class="p">):</span>
-    <span class="k">global</span> <span class="n">x</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">asdf</span>
-
-<span class="n">yerel</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1"># 0 yazar, fonksiyon içindeki x'in dışardaki x'e bir etkisi yoktur.</span>
-<span class="n">genel</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1"># 15 yazar, fonksiyonun içinde, genel x değiştirilmiştir.</span>
-</pre>
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">yerel</span><span class="p">(</span><span class="n">asdf</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">x</span> <span class="o">=</span> <span class="n">asdf</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">genel</span><span class="p">(</span><span class="n">asdf</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="k">global</span> <span class="n">x</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="n">x</span> <span class="o">=</span> <span class="n">asdf</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="n">yerel</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1"># 0 yazar, fonksiyon içindeki x'in dışardaki x'e bir etkisi yoktur.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="n">genel</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="birkac-soruya-cevap.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1"># 15 yazar, fonksiyonun içinde, genel x değiştirilmiştir.</span>
+</code></td>
+</tr>
+</table></div>
 </div>
     </div>
     <aside class="postpromonav"><nav><div class="pager">

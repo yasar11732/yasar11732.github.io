@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Django'da url yapıları nasıl düzenlenir? Django uygulamarınızın herbiri kendi url şemasını belirler. Site çapındaki url ayarları bunları bir araya getirir.">
@@ -11,17 +11,11 @@
 <link href="../../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/django-blog-uygulamasi/url-mapping-ve-views.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/django-blog-uygulamasi/url-mapping-ve-views.html">
 <!--[if lt IE 9]><script src="../../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="../django-abstract-model.html" title="Django'da Abstract Modeller" type="text/html">
 <link rel="next" href="../django-301-redirect.html" title="Django'da Url Taşıma" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Django ile Blog Geliştirme - Url ve Görünüm">
-<meta property="og:url" content="http://ysar.net/python/django-blog-uygulamasi/url-mapping-ve-views.html">
-<meta property="og:description" content="Django'da url yapıları nasıl düzenlenir? Django uygulamarınızın herbiri kendi url şemasını belirler. Site çapındaki url ayarları bunları bir araya getirir.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2011-08-08T18:07:00+03:00">
 </head>
 <body>
 
@@ -68,16 +62,48 @@ yapılmıştır. Bununla birlikte örnek bir urlpatterns objesi de
 tanımlanmıştır. Geçen dersimizde django'nun içerisinde gelen admin
 uygulamasında tanımlanan url'leri, buraya dahil etmiştik. Şimdi de blog
 projemize ait url yapılandırmasını buraya ekleyelim.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">django.conf.urls.defaults</span> <span class="kn">import</span> <span class="n">patterns</span><span class="p">,</span> <span class="n">include</span><span class="p">,</span> <span class="n">url</span>
-<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
-<span class="n">admin</span><span class="o">.</span><span class="n">autodiscover</span><span class="p">()</span>
-
-<span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span>
-    <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">'^admin/'</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">)),</span>
-    <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">'^blog/'</span><span class="p">,</span><span class="n">include</span><span class="p">(</span><span class="s1">'blog.urls'</span><span class="p">))</span>
-<span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.conf.urls.defaults</span> <span class="kn">import</span> <span class="n">patterns</span><span class="p">,</span> <span class="n">include</span><span class="p">,</span> <span class="n">url</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="n">admin</span><span class="o">.</span><span class="n">autodiscover</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">'^admin/'</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">)),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>    <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">'^blog/'</span><span class="p">,</span><span class="n">include</span><span class="p">(</span><span class="s1">'blog.urls'</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Buradaki <code>r'\^blog/'</code> bir düzenli ifadedir. Eğer düzenli ifadeleri
 bilmiyorsanız, Django ile url yapılandırması yapmadan önce düzenli
@@ -92,13 +118,33 @@ olmamıza rağmen, uygulamamız henüz bir url tanımlaması yapmıyor.
 Uygulamanızın ana dizini içerisindeyken (projenin değil dikkat edin.
 blog dizini içinde) urls.py adında boş bir dosya oluşturun ve içine
 şunları girin:</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">django.conf.urls.defaults</span> <span class="kn">import</span> <span class="n">patterns</span>
-<span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">'blog.views'</span><span class="p">,</span>
-  <span class="p">(</span><span class="sa">r</span><span class="s1">'^$'</span><span class="p">,</span> <span class="s1">'anasayfaView'</span><span class="p">),</span>
-    <span class="p">(</span><span class="sa">r</span><span class="s1">'^makaleler/(?P&lt;slug&gt;[^/]+)/$'</span><span class="p">,</span><span class="s1">'makaleView'</span><span class="p">),</span>
-<span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.conf.urls.defaults</span> <span class="kn">import</span> <span class="n">patterns</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">'blog.views'</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>  <span class="p">(</span><span class="sa">r</span><span class="s1">'^$'</span><span class="p">,</span> <span class="s1">'anasayfaView'</span><span class="p">),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="p">(</span><span class="sa">r</span><span class="s1">'^makaleler/(?P&lt;slug&gt;[^/]+)/$'</span><span class="p">,</span><span class="s1">'makaleView'</span><span class="p">),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada iki adet url tanımlaması yaptık. İlk url'imiz <code>^$</code>. Şapka
 işaretinin satır başı anlamına geldiğini söylemiştik. Dolar işareti ise
@@ -129,42 +175,122 @@ HttpResponse objesi döndürmek, başka bir url'e yönledirme yapmak veya
 404 bulunamadı hatası vermek gibi, birkaç şeyden birini yapması
 gerekiyor. Örneğin tarayıca bir yanıt gönderelim. Bunun için
 fonksiyonumuzdan Django'nun HttpResponse objesini döndüreceğiz.</p>
-<pre class="code literal-block"><span></span><span class="c1"># -*- coding:utf-8 -*-</span>
-<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
-
-<span class="k">def</span> <span class="nf">anasayfaView</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s2">"&lt;h1&gt;Burası anasayfa :)&lt;/h1&gt;"</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="c1"># -*- coding:utf-8 -*-</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">anasayfaView</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s2">"&lt;h1&gt;Burası anasayfa :)&lt;/h1&gt;"</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Şu anda eğer bir şeyi atlamadıysak, http://localhost:8000/blog adresine
 gittiğinizde, kocaman bir "Burası anasayfa :)" yazısı görmeniz
 gerekiyor.</p>
 <p>Şimdi biraz daha gelişmiş bir örnek yapalım. makale fonksiyonu
 içerisinde, bizden istenen makaleyi bulup, tarayıcıya gönderelim.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
-<span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">makale</span>
-
-<span class="k">def</span> <span class="nf">makaleView</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">slug</span><span class="p">):</span>
-    <span class="n">mkl</span> <span class="o">=</span> <span class="n">makale</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">slug</span><span class="o">=</span><span class="n">slug</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">mkl</span><span class="o">.</span><span class="n">makale</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">makale</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">makaleView</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">slug</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="n">mkl</span> <span class="o">=</span> <span class="n">makale</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">slug</span><span class="o">=</span><span class="n">slug</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">mkl</span><span class="o">.</span><span class="n">makale</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Artık, <code>http://localhost:8000/makale/cok-onemli-makale</code> adresine
 gittiğinizde size, slug alanı cok-onemli-makale olan makaleyi bulup
 getirecektir. Peki ama ya böyle bir makale yoksa?</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span><span class="p">,</span> <span class="n">Http404</span>
-<span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">makale</span>
-<span class="k">def</span> <span class="nf">makaleView</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">slug</span><span class="p">):</span>
-    <span class="n">mkl_query</span> <span class="o">=</span> <span class="n">makale</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">slug</span><span class="o">=</span><span class="n">slug</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mkl_query</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">mkl</span> <span class="o">=</span> <span class="n">mkl_query</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">mkl</span><span class="o">.</span><span class="n">makale</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">Http404</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span><span class="p">,</span> <span class="n">Http404</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">makale</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">makaleView</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">slug</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="n">mkl_query</span> <span class="o">=</span> <span class="n">makale</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">slug</span><span class="o">=</span><span class="n">slug</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mkl_query</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>        <span class="n">mkl</span> <span class="o">=</span> <span class="n">mkl_query</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">mkl</span><span class="o">.</span><span class="n">makale</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code>    <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="url-mapping-ve-views.html#-9"><code data-line-number="9"></code></a></td>
+<td class="code"><code>        <span class="k">raise</span> <span class="n">Http404</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Artık makale bulunamadığında tarayıcıya bir 404 bulunamadı mesajı
 göndereceğiz. Şu anda debug mod açık olduğu için bunu göremiyoruz, ancak

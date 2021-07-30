@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Euler 7 çözümü ilk denemesi">
@@ -11,18 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/euler/euler-7-silinmis-sahneler.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/euler/euler-7-silinmis-sahneler.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
-<link rel="prev" href="euler-6.html" title="(Euler 6) Ardışık Sayıların Toplamı" type="text/html">
+<link rel="prev" href="euler-6.html" title="(Euler 6) Ardışık Sayıların Toplamı " type="text/html">
 <link rel="next" href="euler-7.html" title="(Euler 7) 10001. Asal Sayı" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="(Euler 7) 10001. Asal Sayı (SİLİNMİŞ SAHNELER)">
-<meta property="og:url" content="http://ysar.net/euler/euler-7-silinmis-sahneler.html">
-<meta property="og:description" content="Euler 7 çözümü ilk denemesi">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2018-08-07T21:25:00+03:00">
-<meta property="article:tag" content="mathjax">
 </head>
 <body>
 
@@ -59,54 +52,238 @@ yöntemde, belli bir aralıktaki asal sayıları tespit etmek için, asal olduğ
 kanıtladığımız sayıların katlarını listeden silme yöntemini kullandık. Bu
 yöntem sayesinde, hızlı bir şekilde asal sayı tespiti yapabilmiştik.
 Hatırlatma amacıyla, kodlarımıza tekrar bir göz atalım.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">basit_sieve</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
-    <span class="n">sieve_limit</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
-
-    <span class="n">primes</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-
-    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">next_prime</span> <span class="o">=</span> <span class="n">candidates</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">primes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_prime</span><span class="p">)</span>
-        <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="n">next_prime</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="n">next_prime</span> <span class="o">&gt;</span> <span class="n">sieve_limit</span><span class="p">:</span>
-            <span class="n">primes</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
-            <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">return</span> <span class="n">primes</span>
-
-<span class="k">def</span> <span class="nf">gelismis_sieve</span><span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">known_primes</span><span class="p">):</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">known_primes</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">basit_sieve</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
-
-    <span class="n">sieve_limit</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
-
-    <span class="n">primes</span> <span class="o">=</span> <span class="n">known_primes</span><span class="p">[:]</span>
-
-    <span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">known_primes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-
-
-    <span class="k">for</span> <span class="n">prime</span> <span class="ow">in</span> <span class="n">known_primes</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">prime</span> <span class="o">&gt;</span> <span class="n">sieve_limit</span><span class="p">:</span>
-            <span class="n">primes</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
-            <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">break</span>
-        <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="n">prime</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
-
-    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">next_prime</span> <span class="o">=</span> <span class="n">candidates</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">primes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_prime</span><span class="p">)</span>
-        <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="n">next_prime</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="n">next_prime</span> <span class="o">&gt;</span> <span class="n">sieve_limit</span><span class="p">:</span>
-            <span class="n">primes</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
-            <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">return</span> <span class="n">primes</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">basit_sieve</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="n">sieve_limit</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">primes</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="n">next_prime</span> <span class="o">=</span> <span class="n">candidates</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="n">primes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_prime</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="n">next_prime</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">next_prime</span> <span class="o">&gt;</span> <span class="n">sieve_limit</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>            <span class="n">primes</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>            <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">primes</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">gelismis_sieve</span><span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">known_primes</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="ow">not</span> <span class="n">known_primes</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">basit_sieve</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>    <span class="n">sieve_limit</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>    <span class="n">primes</span> <span class="o">=</span> <span class="n">known_primes</span><span class="p">[:]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>    <span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">known_primes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">prime</span> <span class="ow">in</span> <span class="n">known_primes</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">prime</span> <span class="o">&gt;</span> <span class="n">sieve_limit</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>            <span class="n">primes</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>            <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>            <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>        <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="n">prime</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-38"><code data-line-number="38"></code></a></td>
+<td class="code"><code>        <span class="n">next_prime</span> <span class="o">=</span> <span class="n">candidates</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-39"><code data-line-number="39"></code></a></td>
+<td class="code"><code>        <span class="n">primes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_prime</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-40"><code data-line-number="40"></code></a></td>
+<td class="code"><code>        <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="n">next_prime</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-41"><code data-line-number="41"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-42"><code data-line-number="42"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">next_prime</span> <span class="o">&gt;</span> <span class="n">sieve_limit</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-43"><code data-line-number="43"></code></a></td>
+<td class="code"><code>            <span class="n">primes</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-44"><code data-line-number="44"></code></a></td>
+<td class="code"><code>            <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-45"><code data-line-number="45"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-46"><code data-line-number="46"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">primes</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Euler Problemleri orjinal olarak modern bilgisayalara nazaran çok daha zayıf
 bilgisayalar göz önünde bulunarak tasarlandığı için, biz euler problemini
@@ -116,16 +293,48 @@ kullanamayız, çünkü, 100001. asal sayıyı tespit etmek için, kaçıncı sa
 kadar olan asal sayıları bulmamız gerektiğini bilmiyoruz. Bu nedenle, 100001.
 asal sayıya ulaşana dek, <code>gelismis_sieve</code> fonksiyonunu çalıştıracağız. İlk
 denemem aşağıdaki şekilde olacak:</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">euler7</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-
-    <span class="n">p</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
-
-    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">:</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">gelismis_sieve</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="nb">max</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="n">p</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">p</span><span class="p">[</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">euler7</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="n">p</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>        <span class="n">p</span> <span class="o">=</span> <span class="n">gelismis_sieve</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="nb">max</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="n">p</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">p</span><span class="p">[</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu kodlar 100001. asal sayı için benim bilgisayarımda ortalama 6.3sn'de
 tamamlanıyor. Daha iyisini yapabilir miyiz? Burada akla gelen ilk optimizasyon,
@@ -146,16 +355,48 @@ olduğundan, her döngüde üst sınırı 2 kat artırmak yerine, 1.6 kat artır
 uygun olur tahmininden yola çıkarak (1.6 tamamen tahmin üzerine verilmiş bir
 değer, siz bununla oynayarak farklı ihtimaller deneyebilirsiniz), kodları
 aşağıdaki şekilde revize edebiliriz.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">euler7</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-
-    <span class="n">p</span> <span class="o">=</span> <span class="n">basit_sieve</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
-
-    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">:</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">gelismis_sieve</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mf">1.6</span><span class="o">*</span><span class="nb">max</span><span class="p">(</span><span class="n">p</span><span class="p">)),</span> <span class="n">p</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">p</span><span class="p">[</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">euler7</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="n">p</span> <span class="o">=</span> <span class="n">basit_sieve</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>        <span class="n">p</span> <span class="o">=</span> <span class="n">gelismis_sieve</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mf">1.6</span><span class="o">*</span><span class="nb">max</span><span class="p">(</span><span class="n">p</span><span class="p">)),</span> <span class="n">p</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">p</span><span class="p">[</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yukardaki versiyon benim bilgisayarımda 1.9-2.0 saniye ortalamasında sonuç
 veriyor. İlk versiyona göre oldukça başarılı. Daha iyisini yapabilir miyiz?
@@ -166,16 +407,48 @@ ikinin hem de üçün katı olan sayılar iki kere çıkarma işlemine tabi
 tutulduğundan, hesabı düzeltmek için altının katı olan sayıları tekrar tahmine
 ekledik. Yukarıdaki ifadeyi sadeleştirirsek, yeni tahminimiz
 \(\pi(x)&lt;=\frac{x}{3}\) oldu. Kodları tekrar revize edebiliriz.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">euler7</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-
-    <span class="n">p</span> <span class="o">=</span> <span class="n">basit_sieve</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
-
-    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">:</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">gelismis_sieve</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mf">1.2</span><span class="o">*</span><span class="nb">max</span><span class="p">(</span><span class="n">p</span><span class="p">)),</span> <span class="n">p</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">p</span><span class="p">[</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">euler7</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="n">p</span> <span class="o">=</span> <span class="n">basit_sieve</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>        <span class="n">p</span> <span class="o">=</span> <span class="n">gelismis_sieve</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mf">1.2</span><span class="o">*</span><span class="nb">max</span><span class="p">(</span><span class="n">p</span><span class="p">)),</span> <span class="n">p</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">p</span><span class="p">[</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu kodları çalıştırdığımda, yaklaşık olarak ikinci versiyonla aynı sonucu
 aaldım. Ciddi bir ilerleme kaydedemedik gibi görünüyor.</p>
@@ -215,19 +488,63 @@ sayılarını toplayacağız. Daha sonra, ikili kesişimlerinin eleman sayılar�
 eleman sayılarını geri ekleyeceğiz, sonra 4lü kesişimlerinin eleman sayılarını geri çıkaracağız, vs... Adı üstünde
 ekleme çıkarma prensibi. Prensip güzelmiş, Python ile yapalım. Birden başlayıp, bir üst sınıra kadar olan sayılar içinde,
 listemizdeki sayılara bölünmeyen kaç sayı olduğunu hesaplayalım.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="nb">reduce</span>
-<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">mul</span>
-
-<span class="k">def</span> <span class="nf">ekle_cikar</span><span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">sayilar</span><span class="p">):</span>
-
-    <span class="k">return</span> <span class="n">limit</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span>
-        <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="n">i</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">limit</span> <span class="o">/</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="n">grb</span><span class="p">)</span> <span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sayilar</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">grb</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="n">sayilar</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-    <span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">reduce</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">mul</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">ekle_cikar</span><span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">sayilar</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">limit</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="n">i</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">limit</span> <span class="o">/</span> <span class="n">reduce</span><span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="n">grb</span><span class="p">)</span> <span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sayilar</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">grb</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="n">sayilar</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Fonksiyon güzel oldu, küçük birkaç modifikasyon ile \(\pi(x)\) fonksiyonunu kesin olarak hesaplayabiliriz.</p>
 <h3>Legendre’nin Formulü</h3>
@@ -239,12 +556,28 @@ işletiyoruz. Neden? Diyelim ki, 2..100 aralığındaki asal sayıları bulmak i
 temizliyoruz. 11 ve daha büyük asalların katlarını temizlemeye ihtiyacımız yok, çünkü, bunların katları aynı zamanda 2,3,5 veya 7'nin katları
 olmak zorunda. Aynı fikir,  Legendre’nin Formulü yönteminde de kullanılmış. Ekleme-Çıkarma prensibi ile birleştirince, yukarıdaki formül
 ortaya çıkıyor. Python ile yapalım;</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">Legendre</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-
-    <span class="n">p</span> <span class="o">=</span> <span class="n">basit_sieve</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">+</span> <span class="n">ekle_cikar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">Legendre</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="n">p</span> <span class="o">=</span> <span class="n">basit_sieve</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">+</span> <span class="n">ekle_cikar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Fonksiyonun çalışma süresini test etmek için uygun bir zaman.</p>
 <div class="centered">
@@ -258,56 +591,248 @@ bir sürü gereksiz kombinasyon hesaplıyoruz. Mesela, \(\pi(200)\) hesaplanırk
 sayı olamayacağını biliyoruz, çünkü \(ekok(2,3,5,7,11) = 2310\). Bu durumda, 2,3,5,7 ve 13 sayılarının ortak katını kontrol etmeye gerek yok, çünkü
 bu bir öncekinden bile daha büyük bir sayı olamak zorunda. Eğer kombinasyon hesabını fonksiyonumuzun içine dahil edersek,
 gereksiz kombinasyon hesapları yapmaktan kurtulabiliriz. Böylece fonksiyonumuz hızlanacaktır.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">ekle_cikar2</span><span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">sayilar</span><span class="p">):</span>
-
-    <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sayilar</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sayilar</span><span class="p">)):</span>
-        <span class="s2">"Döngüden erken çıkabilmek için, kombinasyonları kendimiz hesaplayacağz"</span>
-        <span class="n">indices</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-
-        <span class="n">grb</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">sayilar</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">)</span>
-        <span class="n">denominator</span> <span class="o">=</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="n">grb</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">denominator</span> <span class="o">&gt;</span> <span class="n">limit</span><span class="p">:</span>
-            <span class="s2">"Erken çıkış noktalarından biri"</span>
-            <span class="k">break</span>
-
-        <span class="n">t</span> <span class="o">+=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="n">i</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">limit</span> <span class="o">/</span> <span class="n">denominator</span> <span class="p">)</span>
-
-        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-
-            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
-                <span class="k">if</span> <span class="n">indices</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">!=</span> <span class="n">k</span> <span class="o">+</span> <span class="n">n</span> <span class="o">-</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-                    <span class="k">break</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">break</span>
-
-            <span class="n">indices</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
-                <span class="n">indices</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
-
-            <span class="n">grb</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">sayilar</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">)</span>
-            <span class="n">denominator</span> <span class="o">=</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="n">grb</span><span class="p">)</span>
-
-
-            <span class="k">if</span> <span class="n">denominator</span> <span class="o">&gt;</span> <span class="n">limit</span><span class="p">:</span>
-                <span class="s2">"Erken çıkış noktalarından diğeri"</span>
-                <span class="n">indices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span>
-                <span class="k">continue</span>
-
-            <span class="n">t</span> <span class="o">+=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="n">i</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">limit</span> <span class="o">/</span> <span class="n">denominator</span> <span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">limit</span> <span class="o">-</span> <span class="n">t</span>
-
-<span class="k">def</span> <span class="nf">Legendre2</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-
-    <span class="n">p</span> <span class="o">=</span> <span class="n">basit_sieve</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">+</span> <span class="n">ekle_cikar2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">ekle_cikar2</span><span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">sayilar</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sayilar</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sayilar</span><span class="p">)):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>        <span class="s2">"Döngüden erken çıkabilmek için, kombinasyonları kendimiz hesaplayacağz"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="n">indices</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="n">grb</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">sayilar</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="n">denominator</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="n">grb</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">denominator</span> <span class="o">&gt;</span> <span class="n">limit</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>            <span class="s2">"Erken çıkış noktalarından biri"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>            <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>        <span class="n">t</span> <span class="o">+=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="n">i</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">limit</span> <span class="o">/</span> <span class="n">denominator</span> <span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>                <span class="k">if</span> <span class="n">indices</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">!=</span> <span class="n">k</span> <span class="o">+</span> <span class="n">n</span> <span class="o">-</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>                    <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>            <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>                <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>            <span class="n">indices</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>                <span class="n">indices</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>            <span class="n">grb</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">sayilar</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>            <span class="n">denominator</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="n">grb</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">denominator</span> <span class="o">&gt;</span> <span class="n">limit</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code>                <span class="s2">"Erken çıkış noktalarından diğeri"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-38"><code data-line-number="38"></code></a></td>
+<td class="code"><code>                <span class="n">indices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-39"><code data-line-number="39"></code></a></td>
+<td class="code"><code>                <span class="k">continue</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-40"><code data-line-number="40"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-41"><code data-line-number="41"></code></a></td>
+<td class="code"><code>            <span class="n">t</span> <span class="o">+=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="n">i</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">limit</span> <span class="o">/</span> <span class="n">denominator</span> <span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-42"><code data-line-number="42"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-43"><code data-line-number="43"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">limit</span> <span class="o">-</span> <span class="n">t</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-44"><code data-line-number="44"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-45"><code data-line-number="45"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">Legendre2</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-46"><code data-line-number="46"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-47"><code data-line-number="47"></code></a></td>
+<td class="code"><code>    <span class="n">p</span> <span class="o">=</span> <span class="n">basit_sieve</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-7-silinmis-sahneler.html#-48"><code data-line-number="48"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">+</span> <span class="n">ekle_cikar2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu optimizasyon yüzünden, fonksiyonumuz oldukça karmaşık bir hal aldı. Yukarıda neler döndüğünü anlamakta güçlük çekerseniz, fazla kafaya takmayın. Yazının
 ilerleyen bölümlerinde asal sayı saymak için daha etkin bir algoritmayı inceleyeceğiz. Şimdiye kadar yaptıklarımız, o algoritmayı anlamaya
@@ -361,12 +886,12 @@ Legendre’s Formula and Meissel’s Formula</a></li>
 </div>
     </div>
     <aside class="postpromonav"><nav><div class="pager">
-                <a href="euler-6.html" rel="prev" title="(Euler 6) Ardışık Sayıların Toplamı">Önceki yazı</a>
+                <a href="euler-6.html" rel="prev" title="(Euler 6) Ardışık Sayıların Toplamı ">Önceki yazı</a>
                 <a href="euler-7.html" rel="next" title="(Euler 7) 10001. Asal Sayı">Sonraki yazı</a>
         </div>
 
     </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
-	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script></article></main><script>
   if(document.location.hostname == "ysar.net")

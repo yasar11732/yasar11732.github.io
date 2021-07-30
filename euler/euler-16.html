@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="description" content="2'nin">
+<meta name="description" content="2'nin ">
 <meta name="viewport" content="width=device-width">
 <title>(Euler 16) Büyük Üslü Sayının Haneleri Toplamı | YSAR.NET</title>
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900%7CUbuntu:300,400,500,700" rel="stylesheet">
@@ -11,18 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/euler/euler-16.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/euler/euler-16.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="euler-15.html" title="(Euler 15) Izgara Üzerindeki Yollar" type="text/html">
 <link rel="next" href="../yazilim-dunyasi/sablon-doldurucu.html" title="C ile Komut Okuyan ve Şablon Dolduran Program" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="(Euler 16) Büyük Üslü Sayının Haneleri Toplamı">
-<meta property="og:url" content="http://ysar.net/euler/euler-16.html">
-<meta property="og:description" content="2'nin">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2018-08-26T19:47:00+03:00">
-<meta property="article:tag" content="mathjax">
 </head>
 <body>
 
@@ -50,16 +43,48 @@
 <p><a href="euler-13.html">13. Euler Problemi Çözümünde</a> olduğu gibi, bu sorunun da Python veya BigInteger kütüphanesi
 kullanan herhangi bir dilde çözmenin enteresan bir tarafı yok. <code>sum(int(x) for x in str(2**1000))</code> yazmanın bir esprisi yok.
 16. Euler Problemi çözümünü tekrar C dilinde yapacağım. Kendi mini <code>bigint_t</code> türümü tanımlayarak başlıyorum.</p>
-<pre class="code literal-block"><span></span><span class="cp">#define LIMB_MOD 1000000000</span>
-<span class="cp">#define LIMB_COUNT 250</span>
-
-<span class="cm">/* secilen veri tipi 2xLIMB_MOD sayisini </span>
-<span class="cm"> * alabilecek kadar buyuk olmali</span>
-<span class="cm"> */</span>
-<span class="k">typedef</span> <span class="kt">uint32_t</span> <span class="n">limb_t</span><span class="p">;</span> 
-<span class="k">typedef</span> <span class="n">limb_t</span> <span class="n">bigint_t</span><span class="p">[</span><span class="n">LIMB_COUNT</span><span class="p">];</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="cp">#define LIMB_MOD 1000000000</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="cp">#define LIMB_COUNT 250</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="cm">/* secilen veri tipi 2xLIMB_MOD sayisini </span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="cm"> * alabilecek kadar buyuk olmali</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="cm"> */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="k">typedef</span> <span class="kt">uint32_t</span> <span class="n">limb_t</span><span class="p">;</span> 
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code><span class="k">typedef</span> <span class="n">limb_t</span> <span class="n">bigint_t</span><span class="p">[</span><span class="n">LIMB_COUNT</span><span class="p">];</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Standart bir BigInteger veri türü için dinamik array kullanılsa da, ben kodlaması daha basit
 olacağından sabit uzunluklu bir array kullandım. <code>uint32_t</code> türündeki her bir
@@ -73,233 +98,1013 @@ sayıların her bir parçası için LIMB (tr. uzuv) ismini kullanmışlar. Termi
 Eğer her bir <code>limb</code> için 64 bit kullanmayı tercih ederseniz, <code>limb_t</code>'yi <code>uint64_t</code> ve <code>LIMB_MOD</code>
 sabitini <code>1000000000000000000</code> olarak tanımlayabilirsiniz. Bu durumda, her bir limb onluk tabanda 18 hane
 yerine geçebilir.</p>
-<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">bigint_set_uc</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">,</span> <span class="n">limb_t</span> <span class="n">n2</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">memset</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">bigint_t</span><span class="p">));</span>
-    <span class="kt">div_t</span> <span class="n">d</span> <span class="o">=</span> <span class="n">div</span><span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="n">LIMB_MOD</span><span class="p">);</span>
-    <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">rem</span><span class="p">;</span>
-    <span class="n">n</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">quot</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">bigint_set_uc</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">,</span> <span class="n">limb_t</span> <span class="n">n2</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="n">memset</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">bigint_t</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="kt">div_t</span> <span class="n">d</span> <span class="o">=</span> <span class="n">div</span><span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="n">LIMB_MOD</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">rem</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="n">n</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">quot</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bunu <code>bigint_t</code> değerine ilk atamayı yapmak için kullanıyorum. Burada çok ilginç birşey yok.</p>
-<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">bigint_twice</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
-    <span class="n">limb_t</span> <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="kt">div_t</span> <span class="n">d</span><span class="p">;</span>
-
-    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">LIMB_COUNT</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">limb_t</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-        <span class="n">tmp</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">tmp</span><span class="p">)</span> <span class="o">+</span> <span class="n">carry</span><span class="p">;</span>
-        <span class="kt">div_t</span> <span class="n">d</span> <span class="o">=</span> <span class="n">div</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">LIMB_MOD</span><span class="p">);</span>
-        <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">rem</span><span class="p">;</span>
-        <span class="n">carry</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">quot</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">if</span><span class="p">(</span><span class="n">carry</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="c1">// toplam bigint_t'yi aştı</span>
-        <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"!!!!!!OVERFLOW!!!!!!!"</span><span class="p">);</span>
-        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">bigint_twice</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">limb_t</span> <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="kt">div_t</span> <span class="n">d</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">LIMB_COUNT</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="n">limb_t</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="n">tmp</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">tmp</span><span class="p">)</span> <span class="o">+</span> <span class="n">carry</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="kt">div_t</span> <span class="n">d</span> <span class="o">=</span> <span class="n">div</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">LIMB_MOD</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>        <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">rem</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>        <span class="n">carry</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">quot</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>    <span class="k">if</span><span class="p">(</span><span class="n">carry</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>        <span class="c1">// toplam bigint_t'yi aştı</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>        <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"!!!!!!OVERFLOW!!!!!!!"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Üs alma işlemini tekrar eden çarpma işlemi olarak düşünürsek, büyük sayılarda çarpma işlemi yapmak
 için bir fonksiyona ihtiyacımız var. Genel bir fonksiyon yazmak yerine, verilen büyük sayıyı
 ikiye katlayan bir fonksiyon yazdım. \(2^{1000}\) sayısını hesaplamak için, bu yeterli olacaktır. Sayıyı
 ikiyle çarpmak için, kendisiyle toplama işlemi yapıyorum. Basamak taşıma mantığı, <a href="euler-13.html">13. Euler Çözümünde</a>
 yaptığımla aynı. </p>
-<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">bigint_print</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">LIMB_COUNT</span><span class="p">;</span>
-
-    <span class="c1">// skip leading zeros</span>
-    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">--</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">printf</span><span class="p">(</span><span class="s">"%u"</span><span class="p">,</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="p">}</span>
-
-    <span class="p">}</span>
-
-    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">--</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">printf</span><span class="p">(</span><span class="s">"%09u"</span><span class="p">,</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-    <span class="p">}</span>
-
-    <span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">bigint_print</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">LIMB_COUNT</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="c1">// skip leading zeros</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">--</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>            <span class="n">printf</span><span class="p">(</span><span class="s">"%u"</span><span class="p">,</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>            <span class="k">break</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">--</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>        <span class="n">printf</span><span class="p">(</span><span class="s">"%09u"</span><span class="p">,</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>    <span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Sayıyı Little-Endian (küçük haneler array'in başında) olarak düşündüğüm için,
 yazdırma işlemini sondan başa doğru yapmak gerekiyor. Sayının başındaki sıfırları
 yazdırmamak için, iki ayrı döngü kullanmam gerekti.</p>
-<pre class="code literal-block"><span></span><span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
-    <span class="n">bigint_t</span> <span class="n">n</span><span class="p">;</span>
-    <span class="n">bigint_set_uc</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-
-    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">bigint_twice</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-
-    <span class="p">}</span>
-    <span class="n">bigint_print</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">bigint_t</span> <span class="n">n</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="n">bigint_set_uc</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="n">bigint_twice</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="n">bigint_print</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Programı denemeye hazırız. Büyük sayıya 1 değerini atayıp, 1000 defa ikiyle çarparsak, istediğimiz sayıyı elde etmiş oluyoruz.</p>
-<pre class="code literal-block"><span></span>10715086071862673209484250490600018105614048117055
-33607443750388370351051124936122493198378815695858
-12759467291755314682518714528569231404359845775746
-98574803934567774824230985421074605062371141877954
-18215304647498358194126739876755916554394607706291
-45711964776865421676604298316526243868372056680693
-76
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">10715086071862673209484250490600018105614048117055</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">33607443750388370351051124936122493198378815695858</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="err">12759467291755314682518714528569231404359845775746</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="err">98574803934567774824230985421074605062371141877954</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="err">18215304647498358194126739876755916554394607706291</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="err">45711964776865421676604298316526243868372056680693</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="err">76</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Tabi ki, soru bize \(2^{1000}\) sayısını değil, hanelerinin toplamını soruyor. Onun için de, ayrı bir fonksiyon yazabiliriz.</p>
-<pre class="code literal-block"><span></span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">bigint_sumdigits</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
-
-    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">LIMB_COUNT</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">limb_t</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">sum</span> <span class="o">=</span> <span class="n">sum</span> <span class="o">+</span> <span class="p">(</span><span class="n">tmp</span> <span class="o">%</span> <span class="mi">10</span><span class="p">);</span>
-            <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">/</span> <span class="mi">10</span><span class="p">;</span>
-        <span class="p">}</span>
-
-    <span class="p">}</span>
-
-    <span class="k">return</span> <span class="n">sum</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">bigint_sumdigits</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">LIMB_COUNT</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="n">limb_t</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="k">while</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>            <span class="n">sum</span> <span class="o">=</span> <span class="n">sum</span> <span class="o">+</span> <span class="p">(</span><span class="n">tmp</span> <span class="o">%</span> <span class="mi">10</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>            <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">/</span> <span class="mi">10</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">sum</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Kodların tümü şu şekilde;</p>
-<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;string.h&gt; /* memset */</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt; /* uint32_t */</span><span class="cp"></span>
-
-<span class="cp">#define LIMB_MOD 1000000000</span>
-<span class="cp">#define LIMB_COUNT 250</span>
-
-<span class="cm">/* secilen veri tipi 2xLIMB_MOD sayisini </span>
-<span class="cm"> * alabilecek kadar buyuk olmali</span>
-<span class="cm"> */</span>
-<span class="k">typedef</span> <span class="kt">uint32_t</span> <span class="n">limb_t</span><span class="p">;</span> 
-<span class="k">typedef</span> <span class="n">limb_t</span> <span class="n">bigint_t</span><span class="p">[</span><span class="n">LIMB_COUNT</span><span class="p">];</span>
-
-<span class="kt">void</span> <span class="nf">bigint_set_uc</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">,</span> <span class="n">limb_t</span> <span class="n">n2</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">memset</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">bigint_t</span><span class="p">));</span>
-    <span class="kt">div_t</span> <span class="n">d</span> <span class="o">=</span> <span class="n">div</span><span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="n">LIMB_MOD</span><span class="p">);</span>
-    <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">rem</span><span class="p">;</span>
-    <span class="n">n</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">quot</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="kt">void</span> <span class="nf">bigint_twice</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
-    <span class="n">limb_t</span> <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="kt">div_t</span> <span class="n">d</span><span class="p">;</span>
-
-    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">LIMB_COUNT</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">limb_t</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-        <span class="n">tmp</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">tmp</span><span class="p">)</span> <span class="o">+</span> <span class="n">carry</span><span class="p">;</span>
-        <span class="kt">div_t</span> <span class="n">d</span> <span class="o">=</span> <span class="n">div</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">LIMB_MOD</span><span class="p">);</span>
-        <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">rem</span><span class="p">;</span>
-        <span class="n">carry</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">quot</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">if</span><span class="p">(</span><span class="n">carry</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="c1">// toplam bigint_t'yi aştı</span>
-        <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"!!!!!!OVERFLOW!!!!!!!"</span><span class="p">);</span>
-        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">bigint_sumdigits</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
-
-    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">LIMB_COUNT</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">limb_t</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">sum</span> <span class="o">=</span> <span class="n">sum</span> <span class="o">+</span> <span class="p">(</span><span class="n">tmp</span> <span class="o">%</span> <span class="mi">10</span><span class="p">);</span>
-            <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">/</span> <span class="mi">10</span><span class="p">;</span>
-        <span class="p">}</span>
-
-    <span class="p">}</span>
-
-    <span class="k">return</span> <span class="n">sum</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="c1">// bigint_t is little-endian</span>
-<span class="kt">void</span> <span class="nf">bigint_print</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">LIMB_COUNT</span><span class="p">;</span>
-
-    <span class="c1">// skip leading zeros</span>
-    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">--</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">printf</span><span class="p">(</span><span class="s">"%u"</span><span class="p">,</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="p">}</span>
-
-    <span class="p">}</span>
-
-    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">--</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">printf</span><span class="p">(</span><span class="s">"%09u"</span><span class="p">,</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-    <span class="p">}</span>
-
-    <span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
-    <span class="n">bigint_t</span> <span class="n">n</span><span class="p">;</span>
-    <span class="n">bigint_set_uc</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-
-    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">bigint_twice</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-
-    <span class="p">}</span>
-    <span class="n">bigint_print</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">"Haneleri Toplami: %u</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">bigint_sumdigits</span><span class="p">(</span><span class="n">n</span><span class="p">));</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-1"><code data-line-number="  1"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-2"><code data-line-number="  2"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-3"><code data-line-number="  3"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;string.h&gt; /* memset */</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-4"><code data-line-number="  4"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt; /* uint32_t */</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-5"><code data-line-number="  5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-6"><code data-line-number="  6"></code></a></td>
+<td class="code"><code><span class="cp">#define LIMB_MOD 1000000000</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-7"><code data-line-number="  7"></code></a></td>
+<td class="code"><code><span class="cp">#define LIMB_COUNT 250</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-8"><code data-line-number="  8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-9"><code data-line-number="  9"></code></a></td>
+<td class="code"><code><span class="cm">/* secilen veri tipi 2xLIMB_MOD sayisini </span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-10"><code data-line-number=" 10"></code></a></td>
+<td class="code"><code><span class="cm"> * alabilecek kadar buyuk olmali</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-11"><code data-line-number=" 11"></code></a></td>
+<td class="code"><code><span class="cm"> */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-12"><code data-line-number=" 12"></code></a></td>
+<td class="code"><code><span class="k">typedef</span> <span class="kt">uint32_t</span> <span class="n">limb_t</span><span class="p">;</span> 
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-13"><code data-line-number=" 13"></code></a></td>
+<td class="code"><code><span class="k">typedef</span> <span class="n">limb_t</span> <span class="n">bigint_t</span><span class="p">[</span><span class="n">LIMB_COUNT</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-14"><code data-line-number=" 14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-15"><code data-line-number=" 15"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">bigint_set_uc</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">,</span> <span class="n">limb_t</span> <span class="n">n2</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-16"><code data-line-number=" 16"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-17"><code data-line-number=" 17"></code></a></td>
+<td class="code"><code>    <span class="n">memset</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">bigint_t</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-18"><code data-line-number=" 18"></code></a></td>
+<td class="code"><code>    <span class="kt">div_t</span> <span class="n">d</span> <span class="o">=</span> <span class="n">div</span><span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="n">LIMB_MOD</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-19"><code data-line-number=" 19"></code></a></td>
+<td class="code"><code>    <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">rem</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-20"><code data-line-number=" 20"></code></a></td>
+<td class="code"><code>    <span class="n">n</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">quot</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-21"><code data-line-number=" 21"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-22"><code data-line-number=" 22"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-23"><code data-line-number=" 23"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">bigint_twice</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-24"><code data-line-number=" 24"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-25"><code data-line-number=" 25"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-26"><code data-line-number=" 26"></code></a></td>
+<td class="code"><code>    <span class="n">limb_t</span> <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-27"><code data-line-number=" 27"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-28"><code data-line-number=" 28"></code></a></td>
+<td class="code"><code>    <span class="kt">div_t</span> <span class="n">d</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-29"><code data-line-number=" 29"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-30"><code data-line-number=" 30"></code></a></td>
+<td class="code"><code>    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">LIMB_COUNT</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-31"><code data-line-number=" 31"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-32"><code data-line-number=" 32"></code></a></td>
+<td class="code"><code>        <span class="n">limb_t</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-33"><code data-line-number=" 33"></code></a></td>
+<td class="code"><code>        <span class="n">tmp</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">tmp</span><span class="p">)</span> <span class="o">+</span> <span class="n">carry</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-34"><code data-line-number=" 34"></code></a></td>
+<td class="code"><code>        <span class="kt">div_t</span> <span class="n">d</span> <span class="o">=</span> <span class="n">div</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">LIMB_MOD</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-35"><code data-line-number=" 35"></code></a></td>
+<td class="code"><code>        <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">rem</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-36"><code data-line-number=" 36"></code></a></td>
+<td class="code"><code>        <span class="n">carry</span> <span class="o">=</span> <span class="n">d</span><span class="p">.</span><span class="n">quot</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-37"><code data-line-number=" 37"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-38"><code data-line-number=" 38"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-39"><code data-line-number=" 39"></code></a></td>
+<td class="code"><code>    <span class="k">if</span><span class="p">(</span><span class="n">carry</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-40"><code data-line-number=" 40"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-41"><code data-line-number=" 41"></code></a></td>
+<td class="code"><code>        <span class="c1">// toplam bigint_t'yi aştı</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-42"><code data-line-number=" 42"></code></a></td>
+<td class="code"><code>        <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"!!!!!!OVERFLOW!!!!!!!"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-43"><code data-line-number=" 43"></code></a></td>
+<td class="code"><code>        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-44"><code data-line-number=" 44"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-45"><code data-line-number=" 45"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-46"><code data-line-number=" 46"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-47"><code data-line-number=" 47"></code></a></td>
+<td class="code"><code><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">bigint_sumdigits</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-48"><code data-line-number=" 48"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-49"><code data-line-number=" 49"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-50"><code data-line-number=" 50"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-51"><code data-line-number=" 51"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-52"><code data-line-number=" 52"></code></a></td>
+<td class="code"><code>    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">LIMB_COUNT</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-53"><code data-line-number=" 53"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-54"><code data-line-number=" 54"></code></a></td>
+<td class="code"><code>        <span class="n">limb_t</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-55"><code data-line-number=" 55"></code></a></td>
+<td class="code"><code>        <span class="k">while</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-56"><code data-line-number=" 56"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-57"><code data-line-number=" 57"></code></a></td>
+<td class="code"><code>            <span class="n">sum</span> <span class="o">=</span> <span class="n">sum</span> <span class="o">+</span> <span class="p">(</span><span class="n">tmp</span> <span class="o">%</span> <span class="mi">10</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-58"><code data-line-number=" 58"></code></a></td>
+<td class="code"><code>            <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">/</span> <span class="mi">10</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-59"><code data-line-number=" 59"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-60"><code data-line-number=" 60"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-61"><code data-line-number=" 61"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-62"><code data-line-number=" 62"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-63"><code data-line-number=" 63"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">sum</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-64"><code data-line-number=" 64"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-65"><code data-line-number=" 65"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-66"><code data-line-number=" 66"></code></a></td>
+<td class="code"><code><span class="c1">// bigint_t is little-endian</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-67"><code data-line-number=" 67"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">bigint_print</span><span class="p">(</span><span class="n">bigint_t</span> <span class="n">n</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-68"><code data-line-number=" 68"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-69"><code data-line-number=" 69"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">LIMB_COUNT</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-70"><code data-line-number=" 70"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-71"><code data-line-number=" 71"></code></a></td>
+<td class="code"><code>    <span class="c1">// skip leading zeros</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-72"><code data-line-number=" 72"></code></a></td>
+<td class="code"><code>    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">--</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-73"><code data-line-number=" 73"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-74"><code data-line-number=" 74"></code></a></td>
+<td class="code"><code>        <span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-75"><code data-line-number=" 75"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-76"><code data-line-number=" 76"></code></a></td>
+<td class="code"><code>            <span class="n">printf</span><span class="p">(</span><span class="s">"%u"</span><span class="p">,</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-77"><code data-line-number=" 77"></code></a></td>
+<td class="code"><code>            <span class="k">break</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-78"><code data-line-number=" 78"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-79"><code data-line-number=" 79"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-80"><code data-line-number=" 80"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-81"><code data-line-number=" 81"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-82"><code data-line-number=" 82"></code></a></td>
+<td class="code"><code>    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">--</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-83"><code data-line-number=" 83"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-84"><code data-line-number=" 84"></code></a></td>
+<td class="code"><code>        <span class="n">printf</span><span class="p">(</span><span class="s">"%09u"</span><span class="p">,</span> <span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-85"><code data-line-number=" 85"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-86"><code data-line-number=" 86"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-87"><code data-line-number=" 87"></code></a></td>
+<td class="code"><code>    <span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-88"><code data-line-number=" 88"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-89"><code data-line-number=" 89"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-90"><code data-line-number=" 90"></code></a></td>
+<td class="code"><code><span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-91"><code data-line-number=" 91"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-92"><code data-line-number=" 92"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-93"><code data-line-number=" 93"></code></a></td>
+<td class="code"><code>    <span class="n">bigint_t</span> <span class="n">n</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-94"><code data-line-number=" 94"></code></a></td>
+<td class="code"><code>    <span class="n">bigint_set_uc</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-95"><code data-line-number=" 95"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-96"><code data-line-number=" 96"></code></a></td>
+<td class="code"><code>    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-97"><code data-line-number=" 97"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-98"><code data-line-number=" 98"></code></a></td>
+<td class="code"><code>        <span class="n">bigint_twice</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-99"><code data-line-number=" 99"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-100"><code data-line-number="100"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-101"><code data-line-number="101"></code></a></td>
+<td class="code"><code>    <span class="n">bigint_print</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-102"><code data-line-number="102"></code></a></td>
+<td class="code"><code>    <span class="n">printf</span><span class="p">(</span><span class="s">"Haneleri Toplami: %u</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">bigint_sumdigits</span><span class="p">(</span><span class="n">n</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-103"><code data-line-number="103"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-16.html#-104"><code data-line-number="104"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Eğer onluk haneleri hiç işin içine katmazsak, \(2^{1000}\) sayısını hesaplamak çok daha kolay olur. İkilik tabanda
 sayıyı ikiye katlamak için, bitleri sola kaydırmak yeterli. Dolayısıyla, 1001. biti 1 olarak değiştirirsek, \(2^{1000}\)
@@ -323,7 +1128,7 @@ BigInteger kütüphanesi yazmayı düşünüyorum. Eğer tamamlayabilirsem, onu 
         </div>
 
     </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
-	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script></article></main><script>
   if(document.location.hostname == "ysar.net")

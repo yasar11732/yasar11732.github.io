@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
@@ -10,18 +10,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/diger/setjmp-h.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/diger/setjmp-h.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="../algoritma/canonical-huffman-kodlamasi.html" title="Canonical Huffman Kodlaması" type="text/html">
 <link rel="next" href="../yazilim-dunyasi/autotools.html" title="Autotools Gizemini Çözüyoruz" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="&lt;setjmp.h&gt; Ne İşe Yarar">
-<meta property="og:url" content="http://ysar.net/diger/setjmp-h.html">
-<meta property="og:description" content="Son bir hafta, veya biraz daha uzun bir süre boyunca, akademik bir merak neticesinde deflate formatında sıkıştırma/açma
-yapan bir programın nasıl yazılabileceğini araştıyordum. Zlib kütüphanesinin içi">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2019-06-18T09:53:00+03:00">
 </head>
 <body>
 
@@ -64,49 +57,213 @@ birlikte, Instruction Pointer, Stack Pointer, EFLAGS gibi register'ların değer
 mimarisine göre değişebilir. Bu makronun kullanıcısı olarak bizi ilgilendiren, bu makronun bir zıplama noktası kaydettiği.
 Bu makronun dönüş değeri, yürütme bağlamını kaydettiği anda 0, <code>longjmp</code> ile dönüldüğü anda ise, <code>longjmp</code> tarafından ayarlanan
 değere eşit oluyor. Bunu anlamak için, bir örneğe başvurmakta fayda var.</p>
-<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;setjmp.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
-
-<span class="k">typedef</span> <span class="k">struct</span><span class="p">{</span>
-    <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">size</span><span class="p">;</span>
-    <span class="kt">jmp_buf</span> <span class="n">env</span><span class="p">;</span>
-<span class="p">}</span> <span class="n">String</span><span class="p">;</span>
-
-
-<span class="kt">void</span> <span class="nf">smemset</span><span class="p">(</span><span class="n">String</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="n">val</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">size</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">size</span> <span class="o">&gt;</span> <span class="n">s</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">)</span>
-        <span class="n">longjmp</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">env</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-
-    <span class="n">memset</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">String</span> <span class="n">s</span><span class="p">;</span>
-    <span class="n">s</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
-    <span class="n">s</span><span class="p">.</span><span class="n">size</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
-
-
-    <span class="k">if</span> <span class="p">(</span><span class="n">setjmp</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">env</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">printf</span><span class="p">(</span><span class="s">"String uzunlugu yeterli degil."</span><span class="p">);</span>
-        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">printf</span><span class="p">(</span><span class="s">"%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
-        <span class="n">smemset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;setjmp.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="k">typedef</span> <span class="k">struct</span><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">size</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="kt">jmp_buf</span> <span class="n">env</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="p">}</span> <span class="n">String</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">smemset</span><span class="p">(</span><span class="n">String</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="n">val</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">size</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">size</span> <span class="o">&gt;</span> <span class="n">s</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="n">longjmp</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">env</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>    <span class="n">memset</span><span class="p">(</span><span class="n">s</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>    <span class="n">String</span> <span class="n">s</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>    <span class="n">s</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>    <span class="n">s</span><span class="p">.</span><span class="n">size</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">setjmp</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">env</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>        <span class="n">printf</span><span class="p">(</span><span class="s">"String uzunlugu yeterli degil."</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="p">(</span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code>        <span class="n">printf</span><span class="p">(</span><span class="s">"%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code>        <span class="n">smemset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-38"><code data-line-number="38"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-39"><code data-line-number="39"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-40"><code data-line-number="40"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-41"><code data-line-number="41"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yukarıdaki örneği incelerseniz, <code>setjmp</code> kullanımı daha anlaşılır olur diye düşünüyorum. Dikkat etmeniz gereken
 en önemli kısım, <code>setjmp</code> makrosundan birden fazla kez dönüldüğü. İlk çağırıldığında, dönüş değeri 0 olacağı için,
@@ -116,15 +273,43 @@ kullandığı için, sanki <code>setjmp</code> fonksiyonundan yeni dönülüyorm
 Ancak bu sefer, <code>setjmp</code>'nin dönüş değeri <code>longjmp</code> tarafından 1 olarak ayarlandığı için, <code>if</code>in koşulu sağlanacak ve <code>main</code>
 fonksiyonu hata mesajı yazdırıp dönecek. Gözünüzü kısıp, kafanızı biraz eğerek bakarsanız, tıpkı daha yüksek seviye dillerdeki
 throw/catch veya raise/catch benzeri bir program davranışı ile karşı karşıyayız.</p>
-<pre class="code literal-block"><span></span>1
-2
-3
-4
-5
-6
-String uzunlugu yeterli degil.
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">2</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="err">3</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="err">4</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="err">5</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="err">6</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="setjmp-h.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="err">String uzunlugu yeterli degil.</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yukarıdaki kadar küçük bir programda, <code>setjmp</code> ve <code>longjmp</code> kullanımını anlatmak mümkün olsa da, bu ikisinin
 faydasını göstermek pek muhtemel görünmüyor. Ancak, fonksiyon çağrı hiyerarşisinin derinliklerinde oluşan özel

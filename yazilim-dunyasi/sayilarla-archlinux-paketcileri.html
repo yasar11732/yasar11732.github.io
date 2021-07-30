@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Çeşitli linux komutlarıyla toplanan verilerden, matplotlib kullanarak çizilmiş bir bar grafiği.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/yazilim-dunyasi/sayilarla-archlinux-paketcileri.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/yazilim-dunyasi/sayilarla-archlinux-paketcileri.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="../algoritma/iki-bilinmeyenli-denklem-cozumleri.html" title="İki bilinmeyenli denklem çözümleri" type="text/html">
 <link rel="next" href="../python/yield.html" title="Python yield deyimi nedir? Ne işe yarar?" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Sayılarla ArchLinux Paketçileri">
-<meta property="og:url" content="http://ysar.net/yazilim-dunyasi/sayilarla-archlinux-paketcileri.html">
-<meta property="og:description" content="Çeşitli linux komutlarıyla toplanan verilerden, matplotlib kullanarak çizilmiş bir bar grafiği.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2012-01-21T11:07:57+02:00">
 </head>
 <body>
 
@@ -49,9 +43,18 @@
 paket yapımına katkıda bulunduğunu görebilirsiniz. <!-- TEASER_END --></p>
 <p><img alt="Arch Linux packagers by number of packages graph" src="../images/arch-linux-packagers.png"></p>
 <p>Kaynak:</p>
-<pre class="code literal-block"><span></span><span class="nb">cd</span> /var/abs
-find -name <span class="s1">'PKGBUILD'</span> -exec cat <span class="s1">'{}'</span> <span class="se">\;</span> <span class="p">|</span> egrep <span class="s1">'(Maintainer|Contributor)'</span> <span class="p">|</span> cut -d: -f <span class="m">2</span> <span class="p">|</span> sed <span class="s1">'s///'</span> <span class="p">|</span> sort <span class="p">|</span> uniq -c <span class="p">|</span> sort -nr
-</pre>
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="sayilarla-archlinux-paketcileri.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="nb">cd</span> /var/abs
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="sayilarla-archlinux-paketcileri.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>find -name <span class="s1">'PKGBUILD'</span> -exec cat <span class="s1">'{}'</span> <span class="se">\;</span> <span class="p">|</span> egrep <span class="s1">'(Maintainer|Contributor)'</span> <span class="p">|</span> cut -d: -f <span class="m">2</span> <span class="p">|</span> sed <span class="s1">'s///'</span> <span class="p">|</span> sort <span class="p">|</span> uniq -c <span class="p">|</span> sort -nr
+</code></td>
+</tr>
+</table></div>
 </div>
     </div>
     <aside class="postpromonav"><nav><div class="pager">

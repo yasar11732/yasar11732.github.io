@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="100 adet 50 basamaklı sayının toplamının ilk 10 hanesini bulacağız">
@@ -11,18 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/euler/euler-13.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/euler/euler-13.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="../yazilim-dunyasi/sage-math.html" title="SageMath" type="text/html">
 <link rel="next" href="euler-14.html" title="(Euler 14) En Uzun Collatz Dizisi" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="(Euler 13) C Programlama Dilinde Büyük Sayıları Toplama">
-<meta property="og:url" content="http://ysar.net/euler/euler-13.html">
-<meta property="og:description" content="100 adet 50 basamaklı sayının toplamının ilk 10 hanesini bulacağız">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2018-08-23T16:36:00+03:00">
-<meta property="article:tag" content="mathjax">
 </head>
 <body>
 
@@ -159,183 +152,673 @@ alabileceği değerlerin bir üst sınırı olmadığından, bu soruyu Python il
 ilginç bir yanı yok. Bu nedenle, bu problemi C programlama dilinde çözmeye karar verdim.</p>
 <p>Sayıları txt dosyasından okuma için, aşağıdaki kodları kullanıyorum. <code>sayilar.txt</code> dosyasinda, satir sonu düzeni linux'e göre olmalı ('\n')
 ve dosyasının sonunda en az 1 tane boş bir satır bırakılmalı.</p>
-<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
-
-<span class="cp">#define N_OF_NUMBERS 100</span>
-<span class="cp">#define S_OF_NUMBERS 50</span>
-
-<span class="cm">/* +1 NULL için*/</span>
-<span class="kt">char</span> <span class="n">numbers</span><span class="p">[</span><span class="n">N_OF_NUMBERS</span><span class="p">][</span><span class="n">S_OF_NUMBERS</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
-
-<span class="kt">int</span> <span class="nf">read_numbers</span><span class="p">()</span>
-<span class="p">{</span>
-
-    <span class="kt">FILE</span> <span class="o">*</span><span class="n">f</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"sayilar.txt"</span><span class="p">,</span> <span class="s">"r"</span><span class="p">);</span>
-    <span class="k">if</span><span class="p">(</span><span class="n">f</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">perror</span><span class="p">(</span><span class="s">"sayilar.txt okunamadi"</span><span class="p">);</span>
-        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="cm">/*+1 \n için, daha sonra NULL'a çevrilecek*/</span>
-    <span class="kt">size_t</span> <span class="n">n_elems</span> <span class="o">=</span> <span class="n">fread</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">S_OF_NUMBERS</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">N_OF_NUMBERS</span><span class="p">,</span> <span class="n">f</span><span class="p">);</span>
-    <span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
-
-    <span class="k">if</span><span class="p">(</span><span class="n">n_elems</span> <span class="o">&lt;</span> <span class="n">N_OF_NUMBERS</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">printf</span><span class="p">(</span><span class="s">"sayilar.txt icerisinde %zd adet sayi bulundu. %d bekleniyordu."</span><span class="p">,</span> <span class="n">n_elems</span><span class="p">,</span> <span class="n">N_OF_NUMBERS</span><span class="p">);</span>
-        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="c1">// Sayıları NULL ile sonlandırmak için</span>
-    <span class="k">while</span> <span class="p">(</span><span class="n">n_elems</span><span class="o">--</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">numbers</span><span class="p">[</span><span class="n">n_elems</span><span class="p">][</span><span class="n">S_OF_NUMBERS</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'\0'</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="cp">#define N_OF_NUMBERS 100</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="cp">#define S_OF_NUMBERS 50</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="cm">/* +1 NULL için*/</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="kt">char</span> <span class="n">numbers</span><span class="p">[</span><span class="n">N_OF_NUMBERS</span><span class="p">][</span><span class="n">S_OF_NUMBERS</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">read_numbers</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="kt">FILE</span> <span class="o">*</span><span class="n">f</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"sayilar.txt"</span><span class="p">,</span> <span class="s">"r"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="k">if</span><span class="p">(</span><span class="n">f</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="n">perror</span><span class="p">(</span><span class="s">"sayilar.txt okunamadi"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>    <span class="cm">/*+1 \n için, daha sonra NULL'a çevrilecek*/</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>    <span class="kt">size_t</span> <span class="n">n_elems</span> <span class="o">=</span> <span class="n">fread</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">S_OF_NUMBERS</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">N_OF_NUMBERS</span><span class="p">,</span> <span class="n">f</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>    <span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>    <span class="k">if</span><span class="p">(</span><span class="n">n_elems</span> <span class="o">&lt;</span> <span class="n">N_OF_NUMBERS</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>        <span class="n">printf</span><span class="p">(</span><span class="s">"sayilar.txt icerisinde %zd adet sayi bulundu. %d bekleniyordu."</span><span class="p">,</span> <span class="n">n_elems</span><span class="p">,</span> <span class="n">N_OF_NUMBERS</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>    <span class="c1">// Sayıları NULL ile sonlandırmak için</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="p">(</span><span class="n">n_elems</span><span class="o">--</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>        <span class="n">numbers</span><span class="p">[</span><span class="n">n_elems</span><span class="p">][</span><span class="n">S_OF_NUMBERS</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'\0'</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>50-basamaklı sayılar C'deki standard veri yapılarına sığamayacak kadar büyük olduğundan, karakter dizisi içine okudum. Bunlar üzerinde
 işlem yapabilmek için, ASCII kodlarından sayısal değerlere dönüştürme yapmak gerekiyor.</p>
-<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">convert</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="kt">size_t</span> <span class="n">i</span><span class="p">,</span><span class="n">k</span><span class="p">;</span>
-
-    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N_OF_NUMBERS</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">for</span><span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">S_OF_NUMBERS</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">numbers</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">numbers</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="sc">'0'</span><span class="p">;</span>
-        <span class="p">}</span>
-
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">convert</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="kt">size_t</span> <span class="n">i</span><span class="p">,</span><span class="n">k</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N_OF_NUMBERS</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>        <span class="k">for</span><span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">S_OF_NUMBERS</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>            <span class="n">numbers</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">numbers</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="sc">'0'</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Toplama işlemine geçmeden önce, toplama işleminin sonucunu barındırabilecek büyüklükte bir karakter-dizisine ihtiyacımız olacak.
 Topladığımız sayılar 50 haneli olduğundan, herbirinin alabileceği en büyük değer \(10^{51} - 1\) olur. 100 adet sayı topladığımız
 için, toplamın alabileceği en büyük değer \((10^{51} - 1) \cdot 10^2 = 10^{53} - 100\) olur. Dolayısıyla, 53 elemanlı bir karakter
 dizisi işimizi görecektir.</p>
-<pre class="code literal-block"><span></span><span class="kt">char</span> <span class="n">toplam</span><span class="p">[</span><span class="mi">53</span><span class="p">];</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kt">char</span> <span class="n">toplam</span><span class="p">[</span><span class="mi">53</span><span class="p">];</span>
+</code></td>
+</tr></table></div>
 
 <p>Toplamın ilk 10 hanesini hesaplamak istediğimiz için, soldan sağa haneleri toplayarak ilerliyeceğiz. Önce 50. haneleri toplama ekleyeceğiz,
 sonra 49. haneleri toplama ekleyeceğiz vs. Bunun için toplamın belirli bir hanesine bir rakam eklemek için yardımcı bir fonksiyon yazalım.</p>
-<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">add_to_sum</span><span class="p">(</span><span class="kt">int</span> <span class="n">basamak</span><span class="p">,</span> <span class="kt">int</span> <span class="n">deger</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="c1">// basamağın toplam dizisindeki indeksi</span>
-    <span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">S_OF_SUM</span> <span class="o">-</span> <span class="n">basamak</span><span class="p">;</span>
-
-    <span class="c1">// toplami barindiracak degisken</span>
-    <span class="kt">int</span> <span class="n">sum</span><span class="p">;</span>
-
-    <span class="n">sum</span> <span class="o">=</span> <span class="n">toplam</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">deger</span><span class="p">;</span>
-
-    <span class="c1">// toplamdan 9 dan büyükse, basamak taşımak gerekiyor</span>
-    <span class="kt">div_t</span> <span class="n">bolum</span> <span class="o">=</span> <span class="n">div</span><span class="p">(</span><span class="n">sum</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
-
-    <span class="n">toplam</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">bolum</span><span class="p">.</span><span class="n">rem</span><span class="p">;</span>
-
-    <span class="k">if</span><span class="p">(</span><span class="n">bolum</span><span class="p">.</span><span class="n">quot</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">add_to_sum</span><span class="p">(</span><span class="n">basamak</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">bolum</span><span class="p">.</span><span class="n">quot</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">add_to_sum</span><span class="p">(</span><span class="kt">int</span> <span class="n">basamak</span><span class="p">,</span> <span class="kt">int</span> <span class="n">deger</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="c1">// basamağın toplam dizisindeki indeksi</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">S_OF_SUM</span> <span class="o">-</span> <span class="n">basamak</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="c1">// toplami barindiracak degisken</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">sum</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="n">sum</span> <span class="o">=</span> <span class="n">toplam</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">deger</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="c1">// toplamdan 9 dan büyükse, basamak taşımak gerekiyor</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="kt">div_t</span> <span class="n">bolum</span> <span class="o">=</span> <span class="n">div</span><span class="p">(</span><span class="n">sum</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="n">toplam</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">bolum</span><span class="p">.</span><span class="n">rem</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="k">if</span><span class="p">(</span><span class="n">bolum</span><span class="p">.</span><span class="n">quot</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>        <span class="n">add_to_sum</span><span class="p">(</span><span class="n">basamak</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">bolum</span><span class="p">.</span><span class="n">quot</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Fonksiyonun ilk argümanıyla, hangi basamağa rakam eklemek istediğimizi belirtiyoruz. Birler basamağı için 1, onlar basamağı için 2 gibi.
 Basamaklar sağdan sola, dizi indeksleri ise soldan sağa sayıldığı için, indeksin yerini hesaplamamız gerekti. Toplam dizisindeki
 her bir eleman bir rakamı ifade ettiğinden, 9'dan büyük olmamasına dikkat etmek gerekiyor. Problem ilk 10 haneyi istese de, şu an tüm 
 sayıları toplamamızın önünde bir engel yok.</p>
-<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">sayilari_topla</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="kt">size_t</span> <span class="n">i</span><span class="p">;</span> <span class="cm">/* Topladığımız Sayı */</span>
-    <span class="kt">size_t</span> <span class="n">k</span><span class="p">;</span> <span class="cm">/* Topladığımız hane */</span>
-
-    <span class="k">for</span><span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="n">S_OF_NUMBERS</span><span class="p">;</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span><span class="o">--</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span> <span class="n">N_OF_NUMBERS</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">add_to_sum</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">numbers</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">S_OF_NUMBERS</span> <span class="o">-</span> <span class="n">k</span><span class="p">]);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">sayilari_topla</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="kt">size_t</span> <span class="n">i</span><span class="p">;</span> <span class="cm">/* Topladığımız Sayı */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="kt">size_t</span> <span class="n">k</span><span class="p">;</span> <span class="cm">/* Topladığımız hane */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">for</span><span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="n">S_OF_NUMBERS</span><span class="p">;</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span><span class="o">--</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span> <span class="n">N_OF_NUMBERS</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>            <span class="n">add_to_sum</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">numbers</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">S_OF_NUMBERS</span> <span class="o">-</span> <span class="n">k</span><span class="p">]);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Elde ettiğimiz toplamı karakter karakter ekrana yazabiliriz.</p>
-<pre class="code literal-block"><span></span><span class="c1">// baştaki sıfırları atla</span>
-<span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="k">while</span><span class="p">(</span><span class="n">toplam</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="n">i</span><span class="o">++</span><span class="p">;</span>
-
-<span class="k">for</span><span class="p">(;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">S_OF_SUM</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">"%d"</span><span class="p">,</span> <span class="n">toplam</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-<span class="p">}</span>
-
-<span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="c1">// baştaki sıfırları atla</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="k">while</span><span class="p">(</span><span class="n">toplam</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="k">for</span><span class="p">(;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">S_OF_SUM</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">printf</span><span class="p">(</span><span class="s">"%d"</span><span class="p">,</span> <span class="n">toplam</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Elde ettiğimiz sonuç <span style="font-family:'courier new';font-size:10pt">5537376230390876637302048746832985971773659831892672</span>.
 Böylece, ilk 10 haneyi de hesaplamış olduk.</p>
 <h3>Bonus</h3>
 <p>Varsayalım ki, tüm sayıları toplamadık ve toplamın ilk 10 hanesini hesaplayıp bırakmak istiyoruz. Tüm sayıların ilk 10 hanelerini
 toplayarak başlayalım.</p>
-<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">sayilari_topla</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="kt">size_t</span> <span class="n">i</span><span class="p">;</span> <span class="cm">/* Topladığımız Sayı */</span>
-    <span class="kt">size_t</span> <span class="n">k</span><span class="p">;</span> <span class="cm">/* Topladığımız hane */</span>
-
-    <span class="k">for</span><span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="n">S_OF_NUMBERS</span><span class="p">;</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">39</span><span class="p">;</span> <span class="n">k</span><span class="o">--</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span> <span class="n">N_OF_NUMBERS</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">add_to_sum</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">numbers</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">S_OF_NUMBERS</span> <span class="o">-</span> <span class="n">k</span><span class="p">]);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">sayilari_topla</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="kt">size_t</span> <span class="n">i</span><span class="p">;</span> <span class="cm">/* Topladığımız Sayı */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="kt">size_t</span> <span class="n">k</span><span class="p">;</span> <span class="cm">/* Topladığımız hane */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">for</span><span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="n">S_OF_NUMBERS</span><span class="p">;</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">39</span><span class="p">;</span> <span class="n">k</span><span class="o">--</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span> <span class="n">N_OF_NUMBERS</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>            <span class="n">add_to_sum</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">numbers</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">S_OF_NUMBERS</span> <span class="o">-</span> <span class="n">k</span><span class="p">]);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu şekilde çalıştırdığımızda <span style="font-family:'courier new';font-size:10pt">5537376230342000000000000000000000000000000000000000</span> sonucunu
 elde edeceğiz. Soldan 13 hane elde ettik. İhtiyacımız olandan 3 hane fazla.</p>
 <p>Toplamaya devam ettiğimizde ilk 10 hanenin değişmeyeceğinden emin miyiz? Diyelim ki, kalan 40 hanede sadece 9 rakamı bulunuyor.
 O halde kalan rakamların toplamı en fazla \( (10^{40} - 1)*10^2 = 10^{42} - 100\) olabilir, ki bu 42 haneli bir sayıdır. Bu durumda, ilk 10 hanenin
 sonundaki 0 rakamı 1 olarak değişebilir. Bu da demek oluyor ki, toplama işlemine devam etmemiz gerekiyor.</p>
-<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">sayilari_topla</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="kt">size_t</span> <span class="n">i</span><span class="p">;</span> <span class="cm">/* Topladığımız Sayı */</span>
-    <span class="kt">size_t</span> <span class="n">k</span><span class="p">;</span> <span class="cm">/* Topladığımız hane */</span>
-
-    <span class="k">for</span><span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="n">S_OF_NUMBERS</span><span class="p">;</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">38</span><span class="p">;</span> <span class="n">k</span><span class="o">--</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span> <span class="n">N_OF_NUMBERS</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">add_to_sum</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">numbers</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">S_OF_NUMBERS</span> <span class="o">-</span> <span class="n">k</span><span class="p">]);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">sayilari_topla</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="kt">size_t</span> <span class="n">i</span><span class="p">;</span> <span class="cm">/* Topladığımız Sayı */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="kt">size_t</span> <span class="n">k</span><span class="p">;</span> <span class="cm">/* Topladığımız hane */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">for</span><span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="n">S_OF_NUMBERS</span><span class="p">;</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">38</span><span class="p">;</span> <span class="n">k</span><span class="o">--</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span> <span class="n">N_OF_NUMBERS</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>            <span class="n">add_to_sum</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">numbers</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">S_OF_NUMBERS</span> <span class="o">-</span> <span class="n">k</span><span class="p">]);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Soldan 11. haneleri de topladığımızda <span style="font-family:'courier new';font-size:10pt">5537376230386000000000000000000000000000000000000000</span> sayısını elde ettik.
 Yukarıdaki hesabı tekrar edersek, kalan hanelerin toplamı en fazla 41 haneli bir rakam olabilir. Bu durumda, 11. hane en fazla 4 olabilir. Böylece,
 ilk 10 hanenin daha fazla değişemeyeceğini de görmüş olduk. Problemin cevabı <span style="font-family:'courier new';font-size:10pt">5537376230</span> oldu.</p>
 <h3>Bonus 2</h3>
 <p>Eksik kalmaması açısından, Python çözümünü de ekliyorum.</p>
-<pre class="code literal-block"><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"sayilar.txt"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">sayilar</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>  <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">sayilar</span><span class="p">))[:</span><span class="mi">10</span><span class="p">])</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"sayilar.txt"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="n">sayilar</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>  <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-13.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">sayilar</span><span class="p">))[:</span><span class="mi">10</span><span class="p">])</span>
+</code></td>
+</tr>
+</table></div>
 
 <h3>Gelecek Problem</h3>
 <p>Aşağıdaki yinelemeli dizi pozitif tamsayılar kümesi için tanımlanmıştır:</p>
@@ -355,7 +838,7 @@ ilk 10 hanenin daha fazla değişemeyeceğini de görmüş olduk. Problemin ceva
         </div>
 
     </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
-	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script></article></main><script>
   if(document.location.hostname == "ysar.net")

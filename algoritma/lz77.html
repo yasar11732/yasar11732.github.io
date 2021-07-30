@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
@@ -10,19 +10,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/algoritma/lz77.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/algoritma/lz77.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="huffman-kodlamasi.html" title="Huffman Kodlaması" type="text/html">
 <link rel="next" href="canonical-huffman-kodlamasi.html" title="Canonical Huffman Kodlaması" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="LZ77 Sıkıştırma Algoritması">
-<meta property="og:url" content="http://ysar.net/algoritma/lz77.html">
-<meta property="og:description" content="Bu aralar sıkıştırma algoritmalarına merak sardım. Geçen yazıda, Huffman Kodlaması
-üzerine birşeyler yazmıştım. Bu yazıda, bir diğer efsane sıkıştırma algoritması olan LZ77'den bahsedeceğim.
-LZ77 algo">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2019-06-14T21:23:00+03:00">
 </head>
 <body>
 
@@ -56,18 +48,22 @@ ile, diğer kelimelerin başına ve sonuna gelen ekler, metinlerin içinde sık 
 tekrar edebilirler. LZ77 algoritması, metin belgelerindeki tekrar eden bölümleri ortadan
 kaldırarak, sıkıştırma yapmayı amaçlar. Bunu nasıl yaptığını anlamaya çalışmak için,
 aşağıdaki örneği inceleyelim:</p>
-<pre class="code literal-block"><span></span>Bu köşe yaz köşesi, bu köşe kış köşesi, ortada su şişesi.
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="lz77.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">Bu köşe yaz köşesi, bu köşe kış köşesi, ortada su şişesi.</span>
+</code></td>
+</tr></table></div>
 
 <p>Bu metinde, <em>köşe</em> kelimesinin 4 defa kullanıldığını hemen dikkat çekiyor. İlk bakışta dikkat
 çekmeyen başka tekrarlar da var. Mesela, 7 karakterden oluşan "u köşe " metin parçası 2 kez
 tekrar ediyor. 9 karakterden oluşan " köşesi, " metin parçası yine 2 kere tekrar ediyor vs.
 Eğer bu tekrarları göstermek için kendimize yeni bir notasyon geliştirirsek, yukarıdaki metni
 aşağıdaki şekilde de ifade edebiliriz.</p>
-<pre class="code literal-block"><span></span>Bu köşe yaz<span class="o">&lt;-</span><span class="m">9</span><span class="p">,</span><span class="m">5</span><span class="o">&gt;</span>si<span class="p">,</span> b<span class="o">&lt;-</span><span class="m">20</span><span class="p">,</span><span class="m">7</span><span class="o">&gt;</span>kış<span class="o">&lt;-</span><span class="m">20</span><span class="p">,</span><span class="m">9</span><span class="o">&gt;</span>ortada su şi<span class="o">&lt;-</span><span class="m">18</span><span class="p">,</span><span class="m">4</span><span class="o">&gt;</span><span class="m">.</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="lz77.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">Bu</span> <span class="n">köşe</span> <span class="n">yaz</span><span class="o">&lt;-</span><span class="m">9</span><span class="p">,</span><span class="m">5</span><span class="o">&gt;</span><span class="n">si</span><span class="p">,</span> <span class="n">b</span><span class="o">&lt;-</span><span class="m">20</span><span class="p">,</span><span class="m">7</span><span class="o">&gt;</span><span class="n">kış</span><span class="o">&lt;-</span><span class="m">20</span><span class="p">,</span><span class="m">9</span><span class="o">&gt;</span><span class="n">ortada</span> <span class="n">su</span> ş<span class="n">i</span><span class="o">&lt;-</span><span class="m">18</span><span class="p">,</span><span class="m">4</span><span class="o">&gt;</span><span class="n">.</span>
+</code></td>
+</tr></table></div>
 
 <p>Yukarıdaki örnekte, tekrar eden kısımları "&lt;" ve "&gt;" işaretleri
 arasında gösterdim. Bu işaretler arasında virgülle ayrılmış iki sayı var. Bunlardan
@@ -84,9 +80,11 @@ sayıya <em>length</em> diyeceğiz. &lt;-9,5&gt; şeklinde gösterimin tamamına
 ve tokenleri iç içe kullandık. Ancak, algoritmanın aslında, sıkıştırılmış veriyi
 sadece tokenler kullanarak ifade ediyoruz. Bir diğer deyişle, örneğin şu şekilde
 verilmiş olması aslına daha uygun olur.</p>
-<pre class="code literal-block"><span></span>&lt;0,0,B&gt;&lt;0,0,u&gt;&lt;0,0, &gt;&lt;0,0,k&gt;&lt;0,0,ö&gt; ...
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="lz77.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">&lt;0,0,B&gt;&lt;0,0,u&gt;&lt;0,0, &gt;&lt;0,0,k&gt;&lt;0,0,ö&gt; ...</span>
+</code></td>
+</tr></table></div>
 
 <p>Bu yeni gösterimde, offset ve length her zaman belirtilmek zorunda. Eğer, herhangi
 bir eşleşme yoksa, offset ve length'in ikisini de 0 olarak gösteriyoruz. Offset ve
@@ -96,22 +94,78 @@ etmemiz gerekiyor.</p>
 bir standart yok. Bu tokenler sabit genişlikli olabildiği gibi, bazen sıkıştırma
 oranını artırmak için, değişken genişlikli de tasarlanabiliyor. Ben kolay
 uygulanabilir olacağı için, sabit genişlikli tokenler kullanacağım.</p>
-<pre class="code literal-block"><span></span><span class="cp">#define OFFSETBITS 5</span>
-<span class="cp">#define LENGTHBITS (8-OFFSETBITS)</span>
-
-<span class="cp">#define OFFSETMASK ((1 &lt;&lt; (OFFSETBITS)) - 1)</span>
-<span class="cp">#define LENGTHMASK ((1 &lt;&lt; (LENGTHBITS)) - 1)</span>
-
-<span class="cp">#define GETOFFSET(x) (x &gt;&gt; LENGTHBITS)</span>
-<span class="cp">#define GETLENGTH(x) (x &amp; LENGTHMASK)</span>
-<span class="cp">#define OFFSETLENGTH(x,y) (x &lt;&lt; LENGTHBITS | y)</span>
-
-<span class="k">struct</span> <span class="n">token</span> <span class="p">{</span>
-    <span class="kt">uint8_t</span> <span class="n">offset_len</span><span class="p">;</span>
-    <span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
-<span class="p">};</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="cp">#define OFFSETBITS 5</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="cp">#define LENGTHBITS (8-OFFSETBITS)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="cp">#define OFFSETMASK ((1 &lt;&lt; (OFFSETBITS)) - 1)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="cp">#define LENGTHMASK ((1 &lt;&lt; (LENGTHBITS)) - 1)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="cp">#define GETOFFSET(x) (x &gt;&gt; LENGTHBITS)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="cp">#define GETLENGTH(x) (x &amp; LENGTHMASK)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="cp">#define OFFSETLENGTH(x,y) (x &lt;&lt; LENGTHBITS | y)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="k">struct</span> <span class="n">token</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="kt">uint8_t</span> <span class="n">offset_len</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="p">};</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Her bir tokenim 5 offset biti, 3 length biti ve 8 karakter biti olmak üzere
 toplam 16bit (2 byte) genişliğinde olacak. Dolayısıyla, offset maksimum 31,
@@ -119,11 +173,23 @@ length ise maksimum 7 olabilecek. Yukarıda bazı yardımcı makrolar da tanıml
 <p>Tokenleri oluşturmak için, metni iki parça olarak düşüneceğiz. Bu parçalardan biri,
 metnin henüz işlenmemiş kısmı olacak. Bu kısma, lookahead buffer diyeceğiz. Bu parçalardan
 diğeri ise, search buffer. Search buffer içerisinde eşleşme arayacağız. Örneğin:</p>
-<pre class="code literal-block"><span></span>|Bu köşe yaz köşesi, bu köşe |kış köşesi, ortada su şişesi.
-|^                           |^
-|Search Buffer               |Lookahead Buffer
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">|Bu köşe yaz köşesi, bu köşe |kış köşesi, ortada su şişesi.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">|^                           |^</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="err">|Search Buffer               |Lookahead Buffer</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yukarıdaki tabloda, sıkıştırma algoritması, kış kelimesinin başına kadar
 ilerlediğinde, lookahead ve search buffer'larının olabileceği durumu görüyoruz.
@@ -134,209 +200,879 @@ ileriye doğru kaydırılacak.</p>
 <p>Bu iki buffer'ın genişliği, tokenime uygun olarak, search buffer için 31 karakter,
 lookahead buffer için 7 karakter olarak seçilecek. Aşağıda, tokenleri
 oluşturmak için kullandığım fonksiyonu inceleyebilirsiniz.</p>
-<pre class="code literal-block"><span></span><span class="cm">/*</span>
-<span class="cm">* LZ77 ile sıkıştırılacak bir metin alır.</span>
-<span class="cm">* token array'i döndürür.</span>
-<span class="cm">* Eğer numTokens NULL değilse, token sayısını</span>
-<span class="cm">* numTokens ile gösterilen yere kaydeder.</span>
-<span class="cm">* char *text =&gt; sıkıştırılacak metin</span>
-<span class="cm">* int limit  =&gt; Kaç karakter sıkıştıracağımız.</span>
-<span class="cm">* int *numTokens =&gt; Kullanılan token sayısının yerini gösterir pointer</span>
-<span class="cm">*</span>
-<span class="cm">*/</span>
-<span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="nf">encode</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">text</span><span class="p">,</span> <span class="kt">int</span> <span class="n">limit</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">numTokens</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="c1">// cap (kapasite) hafızada kaç tokenlik yer ayırdığımız.</span>
-    <span class="kt">int</span> <span class="n">cap</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">;</span>
-
-    <span class="c1">// kaç token oluşturduğumuz.</span>
-    <span class="kt">int</span> <span class="n">_numTokens</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="c1">// oluşturulacak token</span>
-    <span class="k">struct</span> <span class="n">token</span> <span class="n">t</span><span class="p">;</span>
-
-    <span class="c1">// lookahead ve search buffer'larının başlangıç pozisyonları</span>
-    <span class="kt">char</span> <span class="o">*</span><span class="n">lookahead</span><span class="p">,</span> <span class="o">*</span><span class="n">search</span><span class="p">;</span>
-
-    <span class="c1">// tokenler için yer ayır.</span>
-    <span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="n">encoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">cap</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span><span class="p">));</span>
-
-    <span class="c1">// token oluşturma döngüsü</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">lookahead</span> <span class="o">=</span> <span class="n">text</span><span class="p">;</span> <span class="n">lookahead</span> <span class="o">&lt;</span> <span class="n">text</span> <span class="o">+</span> <span class="n">limit</span><span class="p">;</span> <span class="n">lookahead</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="c1">// search buffer'ı lookahead buffer'ın 31 (OFFSETMASK) karakter</span>
-        <span class="c1">// gerisine koyuyoruz.</span>
-        <span class="n">search</span> <span class="o">=</span> <span class="n">lookahead</span> <span class="o">-</span> <span class="n">OFFSETMASK</span><span class="p">;</span>
-
-        <span class="c1">// search buffer'ın metnin dışına çıkmasına engel ol.</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">search</span> <span class="o">&lt;</span> <span class="n">text</span><span class="p">)</span>
-            <span class="n">search</span> <span class="o">=</span> <span class="n">text</span><span class="p">;</span>
-
-        <span class="c1">// search bufferda bulunan en uzun eşleşmenin</span>
-        <span class="c1">// boyutu</span>
-        <span class="kt">int</span> <span class="n">max_len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-        <span class="c1">// search bufferda bulunan en uzun eşleşmenin</span>
-        <span class="c1">// pozisyonu</span>
-        <span class="kt">char</span> <span class="o">*</span><span class="n">max_match</span> <span class="o">=</span> <span class="n">lookahead</span><span class="p">;</span>
-
-        <span class="c1">// search buffer içinde arama yap.</span>
-        <span class="k">for</span> <span class="p">(;</span> <span class="n">search</span> <span class="o">&lt;</span> <span class="n">lookahead</span><span class="p">;</span> <span class="n">search</span><span class="o">++</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">prefix_match_length</span><span class="p">(</span><span class="n">search</span><span class="p">,</span> <span class="n">lookahead</span><span class="p">,</span> <span class="n">LENGTHMASK</span><span class="p">);</span>
-
-            <span class="k">if</span> <span class="p">(</span><span class="n">len</span> <span class="o">&gt;</span> <span class="n">max_len</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">max_len</span> <span class="o">=</span> <span class="n">len</span><span class="p">;</span>
-                <span class="n">max_match</span> <span class="o">=</span> <span class="n">search</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-
-        <span class="cm">/*</span>
-<span class="cm">        * ! ÖNEMLİ !</span>
-<span class="cm">        * Eğer eşleşmenin içine metnin son karakteri de dahil olmuşsa,</span>
-<span class="cm">        * tokenin içine bir karakter koyabilmek için, eşleşmeyi kısaltmamız</span>
-<span class="cm">        * gerekiyor.</span>
-<span class="cm">        */</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">lookahead</span> <span class="o">+</span> <span class="n">max_len</span> <span class="o">&gt;=</span> <span class="n">text</span> <span class="o">+</span> <span class="n">limit</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">max_len</span> <span class="o">=</span> <span class="n">text</span> <span class="o">+</span> <span class="n">limit</span> <span class="o">-</span> <span class="n">lookahead</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
-        <span class="p">}</span>
-
-
-        <span class="c1">// bulunan eşleşmeye göre token oluştur.</span>
-        <span class="n">t</span><span class="p">.</span><span class="n">offset_len</span> <span class="o">=</span> <span class="n">OFFSETLENGTH</span><span class="p">(</span><span class="n">lookahead</span> <span class="o">-</span> <span class="n">max_match</span><span class="p">,</span> <span class="n">max_len</span><span class="p">);</span>
-        <span class="n">lookahead</span> <span class="o">+=</span> <span class="n">max_len</span><span class="p">;</span>
-        <span class="n">t</span><span class="p">.</span><span class="n">c</span> <span class="o">=</span> <span class="o">*</span><span class="n">lookahead</span><span class="p">;</span>
-
-        <span class="c1">// gerekirse, hafızada yer aç</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">_numTokens</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">cap</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">cap</span> <span class="o">=</span> <span class="n">cap</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span>
-            <span class="n">encoded</span> <span class="o">=</span> <span class="n">realloc</span><span class="p">(</span><span class="n">encoded</span><span class="p">,</span> <span class="n">cap</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span><span class="p">));</span>
-        <span class="p">}</span>
-
-        <span class="c1">// oluşturulan tokeni, array'e kaydet.</span>
-        <span class="n">encoded</span><span class="p">[</span><span class="n">_numTokens</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="n">numTokens</span><span class="p">)</span>
-        <span class="o">*</span><span class="n">numTokens</span> <span class="o">=</span> <span class="n">_numTokens</span><span class="p">;</span>
-
-    <span class="k">return</span> <span class="n">encoded</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="cm">/*</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="cm">* LZ77 ile sıkıştırılacak bir metin alır.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="cm">* token array'i döndürür.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="cm">* Eğer numTokens NULL değilse, token sayısını</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="cm">* numTokens ile gösterilen yere kaydeder.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="cm">* char *text =&gt; sıkıştırılacak metin</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="cm">* int limit  =&gt; Kaç karakter sıkıştıracağımız.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="cm">* int *numTokens =&gt; Kullanılan token sayısının yerini gösterir pointer</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="cm">*</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="cm">*/</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="nf">encode</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">text</span><span class="p">,</span> <span class="kt">int</span> <span class="n">limit</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">numTokens</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="c1">// cap (kapasite) hafızada kaç tokenlik yer ayırdığımız.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">cap</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="c1">// kaç token oluşturduğumuz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">_numTokens</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>    <span class="c1">// oluşturulacak token</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>    <span class="k">struct</span> <span class="n">token</span> <span class="n">t</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>    <span class="c1">// lookahead ve search buffer'larının başlangıç pozisyonları</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">lookahead</span><span class="p">,</span> <span class="o">*</span><span class="n">search</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>    <span class="c1">// tokenler için yer ayır.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>    <span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="n">encoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">cap</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>    <span class="c1">// token oluşturma döngüsü</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span><span class="n">lookahead</span> <span class="o">=</span> <span class="n">text</span><span class="p">;</span> <span class="n">lookahead</span> <span class="o">&lt;</span> <span class="n">text</span> <span class="o">+</span> <span class="n">limit</span><span class="p">;</span> <span class="n">lookahead</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>        <span class="c1">// search buffer'ı lookahead buffer'ın 31 (OFFSETMASK) karakter</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>        <span class="c1">// gerisine koyuyoruz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>        <span class="n">search</span> <span class="o">=</span> <span class="n">lookahead</span> <span class="o">-</span> <span class="n">OFFSETMASK</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>        <span class="c1">// search buffer'ın metnin dışına çıkmasına engel ol.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="n">search</span> <span class="o">&lt;</span> <span class="n">text</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code>            <span class="n">search</span> <span class="o">=</span> <span class="n">text</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-38"><code data-line-number="38"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-39"><code data-line-number="39"></code></a></td>
+<td class="code"><code>        <span class="c1">// search bufferda bulunan en uzun eşleşmenin</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-40"><code data-line-number="40"></code></a></td>
+<td class="code"><code>        <span class="c1">// boyutu</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-41"><code data-line-number="41"></code></a></td>
+<td class="code"><code>        <span class="kt">int</span> <span class="n">max_len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-42"><code data-line-number="42"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-43"><code data-line-number="43"></code></a></td>
+<td class="code"><code>        <span class="c1">// search bufferda bulunan en uzun eşleşmenin</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-44"><code data-line-number="44"></code></a></td>
+<td class="code"><code>        <span class="c1">// pozisyonu</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-45"><code data-line-number="45"></code></a></td>
+<td class="code"><code>        <span class="kt">char</span> <span class="o">*</span><span class="n">max_match</span> <span class="o">=</span> <span class="n">lookahead</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-46"><code data-line-number="46"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-47"><code data-line-number="47"></code></a></td>
+<td class="code"><code>        <span class="c1">// search buffer içinde arama yap.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-48"><code data-line-number="48"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="p">(;</span> <span class="n">search</span> <span class="o">&lt;</span> <span class="n">lookahead</span><span class="p">;</span> <span class="n">search</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-49"><code data-line-number="49"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-50"><code data-line-number="50"></code></a></td>
+<td class="code"><code>            <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">prefix_match_length</span><span class="p">(</span><span class="n">search</span><span class="p">,</span> <span class="n">lookahead</span><span class="p">,</span> <span class="n">LENGTHMASK</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-51"><code data-line-number="51"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-52"><code data-line-number="52"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="p">(</span><span class="n">len</span> <span class="o">&gt;</span> <span class="n">max_len</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-53"><code data-line-number="53"></code></a></td>
+<td class="code"><code>            <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-54"><code data-line-number="54"></code></a></td>
+<td class="code"><code>                <span class="n">max_len</span> <span class="o">=</span> <span class="n">len</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-55"><code data-line-number="55"></code></a></td>
+<td class="code"><code>                <span class="n">max_match</span> <span class="o">=</span> <span class="n">search</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-56"><code data-line-number="56"></code></a></td>
+<td class="code"><code>            <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-57"><code data-line-number="57"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-58"><code data-line-number="58"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-59"><code data-line-number="59"></code></a></td>
+<td class="code"><code>        <span class="cm">/*</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-60"><code data-line-number="60"></code></a></td>
+<td class="code"><code><span class="cm">        * ! ÖNEMLİ !</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-61"><code data-line-number="61"></code></a></td>
+<td class="code"><code><span class="cm">        * Eğer eşleşmenin içine metnin son karakteri de dahil olmuşsa,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-62"><code data-line-number="62"></code></a></td>
+<td class="code"><code><span class="cm">        * tokenin içine bir karakter koyabilmek için, eşleşmeyi kısaltmamız</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-63"><code data-line-number="63"></code></a></td>
+<td class="code"><code><span class="cm">        * gerekiyor.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-64"><code data-line-number="64"></code></a></td>
+<td class="code"><code><span class="cm">        */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-65"><code data-line-number="65"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="n">lookahead</span> <span class="o">+</span> <span class="n">max_len</span> <span class="o">&gt;=</span> <span class="n">text</span> <span class="o">+</span> <span class="n">limit</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-66"><code data-line-number="66"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-67"><code data-line-number="67"></code></a></td>
+<td class="code"><code>            <span class="n">max_len</span> <span class="o">=</span> <span class="n">text</span> <span class="o">+</span> <span class="n">limit</span> <span class="o">-</span> <span class="n">lookahead</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-68"><code data-line-number="68"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-69"><code data-line-number="69"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-70"><code data-line-number="70"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-71"><code data-line-number="71"></code></a></td>
+<td class="code"><code>        <span class="c1">// bulunan eşleşmeye göre token oluştur.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-72"><code data-line-number="72"></code></a></td>
+<td class="code"><code>        <span class="n">t</span><span class="p">.</span><span class="n">offset_len</span> <span class="o">=</span> <span class="n">OFFSETLENGTH</span><span class="p">(</span><span class="n">lookahead</span> <span class="o">-</span> <span class="n">max_match</span><span class="p">,</span> <span class="n">max_len</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-73"><code data-line-number="73"></code></a></td>
+<td class="code"><code>        <span class="n">lookahead</span> <span class="o">+=</span> <span class="n">max_len</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-74"><code data-line-number="74"></code></a></td>
+<td class="code"><code>        <span class="n">t</span><span class="p">.</span><span class="n">c</span> <span class="o">=</span> <span class="o">*</span><span class="n">lookahead</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-75"><code data-line-number="75"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-76"><code data-line-number="76"></code></a></td>
+<td class="code"><code>        <span class="c1">// gerekirse, hafızada yer aç</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-77"><code data-line-number="77"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="n">_numTokens</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">cap</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-78"><code data-line-number="78"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-79"><code data-line-number="79"></code></a></td>
+<td class="code"><code>            <span class="n">cap</span> <span class="o">=</span> <span class="n">cap</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-80"><code data-line-number="80"></code></a></td>
+<td class="code"><code>            <span class="n">encoded</span> <span class="o">=</span> <span class="n">realloc</span><span class="p">(</span><span class="n">encoded</span><span class="p">,</span> <span class="n">cap</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-81"><code data-line-number="81"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-82"><code data-line-number="82"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-83"><code data-line-number="83"></code></a></td>
+<td class="code"><code>        <span class="c1">// oluşturulan tokeni, array'e kaydet.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-84"><code data-line-number="84"></code></a></td>
+<td class="code"><code>        <span class="n">encoded</span><span class="p">[</span><span class="n">_numTokens</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-85"><code data-line-number="85"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-86"><code data-line-number="86"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-87"><code data-line-number="87"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">numTokens</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-88"><code data-line-number="88"></code></a></td>
+<td class="code"><code>        <span class="o">*</span><span class="n">numTokens</span> <span class="o">=</span> <span class="n">_numTokens</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-89"><code data-line-number="89"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-90"><code data-line-number="90"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">encoded</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-91"><code data-line-number="91"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Gerekli açıklamaları yorum satırlarında yaptım. Burada kullandığım <code>prefix_match_length</code>
 fonksiyonu, iki metnin başından kaç karakter eşleştiğini hesaplıyor. Onu da şu şekilde yazdım.</p>
-<pre class="code literal-block"><span></span><span class="cm">/*</span>
-<span class="cm">* iki string'in ilk kaç karakteri özdeş?</span>
-<span class="cm">* en fazla limit'e kadar kontrol yapar.</span>
-<span class="cm">*/</span>
-<span class="kr">inline</span> <span class="kt">int</span> <span class="nf">prefix_match_length</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s1</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">limit</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">s1</span><span class="o">++</span> <span class="o">==</span> <span class="o">*</span><span class="n">s2</span><span class="o">++</span> <span class="o">&amp;&amp;</span> <span class="n">len</span> <span class="o">&lt;</span> <span class="n">limit</span><span class="p">)</span>
-        <span class="n">len</span><span class="o">++</span><span class="p">;</span>
-
-    <span class="k">return</span> <span class="n">len</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="cm">/*</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="cm">* iki string'in ilk kaç karakteri özdeş?</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="cm">* en fazla limit'e kadar kontrol yapar.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="cm">*/</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="kr">inline</span> <span class="kt">int</span> <span class="nf">prefix_match_length</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s1</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">limit</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">s1</span><span class="o">++</span> <span class="o">==</span> <span class="o">*</span><span class="n">s2</span><span class="o">++</span> <span class="o">&amp;&amp;</span> <span class="n">len</span> <span class="o">&lt;</span> <span class="n">limit</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="n">len</span><span class="o">++</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">len</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Sıkıştırma işleminin hepsi bu. Oluşturulan token array'ini depolama veya transfer amacıyla
 kullanbilirsiniz. Sıkıştırılan metni eski haline döndürmek, sıkıştırmaya nazaran daha basit.</p>
-<pre class="code literal-block"><span></span><span class="cm">/*</span>
-<span class="cm">* token array'ini, karakter array'ine dönüştürür.</span>
-<span class="cm">*/</span>
-<span class="kt">char</span> <span class="o">*</span><span class="nf">decode</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="n">tokens</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numTokens</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">pcbDecoded</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="c1">// hafızada ayırdığımız kapasite</span>
-    <span class="kt">int</span> <span class="n">cap</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">;</span>
-
-    <span class="c1">// kullanılan byte sayısı</span>
-    <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="c1">// hafızada yer ayır</span>
-    <span class="kt">char</span> <span class="o">*</span><span class="n">decoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">cap</span><span class="p">);</span>
-
-    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numTokens</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="c1">// token'in içinden offset, length ve char</span>
-        <span class="c1">// değerlerini oku</span>
-        <span class="kt">int</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">GETOFFSET</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">offset_len</span><span class="p">);</span>
-        <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">GETLENGTH</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">offset_len</span><span class="p">);</span>
-        <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">c</span><span class="p">;</span>
-
-        <span class="c1">// gerekirse kapasite artır.</span>
-        <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">+</span> <span class="n">len</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">cap</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">cap</span> <span class="o">=</span> <span class="n">cap</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span>
-            <span class="n">decoded</span> <span class="o">=</span> <span class="n">realloc</span><span class="p">(</span><span class="n">decoded</span><span class="p">,</span> <span class="n">cap</span><span class="p">);</span>
-        <span class="p">}</span>
-
-        <span class="c1">// eğer length 0 değilse, gösterilen karakteleri</span>
-        <span class="c1">// kopyala</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">len</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">lz77memcpy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">decoded</span><span class="p">[</span><span class="o">*</span><span class="n">pcbDecoded</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">decoded</span><span class="p">[</span><span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">-</span> <span class="n">offset</span><span class="p">],</span> <span class="n">len</span><span class="p">);</span>
-        <span class="p">}</span>
-
-        <span class="c1">// kopyalanan karakter kadar ileri sar</span>
-        <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">+=</span> <span class="n">len</span><span class="p">;</span>
-
-        <span class="c1">// tokenin içindeki karateri ekle.</span>
-        <span class="n">decoded</span><span class="p">[</span><span class="o">*</span><span class="n">pcbDecoded</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
-
-        <span class="c1">// 1 adım daha ileri sar.</span>
-        <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">=</span> <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">return</span> <span class="n">decoded</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="cm">/*</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="cm">* token array'ini, karakter array'ine dönüştürür.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="cm">*/</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="kt">char</span> <span class="o">*</span><span class="nf">decode</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="n">tokens</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numTokens</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">pcbDecoded</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="c1">// hafızada ayırdığımız kapasite</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">cap</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="c1">// kullanılan byte sayısı</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="c1">// hafızada yer ayır</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">decoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">cap</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numTokens</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>        <span class="c1">// token'in içinden offset, length ve char</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>        <span class="c1">// değerlerini oku</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>        <span class="kt">int</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">GETOFFSET</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">offset_len</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>        <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">GETLENGTH</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">offset_len</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>        <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">c</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>        <span class="c1">// gerekirse kapasite artır.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">+</span> <span class="n">len</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">cap</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>            <span class="n">cap</span> <span class="o">=</span> <span class="n">cap</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>            <span class="n">decoded</span> <span class="o">=</span> <span class="n">realloc</span><span class="p">(</span><span class="n">decoded</span><span class="p">,</span> <span class="n">cap</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>        <span class="c1">// eğer length 0 değilse, gösterilen karakteleri</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>        <span class="c1">// kopyala</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="n">len</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>            <span class="n">lz77memcpy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">decoded</span><span class="p">[</span><span class="o">*</span><span class="n">pcbDecoded</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">decoded</span><span class="p">[</span><span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">-</span> <span class="n">offset</span><span class="p">],</span> <span class="n">len</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-38"><code data-line-number="38"></code></a></td>
+<td class="code"><code>        <span class="c1">// kopyalanan karakter kadar ileri sar</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-39"><code data-line-number="39"></code></a></td>
+<td class="code"><code>        <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">+=</span> <span class="n">len</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-40"><code data-line-number="40"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-41"><code data-line-number="41"></code></a></td>
+<td class="code"><code>        <span class="c1">// tokenin içindeki karateri ekle.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-42"><code data-line-number="42"></code></a></td>
+<td class="code"><code>        <span class="n">decoded</span><span class="p">[</span><span class="o">*</span><span class="n">pcbDecoded</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-43"><code data-line-number="43"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-44"><code data-line-number="44"></code></a></td>
+<td class="code"><code>        <span class="c1">// 1 adım daha ileri sar.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-45"><code data-line-number="45"></code></a></td>
+<td class="code"><code>        <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">=</span> <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-46"><code data-line-number="46"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-47"><code data-line-number="47"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-48"><code data-line-number="48"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">decoded</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-49"><code data-line-number="49"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Gerekli açıklamalar, yorum satırlarında mevcut. Burada tek ilginç olan nokta <code>lz77memcpy</code>
 fonksiyonu. Buna neden gerek duyulduğuna geçmeden önce, aşağıdaki tokenlerin nasıl bir
 metin oluşturması gerektiğine bakalım.</p>
-<pre class="code literal-block"><span></span>&lt;0,0,a&gt;&lt;-1,7,a&gt;
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="lz77.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">&lt;0,0,a&gt;&lt;-1,7,a&gt;</span>
+</code></td>
+</tr></table></div>
 
 <p>İkinci tokene dikkat ederseniz, 1 karakter geri gidip, 7 karakter kopyalamamız gerekiyor, ancak,
 gösterilen yerde 7 karakter yok. LZ77 algoritmasında bu şekilde henüz olmayan metne referans
 verebiliyoruz. Aşağıdaki tabloda ikinci token oluşturulmaya başlamadan önceki metnin haline bakalım.</p>
-<pre class="code literal-block"><span></span>|1|2|3|4|5|6|7|8|
-|a|?|?|?|?|?|?|?|
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">|1|2|3|4|5|6|7|8|</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">|a|?|?|?|?|?|?|?|</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu noktada kopyalamanın hedefi ikinci karakter, kaynağı ise birinci karakter. Bu aşamada, 1 karakter
 kopyalarsak, aşağıdaki duruma geçiyoruz.</p>
-<pre class="code literal-block"><span></span>|1|2|3|4|5|6|7|8|
-|a|a|?|?|?|?|?|?|
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">|1|2|3|4|5|6|7|8|</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">|a|a|?|?|?|?|?|?|</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu aşamada, kopyalamanın hedefi üçüncü karakter, kaynağı ise ikinci karakter. Örnek tabloda gördüğünüz
 gibi, ilk karakteri kopyaladıktan sonra, kopyalanacak ikinci karakter oluşmuş oldu. Bu şekilde devam
 ederek, gerekli 7 karakteri kopyalayabiliriz. <code>lz77memcpy</code> fonksiyonu da bu işe yarıyor.</p>
-<pre class="code literal-block"><span></span><span class="cm">/*</span>
-<span class="cm">* memcpy fonksiyonu ile benzer. Byte düzeyinde</span>
-<span class="cm">* kopyalama yapma garantisi olduğu için, bu</span>
-<span class="cm">* versiyonu kullanıyoruz.</span>
-<span class="cm">*/</span>
-<span class="kr">inline</span> <span class="kt">void</span> <span class="nf">lz77memcpy</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s1</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">while</span> <span class="p">(</span><span class="n">size</span><span class="o">--</span><span class="p">)</span>
-        <span class="o">*</span><span class="n">s1</span><span class="o">++</span> <span class="o">=</span> <span class="o">*</span><span class="n">s2</span><span class="o">++</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="cm">/*</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="cm">* memcpy fonksiyonu ile benzer. Byte düzeyinde</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="cm">* kopyalama yapma garantisi olduğu için, bu</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="cm">* versiyonu kullanıyoruz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="cm">*/</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="kr">inline</span> <span class="kt">void</span> <span class="nf">lz77memcpy</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s1</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="p">(</span><span class="n">size</span><span class="o">--</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="o">*</span><span class="n">s1</span><span class="o">++</span> <span class="o">=</span> <span class="o">*</span><span class="n">s2</span><span class="o">++</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Kaynak ve hedefin örtüştüğü durumlarda, standart <code>memcpy</code> fonksiyonu her zaman doğru çalışmayacaktır.
 Bunun için, kendi versiyonumuzu yazmamız gerekti.</p>
@@ -344,238 +1080,1163 @@ Bunun için, kendi versiyonumuzu yazmamız gerekti.</p>
 değiştirerek denemenizi tavsiye ederim. <code>offset</code> ve <code>length</code> değişkenlerini tutmak için daha
 büyük bir veri yapısı (<code>uint16_t</code> gibi) deneyerek, daha iyi sıkıştırma oranları elde etmeniz mümkün.
 <code>offset</code> için ayırdığınız yerin, <code>length</code>'den büyük olması çoğu zaman daha avantajlı olur.</p>
-<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp"></span>
-
-<span class="cp">#define OFFSETBITS 5</span>
-<span class="cp">#define LENGTHBITS (8-OFFSETBITS)</span>
-
-<span class="cp">#define OFFSETMASK ((1 &lt;&lt; (OFFSETBITS)) - 1)</span>
-<span class="cp">#define LENGTHMASK ((1 &lt;&lt; (LENGTHBITS)) - 1)</span>
-
-<span class="cp">#define GETOFFSET(x) (x &gt;&gt; LENGTHBITS)</span>
-<span class="cp">#define GETLENGTH(x) (x &amp; LENGTHMASK)</span>
-<span class="cp">#define OFFSETLENGTH(x,y) (x &lt;&lt; LENGTHBITS | y)</span>
-
-<span class="k">struct</span> <span class="n">token</span> <span class="p">{</span>
-    <span class="kt">uint8_t</span> <span class="n">offset_len</span><span class="p">;</span>
-    <span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
-<span class="p">};</span>
-
-
-<span class="cm">/*</span>
-<span class="cm">* iki string'in ilk kaç karakteri özdeş?</span>
-<span class="cm">* maksimum limit sayısı kadar kontrol yapar.</span>
-<span class="cm">*/</span>
-<span class="kr">inline</span> <span class="kt">int</span> <span class="nf">prefix_match_length</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s1</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">limit</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">s1</span><span class="o">++</span> <span class="o">==</span> <span class="o">*</span><span class="n">s2</span><span class="o">++</span> <span class="o">&amp;&amp;</span> <span class="n">len</span> <span class="o">&lt;</span> <span class="n">limit</span><span class="p">)</span>
-        <span class="n">len</span><span class="o">++</span><span class="p">;</span>
-
-    <span class="k">return</span> <span class="n">len</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="cm">/*</span>
-<span class="cm">* memcpy fonksiyonu ile benzer. Byte düzeyinde</span>
-<span class="cm">* kopyalama yapma garantisi olduğu için, bu</span>
-<span class="cm">* versiyonu kullanıyoruz.</span>
-<span class="cm">*/</span>
-<span class="kr">inline</span> <span class="kt">void</span> <span class="nf">lz77memcpy</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s1</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">while</span> <span class="p">(</span><span class="n">size</span><span class="o">--</span><span class="p">)</span>
-        <span class="o">*</span><span class="n">s1</span><span class="o">++</span> <span class="o">=</span> <span class="o">*</span><span class="n">s2</span><span class="o">++</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="cm">/*</span>
-<span class="cm">* token array'ini, karakter array'ine dönüştürür.</span>
-<span class="cm">*/</span>
-<span class="kt">char</span> <span class="o">*</span><span class="nf">decode</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="n">tokens</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numTokens</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">pcbDecoded</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="c1">// hafızada ayırdığımız kapasite</span>
-    <span class="kt">int</span> <span class="n">cap</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">;</span>
-
-    <span class="c1">// kullanılan byte sayısı</span>
-    <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="c1">// hafızada yer ayır</span>
-    <span class="kt">char</span> <span class="o">*</span><span class="n">decoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">cap</span><span class="p">);</span>
-
-    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numTokens</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="c1">// token'in içinden offset, length ve char</span>
-        <span class="c1">// değerlerini oku</span>
-        <span class="kt">int</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">GETOFFSET</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">offset_len</span><span class="p">);</span>
-        <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">GETLENGTH</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">offset_len</span><span class="p">);</span>
-        <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">c</span><span class="p">;</span>
-
-        <span class="c1">// gerekirse kapasite artır.</span>
-        <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">+</span> <span class="n">len</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">cap</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">cap</span> <span class="o">=</span> <span class="n">cap</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span>
-            <span class="n">decoded</span> <span class="o">=</span> <span class="n">realloc</span><span class="p">(</span><span class="n">decoded</span><span class="p">,</span> <span class="n">cap</span><span class="p">);</span>
-        <span class="p">}</span>
-
-        <span class="c1">// eğer length 0 değilse, gösterilen karakteleri</span>
-        <span class="c1">// kopyala</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">len</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">lz77memcpy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">decoded</span><span class="p">[</span><span class="o">*</span><span class="n">pcbDecoded</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">decoded</span><span class="p">[</span><span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">-</span> <span class="n">offset</span><span class="p">],</span> <span class="n">len</span><span class="p">);</span>
-        <span class="p">}</span>
-
-        <span class="c1">// kopyalanan karakter kadar ileri sar</span>
-        <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">+=</span> <span class="n">len</span><span class="p">;</span>
-
-        <span class="c1">// tokenin içindeki karateri ekle.</span>
-        <span class="n">decoded</span><span class="p">[</span><span class="o">*</span><span class="n">pcbDecoded</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
-
-        <span class="c1">// 1 adım daha ileri sar.</span>
-        <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">=</span> <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">return</span> <span class="n">decoded</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="cm">/*</span>
-<span class="cm">* LZ77 ile sıkıştırılacak bir metin alır.</span>
-<span class="cm">* token array'i döndürür.</span>
-<span class="cm">* Eğer numTokens NULL değilse, token sayısını</span>
-<span class="cm">* numTokens ile gösterilen yere kaydeder.</span>
-<span class="cm">*/</span>
-<span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="nf">encode</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">text</span><span class="p">,</span> <span class="kt">int</span> <span class="n">limit</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">numTokens</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="c1">// cap (kapasite) hafızada kaç tokenlik yer ayırdığımız.</span>
-    <span class="kt">int</span> <span class="n">cap</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">;</span>
-
-    <span class="c1">// kaç token oluşturduğumuz.</span>
-    <span class="kt">int</span> <span class="n">_numTokens</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="c1">// oluşturulacak token</span>
-    <span class="k">struct</span> <span class="n">token</span> <span class="n">t</span><span class="p">;</span>
-
-    <span class="c1">// lookahead ve search buffer'larının başlangıç pozisyonları</span>
-    <span class="kt">char</span> <span class="o">*</span><span class="n">lookahead</span><span class="p">,</span> <span class="o">*</span><span class="n">search</span><span class="p">;</span>
-
-    <span class="c1">// tokenler için yer ayır.</span>
-    <span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="n">encoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">cap</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span><span class="p">));</span>
-
-    <span class="c1">// token oluşturma döngüsü</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">lookahead</span> <span class="o">=</span> <span class="n">text</span><span class="p">;</span> <span class="n">lookahead</span> <span class="o">&lt;</span> <span class="n">text</span> <span class="o">+</span> <span class="n">limit</span><span class="p">;</span> <span class="n">lookahead</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="c1">// search buffer'ı lookahead buffer'ın 31 (OFFSETMASK) karakter</span>
-        <span class="c1">// gerisine koyuyoruz.</span>
-        <span class="n">search</span> <span class="o">=</span> <span class="n">lookahead</span> <span class="o">-</span> <span class="n">OFFSETMASK</span><span class="p">;</span>
-
-        <span class="c1">// search buffer'ın metnin dışına çıkmasına engel ol.</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">search</span> <span class="o">&lt;</span> <span class="n">text</span><span class="p">)</span>
-            <span class="n">search</span> <span class="o">=</span> <span class="n">text</span><span class="p">;</span>
-
-        <span class="c1">// search bufferda bulunan en uzun eşleşmenin</span>
-        <span class="c1">// boyutu</span>
-        <span class="kt">int</span> <span class="n">max_len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-        <span class="c1">// search bufferda bulunan en uzun eşleşmenin</span>
-        <span class="c1">// pozisyonu</span>
-        <span class="kt">char</span> <span class="o">*</span><span class="n">max_match</span> <span class="o">=</span> <span class="n">lookahead</span><span class="p">;</span>
-
-        <span class="c1">// search buffer içinde arama yap.</span>
-        <span class="k">for</span> <span class="p">(;</span> <span class="n">search</span> <span class="o">&lt;</span> <span class="n">lookahead</span><span class="p">;</span> <span class="n">search</span><span class="o">++</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">prefix_match_length</span><span class="p">(</span><span class="n">search</span><span class="p">,</span> <span class="n">lookahead</span><span class="p">,</span> <span class="n">LENGTHMASK</span><span class="p">);</span>
-
-            <span class="k">if</span> <span class="p">(</span><span class="n">len</span> <span class="o">&gt;</span> <span class="n">max_len</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">max_len</span> <span class="o">=</span> <span class="n">len</span><span class="p">;</span>
-                <span class="n">max_match</span> <span class="o">=</span> <span class="n">search</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-
-        <span class="cm">/*</span>
-<span class="cm">        * ! ÖNEMLİ !</span>
-<span class="cm">        * Eğer eşleşmenin içine metnin son karakteri de dahil olmuşsa,</span>
-<span class="cm">        * tokenin içine bir karakter koyabilmek için, eşleşmeyi kısaltmamız</span>
-<span class="cm">        * gerekiyor.</span>
-<span class="cm">        */</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">lookahead</span> <span class="o">+</span> <span class="n">max_len</span> <span class="o">&gt;=</span> <span class="n">text</span> <span class="o">+</span> <span class="n">limit</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">max_len</span> <span class="o">=</span> <span class="n">text</span> <span class="o">+</span> <span class="n">limit</span> <span class="o">-</span> <span class="n">lookahead</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
-        <span class="p">}</span>
-
-
-        <span class="c1">// bulunan eşleşmeye göre token oluştur.</span>
-        <span class="n">t</span><span class="p">.</span><span class="n">offset_len</span> <span class="o">=</span> <span class="n">OFFSETLENGTH</span><span class="p">(</span><span class="n">lookahead</span> <span class="o">-</span> <span class="n">max_match</span><span class="p">,</span> <span class="n">max_len</span><span class="p">);</span>
-        <span class="n">lookahead</span> <span class="o">+=</span> <span class="n">max_len</span><span class="p">;</span>
-        <span class="n">t</span><span class="p">.</span><span class="n">c</span> <span class="o">=</span> <span class="o">*</span><span class="n">lookahead</span><span class="p">;</span>
-
-        <span class="c1">// gerekirse, hafızada yer aç</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">_numTokens</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">cap</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">cap</span> <span class="o">=</span> <span class="n">cap</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span>
-            <span class="n">encoded</span> <span class="o">=</span> <span class="n">realloc</span><span class="p">(</span><span class="n">encoded</span><span class="p">,</span> <span class="n">cap</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span><span class="p">));</span>
-        <span class="p">}</span>
-
-        <span class="c1">// oluşturulan tokeni, array'e kaydet.</span>
-        <span class="n">encoded</span><span class="p">[</span><span class="n">_numTokens</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="n">numTokens</span><span class="p">)</span>
-        <span class="o">*</span><span class="n">numTokens</span> <span class="o">=</span> <span class="n">_numTokens</span><span class="p">;</span>
-
-    <span class="k">return</span> <span class="n">encoded</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="c1">// bir dosyanın tamamını tek seferde</span>
-<span class="c1">// okur. Büyük dosyaları okumak için uygun</span>
-<span class="c1">// değildir.</span>
-<span class="kt">char</span> <span class="o">*</span><span class="nf">file_read</span><span class="p">(</span><span class="kt">FILE</span> <span class="o">*</span><span class="n">f</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">size</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">char</span> <span class="o">*</span><span class="n">content</span><span class="p">;</span>
-    <span class="n">fseek</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SEEK_END</span><span class="p">);</span>
-    <span class="o">*</span><span class="n">size</span> <span class="o">=</span> <span class="n">ftell</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
-    <span class="n">content</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="o">*</span><span class="n">size</span><span class="p">);</span>
-    <span class="n">fseek</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SEEK_SET</span><span class="p">);</span>
-    <span class="n">fread</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">size</span><span class="p">,</span> <span class="n">f</span><span class="p">);</span>
-    <span class="k">return</span> <span class="n">content</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">FILE</span> <span class="o">*</span><span class="n">f</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">metin_boyutu</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">token_sayisi</span><span class="p">,</span> <span class="n">decode_boyutu</span><span class="p">;</span>
-    <span class="kt">char</span> <span class="o">*</span><span class="n">kaynak_metin</span> <span class="o">=</span> <span class="s">"aaaaaaaa"</span><span class="p">,</span> <span class="o">*</span><span class="n">decoded_metin</span> <span class="o">=</span> <span class="s">""</span><span class="p">;</span>
-    <span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="n">encoded_metin</span><span class="p">;</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="n">f</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"source.txt"</span><span class="p">,</span> <span class="s">"rb"</span><span class="p">))</span>
-    <span class="p">{</span>
-        <span class="n">kaynak_metin</span> <span class="o">=</span> <span class="n">file_read</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">metin_boyutu</span><span class="p">);</span>
-        <span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
-    <span class="p">}</span>
-
-
-
-    <span class="n">encoded_metin</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">kaynak_metin</span><span class="p">,</span> <span class="n">metin_boyutu</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">token_sayisi</span><span class="p">);</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="n">f</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"encoded.txt"</span><span class="p">,</span> <span class="s">"wb"</span><span class="p">))</span>
-    <span class="p">{</span>
-        <span class="n">fwrite</span><span class="p">(</span><span class="n">encoded_metin</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span><span class="p">),</span> <span class="n">token_sayisi</span><span class="p">,</span> <span class="n">f</span><span class="p">);</span>
-        <span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="n">decoded_metin</span> <span class="o">=</span> <span class="n">decode</span><span class="p">(</span><span class="n">encoded_metin</span><span class="p">,</span> <span class="n">token_sayisi</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">decode_boyutu</span><span class="p">);</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="n">f</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"decoded.txt"</span><span class="p">,</span> <span class="s">"wb"</span><span class="p">))</span>
-    <span class="p">{</span>
-        <span class="n">fwrite</span><span class="p">(</span><span class="n">decoded_metin</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">decode_boyutu</span><span class="p">,</span> <span class="n">f</span><span class="p">);</span>
-        <span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="n">printf</span><span class="p">(</span><span class="s">"Orjinal Boyut: %d, Encode Boyutu: %d, Decode Boyutu: %d"</span><span class="p">,</span> <span class="n">metin_boyutu</span><span class="p">,</span> <span class="n">token_sayisi</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span><span class="p">),</span> <span class="n">decode_boyutu</span><span class="p">);</span>
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-1"><code data-line-number="  1"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-2"><code data-line-number="  2"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-3"><code data-line-number="  3"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-4"><code data-line-number="  4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-5"><code data-line-number="  5"></code></a></td>
+<td class="code"><code><span class="cp">#define OFFSETBITS 5</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-6"><code data-line-number="  6"></code></a></td>
+<td class="code"><code><span class="cp">#define LENGTHBITS (8-OFFSETBITS)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-7"><code data-line-number="  7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-8"><code data-line-number="  8"></code></a></td>
+<td class="code"><code><span class="cp">#define OFFSETMASK ((1 &lt;&lt; (OFFSETBITS)) - 1)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-9"><code data-line-number="  9"></code></a></td>
+<td class="code"><code><span class="cp">#define LENGTHMASK ((1 &lt;&lt; (LENGTHBITS)) - 1)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-10"><code data-line-number=" 10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-11"><code data-line-number=" 11"></code></a></td>
+<td class="code"><code><span class="cp">#define GETOFFSET(x) (x &gt;&gt; LENGTHBITS)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-12"><code data-line-number=" 12"></code></a></td>
+<td class="code"><code><span class="cp">#define GETLENGTH(x) (x &amp; LENGTHMASK)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-13"><code data-line-number=" 13"></code></a></td>
+<td class="code"><code><span class="cp">#define OFFSETLENGTH(x,y) (x &lt;&lt; LENGTHBITS | y)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-14"><code data-line-number=" 14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-15"><code data-line-number=" 15"></code></a></td>
+<td class="code"><code><span class="k">struct</span> <span class="n">token</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-16"><code data-line-number=" 16"></code></a></td>
+<td class="code"><code>    <span class="kt">uint8_t</span> <span class="n">offset_len</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-17"><code data-line-number=" 17"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-18"><code data-line-number=" 18"></code></a></td>
+<td class="code"><code><span class="p">};</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-19"><code data-line-number=" 19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-20"><code data-line-number=" 20"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-21"><code data-line-number=" 21"></code></a></td>
+<td class="code"><code><span class="cm">/*</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-22"><code data-line-number=" 22"></code></a></td>
+<td class="code"><code><span class="cm">* iki string'in ilk kaç karakteri özdeş?</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-23"><code data-line-number=" 23"></code></a></td>
+<td class="code"><code><span class="cm">* maksimum limit sayısı kadar kontrol yapar.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-24"><code data-line-number=" 24"></code></a></td>
+<td class="code"><code><span class="cm">*/</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-25"><code data-line-number=" 25"></code></a></td>
+<td class="code"><code><span class="kr">inline</span> <span class="kt">int</span> <span class="nf">prefix_match_length</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s1</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">limit</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-26"><code data-line-number=" 26"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-27"><code data-line-number=" 27"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-28"><code data-line-number=" 28"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-29"><code data-line-number=" 29"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">s1</span><span class="o">++</span> <span class="o">==</span> <span class="o">*</span><span class="n">s2</span><span class="o">++</span> <span class="o">&amp;&amp;</span> <span class="n">len</span> <span class="o">&lt;</span> <span class="n">limit</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-30"><code data-line-number=" 30"></code></a></td>
+<td class="code"><code>        <span class="n">len</span><span class="o">++</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-31"><code data-line-number=" 31"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-32"><code data-line-number=" 32"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">len</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-33"><code data-line-number=" 33"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-34"><code data-line-number=" 34"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-35"><code data-line-number=" 35"></code></a></td>
+<td class="code"><code><span class="cm">/*</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-36"><code data-line-number=" 36"></code></a></td>
+<td class="code"><code><span class="cm">* memcpy fonksiyonu ile benzer. Byte düzeyinde</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-37"><code data-line-number=" 37"></code></a></td>
+<td class="code"><code><span class="cm">* kopyalama yapma garantisi olduğu için, bu</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-38"><code data-line-number=" 38"></code></a></td>
+<td class="code"><code><span class="cm">* versiyonu kullanıyoruz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-39"><code data-line-number=" 39"></code></a></td>
+<td class="code"><code><span class="cm">*/</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-40"><code data-line-number=" 40"></code></a></td>
+<td class="code"><code><span class="kr">inline</span> <span class="kt">void</span> <span class="nf">lz77memcpy</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s1</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-41"><code data-line-number=" 41"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-42"><code data-line-number=" 42"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="p">(</span><span class="n">size</span><span class="o">--</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-43"><code data-line-number=" 43"></code></a></td>
+<td class="code"><code>        <span class="o">*</span><span class="n">s1</span><span class="o">++</span> <span class="o">=</span> <span class="o">*</span><span class="n">s2</span><span class="o">++</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-44"><code data-line-number=" 44"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-45"><code data-line-number=" 45"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-46"><code data-line-number=" 46"></code></a></td>
+<td class="code"><code><span class="cm">/*</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-47"><code data-line-number=" 47"></code></a></td>
+<td class="code"><code><span class="cm">* token array'ini, karakter array'ine dönüştürür.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-48"><code data-line-number=" 48"></code></a></td>
+<td class="code"><code><span class="cm">*/</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-49"><code data-line-number=" 49"></code></a></td>
+<td class="code"><code><span class="kt">char</span> <span class="o">*</span><span class="nf">decode</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="n">tokens</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numTokens</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">pcbDecoded</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-50"><code data-line-number=" 50"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-51"><code data-line-number=" 51"></code></a></td>
+<td class="code"><code>    <span class="c1">// hafızada ayırdığımız kapasite</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-52"><code data-line-number=" 52"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">cap</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-53"><code data-line-number=" 53"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-54"><code data-line-number=" 54"></code></a></td>
+<td class="code"><code>    <span class="c1">// kullanılan byte sayısı</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-55"><code data-line-number=" 55"></code></a></td>
+<td class="code"><code>    <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-56"><code data-line-number=" 56"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-57"><code data-line-number=" 57"></code></a></td>
+<td class="code"><code>    <span class="c1">// hafızada yer ayır</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-58"><code data-line-number=" 58"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">decoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">cap</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-59"><code data-line-number=" 59"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-60"><code data-line-number=" 60"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-61"><code data-line-number=" 61"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numTokens</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-62"><code data-line-number=" 62"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-63"><code data-line-number=" 63"></code></a></td>
+<td class="code"><code>        <span class="c1">// token'in içinden offset, length ve char</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-64"><code data-line-number=" 64"></code></a></td>
+<td class="code"><code>        <span class="c1">// değerlerini oku</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-65"><code data-line-number=" 65"></code></a></td>
+<td class="code"><code>        <span class="kt">int</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">GETOFFSET</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">offset_len</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-66"><code data-line-number=" 66"></code></a></td>
+<td class="code"><code>        <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">GETLENGTH</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">offset_len</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-67"><code data-line-number=" 67"></code></a></td>
+<td class="code"><code>        <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">c</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-68"><code data-line-number=" 68"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-69"><code data-line-number=" 69"></code></a></td>
+<td class="code"><code>        <span class="c1">// gerekirse kapasite artır.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-70"><code data-line-number=" 70"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">+</span> <span class="n">len</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">cap</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-71"><code data-line-number=" 71"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-72"><code data-line-number=" 72"></code></a></td>
+<td class="code"><code>            <span class="n">cap</span> <span class="o">=</span> <span class="n">cap</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-73"><code data-line-number=" 73"></code></a></td>
+<td class="code"><code>            <span class="n">decoded</span> <span class="o">=</span> <span class="n">realloc</span><span class="p">(</span><span class="n">decoded</span><span class="p">,</span> <span class="n">cap</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-74"><code data-line-number=" 74"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-75"><code data-line-number=" 75"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-76"><code data-line-number=" 76"></code></a></td>
+<td class="code"><code>        <span class="c1">// eğer length 0 değilse, gösterilen karakteleri</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-77"><code data-line-number=" 77"></code></a></td>
+<td class="code"><code>        <span class="c1">// kopyala</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-78"><code data-line-number=" 78"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="n">len</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-79"><code data-line-number=" 79"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-80"><code data-line-number=" 80"></code></a></td>
+<td class="code"><code>            <span class="n">lz77memcpy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">decoded</span><span class="p">[</span><span class="o">*</span><span class="n">pcbDecoded</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">decoded</span><span class="p">[</span><span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">-</span> <span class="n">offset</span><span class="p">],</span> <span class="n">len</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-81"><code data-line-number=" 81"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-82"><code data-line-number=" 82"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-83"><code data-line-number=" 83"></code></a></td>
+<td class="code"><code>        <span class="c1">// kopyalanan karakter kadar ileri sar</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-84"><code data-line-number=" 84"></code></a></td>
+<td class="code"><code>        <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">+=</span> <span class="n">len</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-85"><code data-line-number=" 85"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-86"><code data-line-number=" 86"></code></a></td>
+<td class="code"><code>        <span class="c1">// tokenin içindeki karateri ekle.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-87"><code data-line-number=" 87"></code></a></td>
+<td class="code"><code>        <span class="n">decoded</span><span class="p">[</span><span class="o">*</span><span class="n">pcbDecoded</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-88"><code data-line-number=" 88"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-89"><code data-line-number=" 89"></code></a></td>
+<td class="code"><code>        <span class="c1">// 1 adım daha ileri sar.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-90"><code data-line-number=" 90"></code></a></td>
+<td class="code"><code>        <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">=</span> <span class="o">*</span><span class="n">pcbDecoded</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-91"><code data-line-number=" 91"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-92"><code data-line-number=" 92"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-93"><code data-line-number=" 93"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">decoded</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-94"><code data-line-number=" 94"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-95"><code data-line-number=" 95"></code></a></td>
+<td class="code"><code><span class="cm">/*</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-96"><code data-line-number=" 96"></code></a></td>
+<td class="code"><code><span class="cm">* LZ77 ile sıkıştırılacak bir metin alır.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-97"><code data-line-number=" 97"></code></a></td>
+<td class="code"><code><span class="cm">* token array'i döndürür.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-98"><code data-line-number=" 98"></code></a></td>
+<td class="code"><code><span class="cm">* Eğer numTokens NULL değilse, token sayısını</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-99"><code data-line-number=" 99"></code></a></td>
+<td class="code"><code><span class="cm">* numTokens ile gösterilen yere kaydeder.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-100"><code data-line-number="100"></code></a></td>
+<td class="code"><code><span class="cm">*/</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-101"><code data-line-number="101"></code></a></td>
+<td class="code"><code><span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="nf">encode</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">text</span><span class="p">,</span> <span class="kt">int</span> <span class="n">limit</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">numTokens</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-102"><code data-line-number="102"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-103"><code data-line-number="103"></code></a></td>
+<td class="code"><code>    <span class="c1">// cap (kapasite) hafızada kaç tokenlik yer ayırdığımız.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-104"><code data-line-number="104"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">cap</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-105"><code data-line-number="105"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-106"><code data-line-number="106"></code></a></td>
+<td class="code"><code>    <span class="c1">// kaç token oluşturduğumuz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-107"><code data-line-number="107"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">_numTokens</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-108"><code data-line-number="108"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-109"><code data-line-number="109"></code></a></td>
+<td class="code"><code>    <span class="c1">// oluşturulacak token</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-110"><code data-line-number="110"></code></a></td>
+<td class="code"><code>    <span class="k">struct</span> <span class="n">token</span> <span class="n">t</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-111"><code data-line-number="111"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-112"><code data-line-number="112"></code></a></td>
+<td class="code"><code>    <span class="c1">// lookahead ve search buffer'larının başlangıç pozisyonları</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-113"><code data-line-number="113"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">lookahead</span><span class="p">,</span> <span class="o">*</span><span class="n">search</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-114"><code data-line-number="114"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-115"><code data-line-number="115"></code></a></td>
+<td class="code"><code>    <span class="c1">// tokenler için yer ayır.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-116"><code data-line-number="116"></code></a></td>
+<td class="code"><code>    <span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="n">encoded</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">cap</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-117"><code data-line-number="117"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-118"><code data-line-number="118"></code></a></td>
+<td class="code"><code>    <span class="c1">// token oluşturma döngüsü</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-119"><code data-line-number="119"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span><span class="n">lookahead</span> <span class="o">=</span> <span class="n">text</span><span class="p">;</span> <span class="n">lookahead</span> <span class="o">&lt;</span> <span class="n">text</span> <span class="o">+</span> <span class="n">limit</span><span class="p">;</span> <span class="n">lookahead</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-120"><code data-line-number="120"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-121"><code data-line-number="121"></code></a></td>
+<td class="code"><code>        <span class="c1">// search buffer'ı lookahead buffer'ın 31 (OFFSETMASK) karakter</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-122"><code data-line-number="122"></code></a></td>
+<td class="code"><code>        <span class="c1">// gerisine koyuyoruz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-123"><code data-line-number="123"></code></a></td>
+<td class="code"><code>        <span class="n">search</span> <span class="o">=</span> <span class="n">lookahead</span> <span class="o">-</span> <span class="n">OFFSETMASK</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-124"><code data-line-number="124"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-125"><code data-line-number="125"></code></a></td>
+<td class="code"><code>        <span class="c1">// search buffer'ın metnin dışına çıkmasına engel ol.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-126"><code data-line-number="126"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="n">search</span> <span class="o">&lt;</span> <span class="n">text</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-127"><code data-line-number="127"></code></a></td>
+<td class="code"><code>            <span class="n">search</span> <span class="o">=</span> <span class="n">text</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-128"><code data-line-number="128"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-129"><code data-line-number="129"></code></a></td>
+<td class="code"><code>        <span class="c1">// search bufferda bulunan en uzun eşleşmenin</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-130"><code data-line-number="130"></code></a></td>
+<td class="code"><code>        <span class="c1">// boyutu</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-131"><code data-line-number="131"></code></a></td>
+<td class="code"><code>        <span class="kt">int</span> <span class="n">max_len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-132"><code data-line-number="132"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-133"><code data-line-number="133"></code></a></td>
+<td class="code"><code>        <span class="c1">// search bufferda bulunan en uzun eşleşmenin</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-134"><code data-line-number="134"></code></a></td>
+<td class="code"><code>        <span class="c1">// pozisyonu</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-135"><code data-line-number="135"></code></a></td>
+<td class="code"><code>        <span class="kt">char</span> <span class="o">*</span><span class="n">max_match</span> <span class="o">=</span> <span class="n">lookahead</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-136"><code data-line-number="136"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-137"><code data-line-number="137"></code></a></td>
+<td class="code"><code>        <span class="c1">// search buffer içinde arama yap.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-138"><code data-line-number="138"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="p">(;</span> <span class="n">search</span> <span class="o">&lt;</span> <span class="n">lookahead</span><span class="p">;</span> <span class="n">search</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-139"><code data-line-number="139"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-140"><code data-line-number="140"></code></a></td>
+<td class="code"><code>            <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">prefix_match_length</span><span class="p">(</span><span class="n">search</span><span class="p">,</span> <span class="n">lookahead</span><span class="p">,</span> <span class="n">LENGTHMASK</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-141"><code data-line-number="141"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-142"><code data-line-number="142"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="p">(</span><span class="n">len</span> <span class="o">&gt;</span> <span class="n">max_len</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-143"><code data-line-number="143"></code></a></td>
+<td class="code"><code>            <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-144"><code data-line-number="144"></code></a></td>
+<td class="code"><code>                <span class="n">max_len</span> <span class="o">=</span> <span class="n">len</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-145"><code data-line-number="145"></code></a></td>
+<td class="code"><code>                <span class="n">max_match</span> <span class="o">=</span> <span class="n">search</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-146"><code data-line-number="146"></code></a></td>
+<td class="code"><code>            <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-147"><code data-line-number="147"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-148"><code data-line-number="148"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-149"><code data-line-number="149"></code></a></td>
+<td class="code"><code>        <span class="cm">/*</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-150"><code data-line-number="150"></code></a></td>
+<td class="code"><code><span class="cm">        * ! ÖNEMLİ !</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-151"><code data-line-number="151"></code></a></td>
+<td class="code"><code><span class="cm">        * Eğer eşleşmenin içine metnin son karakteri de dahil olmuşsa,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-152"><code data-line-number="152"></code></a></td>
+<td class="code"><code><span class="cm">        * tokenin içine bir karakter koyabilmek için, eşleşmeyi kısaltmamız</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-153"><code data-line-number="153"></code></a></td>
+<td class="code"><code><span class="cm">        * gerekiyor.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-154"><code data-line-number="154"></code></a></td>
+<td class="code"><code><span class="cm">        */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-155"><code data-line-number="155"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="n">lookahead</span> <span class="o">+</span> <span class="n">max_len</span> <span class="o">&gt;=</span> <span class="n">text</span> <span class="o">+</span> <span class="n">limit</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-156"><code data-line-number="156"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-157"><code data-line-number="157"></code></a></td>
+<td class="code"><code>            <span class="n">max_len</span> <span class="o">=</span> <span class="n">text</span> <span class="o">+</span> <span class="n">limit</span> <span class="o">-</span> <span class="n">lookahead</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-158"><code data-line-number="158"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-159"><code data-line-number="159"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-160"><code data-line-number="160"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-161"><code data-line-number="161"></code></a></td>
+<td class="code"><code>        <span class="c1">// bulunan eşleşmeye göre token oluştur.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-162"><code data-line-number="162"></code></a></td>
+<td class="code"><code>        <span class="n">t</span><span class="p">.</span><span class="n">offset_len</span> <span class="o">=</span> <span class="n">OFFSETLENGTH</span><span class="p">(</span><span class="n">lookahead</span> <span class="o">-</span> <span class="n">max_match</span><span class="p">,</span> <span class="n">max_len</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-163"><code data-line-number="163"></code></a></td>
+<td class="code"><code>        <span class="n">lookahead</span> <span class="o">+=</span> <span class="n">max_len</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-164"><code data-line-number="164"></code></a></td>
+<td class="code"><code>        <span class="n">t</span><span class="p">.</span><span class="n">c</span> <span class="o">=</span> <span class="o">*</span><span class="n">lookahead</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-165"><code data-line-number="165"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-166"><code data-line-number="166"></code></a></td>
+<td class="code"><code>        <span class="c1">// gerekirse, hafızada yer aç</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-167"><code data-line-number="167"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="n">_numTokens</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">cap</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-168"><code data-line-number="168"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-169"><code data-line-number="169"></code></a></td>
+<td class="code"><code>            <span class="n">cap</span> <span class="o">=</span> <span class="n">cap</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-170"><code data-line-number="170"></code></a></td>
+<td class="code"><code>            <span class="n">encoded</span> <span class="o">=</span> <span class="n">realloc</span><span class="p">(</span><span class="n">encoded</span><span class="p">,</span> <span class="n">cap</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-171"><code data-line-number="171"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-172"><code data-line-number="172"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-173"><code data-line-number="173"></code></a></td>
+<td class="code"><code>        <span class="c1">// oluşturulan tokeni, array'e kaydet.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-174"><code data-line-number="174"></code></a></td>
+<td class="code"><code>        <span class="n">encoded</span><span class="p">[</span><span class="n">_numTokens</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-175"><code data-line-number="175"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-176"><code data-line-number="176"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-177"><code data-line-number="177"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">numTokens</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-178"><code data-line-number="178"></code></a></td>
+<td class="code"><code>        <span class="o">*</span><span class="n">numTokens</span> <span class="o">=</span> <span class="n">_numTokens</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-179"><code data-line-number="179"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-180"><code data-line-number="180"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">encoded</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-181"><code data-line-number="181"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-182"><code data-line-number="182"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-183"><code data-line-number="183"></code></a></td>
+<td class="code"><code><span class="c1">// bir dosyanın tamamını tek seferde</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-184"><code data-line-number="184"></code></a></td>
+<td class="code"><code><span class="c1">// okur. Büyük dosyaları okumak için uygun</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-185"><code data-line-number="185"></code></a></td>
+<td class="code"><code><span class="c1">// değildir.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-186"><code data-line-number="186"></code></a></td>
+<td class="code"><code><span class="kt">char</span> <span class="o">*</span><span class="nf">file_read</span><span class="p">(</span><span class="kt">FILE</span> <span class="o">*</span><span class="n">f</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">size</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-187"><code data-line-number="187"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-188"><code data-line-number="188"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">content</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-189"><code data-line-number="189"></code></a></td>
+<td class="code"><code>    <span class="n">fseek</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SEEK_END</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-190"><code data-line-number="190"></code></a></td>
+<td class="code"><code>    <span class="o">*</span><span class="n">size</span> <span class="o">=</span> <span class="n">ftell</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-191"><code data-line-number="191"></code></a></td>
+<td class="code"><code>    <span class="n">content</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="o">*</span><span class="n">size</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-192"><code data-line-number="192"></code></a></td>
+<td class="code"><code>    <span class="n">fseek</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SEEK_SET</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-193"><code data-line-number="193"></code></a></td>
+<td class="code"><code>    <span class="n">fread</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">size</span><span class="p">,</span> <span class="n">f</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-194"><code data-line-number="194"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">content</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-195"><code data-line-number="195"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-196"><code data-line-number="196"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-197"><code data-line-number="197"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-198"><code data-line-number="198"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-199"><code data-line-number="199"></code></a></td>
+<td class="code"><code>    <span class="kt">FILE</span> <span class="o">*</span><span class="n">f</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-200"><code data-line-number="200"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">metin_boyutu</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">token_sayisi</span><span class="p">,</span> <span class="n">decode_boyutu</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-201"><code data-line-number="201"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">kaynak_metin</span> <span class="o">=</span> <span class="s">"aaaaaaaa"</span><span class="p">,</span> <span class="o">*</span><span class="n">decoded_metin</span> <span class="o">=</span> <span class="s">""</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-202"><code data-line-number="202"></code></a></td>
+<td class="code"><code>    <span class="k">struct</span> <span class="n">token</span> <span class="o">*</span><span class="n">encoded_metin</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-203"><code data-line-number="203"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-204"><code data-line-number="204"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">f</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"source.txt"</span><span class="p">,</span> <span class="s">"rb"</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-205"><code data-line-number="205"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-206"><code data-line-number="206"></code></a></td>
+<td class="code"><code>        <span class="n">kaynak_metin</span> <span class="o">=</span> <span class="n">file_read</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">metin_boyutu</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-207"><code data-line-number="207"></code></a></td>
+<td class="code"><code>        <span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-208"><code data-line-number="208"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-209"><code data-line-number="209"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-210"><code data-line-number="210"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-211"><code data-line-number="211"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-212"><code data-line-number="212"></code></a></td>
+<td class="code"><code>    <span class="n">encoded_metin</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">kaynak_metin</span><span class="p">,</span> <span class="n">metin_boyutu</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">token_sayisi</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-213"><code data-line-number="213"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-214"><code data-line-number="214"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">f</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"encoded.txt"</span><span class="p">,</span> <span class="s">"wb"</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-215"><code data-line-number="215"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-216"><code data-line-number="216"></code></a></td>
+<td class="code"><code>        <span class="n">fwrite</span><span class="p">(</span><span class="n">encoded_metin</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span><span class="p">),</span> <span class="n">token_sayisi</span><span class="p">,</span> <span class="n">f</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-217"><code data-line-number="217"></code></a></td>
+<td class="code"><code>        <span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-218"><code data-line-number="218"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-219"><code data-line-number="219"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-220"><code data-line-number="220"></code></a></td>
+<td class="code"><code>    <span class="n">decoded_metin</span> <span class="o">=</span> <span class="n">decode</span><span class="p">(</span><span class="n">encoded_metin</span><span class="p">,</span> <span class="n">token_sayisi</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">decode_boyutu</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-221"><code data-line-number="221"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-222"><code data-line-number="222"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">f</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"decoded.txt"</span><span class="p">,</span> <span class="s">"wb"</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-223"><code data-line-number="223"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-224"><code data-line-number="224"></code></a></td>
+<td class="code"><code>        <span class="n">fwrite</span><span class="p">(</span><span class="n">decoded_metin</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">decode_boyutu</span><span class="p">,</span> <span class="n">f</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-225"><code data-line-number="225"></code></a></td>
+<td class="code"><code>        <span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-226"><code data-line-number="226"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-227"><code data-line-number="227"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-228"><code data-line-number="228"></code></a></td>
+<td class="code"><code>    <span class="n">printf</span><span class="p">(</span><span class="s">"Orjinal Boyut: %d, Encode Boyutu: %d, Decode Boyutu: %d"</span><span class="p">,</span> <span class="n">metin_boyutu</span><span class="p">,</span> <span class="n">token_sayisi</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">token</span><span class="p">),</span> <span class="n">decode_boyutu</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-229"><code data-line-number="229"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-230"><code data-line-number="230"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lz77.html#-231"><code data-line-number="231"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 </div>
     </div>
     <aside class="postpromonav"><nav><div class="pager">

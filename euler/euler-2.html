@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Çift fibonacci sayılarını toplayacağız.">
@@ -11,18 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/euler/euler-2.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/euler/euler-2.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="euler-1.html" title="(Euler 1) 3 ve 5'in katları" type="text/html">
 <link rel="next" href="euler-3.html" title="(Euler 3) Asal Çarpanlara Ayırma" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="(Euler 2) Çift Fibonacci Sayıları">
-<meta property="og:url" content="http://ysar.net/euler/euler-2.html">
-<meta property="og:description" content="Çift fibonacci sayılarını toplayacağız.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2018-07-18T23:21:00+03:00">
-<meta property="article:tag" content="mathjax">
 </head>
 <body>
 
@@ -66,15 +59,43 @@ n*(n-1)! &amp;\text{$n$ &gt; ise}
 \end{cases}$$</p>
 <p>Yukarıdaki tanımda gördüğümüz üzere, faktoriyel fonksiyonunu, yine faktoriyel fonksiyonu kullanarak yapıyoruz. Bunu Python
 programlama diline birebir çevirebiliriz.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">faktoriyel</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Faktoriyel fonksiyonu negatif sayilar icin tanimli değildir"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="k">return</span> <span class="mi">1</span>
-
-    <span class="k">return</span> <span class="n">n</span><span class="o">*</span><span class="n">faktoriyel</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">faktoriyel</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Faktoriyel fonksiyonu negatif sayilar icin tanimli değildir"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">n</span><span class="o">*</span><span class="n">faktoriyel</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Euler Problemindeki fibonacci tanımını da <em>özyinelemeli</em> olarak şu şekilde ifade edebiliriz.</p>
 <p>$$fib(n) =
@@ -84,84 +105,278 @@ programlama diline birebir çevirebiliriz.</p>
 n+fib(n-1) &amp;\text{$n$ &gt; 2 ise}
 \end{cases}$$ </p>
 <p>Yukarıdaki tanıma uygun olarak, aşağıdaki testi başarıyla geçecek bir fonksiyonu Python dilinde yazabilirsiniz. </p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">fibo_recurse</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="k">pass</span>
-
-<span class="k">if</span> <span class="nb">all</span><span class="p">([</span>
-    <span class="n">fibo_recurse</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="n">fibo_recurse</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="n">fibo_recurse</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span>
-    <span class="n">fibo_recurse</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">,</span>
-    <span class="n">fibo_recurse</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="o">==</span> <span class="mi">8</span><span class="p">,</span>
-    <span class="n">fibo_recurse</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="o">==</span> <span class="n">fibo_recurse</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="n">fibo_recurse</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
-<span class="p">]):</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">"Fonksiyon testi başarılı."</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">"Fonksiyon testi başarısız."</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">fibo_recurse</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="k">pass</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="k">if</span> <span class="nb">all</span><span class="p">([</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="n">fibo_recurse</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="n">fibo_recurse</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="n">fibo_recurse</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">fibo_recurse</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="n">fibo_recurse</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="o">==</span> <span class="mi">8</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="n">fibo_recurse</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="o">==</span> <span class="n">fibo_recurse</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="n">fibo_recurse</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="p">]):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span><span class="p">(</span><span class="s2">"Fonksiyon testi başarılı."</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span><span class="p">(</span><span class="s2">"Fonksiyon testi başarısız."</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Her ne kadar bu tarz fonksiyonlar fibonacci sayıları için çok zarif ve sıkça kullanılan bir yöntem olsa da, bilgisayarın
 kaynaklarını kullanması açısından incelediğinizde, pek de verimli olmadığını göreceksiniz. Örneğin, <code>fibo_recurse(40)</code> fonksiyonunu
 çağırdığınızda, gözle görülür bir bekleme ile karşılaşırsınız. Bunun nedenini ve muhtemel çözümünü yazının sonundaki bonus kısmına
 bırakacağım.</p>
 <p>Bu euler probleminin çözümü için, ben aşağıdaki prosedürel fonksiyonu kullanacağım;</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">fibo_up_to_n</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
-    <span class="n">fibo_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
-
-    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-        <span class="nb">next</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
-        <span class="k">if</span> <span class="nb">next</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">:</span>
-            <span class="k">break</span>
-
-        <span class="n">fibo_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">next</span><span class="p">)</span>
-        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="nb">next</span>
-
-    <span class="k">return</span> <span class="n">fibo_list</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">fibo_up_to_n</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">fibo_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>        <span class="nb">next</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="nb">next</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>            <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="n">fibo_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">next</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="nb">next</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">fibo_list</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada, belirli bir sıradaki fibonacci sayısını döndürmek yerine, bir sayıdan küçük bütün fibonacci sayılarının bir listesini
 döndürüyoruz. Euler problemin çözümü için ise, geriye sadece şu kalıyor;</p>
-<pre class="code literal-block"><span></span><span class="k">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fibo_up_to_n</span><span class="p">(</span><span class="mi">4000000</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="nb">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fibo_up_to_n</span><span class="p">(</span><span class="mi">4000000</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span>
+</code></td>
+</tr></table></div>
 
 <p>Küme üreteci yazım tarzına aşina olmayanlar, aşağıdaki çözümü daha anlaşılır bulabilir.</p>
-<pre class="code literal-block"><span></span><span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fibo_up_to_n</span><span class="p">(</span><span class="mi">4000000</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="nb">sum</span> <span class="o">+=</span> <span class="n">x</span>
-
-<span class="k">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fibo_up_to_n</span><span class="p">(</span><span class="mi">4000000</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>        <span class="nb">sum</span> <span class="o">+=</span> <span class="n">x</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="nb">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <h3>Bonus: Özyinelemeli versiyon, sorunları ve çözümleri</h3>
 <p>Yukarıda boş bırakılmış, özyinelemeli versiyonu şu şekilde yazabilirsiniz;</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">fibo_recurse</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">1</span>
-    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">2</span>
-
-    <span class="k">return</span> <span class="n">fibo_recurse</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">fibo_recurse</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">fibo_recurse</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="mi">2</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">fibo_recurse</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">fibo_recurse</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu fonksiyonu yirmiden büyük sayılarla denediğinizde, hissedilir gecikmelere neden olduğunu görebilirsiniz. Bunun nedenini incelemek için,
 fonksiyonu şu şekilde değiştirelim.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">fibo_recurse</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="k">print</span><span class="p">(</span><span class="s2">"fibo_recurse(</span><span class="si">%s</span><span class="s2">)"</span> <span class="o">%</span><span class="n">n</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">1</span>
-    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">2</span>
-
-    <span class="k">return</span> <span class="n">fibo_recurse</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">fibo_recurse</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">fibo_recurse</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span><span class="p">(</span><span class="s2">"fibo_recurse(</span><span class="si">%s</span><span class="s2">)"</span> <span class="o">%</span><span class="n">n</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="mi">2</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">fibo_recurse</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">fibo_recurse</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Ekrana yazdırılan satır sayısına göre, fonksiyonun kaç kere tekrar ettiğini anlayabiliriz. Bu fonksiyonu birkaç farklı argümanla deneyin. 
 Fonksiyona verilen argüman ile yazdırılan satır sayısı arasında, aşağıdaki gibi bir ilişki ortaya çıkacak.</p>
@@ -184,15 +399,43 @@ defalarca yapılıyor olması problemi, hesapladığımız değer büyükdükçe
 <p>Bu sorunun önüne geçmek için, yabancı kaynaklarda <em>memoization</em> olarak geçen tekniği kullanabiliriz. Ana fikir şu şekilde, eğer
 daha önce hesapladığımız değerlerin bir kaydını tutarsak, aynı hesabı tekrar yapmaktansa, kayıt ettiğimiz değeri kullanabiliriz.
 Bunun bir örneğini aşağıda bulabilirsiniz.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">fibo_recursive_memoize</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">memory</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="mi">2</span><span class="p">}):</span>
-    <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">memory</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">memory</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
-
-    <span class="n">result</span> <span class="o">=</span> <span class="n">fibo_recursive_memoize</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">memory</span><span class="p">)</span> <span class="o">+</span> <span class="n">fibo_recursive_memoize</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">memory</span><span class="p">)</span>
-    <span class="n">memory</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
-    <span class="k">return</span> <span class="n">result</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">fibo_recursive_memoize</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">memory</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="mi">2</span><span class="p">}):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">memory</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">memory</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="n">result</span> <span class="o">=</span> <span class="n">fibo_recursive_memoize</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">memory</span><span class="p">)</span> <span class="o">+</span> <span class="n">fibo_recursive_memoize</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">memory</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="n">memory</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">result</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yaptığımız işi özetlemek gerekirse, fonksiyon için öntanımlı bir hafıza sözlüğü tanımladık. Bu fonksiyon ile yapılan bütün
 hesaplamaların sonucu, bunun içinde kayıtlı tutulacak. Fonksiyonun basit versiyonunda yaptığımız egzersizi burada tekrar edersek,
@@ -223,29 +466,83 @@ $$</p>
 <h3>Bonus 2</h3>
 <p>Eğer farkettiyseniz, fibonacci sayı dizisi iki tek sayı ve bir çift sayı şeklinde ilerliyor. Bunun bu şekilde olması matematiksel bir zorunluluk.
 Bu nedenle, çözümü şu şekilde de yazabiliriz;</p>
-<pre class="code literal-block"><span></span><span class="nb">sum</span><span class="p">(</span><span class="n">fibo_up_to_n</span><span class="p">(</span><span class="mi">4000000</span><span class="p">)[</span><span class="mi">1</span><span class="p">::</span><span class="mi">3</span><span class="p">])</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="nb">sum</span><span class="p">(</span><span class="n">fibo_up_to_n</span><span class="p">(</span><span class="mi">4000000</span><span class="p">)[</span><span class="mi">1</span><span class="p">::</span><span class="mi">3</span><span class="p">])</span>
+</code></td>
+</tr></table></div>
 
 <p>Egzersiz olarak, fibonacci dizisinin iki tek, bir çift sayı olarak ilerlediğini tümevarım yoluyla kanıtlayabilirsiniz</p>
 <h3>Bonus 3</h3>
 <p>Fibonacci sayıları arasındaki oran yaklaşık olarak \(1.618\) olduğundan, bir önceki fibonacci sayısını \(1.618\) ile çarpıp en yakın
 tam sayıya yuvarlayarak da fibonacci sayılarını elde edebilirsiniz.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">fibo_up_to_n</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="n">fibos</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="n">fibo</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">fibos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fibo</span><span class="p">)</span>
-
-    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-        <span class="n">fibo</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">fibo</span> <span class="o">*</span> <span class="mf">1.618</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">fibo</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">:</span>
-            <span class="k">break</span>
-        <span class="n">fibos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fibo</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">fibos</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">fibo_up_to_n</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="n">fibos</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">fibo</span> <span class="o">=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="n">fibos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fibo</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="n">fibo</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">fibo</span> <span class="o">*</span> <span class="mf">1.618</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">fibo</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>            <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="n">fibos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fibo</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-2.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">fibos</span>
+</code></td>
+</tr>
+</table></div>
 
 <h3>Gelecek Problem</h3>
 <p>\(13195\) sayısının asal çarpanları \(5\), \(7\), \(13\) ve \(29\)'dur.</p>
@@ -259,7 +556,7 @@ tam sayıya yuvarlayarak da fibonacci sayılarını elde edebilirsiniz.</p>
         </div>
 
     </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
-	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script></article></main><script>
   if(document.location.hostname == "ysar.net")

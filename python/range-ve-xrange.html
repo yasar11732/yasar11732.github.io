@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Bu pratik ipucu sayesinde Python 3'de bulunan range fonksiyonunun davranışını, kodları değiştirmeden Python 2'de elde edebilirsiniz.">
@@ -11,16 +11,10 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/range-ve-xrange.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/range-ve-xrange.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="next" href="pdb-ile-debug.html" title="Django'da pdb ile debug" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Python range ve xrange">
-<meta property="og:url" content="http://ysar.net/python/range-ve-xrange.html">
-<meta property="og:description" content="Bu pratik ipucu sayesinde Python 3'de bulunan range fonksiyonunun davranışını, kodları değiştirmeden Python 2'de elde edebilirsiniz.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2011-08-02T03:45:56+03:00">
 </head>
 <body>
 
@@ -65,10 +59,23 @@ oluşan bu sorunun üstesinden gelebilirsiniz. Bu kodları modülünüzün
 yukarılarında kullanmalı, ve <code>xrange</code> kullanmak yerine range kullanmayı
 tercih etmelisiniz. Bu kodun çalıştığı platforma göre, <code>xrange</code> ve
 <code>range</code> fonksiyonu kendiliğinden kullanılacak.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">version_info</span>
-<span class="k">if</span> <span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-    <span class="nb">range</span> <span class="o">=</span> <span class="nb">xrange</span>
-</pre>
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="range-ve-xrange.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">version_info</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="range-ve-xrange.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="k">if</span> <span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="range-ve-xrange.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="nb">range</span> <span class="o">=</span> <span class="n">xrange</span>
+</code></td>
+</tr>
+</table></div>
 </div>
     </div>
     <aside class="postpromonav"><nav><div class="pager">

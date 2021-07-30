@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Django'da debugging yapmanın doğru yolu nedir? Django uygulamalarınızı hata ayıklamasını (debugging) Python debugger, kısa adıyla pdb kullanarak yapabilirsiniz.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/pdb-ile-debug.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/pdb-ile-debug.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="range-ve-xrange.html" title="Python range ve xrange" type="text/html">
 <link rel="next" href="../yazilim-dunyasi/windowsda-gnu-linux-tadi-cygwin.html" title="Windows'da gnu/linux tadı – Cygwin" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Django'da pdb ile debug">
-<meta property="og:url" content="http://ysar.net/python/pdb-ile-debug.html">
-<meta property="og:description" content="Django'da debugging yapmanın doğru yolu nedir? Django uygulamalarınızı hata ayıklamasını (debugging) Python debugger, kısa adıyla pdb kullanarak yapabilirsiniz.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2011-08-04T11:41:00+03:00">
 </head>
 <body>
 
@@ -55,18 +49,32 @@ sayesinde <em>django</em> uygulamalarımızı <em>pdb</em> ile debug edebiliriz.
 yapacaktır. *Nix kullananların kendi dağıtımlarına ait depoları kontrol
 etmelerinde de fayda var. Eğer depolarda bulabiliyorsanız, kendi paket
 yöneticinizle de kurabilirsiniz. <!-- TEASER_END --></p>
-<pre class="code literal-block"><span></span>pip install django-pdb
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="pdb-ile-debug.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">pip install django-pdb</span>
+</code></td>
+</tr></table></div>
 
 <p>Kurulumu tamamladıktan sonra <em>django</em> ayar dosyanızdaki, yüklü
 uygulamalara (<code>INSTALLED_APPS</code>) <em>django_pdb</em>’yi ekleyerek <em>django’da</em>
 geliştirdiğimiz siteye dahil ediyoruz.</p>
-<pre class="code literal-block"><span></span><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
-  <span class="s1">'django_pdb'</span><span class="p">,</span>
-<span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="pdb-ile-debug.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="pdb-ile-debug.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>  <span class="s1">'django_pdb'</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="pdb-ile-debug.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Python Debugger’ın çalışması için birkaç farklı yöntem var, ama hepsi için
 settings modülündeki <code>DEBUG</code> değişkeninin, <code>True</code>’ya eşitlenmesi
@@ -75,15 +83,19 @@ olduğundan emin olduktan sonra, ek bir işlem yapmadan <em>django’nun</em> k
 geliştirme sunucusunu başlatabilirsiniz. GET metodunda <em>pdb</em> olan
 herhangi bir sayfa’yı açmaya çalıştığınızda <em>pdb</em> devreye girecektir.
 (ÖRN: www.ornek.com/?pdb)</p>
-<pre class="code literal-block"><span></span><span class="n">DEBUG</span> <span class="o">=</span> <span class="bp">True</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="pdb-ile-debug.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">DEBUG</span> <span class="o">=</span> <span class="kc">True</span>
+</code></td>
+</tr></table></div>
 
 <p>Eğer geliştirme sunucunuzu <code>--pdb</code> anahtarı ile başlatırsanız,
 yüklediğiniz her view sayfasıyla birlikte pdb devreye girecektir.</p>
-<pre class="code literal-block"><span></span>manage.py runserver --pdb
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="pdb-ile-debug.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">manage.py runserver --pdb</span>
+</code></td>
+</tr></table></div>
 
 <p>django-pdb'yi <a href="http://pypi.python.org/pypi/django-pdb">PYPI</a> sayfasından indirebilirsiniz.</p>
 <p>*[PYPI]: Python Package Index</p>

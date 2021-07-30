@@ -1,28 +1,21 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Ardışık doğal sayıların toplamını ve ardışık sayıların karelerini toplamını alacağız.">
 <meta name="viewport" content="width=device-width">
-<title>(Euler 6) Ardışık Sayıların Toplamı | YSAR.NET</title>
+<title>(Euler 6) Ardışık Sayıların Toplamı  | YSAR.NET</title>
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900%7CUbuntu:300,400,500,700" rel="stylesheet">
 <link href="../assets/icons/foundation-icons.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/code.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/euler/euler-6.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/euler/euler-6.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="euler-5.html" title="(Euler 5) EBOB EKOK" type="text/html">
 <link rel="next" href="euler-7-silinmis-sahneler.html" title="(Euler 7) 10001. Asal Sayı (SİLİNMİŞ SAHNELER)" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="(Euler 6) Ardışık Sayıların Toplamı">
-<meta property="og:url" content="http://ysar.net/euler/euler-6.html">
-<meta property="og:description" content="Ardışık doğal sayıların toplamını ve ardışık sayıların karelerini toplamını alacağız.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2018-07-28T21:13:00+03:00">
-<meta property="article:tag" content="mathjax">
 </head>
 <body>
 
@@ -39,7 +32,7 @@
         </ul></nav>
 </div>
         
-    </header><main class="main-content"><article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 itemprop="headline name">(Euler 6) Ardışık Sayıların Toplamı</h1>
+    </header><main class="main-content"><article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 itemprop="headline name">(Euler 6) Ardışık Sayıların Toplamı </h1>
 
         
 
@@ -52,10 +45,18 @@
 <p>olduğundan, ilk 10 sayının karelerinin toplamı ile toplamlarının karelerinin farkı \(3025-385=2640\)dır. İlk 100 doğal sayının
 karelerinin toplamı ile toplamlarının karesi arasındaki farkı bulunuz.  <!-- TEASER_END --></p>
 <p>Problem tanımı oldukça açık. Basit bir çözümle başlayıp, bunu nasıl geliştirebiliriz diye bakacağız.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">euler6</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-6.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">euler6</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-6.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu çözüm benim bilgisayarımda \(n = 10000000\) sayısına kadar problemsiz bir şekilde çözüm üretebiliyor. Pek kötü sayılmaz, ama
 matematik kaslarımızı geliştirerek çok daha verimli bir şekilde problemi çözebiliriz. Öncelikle, problemin şu kısmına bir göz atalım.</p>
@@ -78,10 +79,18 @@ $$</p>
 <p>Yukarıdaki 3 bilinmeyenli 3 denklemi çözdüğünüzde, \(a = 1/2, b=1/2, c=0\) sonucuna ulaşmanız gerekiyor. Aksi takdirde, işlemlerinizi
 kontrol edip, bu sonuca ulaşın. Bu durumda, \(f(n) = \frac{n^2}{2} + \frac{n}{2} = \frac{n(n+1)}{2}\) sonucuna ulaşırız. Böylece, matematik kitaplarındaki
 ardışık sayılar toplamı formulünü kanıtlamış olduk. Bu durumda, <code>euler6</code> fonksiyonumuzu şu şekilde yazabiliriz.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">euler6</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-6.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">euler6</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-6.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Problemin diğer kısmına göz atarsak, ilk kısımla oldukça benzer bir yapıda olduğunu görürüz.</p>
 <p>$$1^2+2^2+...+10^2=385$$</p>
@@ -106,19 +115,47 @@ $$</p>
 \end{eqnarray}
 $$</p>
 <p>Bu fonksiyonun Python karşılığı da şu şekilde olacak.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">euler6</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n</span><span class="o">**</span><span class="mi">4</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="mi">3</span><span class="o">*</span><span class="n">n</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="p">)</span><span class="o">/</span><span class="mi">12</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-6.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">euler6</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-6.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n</span><span class="o">**</span><span class="mi">4</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="mi">3</span><span class="o">*</span><span class="n">n</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="p">)</span><span class="o">/</span><span class="mi">12</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bir hayli emek harcadık, bakalım sonuçlara nasıl yansımış? Kodları test etmek için, aşağıdaki kodları kullandım.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">euler6_control</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
-
-<span class="k">def</span> <span class="nf">euler6_test</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n</span><span class="o">**</span><span class="mi">4</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="mi">3</span><span class="o">*</span><span class="n">n</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="p">)</span><span class="o">/</span><span class="mi">12</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-6.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">euler6_control</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-6.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-6.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-6.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">euler6_test</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-6.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n</span><span class="o">**</span><span class="mi">4</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="mi">3</span><span class="o">*</span><span class="n">n</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="p">)</span><span class="o">/</span><span class="mi">12</span>
+</code></td>
+</tr>
+</table></div>
 
 <p><a href="https://docs.python.org/2/library/timeit.html#basic-examples">timeit.timeit</a> sonuçlarımız aşağıdaki gibi. (number=10)</p>
 <p><img alt="Benchmark Tablosu" src="../images/euler6-chart.svg"></p>
@@ -144,7 +181,7 @@ kılmıştır diye ümit ediyorum.</p>
         </div>
 
     </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
-	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script></article></main><script>
   if(document.location.hostname == "ysar.net")

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Bu yazıda çeşitli iki bilinmeyenleri denklerimlerin python ile çözümünün örnekleri verilmiş. Bu fonksiyonları günlük ihtiyaçlar için kullanabilirsiniz.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/algoritma/iki-bilinmeyenli-denklem-cozumleri.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/algoritma/iki-bilinmeyenli-denklem-cozumleri.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="../yazilim-dunyasi/arch-linux-paket-grafigi-2.html" title="Arch Linux Paket Grafiği - 2" type="text/html">
 <link rel="next" href="../yazilim-dunyasi/sayilarla-archlinux-paketcileri.html" title="Sayılarla ArchLinux Paketçileri" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="İki bilinmeyenli denklem çözümleri">
-<meta property="og:url" content="http://ysar.net/algoritma/iki-bilinmeyenli-denklem-cozumleri.html">
-<meta property="og:description" content="Bu yazıda çeşitli iki bilinmeyenleri denklerimlerin python ile çözümünün örnekleri verilmiş. Bu fonksiyonları günlük ihtiyaçlar için kullanabilirsiniz.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2012-01-21T01:17:00+02:00">
 </head>
 <body>
 
@@ -47,135 +41,648 @@
 <p>Dün Python ile, iki bilinmeyenli denklem çözümleriyle ile birşeyler
 yazdım. Paylaşayım dedim. Sonuncusunun biraz daha elden geçmesi lazım,
 ama aşağı yukarı çalışıyor. <!-- TEASER_END --></p>
-<pre class="code literal-block"><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
-
-<span class="k">def</span> <span class="nf">gereksiz</span><span class="p">(</span><span class="n">toplam</span><span class="p">,</span> <span class="n">carpim</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    a + b = toplam</span>
-<span class="sd">    a * b = carpim</span>
-<span class="sd">    return a,b</span>
-<span class="sd">    &gt;&gt;&gt; gereksiz(8,15)</span>
-<span class="sd">    (3.0, 5.0)</span>
-<span class="sd">    &gt;&gt;&gt; gereksiz(7,12)</span>
-<span class="sd">    (3.0, 4.0)</span>
-<span class="sd">    &gt;&gt;&gt; gereksiz(12,35)</span>
-<span class="sd">    (5.0, 7.0)</span>
-<span class="sd">    """</span>
-    <span class="n">carpim</span><span class="p">,</span> <span class="n">toplam</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">carpim</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">toplam</span><span class="p">)</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">terim1</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">((</span><span class="n">toplam</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">carpim</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-    <span class="n">terim2</span> <span class="o">=</span> <span class="n">toplam</span> <span class="o">/</span> <span class="mi">2</span>
-    <span class="n">buyuk</span> <span class="o">=</span> <span class="n">terim1</span> <span class="o">+</span> <span class="n">terim2</span>
-    <span class="n">kucuk</span> <span class="o">=</span> <span class="n">terim2</span> <span class="o">-</span> <span class="n">terim1</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">kucuk</span><span class="p">,</span> <span class="n">buyuk</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">gereksiz2</span><span class="p">(</span><span class="n">fark</span><span class="p">,</span> <span class="n">carpim</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    a - b = fark</span>
-<span class="sd">    a * b = carpim</span>
-<span class="sd">    return a,b</span>
-<span class="sd">    &gt;&gt;&gt; gereksiz2(7,30)</span>
-<span class="sd">    (3.0, 10.0)</span>
-<span class="sd">    &gt;&gt;&gt; gereksiz2(2,35)</span>
-<span class="sd">    (5.0, 7.0)</span>
-<span class="sd">    &gt;&gt;&gt; gereksiz2(7,78)</span>
-<span class="sd">    (6.0, 13.0)</span>
-<span class="sd">    """</span>
-    <span class="n">kucuk</span><span class="p">,</span> <span class="n">buyuk</span> <span class="o">=</span> <span class="n">gereksiz</span><span class="p">(</span><span class="n">fark</span><span class="p">,</span> <span class="o">-</span><span class="n">carpim</span><span class="p">)</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">buyuk</span><span class="p">,</span> <span class="o">-</span><span class="n">kucuk</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">gereksiz3</span><span class="p">(</span><span class="n">toplam</span><span class="p">,</span> <span class="n">bolum</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    a + b = toplam</span>
-<span class="sd">    a / b = bolum</span>
-<span class="sd">    return a,b</span>
-<span class="sd">    &gt;&gt;&gt; gereksiz3(240,5)</span>
-<span class="sd">    (200.0, 40.0)</span>
-<span class="sd">    &gt;&gt;&gt; gereksiz3(6,2)</span>
-<span class="sd">    (4.0, 2.0)</span>
-<span class="sd">    &gt;&gt;&gt; gereksiz3(15,4)</span>
-<span class="sd">    (12.0, 3.0)</span>
-<span class="sd">    """</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">toplam</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">bolum</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">toplam</span> <span class="o">-</span> <span class="n">b</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">gereksiz4</span><span class="p">(</span><span class="n">fark</span><span class="p">,</span> <span class="n">bolum</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    a - b = fark</span>
-<span class="sd">    a / b = bolum</span>
-<span class="sd">    return a,b</span>
-<span class="sd">    &gt;&gt;&gt; gereksiz4(15,2)</span>
-<span class="sd">    (30.0, 15.0)</span>
-<span class="sd">    &gt;&gt;&gt; gereksiz4(4,2)</span>
-<span class="sd">    (8.0, 4.0)</span>
-<span class="sd">    &gt;&gt;&gt; gereksiz4(15,4)</span>
-<span class="sd">    (20.0, 5.0)</span>
-<span class="sd">    """</span>
-    <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="n">gereksiz3</span><span class="p">(</span><span class="n">fark</span><span class="p">,</span> <span class="o">-</span><span class="n">bolum</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="o">-</span><span class="n">b</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">gradient</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
-    <span class="n">terim1</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">s</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span>
-    <span class="n">alttaraf</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">((</span><span class="n">terim1</span> <span class="o">-</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="n">a</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="n">usttaraf_1</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="p">(</span><span class="n">a</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">terim1</span><span class="p">)</span>
-    <span class="n">usttaraf_2</span> <span class="o">=</span> <span class="n">terim1</span> <span class="o">-</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="n">a</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">usttaraf_1</span> <span class="o">*</span> <span class="n">usttaraf_2</span><span class="p">)</span> <span class="o">/</span> <span class="n">alttaraf</span>
-
-<span class="k">def</span> <span class="nf">mesafe</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">s</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="n">a</span><span class="p">))</span>
-
-<span class="k">def</span> <span class="nf">gereksiz5</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">hata</span><span class="o">=</span><span class="mf">1.0e-15</span><span class="p">,</span><span class="n">maxdeneme</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    a + b ^ 2 = s</span>
-<span class="sd">    a * b = p</span>
-<span class="sd">    için YAKLAŞIK olarak, DENEME YANILMA yoluyla a ve b değerleri bulur.</span>
-<span class="sd">    işlemler genelde 100 denemeden daha önce bitmeli, eğer çok uzarsa,</span>
-<span class="sd">    hata değerini artırın.</span>
-<span class="sd">    """</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
-    <span class="n">up_limit</span> <span class="o">=</span> <span class="n">s</span>
-    <span class="n">down_limit</span> <span class="o">=</span> <span class="o">-</span><span class="n">s</span>
-    <span class="c1">#print "a değerinden başlanıyor: ", a</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">mesafe</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">p</span><span class="p">)</span>
-    <span class="n">prev_m</span> <span class="o">=</span> <span class="n">m</span>
-    <span class="n">weight</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">while</span>  <span class="n">m</span><span class="o">&gt;</span> <span class="n">hata</span><span class="p">:</span>
-        <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="n">counter</span> <span class="o">&gt;=</span> <span class="n">maxdeneme</span><span class="p">:</span>
-            <span class="k">break</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="c1">#print "a=&gt;",a, "hata=&gt;",mesafe(a,s,p)</span>
-            <span class="n">grad</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">p</span><span class="p">)</span>
-            <span class="c1">#print "gradient:", grad</span>
-            <span class="n">a_deneme</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">weight</span> <span class="o">*</span> <span class="n">grad</span><span class="p">))</span>
-            <span class="n">m</span> <span class="o">=</span> <span class="n">mesafe</span><span class="p">(</span><span class="n">a_deneme</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">p</span><span class="p">)</span>
-            <span class="k">while</span> <span class="n">m</span> <span class="o">&gt;</span> <span class="n">prev_m</span><span class="p">:</span>
-                <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="k">if</span> <span class="n">counter</span> <span class="o">&gt;=</span> <span class="n">maxdeneme</span><span class="p">:</span>
-                    <span class="k">break</span>
-                <span class="n">a_deneme</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">weight</span> <span class="o">*</span> <span class="n">grad</span><span class="p">))</span>
-                <span class="n">m</span> <span class="o">=</span> <span class="n">mesafe</span><span class="p">(</span><span class="n">a_deneme</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">p</span><span class="p">)</span>
-                <span class="n">weight</span> <span class="o">*=</span> <span class="mi">2</span>
-                <span class="c1">#print "weight:",weight, "a:", a_deneme, "hata=&gt;",m</span>
-            <span class="n">a</span> <span class="o">=</span> <span class="n">a_deneme</span>
-            <span class="n">prev_m</span> <span class="o">=</span> <span class="n">m</span>
-        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="k">print</span> <span class="s2">"Valüü erör"</span>
-            <span class="k">break</span>
-    <span class="c1">#print "hata=&gt;",mesafe(a,s,p)</span>
-    <span class="c1">#print counter,"denemede sonuç bulundu."</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">p</span> <span class="o">/</span> <span class="n">a</span>
-    <span class="c1">#return (round(a,2),round(b,2))</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
-</pre>
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-1"><code data-line-number="  1"></code></a></td>
+<td class="code"><code><span class="c1"># -*- coding: utf-8 -*-</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-2"><code data-line-number="  2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-3"><code data-line-number="  3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-4"><code data-line-number="  4"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">gereksiz</span><span class="p">(</span><span class="n">toplam</span><span class="p">,</span> <span class="n">carpim</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-5"><code data-line-number="  5"></code></a></td>
+<td class="code"><code>    <span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-6"><code data-line-number="  6"></code></a></td>
+<td class="code"><code><span class="sd">    a + b = toplam</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-7"><code data-line-number="  7"></code></a></td>
+<td class="code"><code><span class="sd">    a * b = carpim</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-8"><code data-line-number="  8"></code></a></td>
+<td class="code"><code><span class="sd">    return a,b</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-9"><code data-line-number="  9"></code></a></td>
+<td class="code"><code><span class="sd">    &gt;&gt;&gt; gereksiz(8,15)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-10"><code data-line-number=" 10"></code></a></td>
+<td class="code"><code><span class="sd">    (3.0, 5.0)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-11"><code data-line-number=" 11"></code></a></td>
+<td class="code"><code><span class="sd">    &gt;&gt;&gt; gereksiz(7,12)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-12"><code data-line-number=" 12"></code></a></td>
+<td class="code"><code><span class="sd">    (3.0, 4.0)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-13"><code data-line-number=" 13"></code></a></td>
+<td class="code"><code><span class="sd">    &gt;&gt;&gt; gereksiz(12,35)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-14"><code data-line-number=" 14"></code></a></td>
+<td class="code"><code><span class="sd">    (5.0, 7.0)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-15"><code data-line-number=" 15"></code></a></td>
+<td class="code"><code><span class="sd">    """</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-16"><code data-line-number=" 16"></code></a></td>
+<td class="code"><code>    <span class="n">carpim</span><span class="p">,</span> <span class="n">toplam</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">carpim</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">toplam</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-17"><code data-line-number=" 17"></code></a></td>
+<td class="code"><code>    <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-18"><code data-line-number=" 18"></code></a></td>
+<td class="code"><code>        <span class="n">terim1</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">((</span><span class="n">toplam</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">carpim</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-19"><code data-line-number=" 19"></code></a></td>
+<td class="code"><code>    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-20"><code data-line-number=" 20"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-21"><code data-line-number=" 21"></code></a></td>
+<td class="code"><code>    <span class="n">terim2</span> <span class="o">=</span> <span class="n">toplam</span> <span class="o">/</span> <span class="mi">2</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-22"><code data-line-number=" 22"></code></a></td>
+<td class="code"><code>    <span class="n">buyuk</span> <span class="o">=</span> <span class="n">terim1</span> <span class="o">+</span> <span class="n">terim2</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-23"><code data-line-number=" 23"></code></a></td>
+<td class="code"><code>    <span class="n">kucuk</span> <span class="o">=</span> <span class="n">terim2</span> <span class="o">-</span> <span class="n">terim1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-24"><code data-line-number=" 24"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="p">(</span><span class="n">kucuk</span><span class="p">,</span> <span class="n">buyuk</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-25"><code data-line-number=" 25"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-26"><code data-line-number=" 26"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">gereksiz2</span><span class="p">(</span><span class="n">fark</span><span class="p">,</span> <span class="n">carpim</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-27"><code data-line-number=" 27"></code></a></td>
+<td class="code"><code>    <span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-28"><code data-line-number=" 28"></code></a></td>
+<td class="code"><code><span class="sd">    a - b = fark</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-29"><code data-line-number=" 29"></code></a></td>
+<td class="code"><code><span class="sd">    a * b = carpim</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-30"><code data-line-number=" 30"></code></a></td>
+<td class="code"><code><span class="sd">    return a,b</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-31"><code data-line-number=" 31"></code></a></td>
+<td class="code"><code><span class="sd">    &gt;&gt;&gt; gereksiz2(7,30)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-32"><code data-line-number=" 32"></code></a></td>
+<td class="code"><code><span class="sd">    (3.0, 10.0)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-33"><code data-line-number=" 33"></code></a></td>
+<td class="code"><code><span class="sd">    &gt;&gt;&gt; gereksiz2(2,35)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-34"><code data-line-number=" 34"></code></a></td>
+<td class="code"><code><span class="sd">    (5.0, 7.0)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-35"><code data-line-number=" 35"></code></a></td>
+<td class="code"><code><span class="sd">    &gt;&gt;&gt; gereksiz2(7,78)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-36"><code data-line-number=" 36"></code></a></td>
+<td class="code"><code><span class="sd">    (6.0, 13.0)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-37"><code data-line-number=" 37"></code></a></td>
+<td class="code"><code><span class="sd">    """</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-38"><code data-line-number=" 38"></code></a></td>
+<td class="code"><code>    <span class="n">kucuk</span><span class="p">,</span> <span class="n">buyuk</span> <span class="o">=</span> <span class="n">gereksiz</span><span class="p">(</span><span class="n">fark</span><span class="p">,</span> <span class="o">-</span><span class="n">carpim</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-39"><code data-line-number=" 39"></code></a></td>
+<td class="code"><code>    <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-40"><code data-line-number=" 40"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="p">(</span><span class="n">buyuk</span><span class="p">,</span> <span class="o">-</span><span class="n">kucuk</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-41"><code data-line-number=" 41"></code></a></td>
+<td class="code"><code>    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-42"><code data-line-number=" 42"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-43"><code data-line-number=" 43"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-44"><code data-line-number=" 44"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">gereksiz3</span><span class="p">(</span><span class="n">toplam</span><span class="p">,</span> <span class="n">bolum</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-45"><code data-line-number=" 45"></code></a></td>
+<td class="code"><code>    <span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-46"><code data-line-number=" 46"></code></a></td>
+<td class="code"><code><span class="sd">    a + b = toplam</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-47"><code data-line-number=" 47"></code></a></td>
+<td class="code"><code><span class="sd">    a / b = bolum</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-48"><code data-line-number=" 48"></code></a></td>
+<td class="code"><code><span class="sd">    return a,b</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-49"><code data-line-number=" 49"></code></a></td>
+<td class="code"><code><span class="sd">    &gt;&gt;&gt; gereksiz3(240,5)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-50"><code data-line-number=" 50"></code></a></td>
+<td class="code"><code><span class="sd">    (200.0, 40.0)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-51"><code data-line-number=" 51"></code></a></td>
+<td class="code"><code><span class="sd">    &gt;&gt;&gt; gereksiz3(6,2)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-52"><code data-line-number=" 52"></code></a></td>
+<td class="code"><code><span class="sd">    (4.0, 2.0)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-53"><code data-line-number=" 53"></code></a></td>
+<td class="code"><code><span class="sd">    &gt;&gt;&gt; gereksiz3(15,4)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-54"><code data-line-number=" 54"></code></a></td>
+<td class="code"><code><span class="sd">    (12.0, 3.0)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-55"><code data-line-number=" 55"></code></a></td>
+<td class="code"><code><span class="sd">    """</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-56"><code data-line-number=" 56"></code></a></td>
+<td class="code"><code>    <span class="n">b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">toplam</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">bolum</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-57"><code data-line-number=" 57"></code></a></td>
+<td class="code"><code>    <span class="n">a</span> <span class="o">=</span> <span class="n">toplam</span> <span class="o">-</span> <span class="n">b</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-58"><code data-line-number=" 58"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-59"><code data-line-number=" 59"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-60"><code data-line-number=" 60"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">gereksiz4</span><span class="p">(</span><span class="n">fark</span><span class="p">,</span> <span class="n">bolum</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-61"><code data-line-number=" 61"></code></a></td>
+<td class="code"><code>    <span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-62"><code data-line-number=" 62"></code></a></td>
+<td class="code"><code><span class="sd">    a - b = fark</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-63"><code data-line-number=" 63"></code></a></td>
+<td class="code"><code><span class="sd">    a / b = bolum</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-64"><code data-line-number=" 64"></code></a></td>
+<td class="code"><code><span class="sd">    return a,b</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-65"><code data-line-number=" 65"></code></a></td>
+<td class="code"><code><span class="sd">    &gt;&gt;&gt; gereksiz4(15,2)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-66"><code data-line-number=" 66"></code></a></td>
+<td class="code"><code><span class="sd">    (30.0, 15.0)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-67"><code data-line-number=" 67"></code></a></td>
+<td class="code"><code><span class="sd">    &gt;&gt;&gt; gereksiz4(4,2)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-68"><code data-line-number=" 68"></code></a></td>
+<td class="code"><code><span class="sd">    (8.0, 4.0)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-69"><code data-line-number=" 69"></code></a></td>
+<td class="code"><code><span class="sd">    &gt;&gt;&gt; gereksiz4(15,4)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-70"><code data-line-number=" 70"></code></a></td>
+<td class="code"><code><span class="sd">    (20.0, 5.0)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-71"><code data-line-number=" 71"></code></a></td>
+<td class="code"><code><span class="sd">    """</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-72"><code data-line-number=" 72"></code></a></td>
+<td class="code"><code>    <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="n">gereksiz3</span><span class="p">(</span><span class="n">fark</span><span class="p">,</span> <span class="o">-</span><span class="n">bolum</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-73"><code data-line-number=" 73"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="o">-</span><span class="n">b</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-74"><code data-line-number=" 74"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-75"><code data-line-number=" 75"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">gradient</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-76"><code data-line-number=" 76"></code></a></td>
+<td class="code"><code>    <span class="n">terim1</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">s</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-77"><code data-line-number=" 77"></code></a></td>
+<td class="code"><code>    <span class="n">alttaraf</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">((</span><span class="n">terim1</span> <span class="o">-</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="n">a</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-78"><code data-line-number=" 78"></code></a></td>
+<td class="code"><code>    <span class="n">usttaraf_1</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="p">(</span><span class="n">a</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">terim1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-79"><code data-line-number=" 79"></code></a></td>
+<td class="code"><code>    <span class="n">usttaraf_2</span> <span class="o">=</span> <span class="n">terim1</span> <span class="o">-</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="n">a</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-80"><code data-line-number=" 80"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="p">(</span><span class="n">usttaraf_1</span> <span class="o">*</span> <span class="n">usttaraf_2</span><span class="p">)</span> <span class="o">/</span> <span class="n">alttaraf</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-81"><code data-line-number=" 81"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-82"><code data-line-number=" 82"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">mesafe</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-83"><code data-line-number=" 83"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">s</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="n">a</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-84"><code data-line-number=" 84"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-85"><code data-line-number=" 85"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">gereksiz5</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">hata</span><span class="o">=</span><span class="mf">1.0e-15</span><span class="p">,</span><span class="n">maxdeneme</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-86"><code data-line-number=" 86"></code></a></td>
+<td class="code"><code>    <span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-87"><code data-line-number=" 87"></code></a></td>
+<td class="code"><code><span class="sd">    a + b ^ 2 = s</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-88"><code data-line-number=" 88"></code></a></td>
+<td class="code"><code><span class="sd">    a * b = p</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-89"><code data-line-number=" 89"></code></a></td>
+<td class="code"><code><span class="sd">    için YAKLAŞIK olarak, DENEME YANILMA yoluyla a ve b değerleri bulur.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-90"><code data-line-number=" 90"></code></a></td>
+<td class="code"><code><span class="sd">    işlemler genelde 100 denemeden daha önce bitmeli, eğer çok uzarsa,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-91"><code data-line-number=" 91"></code></a></td>
+<td class="code"><code><span class="sd">    hata değerini artırın.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-92"><code data-line-number=" 92"></code></a></td>
+<td class="code"><code><span class="sd">    """</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-93"><code data-line-number=" 93"></code></a></td>
+<td class="code"><code>    <span class="n">a</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-94"><code data-line-number=" 94"></code></a></td>
+<td class="code"><code>    <span class="n">up_limit</span> <span class="o">=</span> <span class="n">s</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-95"><code data-line-number=" 95"></code></a></td>
+<td class="code"><code>    <span class="n">down_limit</span> <span class="o">=</span> <span class="o">-</span><span class="n">s</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-96"><code data-line-number=" 96"></code></a></td>
+<td class="code"><code>    <span class="c1">#print "a değerinden başlanıyor: ", a</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-97"><code data-line-number=" 97"></code></a></td>
+<td class="code"><code>    <span class="n">m</span> <span class="o">=</span> <span class="n">mesafe</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">p</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-98"><code data-line-number=" 98"></code></a></td>
+<td class="code"><code>    <span class="n">prev_m</span> <span class="o">=</span> <span class="n">m</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-99"><code data-line-number=" 99"></code></a></td>
+<td class="code"><code>    <span class="n">weight</span> <span class="o">=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-100"><code data-line-number="100"></code></a></td>
+<td class="code"><code>    <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-101"><code data-line-number="101"></code></a></td>
+<td class="code"><code>    <span class="k">while</span>  <span class="n">m</span><span class="o">&gt;</span> <span class="n">hata</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-102"><code data-line-number="102"></code></a></td>
+<td class="code"><code>        <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-103"><code data-line-number="103"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">counter</span> <span class="o">&gt;=</span> <span class="n">maxdeneme</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-104"><code data-line-number="104"></code></a></td>
+<td class="code"><code>            <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-105"><code data-line-number="105"></code></a></td>
+<td class="code"><code>        <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-106"><code data-line-number="106"></code></a></td>
+<td class="code"><code>            <span class="c1">#print "a=&gt;",a, "hata=&gt;",mesafe(a,s,p)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-107"><code data-line-number="107"></code></a></td>
+<td class="code"><code>            <span class="n">grad</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">p</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-108"><code data-line-number="108"></code></a></td>
+<td class="code"><code>            <span class="c1">#print "gradient:", grad</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-109"><code data-line-number="109"></code></a></td>
+<td class="code"><code>            <span class="n">a_deneme</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">weight</span> <span class="o">*</span> <span class="n">grad</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-110"><code data-line-number="110"></code></a></td>
+<td class="code"><code>            <span class="n">m</span> <span class="o">=</span> <span class="n">mesafe</span><span class="p">(</span><span class="n">a_deneme</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">p</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-111"><code data-line-number="111"></code></a></td>
+<td class="code"><code>            <span class="k">while</span> <span class="n">m</span> <span class="o">&gt;</span> <span class="n">prev_m</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-112"><code data-line-number="112"></code></a></td>
+<td class="code"><code>                <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-113"><code data-line-number="113"></code></a></td>
+<td class="code"><code>                <span class="k">if</span> <span class="n">counter</span> <span class="o">&gt;=</span> <span class="n">maxdeneme</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-114"><code data-line-number="114"></code></a></td>
+<td class="code"><code>                    <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-115"><code data-line-number="115"></code></a></td>
+<td class="code"><code>                <span class="n">a_deneme</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">weight</span> <span class="o">*</span> <span class="n">grad</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-116"><code data-line-number="116"></code></a></td>
+<td class="code"><code>                <span class="n">m</span> <span class="o">=</span> <span class="n">mesafe</span><span class="p">(</span><span class="n">a_deneme</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">p</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-117"><code data-line-number="117"></code></a></td>
+<td class="code"><code>                <span class="n">weight</span> <span class="o">*=</span> <span class="mi">2</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-118"><code data-line-number="118"></code></a></td>
+<td class="code"><code>                <span class="c1">#print "weight:",weight, "a:", a_deneme, "hata=&gt;",m</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-119"><code data-line-number="119"></code></a></td>
+<td class="code"><code>            <span class="n">a</span> <span class="o">=</span> <span class="n">a_deneme</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-120"><code data-line-number="120"></code></a></td>
+<td class="code"><code>            <span class="n">prev_m</span> <span class="o">=</span> <span class="n">m</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-121"><code data-line-number="121"></code></a></td>
+<td class="code"><code>        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-122"><code data-line-number="122"></code></a></td>
+<td class="code"><code>            <span class="nb">print</span> <span class="s2">"Valüü erör"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-123"><code data-line-number="123"></code></a></td>
+<td class="code"><code>            <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-124"><code data-line-number="124"></code></a></td>
+<td class="code"><code>    <span class="c1">#print "hata=&gt;",mesafe(a,s,p)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-125"><code data-line-number="125"></code></a></td>
+<td class="code"><code>    <span class="c1">#print counter,"denemede sonuç bulundu."</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-126"><code data-line-number="126"></code></a></td>
+<td class="code"><code>    <span class="n">b</span> <span class="o">=</span> <span class="n">p</span> <span class="o">/</span> <span class="n">a</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-127"><code data-line-number="127"></code></a></td>
+<td class="code"><code>    <span class="c1">#return (round(a,2),round(b,2))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="iki-bilinmeyenli-denklem-cozumleri.html#-128"><code data-line-number="128"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 </div>
     </div>
     <aside class="postpromonav"><nav><div class="pager">

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
@@ -10,19 +10,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/algoritma/huffman-kodlamasi.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/algoritma/huffman-kodlamasi.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="utf8-kodlama.html" title="UTF-8 Kodlama Algoritması" type="text/html">
 <link rel="next" href="lz77.html" title="LZ77 Sıkıştırma Algoritması" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Huffman Kodlaması">
-<meta property="og:url" content="http://ysar.net/algoritma/huffman-kodlamasi.html">
-<meta property="og:description" content="Bir mesajı, rakamları kullanarak kodlayacak olsanız, en az rakam kullanarak nasıl
-kodlarsınız? David Huffman 1952 yılında A Method for the Construction of Minimum-Redundancy Codes
-başlıklı makalede bu">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2019-06-10T21:29:00+03:00">
 </head>
 <body>
 
@@ -54,16 +46,48 @@ formatı da gzip ve zlib kütüphanelerinde kullanılmış. Ben de merak edip, H
 Kodlaması nasıl yapılır öğrenmek istedim.</p>
 <p>Huffman kodlaması temelinde bir prefix kodlamadır. Prefix kodlamaya örnek olarak,
 aşağıdaki örneği inceleyelim.</p>
-<pre class="code literal-block"><span></span>       / \             d: 000
-      0   1            b: 001
-    /   \   \          c: 01
-   0     1   a         a: 1
-  / \    /
- 0   1   c
-/    \
-d     b
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">       / \             d: 000</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">      0   1            b: 001</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="err">    /   \   \          c: 01</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="err">   0     1   a         a: 1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="err">  / \    /</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="err"> 0   1   c</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="err">/    \</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code><span class="err">d     b</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Prefix kodlamada, kodlanmak istenen her karaktere, bir veya daha çok
 rakamdan oluşan kodlar atanır. Bu kodlar atanırken, herhangi bir kodun,
@@ -90,169 +114,669 @@ en kısa kodu verecek şekilde oluşturmaktır. Bunun için kullanılacak algori
 Dinamik array yerine, Heap daha iyi bir tercih olabilir. Ben daha kolay anlaşılacağını
 düşündüğüm için, array kullandım. Algoritmaya geçmeden önce, veri yapılarına bir göz
 atalım.</p>
-<pre class="code literal-block"><span></span><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_huffman</span>
-<span class="p">{</span>
-    <span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">freq</span><span class="p">;</span>
-    <span class="k">struct</span> <span class="n">_huffman</span> <span class="o">*</span><span class="n">left</span><span class="p">;</span>
-    <span class="k">struct</span> <span class="n">_huffman</span> <span class="o">*</span><span class="n">right</span><span class="p">;</span>
-<span class="p">}</span> <span class="n">HUFFMANTREE</span><span class="p">;</span>
-
-<span class="k">typedef</span> <span class="k">struct</span> <span class="n">_huffman_array</span> <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">cap</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">size</span><span class="p">;</span>
-    <span class="n">HUFFMANTREE</span> <span class="o">**</span><span class="n">items</span><span class="p">;</span>
-<span class="p">}</span> <span class="n">HUFFMANARRAY</span><span class="p">;</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_huffman</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">freq</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="k">struct</span> <span class="n">_huffman</span> <span class="o">*</span><span class="n">left</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">struct</span> <span class="n">_huffman</span> <span class="o">*</span><span class="n">right</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="p">}</span> <span class="n">HUFFMANTREE</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_huffman_array</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">cap</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">size</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="n">HUFFMANTREE</span> <span class="o">**</span><span class="n">items</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="p">}</span> <span class="n">HUFFMANARRAY</span><span class="p">;</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>HUFFMANTREE veri yapısını, gruplamaları yapmak için, HUFFMANARRAY veri yapısını ise, gruplamaları
 sıralamak için kullanacağım. Sıralama algoritması olarak, klasik "selection sort" yöntemini tercih ettim.
 Bu algoritmanın nasıl çalıştığını anlamadıysanız, bir listedeki elemanları, büyükten küçüğe
 sıraladığını bilmeniz yeterli.</p>
-<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">huffman_array_sort</span><span class="p">(</span><span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">max_index</span><span class="p">,</span> <span class="n">max_value</span><span class="p">;</span>
-
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">max_index</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
-        <span class="n">max_value</span> <span class="o">=</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">freq</span><span class="p">;</span>
-
-        <span class="k">for</span> <span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">&gt;</span> <span class="n">max_value</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">max_value</span> <span class="o">=</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">freq</span><span class="p">;</span>
-                <span class="n">max_index</span> <span class="o">=</span> <span class="n">k</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-
-        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">max_index</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">max_index</span><span class="p">];</span>
-            <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">max_index</span><span class="p">]</span> <span class="o">^=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-            <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">max_index</span><span class="p">];</span>
-        <span class="p">}</span>
-
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">huffman_array_sort</span><span class="p">(</span><span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">max_index</span><span class="p">,</span> <span class="n">max_value</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="n">max_index</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="n">max_value</span> <span class="o">=</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">freq</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">&gt;</span> <span class="n">max_value</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>            <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>                <span class="n">max_value</span> <span class="o">=</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">freq</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>                <span class="n">max_index</span> <span class="o">=</span> <span class="n">k</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>            <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">max_index</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>            <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">max_index</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>            <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">max_index</span><span class="p">]</span> <span class="o">^=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>            <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">max_index</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Büyükten küçüğe sıralanmış bir array'in en küçük elemanı sonda olduğu için, en
 küçük elemanı kolayca array'den çıkarabiliriz.</p>
-<pre class="code literal-block"><span></span><span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="nf">huffman_array_pop</span><span class="p">(</span><span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">return</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="o">--</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">];</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="nf">huffman_array_pop</span><span class="p">(</span><span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="o">--</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Şimdi algoritmanın uygulamasına geçelim. Öncelikle metinde geçen karakterlerin
 görülme sıklıklarını hesaplamamız gerekiyor.</p>
-<pre class="code literal-block"><span></span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">frequencies</span><span class="p">[</span><span class="mh">0xFF</span><span class="p">];</span>
-<span class="kt">char</span> <span class="n">metin</span><span class="p">[]</span> <span class="o">=</span> <span class="s">"bu oylesine uzun, oylesine girift bir metin ki, muhakkak gereksiz bitlerini temizlemek gerekir."</span><span class="p">;</span>
-<span class="kt">char</span> <span class="o">*</span><span class="n">pcTemp</span><span class="p">;</span>
-<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
-
-<span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">frequencies</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">frequencies</span><span class="p">));</span>
-
-<span class="k">for</span> <span class="p">(</span><span class="n">pcTemp</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">metin</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="o">*</span><span class="n">pcTemp</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">pcTemp</span><span class="o">++</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">frequencies</span><span class="p">[(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">pcTemp</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
-
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">frequencies</span><span class="p">[</span><span class="mh">0xFF</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="kt">char</span> <span class="n">metin</span><span class="p">[]</span> <span class="o">=</span> <span class="s">"bu oylesine uzun, oylesine girift bir metin ki, muhakkak gereksiz bitlerini temizlemek gerekir."</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="kt">char</span> <span class="o">*</span><span class="n">pcTemp</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">frequencies</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">frequencies</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="p">(</span><span class="n">pcTemp</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">metin</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="o">*</span><span class="n">pcTemp</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">pcTemp</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="n">frequencies</span><span class="p">[(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">pcTemp</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Metnin üstünden bir kez geçerek, karakterleri saydım. Şimdi, sıfırdan büyük
 karakleri array'imize ekleyelim.</p>
-<pre class="code literal-block"><span></span><span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span> <span class="o">=</span> <span class="n">huffman_array_new</span><span class="p">();</span>
-<span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">255</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">frequencies</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">huffman_array_add</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">huffmantree_new</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span> <span class="o">=</span> <span class="n">huffman_array_new</span><span class="p">();</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">255</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">frequencies</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>        <span class="n">huffman_array_add</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">huffmantree_new</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Son olarak, sadece tek bir grup kalana kadar, küçükten büyüğe
 gruplamak kaldı.</p>
-<pre class="code literal-block"><span></span><span class="k">while</span> <span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">huffman_array_sort</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
-    <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t1</span> <span class="o">=</span> <span class="n">huffman_array_pop</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
-    <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t2</span> <span class="o">=</span> <span class="n">huffman_array_pop</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
-    <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t3</span> <span class="o">=</span> <span class="n">calloc</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">HUFFMANTREE</span><span class="p">));</span>
-    <span class="n">t3</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="n">t1</span><span class="p">;</span>
-    <span class="n">t3</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="n">t2</span><span class="p">;</span>
-    <span class="n">t3</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">=</span> <span class="n">t1</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">+</span> <span class="n">t2</span><span class="o">-&gt;</span><span class="n">freq</span><span class="p">;</span>
-    <span class="n">huffman_array_add</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">t3</span><span class="p">);</span>
-
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">while</span> <span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">huffman_array_sort</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t1</span> <span class="o">=</span> <span class="n">huffman_array_pop</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t2</span> <span class="o">=</span> <span class="n">huffman_array_pop</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t3</span> <span class="o">=</span> <span class="n">calloc</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">HUFFMANTREE</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="n">t3</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="n">t1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">t3</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="n">t2</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="n">t3</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">=</span> <span class="n">t1</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">+</span> <span class="n">t2</span><span class="o">-&gt;</span><span class="n">freq</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="n">huffman_array_add</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">t3</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu noktada, prefix ağacımız hazır oldu. Karakterlere atanan kodları görebilmek için,
 küçük bir yardımcı fonksiyon yazdım.</p>
-<pre class="code literal-block"><span></span><span class="c1">// huffmantree_print(t, "", 0) şeklinde çağrılacak.</span>
-<span class="c1">// prefix en uzun kodu alabilecek kadar büyük bir</span>
-<span class="c1">// buffer olmalı.</span>
-<span class="kt">void</span> <span class="nf">huffmantree_print</span><span class="p">(</span><span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">prefix</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size_prefix</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">&amp;&amp;</span> <span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">prefix</span><span class="p">[</span><span class="n">size_prefix</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="n">printf</span><span class="p">(</span><span class="s">"%c: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">t</span><span class="o">-&gt;</span><span class="n">c</span><span class="p">,</span> <span class="n">prefix</span><span class="p">);</span>
-        <span class="k">return</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">prefix</span><span class="p">[</span><span class="n">size_prefix</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'0'</span><span class="p">;</span>
-        <span class="n">huffmantree_print</span><span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">size_prefix</span><span class="p">);</span>
-        <span class="n">size_prefix</span><span class="o">--</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">prefix</span><span class="p">[</span><span class="n">size_prefix</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'1'</span><span class="p">;</span>
-        <span class="n">huffmantree_print</span><span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">size_prefix</span><span class="p">);</span>
-        <span class="n">size_prefix</span><span class="o">--</span><span class="p">;</span>
-    <span class="p">}</span>
-
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="c1">// huffmantree_print(t, "", 0) şeklinde çağrılacak.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="c1">// prefix en uzun kodu alabilecek kadar büyük bir</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="c1">// buffer olmalı.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">huffmantree_print</span><span class="p">(</span><span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">prefix</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size_prefix</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">&amp;&amp;</span> <span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="n">prefix</span><span class="p">[</span><span class="n">size_prefix</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="n">printf</span><span class="p">(</span><span class="s">"%c: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">t</span><span class="o">-&gt;</span><span class="n">c</span><span class="p">,</span> <span class="n">prefix</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="k">return</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="n">prefix</span><span class="p">[</span><span class="n">size_prefix</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'0'</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>        <span class="n">huffmantree_print</span><span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">size_prefix</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>        <span class="n">size_prefix</span><span class="o">--</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>        <span class="n">prefix</span><span class="p">[</span><span class="n">size_prefix</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'1'</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>        <span class="n">huffmantree_print</span><span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">size_prefix</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>        <span class="n">size_prefix</span><span class="o">--</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Şimdi sonuçlara bir göz atalım.</p>
-<pre class="code literal-block"><span></span><span class="n">u</span><span class="o">:</span> <span class="mi">0000</span>
-<span class="n">a</span><span class="o">:</span> <span class="mi">00010</span>
-<span class="o">,:</span> <span class="mi">00011</span>
-<span class="n">o</span><span class="o">:</span> <span class="mi">00100</span>
-<span class="n">y</span><span class="o">:</span> <span class="mi">00101</span>
-<span class="n">n</span><span class="o">:</span> <span class="mi">0011</span>
- <span class="o">:</span> <span class="mi">010</span>
-<span class="n">r</span><span class="o">:</span> <span class="mi">0110</span>
-<span class="n">s</span><span class="o">:</span> <span class="mi">01110</span>
-<span class="n">f</span><span class="o">:</span> <span class="mi">011110</span>
-<span class="o">.:</span> <span class="mi">0111110</span>
-<span class="n">h</span><span class="o">:</span> <span class="mi">0111111</span>
-<span class="n">b</span><span class="o">:</span> <span class="mi">10000</span>
-<span class="n">g</span><span class="o">:</span> <span class="mi">10001</span>
-<span class="n">z</span><span class="o">:</span> <span class="mi">10010</span>
-<span class="n">m</span><span class="o">:</span> <span class="mi">10011</span>
-<span class="n">i</span><span class="o">:</span> <span class="mi">101</span>
-<span class="n">e</span><span class="o">:</span> <span class="mi">110</span>
-<span class="n">k</span><span class="o">:</span> <span class="mi">1110</span>
-<span class="n">t</span><span class="o">:</span> <span class="mi">11110</span>
-<span class="n">l</span><span class="o">:</span> <span class="mi">11111</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="n">u</span><span class="o">:</span> <span class="mi">0000</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="n">a</span><span class="o">:</span> <span class="mi">00010</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="o">,:</span> <span class="mi">00011</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="n">o</span><span class="o">:</span> <span class="mi">00100</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="n">y</span><span class="o">:</span> <span class="mi">00101</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="n">n</span><span class="o">:</span> <span class="mi">0011</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code> <span class="o">:</span> <span class="mi">010</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="n">r</span><span class="o">:</span> <span class="mi">0110</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="n">s</span><span class="o">:</span> <span class="mi">01110</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="n">f</span><span class="o">:</span> <span class="mi">011110</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="o">.:</span> <span class="mi">0111110</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="n">h</span><span class="o">:</span> <span class="mi">0111111</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="n">b</span><span class="o">:</span> <span class="mi">10000</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="n">g</span><span class="o">:</span> <span class="mi">10001</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="n">z</span><span class="o">:</span> <span class="mi">10010</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="n">m</span><span class="o">:</span> <span class="mi">10011</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><span class="n">i</span><span class="o">:</span> <span class="mi">101</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="n">e</span><span class="o">:</span> <span class="mi">110</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code><span class="n">k</span><span class="o">:</span> <span class="mi">1110</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><span class="n">t</span><span class="o">:</span> <span class="mi">11110</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="n">l</span><span class="o">:</span> <span class="mi">11111</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yukarıdaki tabloda görüleceği üzere, en kısa kodlar boşluk, i ve e karakterlerine, en uzun kodlar ise
 nokta ve h karakterlerine verilmiş. Ayrıca kısa kodların hiçbiri, uzun kodlardan birinin başlangıcı
@@ -265,161 +789,778 @@ burada bitiriyorum.</p>
 veri yapıları ve algoritmalar kullanarak aynı kodlamayı yapmayı deneyebilirsiniz. Burada
 verilen metni bit array'ine dönüştürme işlemini ve bit array'ini tekrar orjinal metne dönüştürme
 işlemini de yapmadık. Bunları da denemek isteyebilirsiniz. İyi kodlamalar.</p>
-<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stddef.h&gt; // NULL</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt; // calloc</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;string.h&gt; // memset</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
-
-<span class="k">typedef</span> <span class="k">struct</span> <span class="n">_huffman</span>
-<span class="p">{</span>
-    <span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">freq</span><span class="p">;</span>
-    <span class="k">struct</span> <span class="n">_huffman</span> <span class="o">*</span><span class="n">left</span><span class="p">;</span>
-    <span class="k">struct</span> <span class="n">_huffman</span> <span class="o">*</span><span class="n">right</span><span class="p">;</span>
-<span class="p">}</span> <span class="n">HUFFMANTREE</span><span class="p">;</span>
-
-<span class="k">typedef</span> <span class="k">struct</span> <span class="n">_huffman_array</span> <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">cap</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">size</span><span class="p">;</span>
-    <span class="n">HUFFMANTREE</span> <span class="o">**</span><span class="n">items</span><span class="p">;</span>
-<span class="p">}</span> <span class="n">HUFFMANARRAY</span><span class="p">;</span>
-
-<span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="nf">huffmantree_new</span><span class="p">(</span><span class="kt">char</span> <span class="n">c</span><span class="p">,</span> <span class="kt">int</span> <span class="n">freq</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">HUFFMANTREE</span><span class="p">));</span>
-    <span class="n">t</span><span class="o">-&gt;</span><span class="n">c</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
-    <span class="n">t</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">=</span> <span class="n">freq</span><span class="p">;</span>
-    <span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-    <span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-    <span class="k">return</span> <span class="n">t</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="cm">/*</span>
-<span class="cm">* Selection sort, büyükten küçüğe</span>
-<span class="cm">*/</span>
-<span class="kt">void</span> <span class="nf">huffman_array_sort</span><span class="p">(</span><span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">max_index</span><span class="p">,</span> <span class="n">max_value</span><span class="p">;</span>
-
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">max_index</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
-        <span class="n">max_value</span> <span class="o">=</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">freq</span><span class="p">;</span>
-
-        <span class="k">for</span> <span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">&gt;</span> <span class="n">max_value</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">max_value</span> <span class="o">=</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">freq</span><span class="p">;</span>
-                <span class="n">max_index</span> <span class="o">=</span> <span class="n">k</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-
-        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">max_index</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">max_index</span><span class="p">];</span>
-            <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">max_index</span><span class="p">]</span> <span class="o">^=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-            <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">max_index</span><span class="p">];</span>
-        <span class="p">}</span>
-
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="nf">huffman_array_pop</span><span class="p">(</span><span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">return</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="o">--</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">];</span>
-<span class="p">}</span>
-
-<span class="kt">void</span> <span class="o">*</span><span class="nf">huffman_array_add</span><span class="p">(</span><span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span><span class="p">,</span> <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">cap</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">arr</span><span class="o">-&gt;</span><span class="n">cap</span> <span class="o">*=</span> <span class="mi">2</span><span class="p">;</span>
-        <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span> <span class="o">=</span> <span class="n">realloc</span><span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">,</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">cap</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="p">));</span>
-    <span class="p">}</span>
-
-    <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="nf">huffman_array_new</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">HUFFMANARRAY</span><span class="p">));</span>
-    <span class="n">arr</span><span class="o">-&gt;</span><span class="n">cap</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
-    <span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">cap</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="p">)</span> <span class="p">);</span>
-    <span class="k">return</span> <span class="n">arr</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="kt">void</span> <span class="nf">huffmantree_print</span><span class="p">(</span><span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">prefix</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size_prefix</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">&amp;&amp;</span> <span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">prefix</span><span class="p">[</span><span class="n">size_prefix</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="n">printf</span><span class="p">(</span><span class="s">"%c: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">t</span><span class="o">-&gt;</span><span class="n">c</span><span class="p">,</span> <span class="n">prefix</span><span class="p">);</span>
-        <span class="k">return</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">prefix</span><span class="p">[</span><span class="n">size_prefix</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'0'</span><span class="p">;</span>
-        <span class="n">huffmantree_print</span><span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">size_prefix</span><span class="p">);</span>
-        <span class="n">size_prefix</span><span class="o">--</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">prefix</span><span class="p">[</span><span class="n">size_prefix</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'1'</span><span class="p">;</span>
-        <span class="n">huffmantree_print</span><span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">size_prefix</span><span class="p">);</span>
-        <span class="n">size_prefix</span><span class="o">--</span><span class="p">;</span>
-    <span class="p">}</span>
-
-<span class="p">}</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">frequencies</span><span class="p">[</span><span class="mh">0xFF</span><span class="p">];</span>
-    <span class="kt">char</span> <span class="n">metin</span><span class="p">[]</span> <span class="o">=</span> <span class="s">"bu oylesine uzun, oylesine girift bir metin ki, muhakkak gereksiz bitlerini temizlemek gerekir."</span><span class="p">;</span>
-    <span class="kt">char</span> <span class="o">*</span><span class="n">pcTemp</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
-
-    <span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span> <span class="o">=</span> <span class="n">huffman_array_new</span><span class="p">();</span>
-
-    <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">frequencies</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">frequencies</span><span class="p">));</span>
-
-    <span class="k">for</span> <span class="p">(</span><span class="n">pcTemp</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">metin</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="o">*</span><span class="n">pcTemp</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">pcTemp</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">frequencies</span><span class="p">[(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">pcTemp</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
-
-    <span class="p">}</span>
-
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">255</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">frequencies</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">huffman_array_add</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">huffmantree_new</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="k">while</span> <span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">huffman_array_sort</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
-        <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t1</span> <span class="o">=</span> <span class="n">huffman_array_pop</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
-        <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t2</span> <span class="o">=</span> <span class="n">huffman_array_pop</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
-        <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t3</span> <span class="o">=</span> <span class="n">calloc</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">HUFFMANTREE</span><span class="p">));</span>
-        <span class="n">t3</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="n">t1</span><span class="p">;</span>
-        <span class="n">t3</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="n">t2</span><span class="p">;</span>
-        <span class="n">t3</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">=</span> <span class="n">t1</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">+</span> <span class="n">t2</span><span class="o">-&gt;</span><span class="n">freq</span><span class="p">;</span>
-        <span class="n">huffman_array_add</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">t3</span><span class="p">);</span>
-
-    <span class="p">}</span>
-
-    <span class="kt">char</span> <span class="o">*</span><span class="n">buffer</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">256</span><span class="p">);</span>
-    <span class="n">huffmantree_print</span><span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">buffer</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-1"><code data-line-number="  1"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stddef.h&gt; // NULL</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-2"><code data-line-number="  2"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt; // calloc</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-3"><code data-line-number="  3"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;string.h&gt; // memset</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-4"><code data-line-number="  4"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-5"><code data-line-number="  5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-6"><code data-line-number="  6"></code></a></td>
+<td class="code"><code><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_huffman</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-7"><code data-line-number="  7"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-8"><code data-line-number="  8"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-9"><code data-line-number="  9"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">freq</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-10"><code data-line-number=" 10"></code></a></td>
+<td class="code"><code>    <span class="k">struct</span> <span class="n">_huffman</span> <span class="o">*</span><span class="n">left</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-11"><code data-line-number=" 11"></code></a></td>
+<td class="code"><code>    <span class="k">struct</span> <span class="n">_huffman</span> <span class="o">*</span><span class="n">right</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-12"><code data-line-number=" 12"></code></a></td>
+<td class="code"><code><span class="p">}</span> <span class="n">HUFFMANTREE</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-13"><code data-line-number=" 13"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-14"><code data-line-number=" 14"></code></a></td>
+<td class="code"><code><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_huffman_array</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-15"><code data-line-number=" 15"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">cap</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-16"><code data-line-number=" 16"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">size</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-17"><code data-line-number=" 17"></code></a></td>
+<td class="code"><code>    <span class="n">HUFFMANTREE</span> <span class="o">**</span><span class="n">items</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-18"><code data-line-number=" 18"></code></a></td>
+<td class="code"><code><span class="p">}</span> <span class="n">HUFFMANARRAY</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-19"><code data-line-number=" 19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-20"><code data-line-number=" 20"></code></a></td>
+<td class="code"><code><span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="nf">huffmantree_new</span><span class="p">(</span><span class="kt">char</span> <span class="n">c</span><span class="p">,</span> <span class="kt">int</span> <span class="n">freq</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-21"><code data-line-number=" 21"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-22"><code data-line-number=" 22"></code></a></td>
+<td class="code"><code>    <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">HUFFMANTREE</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-23"><code data-line-number=" 23"></code></a></td>
+<td class="code"><code>    <span class="n">t</span><span class="o">-&gt;</span><span class="n">c</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-24"><code data-line-number=" 24"></code></a></td>
+<td class="code"><code>    <span class="n">t</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">=</span> <span class="n">freq</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-25"><code data-line-number=" 25"></code></a></td>
+<td class="code"><code>    <span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-26"><code data-line-number=" 26"></code></a></td>
+<td class="code"><code>    <span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-27"><code data-line-number=" 27"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">t</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-28"><code data-line-number=" 28"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-29"><code data-line-number=" 29"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-30"><code data-line-number=" 30"></code></a></td>
+<td class="code"><code><span class="cm">/*</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-31"><code data-line-number=" 31"></code></a></td>
+<td class="code"><code><span class="cm">* Selection sort, büyükten küçüğe</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-32"><code data-line-number=" 32"></code></a></td>
+<td class="code"><code><span class="cm">*/</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-33"><code data-line-number=" 33"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">huffman_array_sort</span><span class="p">(</span><span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-34"><code data-line-number=" 34"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-35"><code data-line-number=" 35"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-36"><code data-line-number=" 36"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">max_index</span><span class="p">,</span> <span class="n">max_value</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-37"><code data-line-number=" 37"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-38"><code data-line-number=" 38"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-39"><code data-line-number=" 39"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-40"><code data-line-number=" 40"></code></a></td>
+<td class="code"><code>        <span class="n">max_index</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-41"><code data-line-number=" 41"></code></a></td>
+<td class="code"><code>        <span class="n">max_value</span> <span class="o">=</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">freq</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-42"><code data-line-number=" 42"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-43"><code data-line-number=" 43"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-44"><code data-line-number=" 44"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-45"><code data-line-number=" 45"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">&gt;</span> <span class="n">max_value</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-46"><code data-line-number=" 46"></code></a></td>
+<td class="code"><code>            <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-47"><code data-line-number=" 47"></code></a></td>
+<td class="code"><code>                <span class="n">max_value</span> <span class="o">=</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">freq</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-48"><code data-line-number=" 48"></code></a></td>
+<td class="code"><code>                <span class="n">max_index</span> <span class="o">=</span> <span class="n">k</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-49"><code data-line-number=" 49"></code></a></td>
+<td class="code"><code>            <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-50"><code data-line-number=" 50"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-51"><code data-line-number=" 51"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-52"><code data-line-number=" 52"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">max_index</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-53"><code data-line-number=" 53"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-54"><code data-line-number=" 54"></code></a></td>
+<td class="code"><code>            <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">max_index</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-55"><code data-line-number=" 55"></code></a></td>
+<td class="code"><code>            <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">max_index</span><span class="p">]</span> <span class="o">^=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-56"><code data-line-number=" 56"></code></a></td>
+<td class="code"><code>            <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">max_index</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-57"><code data-line-number=" 57"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-58"><code data-line-number=" 58"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-59"><code data-line-number=" 59"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-60"><code data-line-number=" 60"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-61"><code data-line-number=" 61"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-62"><code data-line-number=" 62"></code></a></td>
+<td class="code"><code><span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="nf">huffman_array_pop</span><span class="p">(</span><span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-63"><code data-line-number=" 63"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-64"><code data-line-number=" 64"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="o">--</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-65"><code data-line-number=" 65"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-66"><code data-line-number=" 66"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-67"><code data-line-number=" 67"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="o">*</span><span class="nf">huffman_array_add</span><span class="p">(</span><span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span><span class="p">,</span> <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-68"><code data-line-number=" 68"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-69"><code data-line-number=" 69"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">cap</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-70"><code data-line-number=" 70"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-71"><code data-line-number=" 71"></code></a></td>
+<td class="code"><code>        <span class="n">arr</span><span class="o">-&gt;</span><span class="n">cap</span> <span class="o">*=</span> <span class="mi">2</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-72"><code data-line-number=" 72"></code></a></td>
+<td class="code"><code>        <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span> <span class="o">=</span> <span class="n">realloc</span><span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">,</span> <span class="n">arr</span><span class="o">-&gt;</span><span class="n">cap</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-73"><code data-line-number=" 73"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-74"><code data-line-number=" 74"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-75"><code data-line-number=" 75"></code></a></td>
+<td class="code"><code>    <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-76"><code data-line-number=" 76"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-77"><code data-line-number=" 77"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-78"><code data-line-number=" 78"></code></a></td>
+<td class="code"><code><span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="nf">huffman_array_new</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-79"><code data-line-number=" 79"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-80"><code data-line-number=" 80"></code></a></td>
+<td class="code"><code>    <span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">HUFFMANARRAY</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-81"><code data-line-number=" 81"></code></a></td>
+<td class="code"><code>    <span class="n">arr</span><span class="o">-&gt;</span><span class="n">cap</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-82"><code data-line-number=" 82"></code></a></td>
+<td class="code"><code>    <span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-83"><code data-line-number=" 83"></code></a></td>
+<td class="code"><code>    <span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">cap</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="p">)</span> <span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-84"><code data-line-number=" 84"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">arr</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-85"><code data-line-number=" 85"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-86"><code data-line-number=" 86"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-87"><code data-line-number=" 87"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">huffmantree_print</span><span class="p">(</span><span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">prefix</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size_prefix</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-88"><code data-line-number=" 88"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-89"><code data-line-number=" 89"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">&amp;&amp;</span> <span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-90"><code data-line-number=" 90"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-91"><code data-line-number=" 91"></code></a></td>
+<td class="code"><code>        <span class="n">prefix</span><span class="p">[</span><span class="n">size_prefix</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-92"><code data-line-number=" 92"></code></a></td>
+<td class="code"><code>        <span class="n">printf</span><span class="p">(</span><span class="s">"%c: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">t</span><span class="o">-&gt;</span><span class="n">c</span><span class="p">,</span> <span class="n">prefix</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-93"><code data-line-number=" 93"></code></a></td>
+<td class="code"><code>        <span class="k">return</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-94"><code data-line-number=" 94"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-95"><code data-line-number=" 95"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-96"><code data-line-number=" 96"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-97"><code data-line-number=" 97"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-98"><code data-line-number=" 98"></code></a></td>
+<td class="code"><code>        <span class="n">prefix</span><span class="p">[</span><span class="n">size_prefix</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'0'</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-99"><code data-line-number=" 99"></code></a></td>
+<td class="code"><code>        <span class="n">huffmantree_print</span><span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">size_prefix</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-100"><code data-line-number="100"></code></a></td>
+<td class="code"><code>        <span class="n">size_prefix</span><span class="o">--</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-101"><code data-line-number="101"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-102"><code data-line-number="102"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-103"><code data-line-number="103"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-104"><code data-line-number="104"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-105"><code data-line-number="105"></code></a></td>
+<td class="code"><code>        <span class="n">prefix</span><span class="p">[</span><span class="n">size_prefix</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'1'</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-106"><code data-line-number="106"></code></a></td>
+<td class="code"><code>        <span class="n">huffmantree_print</span><span class="p">(</span><span class="n">t</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">size_prefix</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-107"><code data-line-number="107"></code></a></td>
+<td class="code"><code>        <span class="n">size_prefix</span><span class="o">--</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-108"><code data-line-number="108"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-109"><code data-line-number="109"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-110"><code data-line-number="110"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-111"><code data-line-number="111"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-112"><code data-line-number="112"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-113"><code data-line-number="113"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-114"><code data-line-number="114"></code></a></td>
+<td class="code"><code>    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">frequencies</span><span class="p">[</span><span class="mh">0xFF</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-115"><code data-line-number="115"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="n">metin</span><span class="p">[]</span> <span class="o">=</span> <span class="s">"bu oylesine uzun, oylesine girift bir metin ki, muhakkak gereksiz bitlerini temizlemek gerekir."</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-116"><code data-line-number="116"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">pcTemp</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-117"><code data-line-number="117"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-118"><code data-line-number="118"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-119"><code data-line-number="119"></code></a></td>
+<td class="code"><code>    <span class="n">HUFFMANARRAY</span> <span class="o">*</span><span class="n">arr</span> <span class="o">=</span> <span class="n">huffman_array_new</span><span class="p">();</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-120"><code data-line-number="120"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-121"><code data-line-number="121"></code></a></td>
+<td class="code"><code>    <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">frequencies</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">frequencies</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-122"><code data-line-number="122"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-123"><code data-line-number="123"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span><span class="n">pcTemp</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">metin</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="o">*</span><span class="n">pcTemp</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">pcTemp</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-124"><code data-line-number="124"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-125"><code data-line-number="125"></code></a></td>
+<td class="code"><code>        <span class="n">frequencies</span><span class="p">[(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">pcTemp</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-126"><code data-line-number="126"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-127"><code data-line-number="127"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-128"><code data-line-number="128"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-129"><code data-line-number="129"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">255</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-130"><code data-line-number="130"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-131"><code data-line-number="131"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="n">frequencies</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-132"><code data-line-number="132"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-133"><code data-line-number="133"></code></a></td>
+<td class="code"><code>            <span class="n">huffman_array_add</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">huffmantree_new</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-134"><code data-line-number="134"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-135"><code data-line-number="135"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-136"><code data-line-number="136"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-137"><code data-line-number="137"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-138"><code data-line-number="138"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-139"><code data-line-number="139"></code></a></td>
+<td class="code"><code>        <span class="n">huffman_array_sort</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-140"><code data-line-number="140"></code></a></td>
+<td class="code"><code>        <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t1</span> <span class="o">=</span> <span class="n">huffman_array_pop</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-141"><code data-line-number="141"></code></a></td>
+<td class="code"><code>        <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t2</span> <span class="o">=</span> <span class="n">huffman_array_pop</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-142"><code data-line-number="142"></code></a></td>
+<td class="code"><code>        <span class="n">HUFFMANTREE</span> <span class="o">*</span><span class="n">t3</span> <span class="o">=</span> <span class="n">calloc</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">HUFFMANTREE</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-143"><code data-line-number="143"></code></a></td>
+<td class="code"><code>        <span class="n">t3</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="n">t1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-144"><code data-line-number="144"></code></a></td>
+<td class="code"><code>        <span class="n">t3</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="n">t2</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-145"><code data-line-number="145"></code></a></td>
+<td class="code"><code>        <span class="n">t3</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">=</span> <span class="n">t1</span><span class="o">-&gt;</span><span class="n">freq</span> <span class="o">+</span> <span class="n">t2</span><span class="o">-&gt;</span><span class="n">freq</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-146"><code data-line-number="146"></code></a></td>
+<td class="code"><code>        <span class="n">huffman_array_add</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">t3</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-147"><code data-line-number="147"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-148"><code data-line-number="148"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-149"><code data-line-number="149"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-150"><code data-line-number="150"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">buffer</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">256</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-151"><code data-line-number="151"></code></a></td>
+<td class="code"><code>    <span class="n">huffmantree_print</span><span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">buffer</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-152"><code data-line-number="152"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-153"><code data-line-number="153"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="huffman-kodlamasi.html#-154"><code data-line-number="154"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 </div>
     </div>
     <aside class="postpromonav"><nav><div class="pager">

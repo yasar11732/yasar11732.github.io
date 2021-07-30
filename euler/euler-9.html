@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Toplamı 1000 eden Pisagor üçlüsünü bulacağız">
@@ -11,18 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/euler/euler-9.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/euler/euler-9.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="euler-8.html" title="(Euler 8) Çarpımı en büyük alt dizi" type="text/html">
 <link rel="next" href="euler-10.html" title="(Euler 10) Asal Sayılar Toplamı" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="(Euler 9) Pisagor Üçlüsü">
-<meta property="og:url" content="http://ysar.net/euler/euler-9.html">
-<meta property="og:description" content="Toplamı 1000 eden Pisagor üçlüsünü bulacağız">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2018-08-16T21:38:00+03:00">
-<meta property="article:tag" content="mathjax">
 </head>
 <body>
 
@@ -48,19 +41,63 @@
 <p>Pisagor üçlüsü \(a^2 + b^2 = c^2\) eşiliğini sağlayan \(a &lt; b &lt; c\) üçlüsüne verilen isimdir. Örneğin, \(3^2 + 4^2 = 9+16 = 25 = 5^2\) gibi.</p>
 <p>\(a+b+c=1000\) olan tek bir pisagor üçlüsü vardır. Bu üçlüde \(a \cdot b \cdot c\) çarpımını bulunuz. <!-- TEASER_END --></p>
 <p>İlk akla gelen yöntem, teker teker tüm ihtimalleri denemek.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
-
-<span class="k">def</span> <span class="nf">euler9</span><span class="p">():</span>
-
-    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1001</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-
-            <span class="n">c</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">a</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">b</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span> <span class="o">==</span> <span class="mi">1000</span><span class="p">:</span>
-                <span class="k">return</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">euler9</span><span class="p">():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1001</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>            <span class="n">c</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">a</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">b</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span> <span class="o">==</span> <span class="mi">1000</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>                <span class="k">return</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Her zamanki gibi, Euler Problemlerinde ilk akla gelenden daha iyisi var. \(a^2 + b^2 = c^2\) eşitliğini sağlayan terimlerin her birini
 sabit bir sayıyla çarpığınızda eşitlik bozulmaz. Şu şekilde gösterelim;</p>
@@ -72,29 +109,97 @@ k^2 \cdot a^2 + k^2 \cdot b^2 = k^2 \cdot c^2 &amp;&amp; k^2 \text{ terimini par
 \end{align}$$</p>
 <p>O halde, eğer \(a^2 + b^2 = c^2\) olduğunda \(\frac{1000}{a + b + c} = k\) dersek, \((k \cdot a)^2 + (k \cdot b)^2 = (k \cdot c)^2 \)
 eşitliğinde terimler toplamı 1000 olur. Öyleyse, kodları tekrar gözden geçirelim;</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
-
-<span class="k">def</span> <span class="nf">euler9_v2</span><span class="p">():</span>
-
-    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1001</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-
-            <span class="n">c</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">a</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">b</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-
-            <span class="n">k</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">return</span> <span class="p">(</span><span class="n">k</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="n">k</span><span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="n">k</span><span class="o">*</span><span class="n">c</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">euler9_v2</span><span class="p">():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1001</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>            <span class="n">c</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">a</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">b</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>            <span class="n">k</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>                <span class="k">return</span> <span class="p">(</span><span class="n">k</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="n">k</span><span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="n">k</span><span class="o">*</span><span class="n">c</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Sanırım bu problemde yapılabilecek en iyisi bu, o yüzden karşılaştırmaya geçebiliriz.</p>
-<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s2">"euler9()"</span><span class="p">,</span> <span class="s2">"from euler9 import euler9"</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-<span class="mf">16.17503372204979</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s2">"euler9_v2()"</span><span class="p">,</span> <span class="s2">"from euler9 import euler9_v2"</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-<span class="mf">0.05705214216433774</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s2">"euler9()"</span><span class="p">,</span> <span class="s2">"from euler9 import euler9"</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="mf">16.17503372204979</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s2">"euler9_v2()"</span><span class="p">,</span> <span class="s2">"from euler9 import euler9_v2"</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-9.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="mf">0.05705214216433774</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yaklaşık 284 kat hızlandık. Gayet başarılı.</p>
 <h3>Gelecek Problem</h3>
@@ -108,7 +213,7 @@ eşitliğinde terimler toplamı 1000 olur. Öyleyse, kodları tekrar gözden ge�
         </div>
 
     </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
-	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script></article></main><script>
   if(document.location.hostname == "ysar.net")

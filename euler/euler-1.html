@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Project Euler problemlerini çözdüğüm bu yeni serinin ilk sayısında, en kolay Project Euler sorusunu çözeceğiz">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/euler/euler-1.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/euler/euler-1.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="../python/programlama-dilleri.html" title="Hangi Dilleri Öğrenmeliyim" type="text/html">
 <link rel="next" href="euler-2.html" title="(Euler 2) Çift Fibonacci Sayıları" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="(Euler 1) 3 ve 5'in katları">
-<meta property="og:url" content="http://ysar.net/euler/euler-1.html">
-<meta property="og:description" content="Project Euler problemlerini çözdüğüm bu yeni serinin ilk sayısında, en kolay Project Euler sorusunu çözeceğiz">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2018-07-16T23:52:00+03:00">
 </head>
 <body>
 
@@ -60,28 +54,65 @@ veya 5'in katları olan sayıları listelersek, 3,5,6 ve 9 sayılarını elde ed
 </ul>
 <p>Problemin Çözümü için, 1000'den küçük sayıların içinde 3'ün katlarını ve 5'in katlarını bulmalı, daha sonra bu kümeleri toplamalıyız. İşin püf noktası ise,
 hem 3'ün hem de 5'in katı olan sayıları, birden fazla işleme dahil etmemek. Bunun için liste kullanmak yerine Küme kullanacağız.</p>
-<pre class="code literal-block"><span></span><span class="s2">"1000'den küçük sayilardan 3'ün katlarini alalım"</span>
-<span class="n">sayilar</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-
-<span class="s2">"5'in katlarını da deneyelim"</span>
-<span class="n">sayilar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-
-<span class="s2">"Şimdi toplamı alabiliriz."</span>
-<span class="k">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">sayilar</span><span class="p">))</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-1.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="s2">"1000'den küçük sayilardan 3'ün katlarini alalım"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-1.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">sayilar</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-1.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-1.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="s2">"5'in katlarını da deneyelim"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-1.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="n">sayilar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-1.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-1.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="s2">"Şimdi toplamı alabiliriz."</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-1.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code><span class="nb">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">sayilar</span><span class="p">))</span>
+</code></td>
+</tr>
+</table></div>
 
 <h4>Alternatif Çözüm</h4>
-<pre class="code literal-block"><span></span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="euler-1.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="nb">sum</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr></table></div>
 
 <h4>Ek Alıştırma</h4>
 <p>Aynı problemi 2000'den küçük 7 ve 11'in katları için tekrar edin.</p>
 <h4>Bonus (Haskell Versiyonu)</h4>
 <p>Burada dikkat edilmesi gereken nokta, Python'dan farklı olarak, haskell'in aralıktaki son noktayı işleme dahil etmesi. Bu nedenle, <code>[1..999]</code> yazılması gerekiyor.</p>
-<pre class="code literal-block"><span></span><span class="nf">sum</span> <span class="p">[</span><span class="n">x</span> <span class="o">|</span> <span class="n">x</span> <span class="ow">&lt;-</span> <span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">999</span><span class="p">],</span> <span class="p">(</span><span class="n">x</span> <span class="p">`</span><span class="n">mod</span><span class="p">`</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">x</span> <span class="p">`</span><span class="n">mod</span><span class="p">`</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)]</span>
-</pre>
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="euler-1.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="nf">sum</span> <span class="p">[</span><span class="n">x</span> <span class="o">|</span> <span class="n">x</span> <span class="ow">&lt;-</span> <span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">999</span><span class="p">],</span> <span class="p">(</span><span class="n">x</span> <span class="p">`</span><span class="n">mod</span><span class="p">`</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">x</span> <span class="p">`</span><span class="n">mod</span><span class="p">`</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)]</span>
+</code></td>
+</tr></table></div>
 </div>
     </div>
     <aside class="postpromonav"><nav><div class="pager">

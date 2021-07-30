@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Django veritabanında özet veri elde etmek için annotate ve aggregate fonksiyonları kullanılıyor. Bu fonksiyonlar ile, satırların ortalaması, toplamı gibi tanımlayıcı istatistikler alınabilir.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/djangoda-aggregate-and-annotate.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/djangoda-aggregate-and-annotate.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="surumler-arasi-gecis-rehberi.html" title="Python 2.x ve 3.x Arasındaki Bazı Farklılıklar" type="text/html">
 <link rel="next" href="birkac-soruya-cevap.html" title="Python Hakkında Birkaç Soruya Cevap" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Django'da Aggregate ve Annotate">
-<meta property="og:url" content="http://ysar.net/python/djangoda-aggregate-and-annotate.html">
-<meta property="og:description" content="Django veritabanında özet veri elde etmek için annotate ve aggregate fonksiyonları kullanılıyor. Bu fonksiyonlar ile, satırların ortalaması, toplamı gibi tanımlayıcı istatistikler alınabilir.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2011-08-27T12:19:00+03:00">
 </head>
 <body>
 
@@ -56,96 +50,396 @@ Bu yazıda kısaca Django'da annotate ve aggreate kullanımı ile ilgili
 kullanılır konusuna giriş yapmak içindir, daha fazlasını django
 belgelerinde <a href="https://docs.djangoproject.com/en/dev/topics/db/aggregation/">aggregate</a> ile ilgili bölümden bulabilirsiniz. <!-- TEASER_END --></p>
 <h4>Tablo alanlarının ortalaması</h4>
-<pre class="code literal-block"><span></span><span class="c1">###</span>
-<span class="c1"># models.py</span>
-<span class="c1">###</span>
-
-<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
-
-<span class="k">class</span> <span class="nc">Urun</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">fiyat</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">PositiveIntegerField</span><span class="p">()</span>
-
-<span class="c1">###</span>
-<span class="c1"># Tüm ürünlere ait ortalama fiyatları almak istediğinizde</span>
-<span class="c1">###</span>
-<span class="kn">from</span> <span class="nn">uygulama_adi.models</span> <span class="kn">import</span> <span class="n">Urun</span>
-<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">Avg</span>
-
-<span class="n">a</span> <span class="o">=</span> <span class="n">Urun</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">Avg</span><span class="p">(</span><span class="s1">'fiyat'</span><span class="p">))</span>
-
-<span class="c1"># a = {"fiyat__avg": 23.56} -&gt; bir dict objesi döndürür.</span>
-<span class="c1"># Dönen sözlükteki anahtar adını da ayarlayabilirsiniz.</span>
-
-<span class="n">a</span> <span class="o">=</span> <span class="n">Urun</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">ortalama_fiyat</span><span class="o">=</span><span class="n">Avg</span><span class="p">(</span><span class="s1">'fiyat'</span><span class="p">))</span>
-
-<span class="c1"># a = {"ortalama_fiyat": 23.56}</span>
-
-<span class="c1">##</span>
-<span class="c1"># Birden fazla değer hesaplamak</span>
-<span class="c1">##</span>
-<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Max</span><span class="p">,</span> <span class="n">Min</span>
-<span class="n">a</span> <span class="o">=</span> <span class="n">Urun</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">Ortfiyat</span><span class="o">=</span><span class="n">Avg</span><span class="p">(</span><span class="s1">'fiyat'</span><span class="p">),</span><span class="n">Minfiyat</span><span class="o">=</span><span class="n">Min</span><span class="p">(</span><span class="s1">'fiyat'</span><span class="p">),</span><span class="n">maksfiyat</span><span class="o">=</span><span class="n">Max</span><span class="p">(</span><span class="s1">'fiyat'</span><span class="p">))</span>
-
-<span class="c1"># a = {"Ortfiyat" : 15.23, "Minfiyat": 3, "Maxfiyat" : 28}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="c1">###</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="c1"># models.py</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="c1">###</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Urun</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">fiyat</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">PositiveIntegerField</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="c1">###</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="c1"># Tüm ürünlere ait ortalama fiyatları almak istediğinizde</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="c1">###</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">uygulama_adi.models</span> <span class="kn">import</span> <span class="n">Urun</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">Avg</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">=</span> <span class="n">Urun</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">Avg</span><span class="p">(</span><span class="s1">'fiyat'</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="c1"># a = {"fiyat__avg": 23.56} -&gt; bir dict objesi döndürür.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code><span class="c1"># Dönen sözlükteki anahtar adını da ayarlayabilirsiniz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">=</span> <span class="n">Urun</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">ortalama_fiyat</span><span class="o">=</span><span class="n">Avg</span><span class="p">(</span><span class="s1">'fiyat'</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code><span class="c1"># a = {"ortalama_fiyat": 23.56}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code><span class="c1">##</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code><span class="c1"># Birden fazla değer hesaplamak</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code><span class="c1">##</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Max</span><span class="p">,</span> <span class="n">Min</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">=</span> <span class="n">Urun</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">Ortfiyat</span><span class="o">=</span><span class="n">Avg</span><span class="p">(</span><span class="s1">'fiyat'</span><span class="p">),</span><span class="n">Minfiyat</span><span class="o">=</span><span class="n">Min</span><span class="p">(</span><span class="s1">'fiyat'</span><span class="p">),</span><span class="n">maksfiyat</span><span class="o">=</span><span class="n">Max</span><span class="p">(</span><span class="s1">'fiyat'</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code><span class="c1"># a = {"Ortfiyat" : 15.23, "Minfiyat": 3, "Maxfiyat" : 28}</span>
+</code></td>
+</tr>
+</table></div>
 
 <h4>Django'da annotate kullanımı</h4>
 <p>Bir istem kümesindeki (QuerySet) tüm değerler için aggregate almak için
 annotate kullanılır. Çoğu zaman annotate m2m (çokdan çoğa) ilişkilerde
 kullanılır.</p>
-<pre class="code literal-block"><span></span><span class="c1">###</span>
-<span class="c1"># models.py</span>
-<span class="c1">###</span>
-<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
-
-<span class="k">class</span> <span class="nc">Etiket</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">yazi</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">Makale</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">etiketler</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Etiket</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-
-<span class="c1">### model.py sonu ###</span>
-
-<span class="c1"># Her etiket için kaç makale var</span>
-
-<span class="kn">from</span> <span class="nn">uygulamam.models</span> <span class="kn">import</span> <span class="n">Etiket</span>
-<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
-
-<span class="n">a</span> <span class="o">=</span> <span class="n">Etiket</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">makale_sayisi</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s1">'makale'</span><span class="p">))</span>
-
-<span class="c1"># a değişkeni Etiket.objects.all() gibi, ancak her elemanın artık makale_sayisi diye bir özelliği var,</span>
-<span class="c1"># örneğin: a[0].makale_sayisi ilk sıradaki etikete ait kaç adet makale olduğunu verir.</span>
-<span class="c1"># aynı zamanda bir etikete ait diğer tüm özellikler de her bir elemanda mevcuttur.</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="c1">###</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="c1"># models.py</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="c1">###</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Etiket</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="n">yazi</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Makale</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="n">etiketler</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Etiket</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="c1">### model.py sonu ###</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="c1"># Her etiket için kaç makale var</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">uygulamam.models</span> <span class="kn">import</span> <span class="n">Etiket</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Count</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">=</span> <span class="n">Etiket</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">makale_sayisi</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s1">'makale'</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><span class="c1"># a değişkeni Etiket.objects.all() gibi, ancak her elemanın artık makale_sayisi diye bir özelliği var,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="c1"># örneğin: a[0].makale_sayisi ilk sıradaki etikete ait kaç adet makale olduğunu verir.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code><span class="c1"># aynı zamanda bir etikete ait diğer tüm özellikler de her bir elemanda mevcuttur.</span>
+</code></td>
+</tr>
+</table></div>
 
 <h4>Alakalı tablo sütünları</h4>
 <p>Django'daki çift alt tire gösterimini, annotate ve aggregate için
 kullanabilirsiniz.</p>
-<pre class="code literal-block"><span></span><span class="c1"># gerekli import'lar yapılmış sayın</span>
-
-<span class="sd">"""</span>
-<span class="sd">Bu örnekteki uygulama, aynı site içerisinde birden fazla blog tutuyor.</span>
-<span class="sd">Her makale bir blog'a ilişkilendirilmiş</span>
-<span class="sd">"""</span>
-<span class="k">class</span> <span class="nc">Blog</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="c1"># bir iki alan tanımı var burda</span>
-
-<span class="k">class</span> <span class="nc">Makale</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">blog</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Blog</span><span class="p">,</span><span class="n">related_name</span><span class="o">=</span><span class="s2">"makaleler"</span><span class="p">)</span>
-    <span class="n">begeni_yuzdesi</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">()</span>
-
-<span class="c1">###</span>
-<span class="c1"># Her blog için, en az beğenilen makalelerin ne kadar begeni_yuzdesi aldığı!</span>
-<span class="c1">###</span>
-<span class="kn">from</span> <span class="nn">django.models</span> <span class="kn">import</span> <span class="n">Min</span>
-<span class="n">a</span> <span class="o">=</span> <span class="n">Blog</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">en_az_begeni</span> <span class="o">=</span> <span class="n">Min</span><span class="p">(</span><span class="s1">'makaleler__begeni_yuzdesi'</span><span class="p">))</span>
-
-<span class="c1"># a değişkeni tüm blogların bir listesini tutuyor. a'nın her elemanının en_az_begeni diye bir</span>
-<span class="c1"># özelliği var ve bu özellik o blog'daki tüm makeler içerisinde en az beğenilen makalenin</span>
-<span class="c1"># begeni yüzdesini tutuyor.</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="c1"># gerekli import'lar yapılmış sayın</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="sd">Bu örnekteki uygulama, aynı site içerisinde birden fazla blog tutuyor.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="sd">Her makale bir blog'a ilişkilendirilmiş</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Blog</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="c1"># bir iki alan tanımı var burda</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Makale</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="n">blog</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Blog</span><span class="p">,</span><span class="n">related_name</span><span class="o">=</span><span class="s2">"makaleler"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="n">begeni_yuzdesi</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="c1">###</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="c1"># Her blog için, en az beğenilen makalelerin ne kadar begeni_yuzdesi aldığı!</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="c1">###</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.models</span> <span class="kn">import</span> <span class="n">Min</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">=</span> <span class="n">Blog</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">en_az_begeni</span> <span class="o">=</span> <span class="n">Min</span><span class="p">(</span><span class="s1">'makaleler__begeni_yuzdesi'</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><span class="c1"># a değişkeni tüm blogların bir listesini tutuyor. a'nın her elemanının en_az_begeni diye bir</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="c1"># özelliği var ve bu özellik o blog'daki tüm makeler içerisinde en az beğenilen makalenin</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code><span class="c1"># begeni yüzdesini tutuyor.</span>
+</code></td>
+</tr>
+</table></div>
 
 <h4>İstem (Query) metotlarını zincirlememek</h4>
 <p>Django'da aggregate() ve annotate() metodları, Django veritabanı
@@ -153,13 +447,38 @@ apisindeki filter, exclude gibi diğer istem metotlarıyla
 zicirleyebilirsiniz. Ancak aggregate() her zaman en son metot olmak
 zorunda. annotate'in ise zincirlemedeki yerine göre, istem kümesinin
 elemanları değişiyor.</p>
-<pre class="code literal-block"><span></span><span class="n">Makale</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">yayinlandi</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">ortalama_begeni</span> <span class="o">=</span> <span class="n">Avg</span><span class="p">(</span><span class="s2">"begeni_yuzdesi"</span><span class="p">))</span>
-<span class="c1"># Yayınlanan makalelerin ortalama beğeni yüzdesini döndürür : {"ortalama_begeni": 93.21}</span>
-
-<span class="n">Blog</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">makale_sayisi</span> <span class="o">=</span> <span class="n">Count</span><span class="p">(</span><span class="s2">"makaleler"</span><span class="p">))</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"-makale_sayisi"</span><span class="p">)</span>
-
-<span class="c1"># annotate ile eklediğimiz makale_sayisi özelliğini Blog'ları sıralamak için kullanıyoruz.</span>
-</pre>
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">Makale</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">yayinlandi</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">ortalama_begeni</span> <span class="o">=</span> <span class="n">Avg</span><span class="p">(</span><span class="s2">"begeni_yuzdesi"</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="c1"># Yayınlanan makalelerin ortalama beğeni yüzdesini döndürür : {"ortalama_begeni": 93.21}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="n">Blog</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">makale_sayisi</span> <span class="o">=</span> <span class="n">Count</span><span class="p">(</span><span class="s2">"makaleler"</span><span class="p">))</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"-makale_sayisi"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-aggregate-and-annotate.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="c1"># annotate ile eklediğimiz makale_sayisi özelliğini Blog'ları sıralamak için kullanıyoruz.</span>
+</code></td>
+</tr>
+</table></div>
 </div>
     </div>
     <aside class="postpromonav"><nav><div class="pager">

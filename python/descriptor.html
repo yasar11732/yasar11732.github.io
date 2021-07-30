@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Python'daki descriptor'ler, diğer dillerdeki protected alanlara benzer obje özellikleri oluşturmamızı sağlıyor. Böylece, obje elemanlarına erişimi kontrol altında tutabiliyoruz.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/descriptor.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/descriptor.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="threading.html" title="Python threading modülü" type="text/html">
 <link rel="next" href="soket-socket-makefile.html" title="socket objelerinden dosya yapmak" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Python 'descriptor' - giriş">
-<meta property="og:url" content="http://ysar.net/python/descriptor.html">
-<meta property="og:description" content="Python'daki descriptor'ler, diğer dillerdeki protected alanlara benzer obje özellikleri oluşturmamızı sağlıyor. Böylece, obje elemanlarına erişimi kontrol altında tutabiliyoruz.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2012-08-28T02:44:00+03:00">
 </head>
 <body>
 
@@ -56,38 +50,142 @@ descriptor'ler burada devreye giriyor. Bu 'descriptor' denen şey bizim
 bunların erişimi kontrol altında tutmamıza yardımcı oluyor. <!-- TEASER_END --></p>
 <p>Peki, tam olarak nedir bu descriptor? Özetle, aşağıdaki metotlardan
 herhangi birini tanımlamış objelere descriptor diyoruz;</p>
-<pre class="code literal-block"><span></span><span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">)</span>
-<span class="fm">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-<span class="fm">__delete__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="fm">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="fm">__delete__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Şimdi uygulamalı olarak, çok basit bir descriptor görelim;</p>
-<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">SayiDescriptor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-
-    <span class="k">def</span> <span class="fm">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2"> bir sayi degil."</span> <span class="o">%</span> <span class="n">value</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-
-<span class="k">class</span> <span class="nc">Insan</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="n">yas</span> <span class="o">=</span> <span class="n">SayiDescriptor</span><span class="p">(</span><span class="s2">"_yas"</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">yas</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">yas</span> <span class="o">=</span> <span class="n">yas</span>
-
-<span class="n">a</span> <span class="o">=</span> <span class="n">Insan</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
-<span class="k">print</span> <span class="n">a</span><span class="o">.</span><span class="n">yas</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">Insan</span><span class="p">(</span><span class="s2">"osman"</span><span class="p">)</span>
-<span class="k">print</span> <span class="n">b</span><span class="o">.</span><span class="n">yas</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">SayiDescriptor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2"> bir sayi degil."</span> <span class="o">%</span> <span class="n">value</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>            <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Insan</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>    <span class="n">yas</span> <span class="o">=</span> <span class="n">SayiDescriptor</span><span class="p">(</span><span class="s2">"_yas"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">yas</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">yas</span> <span class="o">=</span> <span class="n">yas</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">=</span> <span class="n">Insan</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="nb">print</span> <span class="n">a</span><span class="o">.</span><span class="n">yas</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code><span class="n">b</span> <span class="o">=</span> <span class="n">Insan</span><span class="p">(</span><span class="s2">"osman"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code><span class="nb">print</span> <span class="n">b</span><span class="o">.</span><span class="n">yas</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu kodu çalıştırdığımızda, alacağımız çıktı şu şekilde olacak;</p>
 <pre>
@@ -136,31 +234,123 @@ değil. Her ne kadar yukarıdaki basitçe bir örnek olsa da, bu örneğe
 bakarak email veya telefon numarası için descriptor yapabilirsiniz.</p>
 <p>Descriptor oluşturmanın bir diğer yolu ise, <a href="http://docs.python.org/library/functions.html?highlight=propert#property">property</a> fonksiyonu.
 Aşağıdaki örnek, hem yukarıdakiyle eşdeğer, hem de daha temiz görünüyor;</p>
-<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">Insan</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">yas</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_yas</span> <span class="o">=</span> <span class="n">yas</span>
-
-    <span class="k">def</span> <span class="nf">yget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_yas</span>
-
-    <span class="k">def</span> <span class="nf">yset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_yas</span> <span class="o">=</span> <span class="n">value</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2"> bir sayi degil."</span> <span class="o">%</span> <span class="n">value</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">ydel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_yas</span>
-
-    <span class="n">yas</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">yget</span><span class="p">,</span> <span class="n">yset</span><span class="p">,</span> <span class="n">ydel</span><span class="p">,</span> <span class="s2">"bana property derler!"</span><span class="p">)</span>
-
-
-<span class="n">a</span> <span class="o">=</span> <span class="n">Insan</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
-<span class="k">print</span> <span class="n">a</span><span class="o">.</span><span class="n">yas</span>
-<span class="n">a</span><span class="o">.</span><span class="n">yas</span> <span class="o">=</span> <span class="s2">"osman"</span>
-<span class="k">print</span> <span class="n">a</span><span class="o">.</span><span class="n">yas</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Insan</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">yas</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">_yas</span> <span class="o">=</span> <span class="n">yas</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">yget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_yas</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">yset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>            <span class="bp">self</span><span class="o">.</span><span class="n">_yas</span> <span class="o">=</span> <span class="n">value</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2"> bir sayi degil."</span> <span class="o">%</span> <span class="n">value</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">ydel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_yas</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>    <span class="n">yas</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">yget</span><span class="p">,</span> <span class="n">yset</span><span class="p">,</span> <span class="n">ydel</span><span class="p">,</span> <span class="s2">"bana property derler!"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">=</span> <span class="n">Insan</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="nb">print</span> <span class="n">a</span><span class="o">.</span><span class="n">yas</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code><span class="n">a</span><span class="o">.</span><span class="n">yas</span> <span class="o">=</span> <span class="s2">"osman"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code><span class="nb">print</span> <span class="n">a</span><span class="o">.</span><span class="n">yas</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu örnek de, yukarıdakine benzer bir çıktı verecek. Burada, descriptor
 için ayrı bir sınıf kullanmak yerine, <code>property()</code> fonksiyonu ile bir
@@ -170,29 +360,113 @@ kolayca örneklenebilir. Bu ise, oluşturulduğu sınıfın sınırları içine
 sıkışmış bir descriptor.</p>
 <p>Son olarak da, <a href="http://yasararabaci.tumblr.com/post/22751163382/python-decorator-nedir">decorator</a> kullanarak nasıl descriptor
 oluşturabileceğimize bakalım;</p>
-<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">Insan</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">yas</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_yas</span> <span class="o">=</span> <span class="n">yas</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">yas</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_yas</span>
-
-    <span class="nd">@yas.setter</span>
-    <span class="k">def</span> <span class="nf">yas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_yas</span> <span class="o">=</span> <span class="n">value</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2"> bir sayi degil."</span> <span class="o">%</span> <span class="n">value</span><span class="p">)</span>
-
-
-<span class="n">a</span> <span class="o">=</span> <span class="n">Insan</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
-<span class="k">print</span> <span class="n">a</span><span class="o">.</span><span class="n">yas</span>
-<span class="n">a</span><span class="o">.</span><span class="n">yas</span> <span class="o">=</span> <span class="s2">"osman"</span>
-<span class="k">print</span> <span class="n">a</span><span class="o">.</span><span class="n">yas</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Insan</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">yas</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">_yas</span> <span class="o">=</span> <span class="n">yas</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="nd">@property</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">yas</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_yas</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="nd">@yas</span><span class="o">.</span><span class="n">setter</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">yas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>            <span class="bp">self</span><span class="o">.</span><span class="n">_yas</span> <span class="o">=</span> <span class="n">value</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>        <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2"> bir sayi degil."</span> <span class="o">%</span> <span class="n">value</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">=</span> <span class="n">Insan</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code><span class="nb">print</span> <span class="n">a</span><span class="o">.</span><span class="n">yas</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><span class="n">a</span><span class="o">.</span><span class="n">yas</span> <span class="o">=</span> <span class="s2">"osman"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="descriptor.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="nb">print</span> <span class="n">a</span><span class="o">.</span><span class="n">yas</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu fonksiyonda, <code>yas</code> isimli fonksiyon için <code>property</code> decorator'u
 kullandık. Böylece, bu aynı isimle erişilebilecek bir özellik ve bu

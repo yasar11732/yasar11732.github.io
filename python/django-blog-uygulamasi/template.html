@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Bu yazıda Django'daki şablon (template) dili anlatılıyor. Örnekler aracılığıyla, gerekli dosyalar ve ayarlar gösteriliyor.">
@@ -11,17 +11,11 @@
 <link href="../../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/django-blog-uygulamasi/template.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/django-blog-uygulamasi/template.html">
 <!--[if lt IE 9]><script src="../../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="../django-301-redirect.html" title="Django'da Url Taşıma" type="text/html">
 <link rel="next" href="sitemap-rss.html" title="Django ile Blog Geliştirme - Rss ve Site Haritası" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Django ile Blog Geliştirme - Şablonlar">
-<meta property="og:url" content="http://ysar.net/python/django-blog-uygulamasi/template.html">
-<meta property="og:description" content="Bu yazıda Django'daki şablon (template) dili anlatılıyor. Örnekler aracılığıyla, gerekli dosyalar ve ayarlar gösteriliyor.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2011-08-09T17:30:00+03:00">
 </head>
 <body>
 
@@ -86,17 +80,53 @@ başlayacağız.</p>
 <p>Django'da şablonların yüklenmesi, views modülü içerisinde yapılır.
 Aşağıdaki örnekte bir şablonu derleyip (henüz içerisinde derlenecek
 birşey olmasa da) tarayıcıya göndereceğiz.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">Context</span><span class="p">,</span> <span class="n">loader</span>
-<span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">makale</span>
-<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
-
-<span class="k">def</span> <span class="nf">anasayfaView</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">sablon</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s1">'blog_index.html'</span><span class="p">)</span>
-    <span class="n">icerik</span> <span class="o">=</span> <span class="n">Context</span><span class="p">()</span>
-    <span class="n">yanit</span> <span class="o">=</span> <span class="n">sablon</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">icerik</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">yanit</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">Context</span><span class="p">,</span> <span class="n">loader</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">makale</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">anasayfaView</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="n">sablon</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s1">'blog_index.html'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>    <span class="n">icerik</span> <span class="o">=</span> <span class="n">Context</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code>    <span class="n">yanit</span> <span class="o">=</span> <span class="n">sablon</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">icerik</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-9"><code data-line-number="9"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">yanit</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Django'da şablon kullanmak için yapılacak ilk iş, şablonun yüklenip bir
 değişkene atanmasıdır. Bunu yukarıdaki örneğin 6. satırında yaptık.
@@ -113,56 +143,180 @@ olarak da, derlemiş olduğum şablonu, tarayıcıya gönderiyorum.</p>
 içerisinde, şablon etiketleri, filtreler ve değişkenler kullanıp,
 şablonumuza bunlarla birlikte derlememiz gerekiyor. Basit bir değişken
 örneğiyle başlayalım. Bu örnek şablonumuz:</p>
-<pre class="code literal-block"><span></span><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
-    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>{{ baslik }}<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
-  <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>  <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>{{ baslik }}<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>  <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada şablon içerisinde <code>baslik</code> adında bir değişken tanımladık.
 Şablondaki bu değişkene bir değer atamak için, bu değeri şablonu
 derlemeden önce, şablon içeriğinde belirtmemiz gerekiyor.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">Context</span><span class="p">,</span> <span class="n">loader</span>
-<span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">makale</span>
-<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
-
-<span class="k">def</span> <span class="nf">anasayfaView</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">sablon</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s1">'blog_index.html'</span><span class="p">)</span>
-    <span class="n">icerik</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span><span class="s1">'baslik'</span><span class="p">:</span> <span class="s1">'Cok guzel blog, cok da guzel iyi blog!'</span><span class="p">})</span>
-    <span class="n">yanit</span> <span class="o">=</span> <span class="n">sablon</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">icerik</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">yanit</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">Context</span><span class="p">,</span> <span class="n">loader</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">makale</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">anasayfaView</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="n">sablon</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s1">'blog_index.html'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>    <span class="n">icerik</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span><span class="s1">'baslik'</span><span class="p">:</span> <span class="s1">'Cok guzel blog, cok da guzel iyi blog!'</span><span class="p">})</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code>    <span class="n">yanit</span> <span class="o">=</span> <span class="n">sablon</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">icerik</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-9"><code data-line-number="9"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">yanit</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Böylece, şablonumuzun içerisinde basit bir değişken kullanmış olduk.
 Şimdi de biraz şablon etiketlerine bakalım. Bunun için önce, şablon
 içeriğine makalelerimizin bir listesini gönderelim.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">Context</span><span class="p">,</span> <span class="n">loader</span>
-<span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">makale</span>
-<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
-
-<span class="k">def</span> <span class="nf">anasayfaView</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">makaleler</span> <span class="o">=</span> <span class="n">makale</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-    <span class="n">sablon</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s1">'blog_index.html'</span><span class="p">)</span>
-    <span class="n">icerik</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span>
-                               <span class="s1">'baslik'</span><span class="p">:</span> <span class="s1">'Cok guzel blog, cok da guzel iyi blog!'</span><span class="p">,</span>
-                               <span class="s1">'makaleler'</span> <span class="p">:</span> <span class="n">makaleler</span>
-    <span class="p">})</span>
-    <span class="n">yanit</span> <span class="o">=</span> <span class="n">sablon</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">icerik</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">yanit</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">Context</span><span class="p">,</span> <span class="n">loader</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">makale</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">anasayfaView</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="n">makaleler</span> <span class="o">=</span> <span class="n">makale</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="n">sablon</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s1">'blog_index.html'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">icerik</span> <span class="o">=</span> <span class="n">Context</span><span class="p">({</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>                               <span class="s1">'baslik'</span><span class="p">:</span> <span class="s1">'Cok guzel blog, cok da guzel iyi blog!'</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>                               <span class="s1">'makaleler'</span> <span class="p">:</span> <span class="n">makaleler</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="p">})</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="n">yanit</span> <span class="o">=</span> <span class="n">sablon</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">icerik</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">yanit</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada, tüm makalelerimizi şablonumuza içerik olarak gönderdik. Şimdi
 anasayfa şablonumuzu makalelerimizi gösterecek şekilde düzenleyelim.</p>
-<pre class="code literal-block"><span></span>{% for makale in makaleler %}
-<span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span> {{ makale.baslik }}<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>{{ makale.makale }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
-{% endfor %}
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code>{% for makale in makaleler %}
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span> {{ makale.baslik }}<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>{{ makale.makale }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>{% endfor %}
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada ilk şablon etiketimizle tanışmış olduk. Bu etiket bize
 python'daki for döngüsüne benzer bir döngü oluşturup, döngünün her
@@ -174,16 +328,48 @@ belirtiyoruz.</p>
 <p>Django şablonlarında sıklıkla kullanmak isteyeceğiniz bir başka etiket
 ise, bize python'daki <code>if</code> yapısına benzer bir yapı kurma imkanı
 sağlıyor. Bir örnekle görelim:</p>
-<pre class="code literal-block"><span></span>{% if makaleler %}
-  {% for makale in makaleler %}
-  <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span> {{ makale.baslik }}<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>{{ makale.makale }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
-  {% endfor %}
-{% else %}
-  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Malesef makale yok!<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
-{% endif %}
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code>{% if makaleler %}
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>  {% for makale in makaleler %}
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>  <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span> {{ makale.baslik }}<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>{{ makale.makale }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>  {% endfor %}
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>{% else %}
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Malesef makale yok!<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code>{% endif %}
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada, if etiketi sayesinde, makaleler değişkenini bir mantıksal
 değerlendirmeye aldık. Eğer buradaki mantıksal değerlendirme doğru
@@ -196,29 +382,85 @@ olarak sonuçlanırsa, şablon'un derlenmesi, eşleşen <code>else</code> etiket
 <p><code>block</code> ve <code>extends</code> etiketleri ise, bir şablonda, başka bir şablonun
 sadece belli kısımlarını değiştirerek kullanma imkanı veriyor. Örneğin,
 <code>blog_anasayfa.html</code> şablonumuzu şu şekilde düzenleyelim:</p>
-<pre class="code literal-block"><span></span><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
-    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>{% block baslik %}En güzel Blog! {% endblock %}<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
-  <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
-{% if makaleler %}
-  {% for makale in makaleler %}
-  <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span> {{ makale.baslik }}<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>{{ makale.makale }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
-  {% endfor %}
-{% else %}
-  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Malesef makale yok!<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
-{% endif %}
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>  <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>{% block baslik %}En güzel Blog! {% endblock %}<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>  <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>{% if makaleler %}
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>  {% for makale in makaleler %}
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>  <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span> {{ makale.baslik }}<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>{{ makale.makale }}<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>  {% endfor %}
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>{% else %}
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Malesef makale yok!<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>{% endif %}
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada, bu şablonu temel alarak oluşturulan diğer şablonların üstüne
 yazabilmesi için, <em>baslik</em> isminde bir blok tanımladık. Şimdi, yeni bir
 şablon dosyası oluşturup içine şunları girersek, anasayfa ile tamamen
 aynı, ancak başlığı farklı bir şablon elde ederiz.</p>
-<pre class="code literal-block"><span></span>{% extends "blog_anasayfa.html" %}
-{% block baslik %}Çok kötü bir blog bu!{% endblock %}
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code>{% extends "blog_anasayfa.html" %}
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>{% block baslik %}Çok kötü bir blog bu!{% endblock %}
+</code></td>
+</tr>
+</table></div>
 
 <p>Eğer şimdi bir önceki şablon yerine bunu kullanırsanız, başlık kısmının
 değiştiğini göreceksiniz. Bir şablonu temel alarak yeni şablon
@@ -233,15 +475,43 @@ ayrı bahsedeceğim.</p>
 <p>Bu yazıyı bitirmeden önce, Django'daki bir kısayoldan bahsetmek
 istiyorum. Bu kısayol sayesinde, tek bir satırda, şablonlarınızı işleyip
 tarayıcıya gönderebilirsiniz.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render_to_response</span>
-
-<span class="k">def</span> <span class="nf">anasayfaView</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">veriler</span> <span class="o">=</span> <span class="p">{</span>
-                  <span class="s1">'baslik'</span> <span class="p">:</span> <span class="s1">'Benim Blog!'</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s2">"blog_anasayfa.html"</span><span class="p">,</span><span class="n">veriler</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render_to_response</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">anasayfaView</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="n">veriler</span> <span class="o">=</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>                  <span class="s1">'baslik'</span> <span class="p">:</span> <span class="s1">'Benim Blog!'</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="template.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s2">"blog_anasayfa.html"</span><span class="p">,</span><span class="n">veriler</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu kısayol, sizin için şablonunuzu bulup, verdiğiniz verilere göre
 işeyip size bir HttpResponse nesnesi döndürüyor. Şimdiye kadar

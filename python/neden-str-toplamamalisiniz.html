@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Döngü içerisinde str objelerini toplamak çok uzun sürüyor. En hızlı şekilde string birleştirmek için map ve join kullanın.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/neden-str-toplamamalisiniz.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/neden-str-toplamamalisiniz.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="debugging-decorator.html" title="Debugging Decorator" type="text/html">
 <link rel="next" href="../algoritma/pixel-siralama-videolari.html" title="Pixel Sıralama Videoları" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Neden str toplamamalısınız">
-<meta property="og:url" content="http://ysar.net/python/neden-str-toplamamalisiniz.html">
-<meta property="og:description" content="Döngü içerisinde str objelerini toplamak çok uzun sürüyor. En hızlı şekilde string birleştirmek için map ve join kullanın.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2013-10-27T15:27:00+02:00">
 </head>
 <body>
 
@@ -49,11 +43,23 @@ yöntemlerini denemek geldi. Daha önce bir yerde gördüğümü hatırladığı
 int'leri karaktere dönüştürüp, bir str içinde birleştirmeyi deniyorum. Bu yöntem bu kadar hızlı,
 şu yöntem bu kadar yavaş derken, acaba str objelerini + ile toplamak
 ne kadar kötü olabilir ki diye merak ettim. 1 milyon karakter ile şunu denedim: <!-- TEASER_END --></p>
-<pre class="code literal-block"><span></span><span class="n">string</span> <span class="o">=</span> <span class="s2">""</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bytelist</span><span class="p">:</span>
-    <span class="n">string</span> <span class="o">+=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">string</span> <span class="o">=</span> <span class="s2">""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bytelist</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="n">string</span> <span class="o">+=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bekledim, bekledim, bekledim... Bir türlü bitmek bilmedi. Ben de daha küçük liste üzerinde
 deneyeyim dedim. Önce 10 bin, sonra 20 bin derken bir döngü içerisinde 420 bin uzunluklu
@@ -69,34 +75,138 @@ bir ilişki var. Kabataslak bir hesap yaptım, eğer işlemin bitmesini beklesey
 beklemem gerekecekmiş. Aynı hesapla, eğer 10 milyon karakterle işlem yapsam, 57 gün beklemem
 gerekecekti. İşte bu yüzden, özellikle döngü içerisinde str toplamak çok hoş sonuçlar doğurmuyor.</p>
 <p>Bunlar da 10 milyon karakterle denediğim diğer algoritmalar:</p>
-<pre class="code literal-block"><span></span><span class="c1"># for loop 1</span>
-<span class="n">chars</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bytelist</span><span class="p">:</span>
-    <span class="n">chars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-<span class="n">string</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">looper</span><span class="p">():</span>
-    <span class="n">chars</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">_chr</span> <span class="o">=</span> <span class="nb">chr</span>
-    <span class="n">_append</span> <span class="o">=</span> <span class="n">chars</span><span class="o">.</span><span class="n">append</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bytelist</span><span class="p">:</span>
-        <span class="n">_append</span><span class="p">(</span><span class="n">_chr</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-    <span class="n">string</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span>
-
-<span class="c1"># for loop 2</span>
-<span class="n">looper</span><span class="p">()</span>
-
-<span class="c1"># map</span>
-<span class="n">string</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">chr</span><span class="p">,</span> <span class="n">bytelist</span><span class="p">))</span>
-
-<span class="k">def</span> <span class="nf">looper2</span><span class="p">():</span>
-    <span class="n">_chr</span> <span class="o">=</span> <span class="nb">chr</span>
-    <span class="n">string</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">chr</span><span class="p">,</span> <span class="n">bytelist</span><span class="p">))</span>
-
-<span class="c1"># local map</span>
-<span class="n">looper2</span><span class="p">()</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="c1"># for loop 1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="n">chars</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bytelist</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">chars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="n">string</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">looper</span><span class="p">():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">chars</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="n">_chr</span> <span class="o">=</span> <span class="nb">chr</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="n">_append</span> <span class="o">=</span> <span class="n">chars</span><span class="o">.</span><span class="n">append</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bytelist</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="n">_append</span><span class="p">(</span><span class="n">_chr</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="n">string</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="c1"># for loop 2</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="n">looper</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="c1"># map</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code><span class="n">string</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">chr</span><span class="p">,</span> <span class="n">bytelist</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">looper2</span><span class="p">():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>    <span class="n">_chr</span> <span class="o">=</span> <span class="nb">chr</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>    <span class="n">string</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">chr</span><span class="p">,</span> <span class="n">bytelist</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code><span class="c1"># local map</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code><span class="n">looper2</span><span class="p">()</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Sonuçlar:</p>
 <pre>
@@ -107,9 +217,11 @@ map local took 2.24699997902 seconds
 </pre>
 
 <p>Evet, şampiyonumuz:</p>
-<pre class="code literal-block"><span></span><span class="n">string</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">chr</span><span class="p">,</span> <span class="n">bytelist</span><span class="p">))</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="neden-str-toplamamalisiniz.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">string</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">chr</span><span class="p">,</span> <span class="n">bytelist</span><span class="p">))</span>
+</code></td>
+</tr></table></div>
 
 <p><a href="https://gist.github.com/yasar11732/7181985">Bu ölçümleri yapmak için kullandığım dosyaya</a> gist üzerinden erişebilirsiniz.</p>
 </div>

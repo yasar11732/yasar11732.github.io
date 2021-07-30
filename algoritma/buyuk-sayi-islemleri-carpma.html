@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
@@ -10,20 +10,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/algoritma/buyuk-sayi-islemleri-carpma.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/algoritma/buyuk-sayi-islemleri-carpma.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="buyuk-sayi-islemleri-toplama-cikarma.html" title="Büyük Sayı Algoritmaları - Toplama / Çıkarma" type="text/html">
 <link rel="next" href="rastgele-sayi-uretici.html" title="Rastgele Sayı Üretici" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Büyük Sayı Algoritmaları - Çarpma">
-<meta property="og:url" content="http://ysar.net/algoritma/buyuk-sayi-islemleri-carpma.html">
-<meta property="og:description" content="Bir önceki yazıda, n-haneli doğal sayılar üzerinde toplama
-çıkarma algoritmalarından bahsetmiştik. Bu yazıda m-haneli doğal sayılar ile n-haneli doğal sayılar arasında
-çarpma işlemi yapan bir algoritm">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2020-02-26T22:44:00+03:00">
-<meta property="article:tag" content="mathjax">
 </head>
 <body>
 
@@ -50,30 +41,118 @@
 çıkarma algoritmalarından bahsetmiştik. Bu yazıda m-haneli doğal sayılar ile n-haneli doğal sayılar arasında
 çarpma işlemi yapan bir algoritmayı inceleyeceğiz. Bu algoritmanın ön çalışması olarak, bir haneli iki
 sayı çarparak, iki haneli sonuç döndüren bir fonksiyon yazacağız. </p>
-<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">bn_mul_n11</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">rl</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="n">op1</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="n">op2</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">bn_digit_t</span> <span class="n">op1_h</span> <span class="o">=</span> <span class="p">(</span><span class="n">op1</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">/</span> <span class="mi">2</span><span class="p">));</span>
-    <span class="n">bn_digit_t</span> <span class="n">op1_l</span> <span class="o">=</span> <span class="p">(</span><span class="n">op1</span> <span class="o">&amp;</span> <span class="n">BN_DIGIT_LOWMASK</span><span class="p">);</span>
-    <span class="n">bn_digit_t</span> <span class="n">op2_h</span> <span class="o">=</span> <span class="p">(</span><span class="n">op2</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">/</span> <span class="mi">2</span><span class="p">));</span>
-    <span class="n">bn_digit_t</span> <span class="n">op2_l</span> <span class="o">=</span> <span class="p">(</span><span class="n">op2</span> <span class="o">&amp;</span> <span class="n">BN_DIGIT_LOWMASK</span><span class="p">);</span>
-
-    <span class="n">bn_digit_t</span> <span class="n">p1</span> <span class="o">=</span> <span class="n">op1_l</span> <span class="o">*</span> <span class="n">op2_l</span><span class="p">;</span>
-    <span class="n">bn_digit_t</span> <span class="n">p2</span> <span class="o">=</span> <span class="n">op1_l</span> <span class="o">*</span> <span class="n">op2_h</span><span class="p">;</span>
-    <span class="n">bn_digit_t</span> <span class="n">p3</span> <span class="o">=</span> <span class="n">op1_h</span> <span class="o">*</span> <span class="n">op2_l</span><span class="p">;</span>
-    <span class="n">bn_digit_t</span> <span class="n">p4</span> <span class="o">=</span> <span class="n">op1_h</span> <span class="o">*</span> <span class="n">op2_h</span><span class="p">;</span>
-
-    <span class="n">p2</span> <span class="o">+=</span> <span class="p">(</span><span class="n">p1</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">/</span> <span class="mi">2</span><span class="p">));</span>
-    <span class="n">p2</span> <span class="o">+=</span> <span class="n">p3</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">p2</span> <span class="o">&lt;</span> <span class="n">p3</span><span class="p">)</span> <span class="c1">// carry</span>
-    <span class="p">{</span>
-        <span class="n">p4</span> <span class="o">+=</span> <span class="n">BN_DIGIT_HI</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="n">rl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">p2</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="n">p1</span> <span class="o">&amp;</span> <span class="n">BN_DIGIT_LOWMASK</span><span class="p">);</span>
-    <span class="n">rl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">p4</span> <span class="o">+</span> <span class="p">(</span><span class="n">p2</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">/</span> <span class="mi">2</span><span class="p">));</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">bn_mul_n11</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">rl</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="n">op1</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="n">op2</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">bn_digit_t</span> <span class="n">op1_h</span> <span class="o">=</span> <span class="p">(</span><span class="n">op1</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">/</span> <span class="mi">2</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">bn_digit_t</span> <span class="n">op1_l</span> <span class="o">=</span> <span class="p">(</span><span class="n">op1</span> <span class="o">&amp;</span> <span class="n">BN_DIGIT_LOWMASK</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="n">bn_digit_t</span> <span class="n">op2_h</span> <span class="o">=</span> <span class="p">(</span><span class="n">op2</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">/</span> <span class="mi">2</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="n">bn_digit_t</span> <span class="n">op2_l</span> <span class="o">=</span> <span class="p">(</span><span class="n">op2</span> <span class="o">&amp;</span> <span class="n">BN_DIGIT_LOWMASK</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">bn_digit_t</span> <span class="n">p1</span> <span class="o">=</span> <span class="n">op1_l</span> <span class="o">*</span> <span class="n">op2_l</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="n">bn_digit_t</span> <span class="n">p2</span> <span class="o">=</span> <span class="n">op1_l</span> <span class="o">*</span> <span class="n">op2_h</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="n">bn_digit_t</span> <span class="n">p3</span> <span class="o">=</span> <span class="n">op1_h</span> <span class="o">*</span> <span class="n">op2_l</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="n">bn_digit_t</span> <span class="n">p4</span> <span class="o">=</span> <span class="n">op1_h</span> <span class="o">*</span> <span class="n">op2_h</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="n">p2</span> <span class="o">+=</span> <span class="p">(</span><span class="n">p1</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">/</span> <span class="mi">2</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="n">p2</span> <span class="o">+=</span> <span class="n">p3</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">p2</span> <span class="o">&lt;</span> <span class="n">p3</span><span class="p">)</span> <span class="c1">// carry</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>        <span class="n">p4</span> <span class="o">+=</span> <span class="n">BN_DIGIT_HI</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>    <span class="n">rl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">p2</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="n">p1</span> <span class="o">&amp;</span> <span class="n">BN_DIGIT_LOWMASK</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>    <span class="n">rl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">p4</span> <span class="o">+</span> <span class="p">(</span><span class="n">p2</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">/</span> <span class="mi">2</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>32 bit iki sayının çarpımı, 64 bite kadar sonuç verebileceği için, 32 bitlik
 çarpanları, 16 bitlik parçalara bölüp, parçaları ikişerli olarak çarpıp,
@@ -111,48 +190,188 @@ $$
 işlemlerinde kullanılabilir. Ancak, birçok modern 32 bit işlemci, 64 bit sonuç verebiliyor.
 64 bit işlemcilerde zaten böyle bir sorunumuz olmadığı için, aşağıdaki fonksiyon çoğunlukla
 yukarıdakinden daha iyi bir performans verecektir.</p>
-<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">bn_mul_n11</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">rl</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="n">op1</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="n">op2</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="o">*</span><span class="p">((</span><span class="n">bn_long_digit_t</span> <span class="o">*</span><span class="p">)</span><span class="n">rl</span><span class="p">)</span> <span class="o">=</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)</span><span class="n">op1</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)</span><span class="n">op2</span><span class="p">);</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">bn_mul_n11</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">rl</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="n">op1</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="n">op2</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="o">*</span><span class="p">((</span><span class="n">bn_long_digit_t</span> <span class="o">*</span><span class="p">)</span><span class="n">rl</span><span class="p">)</span> <span class="o">=</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)</span><span class="n">op1</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)</span><span class="n">op2</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>1-hane x 1-hane çarpımı yaptıktan sonra, n-hane x 1-hane çarpımına geçebiliriz. Bir önceki yazıda egzersiz
 olarak bıraktığım, n-haneli ve 1 haneli toplamı fonksiyonunu da burada tanımlıyorum.</p>
-<pre class="code literal-block"><span></span><span class="n">bn_digit_t</span> <span class="nf">bn_add_n1</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">result</span><span class="p">,</span> <span class="k">const</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op1</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="n">op2</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">n</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">bn_size_t</span> <span class="n">i</span><span class="p">;</span>
-    <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">op1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">op2</span><span class="p">;</span>
-    <span class="n">bn_digit_t</span> <span class="n">carry</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">op2</span><span class="p">;</span>
-
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">op1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">carry</span><span class="p">;</span>
-        <span class="n">carry</span> <span class="o">=</span> <span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">carry</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="k">return</span> <span class="n">carry</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="n">bn_digit_t</span> <span class="nf">bn_mul_n1</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">result</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op1</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="n">op2</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">n</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">bn_digit_t</span> <span class="n">temp</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
-    <span class="n">bn_digit_t</span> <span class="n">carry</span><span class="p">;</span>
-    <span class="n">bn_size_t</span> <span class="n">i</span><span class="p">;</span>
-
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">bn_mul_n11</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">op1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">op2</span><span class="p">);</span>
-        <span class="n">bn_add_n1</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">carry</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span> <span class="c1">// bu carry döndüremez, döndürmemeli</span>
-        <span class="n">carry</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
-        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-    <span class="p">}</span>
-
-    <span class="k">return</span> <span class="n">carry</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="n">bn_digit_t</span> <span class="nf">bn_add_n1</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">result</span><span class="p">,</span> <span class="k">const</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op1</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="n">op2</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">n</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">bn_size_t</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">op1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">op2</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="n">bn_digit_t</span> <span class="n">carry</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">op2</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">op1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">carry</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="n">carry</span> <span class="o">=</span> <span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">carry</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">carry</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="n">bn_digit_t</span> <span class="nf">bn_mul_n1</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">result</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op1</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="n">op2</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">n</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>    <span class="n">bn_digit_t</span> <span class="n">temp</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>    <span class="n">bn_digit_t</span> <span class="n">carry</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>    <span class="n">bn_size_t</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>        <span class="n">bn_mul_n11</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">op1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">op2</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>        <span class="n">bn_add_n1</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">carry</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span> <span class="c1">// bu carry döndüremez, döndürmemeli</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>        <span class="n">carry</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">carry</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada <code>for</code> döngüsünün her bir adımında, <code>op1</code>'in bir hanesi ile, <code>op2</code>'yi
 çarpıyoruz. Bu çarpım bize 2 haneli bir sonuç veriyor. Bu sonuca, bir önceki
@@ -183,42 +402,158 @@ x     5
 <p>Son algoritmaya geçmeden önce, yukarıdaki fonksiyonun farklı bir versiyonunu
 yazalım. Bu fonksiyonun öncekinden farkı, çarpım sonucunu, <code>result</code> array'inde
 önceden bulunan değerin üstüne ekliyor olması. </p>
-<pre class="code literal-block"><span></span><span class="c1">// result += op1 * op2</span>
-<span class="n">bn_digit_t</span> <span class="nf">bn_muladd_n1</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">result</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op1</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="n">op2</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">n</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">bn_digit_t</span> <span class="n">temp</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
-    <span class="n">bn_digit_t</span> <span class="n">carry</span><span class="p">;</span>
-    <span class="n">bn_size_t</span> <span class="n">i</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">bn_mul_n11</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">op1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">op2</span><span class="p">);</span>
-        <span class="n">bn_add_n1</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">carry</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
-        <span class="n">carry</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
-        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">temp</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-        <span class="n">carry</span> <span class="o">+=</span> <span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">temp</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">carry</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="c1">// result += op1 * op2</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="n">bn_digit_t</span> <span class="nf">bn_muladd_n1</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">result</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op1</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="n">op2</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">n</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">bn_digit_t</span> <span class="n">temp</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="n">bn_digit_t</span> <span class="n">carry</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="n">bn_size_t</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="n">bn_mul_n11</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">op1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">op2</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="n">bn_add_n1</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">carry</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="n">carry</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">temp</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>        <span class="n">carry</span> <span class="o">+=</span> <span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">temp</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">carry</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Şu ana kadar yazdığımız fonksiyonları kullanarak, m-haneli ve n-haneli sayilari
 çarpan fonksiyona geçebiliriz.</p>
-<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">bn_mul_n</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">result</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op1</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">m</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op2</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">n</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">bn_size_t</span> <span class="n">i</span><span class="p">;</span>
-    <span class="n">result</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="n">bn_mul_n1</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">op1</span><span class="p">,</span> <span class="n">op2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">m</span><span class="p">);</span>
-
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">result</span><span class="o">++</span><span class="p">;</span>
-        <span class="n">op2</span><span class="o">++</span><span class="p">;</span>
-
-        <span class="n">result</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="n">bn_muladd_n1</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">op1</span><span class="p">,</span> <span class="n">op2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">m</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">bn_mul_n</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">result</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op1</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">m</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op2</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">n</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">bn_size_t</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">result</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="n">bn_mul_n1</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">op1</span><span class="p">,</span> <span class="n">op2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">m</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="n">result</span><span class="o">++</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="n">op2</span><span class="o">++</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="n">result</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="n">bn_muladd_n1</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">op1</span><span class="p">,</span> <span class="n">op2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">m</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu fonksiyonda, önce <code>op2</code>'nin son hanesi ile, <code>op1</code>'i çarpıp, sonucu <code>result</code> array'ine yazıyoruz.
 <code>for</code> döngüsünün her bir adımında, <code>op2</code> bir sonraki hanesini <code>op1</code> ile çarparak, <code>result</code>
@@ -236,16 +571,48 @@ x    17
 </pre>
 
 <p>Bir önceki yazıda, egzersiz olarak bıraktığım farklı büyüklükteki doğal sayıları toplama fonksiyonu da şu şekilde yazılabilir</p>
-<pre class="code literal-block"><span></span><span class="n">bn_digit_t</span> <span class="nf">bn_add_nn</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">result</span><span class="p">,</span> <span class="k">const</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op1</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">n1</span><span class="p">,</span> <span class="k">const</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op2</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">n2</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">bn_digit_t</span> <span class="n">carry</span> <span class="o">=</span> <span class="n">bn_add_n</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">op1</span><span class="p">,</span> <span class="n">op2</span><span class="p">,</span> <span class="n">n2</span><span class="p">);</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">n1</span> <span class="o">&gt;</span> <span class="n">n2</span><span class="p">)</span>
-        <span class="n">carry</span> <span class="o">=</span> <span class="n">bn_add_n1</span><span class="p">(</span><span class="n">result</span> <span class="o">+</span> <span class="n">n2</span><span class="p">,</span> <span class="n">op1</span> <span class="o">+</span> <span class="n">n2</span><span class="p">,</span> <span class="n">carry</span><span class="p">,</span> <span class="n">n1</span> <span class="o">-</span> <span class="n">n2</span><span class="p">);</span>
-
-    <span class="k">return</span> <span class="n">carry</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">bn_digit_t</span> <span class="nf">bn_add_nn</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">result</span><span class="p">,</span> <span class="k">const</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op1</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">n1</span><span class="p">,</span> <span class="k">const</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">op2</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">n2</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="n">bn_digit_t</span> <span class="n">carry</span> <span class="o">=</span> <span class="n">bn_add_n</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">op1</span><span class="p">,</span> <span class="n">op2</span><span class="p">,</span> <span class="n">n2</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">n1</span> <span class="o">&gt;</span> <span class="n">n2</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>        <span class="n">carry</span> <span class="o">=</span> <span class="n">bn_add_n1</span><span class="p">(</span><span class="n">result</span> <span class="o">+</span> <span class="n">n2</span><span class="p">,</span> <span class="n">op1</span> <span class="o">+</span> <span class="n">n2</span><span class="p">,</span> <span class="n">carry</span><span class="p">,</span> <span class="n">n1</span> <span class="o">-</span> <span class="n">n2</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">carry</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-carpma.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p><strong>Not:</strong> Yukarıdaki fonksiyonun orjinal halinde, <code>bn_add_n1</code> fonksiyonunun argümanları yanlış sıradaydı. 13.3.2020 tarihinde düzeltildi.</p>
 <h3>Ek Kaynaklar</h3>
@@ -264,7 +631,7 @@ x    17
         </div>
 
     </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
-	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script></article></main><script>
   if(document.location.hostname == "ysar.net")

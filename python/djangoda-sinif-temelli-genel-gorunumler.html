@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Django'da view'ler bir fonksiyon olabileceği gibi, bir sınıf da olabilir. Sınıf olan view'lerin nasıl kullanıldığı ve bunları faydaları hakkında bir yazı.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/djangoda-sinif-temelli-genel-gorunumler.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/djangoda-sinif-temelli-genel-gorunumler.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="google-api-ile-url-kisaltma.html" title="Python ve Google Api ile Url Kısaltma" type="text/html">
 <link rel="next" href="asal-yolculuk.html" title="Python'da Asal Sayı Bulma Algoritmaları ve Bunların Evrimi" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Django'da Sınıf Temelli Genel Görünümler">
-<meta property="og:url" content="http://ysar.net/python/djangoda-sinif-temelli-genel-gorunumler.html">
-<meta property="og:description" content="Django'da view'ler bir fonksiyon olabileceği gibi, bir sınıf da olabilir. Sınıf olan view'lerin nasıl kullanıldığı ve bunları faydaları hakkında bir yazı.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2011-09-04T21:59:00+03:00">
 </head>
 <body>
 
@@ -53,13 +47,33 @@ biraz göz attım, ve etkin kullanıldığında, sınıf temelli görünümlerin
 örnekler ve kısa açıklamalar yazmak istedim, kendimi bu konuda
 geliştirirsem, ileride daha derin olarak inceleyebilirim bunları. <!-- TEASER_END --></p>
 <h4>Şablonlar</h4>
-<pre class="code literal-block"><span></span><span class="c1"># uygulamam/views.py</span>
-<span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">TemplateView</span>
-
-<span class="k">class</span> <span class="nc">Hakkimda</span><span class="p">(</span><span class="n">TemplateView</span><span class="p">):</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"hakkimda.html"</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="c1"># uygulamam/views.py</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">TemplateView</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Hakkimda</span><span class="p">(</span><span class="n">TemplateView</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"hakkimda.html"</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Django'nun genel görünümlerinden TemplateView, bir şablonu olduğu gibi
 tarayıca göndermeye yarıyor. Burada, Hakkimda isimli sınıf temelli bir
@@ -69,15 +83,43 @@ hakkimda.html şablonunu gönderen bir görünümü hızlıca yazdık. Şüphesi
 ki bu, baştan bir görünüm yazmaktan daha hızlıdır. Bu sınıfı, bir url
 ile eşleştirmek için, urls.py içerisinde gerekli ayarları yapmamız
 gerek.</p>
-<pre class="code literal-block"><span></span><span class="c1"># urls.py</span>
-<span class="kn">from</span> <span class="nn">django.conf.urls.defaults</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">uygulamam.views</span> <span class="kn">import</span> <span class="n">Hakkimda</span>
-
-<span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span>
-    <span class="p">(</span><span class="sa">r</span><span class="s1">'^hakkimda/'</span><span class="p">,</span> <span class="n">Hakkimda</span><span class="o">.</span><span class="n">as_view</span><span class="p">()),</span>
-<span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="c1"># urls.py</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.conf.urls.defaults</span> <span class="kn">import</span> <span class="o">*</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">uygulamam.views</span> <span class="kn">import</span> <span class="n">Hakkimda</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="p">(</span><span class="sa">r</span><span class="s1">'^hakkimda/'</span><span class="p">,</span> <span class="n">Hakkimda</span><span class="o">.</span><span class="n">as_view</span><span class="p">()),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Hakkimda, bir sınıftır, url ile eşleştirdiğimiz ise, bu sınıfın as_view
 metodunun döndürdüğü görünüm fonksiyonu. Anlaşılan, sınıf temelli
@@ -85,47 +127,167 @@ görünümlerin kendileri aslında görünüm değiller. Gerekli görünüm
 fonksiyonlarını, sınıfın as_view metodundan alıyoruz. Ayrıca, buradaki
 gibi, sadece tek bir özelliğin üstüne yazılması gereken durumlarda, bunu
 yeni bir sınıf türetmeden, hemen urls.py içerisinden de yapabiliriz.</p>
-<pre class="code literal-block"><span></span><span class="c1"># urls.py</span>
-<span class="kn">from</span> <span class="nn">django.conf.urls.defaults</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">TemplateView</span>
-
-<span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span>
-    <span class="p">(</span><span class="sa">r</span><span class="s1">'^hakkimda/'</span><span class="p">,</span> <span class="n">TemplateView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">template_name</span><span class="o">=</span><span class="s2">"hakkimda.html"</span><span class="p">)),</span>
-<span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="c1"># urls.py</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.conf.urls.defaults</span> <span class="kn">import</span> <span class="o">*</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">TemplateView</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="p">(</span><span class="sa">r</span><span class="s1">'^hakkimda/'</span><span class="p">,</span> <span class="n">TemplateView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">template_name</span><span class="o">=</span><span class="s2">"hakkimda.html"</span><span class="p">)),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <h4>Objelerin Genel Görünümleri</h4>
 <p>Bu kısımda yapacağım örneklerde, aşağıdaki iki modeli kullanacağım.</p>
-<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">Tag</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">slug</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SlugField</span><span class="p">(</span><span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">created</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
-
-<span class="k">class</span> <span class="nc">Post</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-    <span class="n">slug</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SlugField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">abstract</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
-    <span class="n">post</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
-    <span class="n">pub_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="s2">"Date Published"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
-    <span class="n">last_mod</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">tags</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Tag</span><span class="p">,</span><span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">yayinlandi</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Tag</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="n">text</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">slug</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SlugField</span><span class="p">(</span><span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">created</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Post</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="n">title</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">slug</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SlugField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="n">abstract</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="n">post</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="n">pub_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="s2">"Date Published"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="n">last_mod</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="n">tags</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Tag</span><span class="p">,</span><span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="n">yayinlandi</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Tüm Tag'ların listesini almak için:</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">django.conf.urls.defaults</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">ListView</span>
-<span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">Tag</span>
-
-<span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span>
-    <span class="p">(</span><span class="sa">r</span><span class="s1">'^tags/$'</span><span class="p">,</span> <span class="n">ListView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span>
-        <span class="n">model</span><span class="o">=</span><span class="n">Tag</span><span class="p">,</span>
-    <span class="p">)),</span>
-<span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.conf.urls.defaults</span> <span class="kn">import</span> <span class="o">*</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">ListView</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">Tag</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="p">(</span><span class="sa">r</span><span class="s1">'^tags/$'</span><span class="p">,</span> <span class="n">ListView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>        <span class="n">model</span><span class="o">=</span><span class="n">Tag</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code>    <span class="p">)),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-9"><code data-line-number="9"></code></a></td>
+<td class="code"><code><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Şimdi de bir şablon oluşturmamız gerekiyor. Url yapılandırmasında
 template_name ile bir şablon adı belirtmediğimiz için, django
@@ -139,13 +301,33 @@ bulunabilir. Ya da, "django.template.loaders.filesystem.Loader" varsa, o
 zaman TEMPLATE_DIRS ile belirttiğiniz dosya yollarından herhangi
 birisinde durabilir. Bu kısmı daha fazla uzatmadan, kısaca bu şablonunun
 nasıl olacağına değineyim.</p>
-<pre class="code literal-block"><span></span>... Şablonun yukarıları burada ...
-{% for tag in object_list %}
-     {{ tag.text }}
-{% endfor %}
-... Şablonun devamı burada...
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code>... Şablonun yukarıları burada ...
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>{% for tag in object_list %}
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>     {{ tag.text }}
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>{% endfor %}
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>... Şablonun devamı burada...
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu şablondaki object_list içeriği (ing: Context Variable) ListView
 objesi tarafından gönderildi. Bu değişkenin adını, daha önce
@@ -153,22 +335,78 @@ TemplateView'da şablon adının üstüne yazdığımız gibi
 değiştirebilirsiniz. Bunun için, context_object_name değişkenine,
 şablondan ulaşmak istediğiniz değişken adını verebilirsiniz.</p>
 <h5>Şablona Ek İçerik Gönderme</h5>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">DetailView</span>
-<span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">Post</span>
-
-<span class="k">class</span> <span class="nc">PostDetailView</span><span class="p">(</span><span class="n">DetailView</span><span class="p">):</span>
-
-    <span class="n">context_object_name</span> <span class="o">=</span> <span class="s2">"post"</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">Post</span>
-
-    <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="c1"># Şablon içeriğini ebeveyn metottan alacağız.</span>
-        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">PostDetailView</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="c1"># Bütün tagları da şablon'a gönderelim!</span>
-        <span class="n">context</span><span class="p">[</span><span class="s1">'taglar'</span><span class="p">]</span> <span class="o">=</span> <span class="n">Tag</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">context</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">DetailView</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">Post</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">PostDetailView</span><span class="p">(</span><span class="n">DetailView</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="n">context_object_name</span> <span class="o">=</span> <span class="s2">"post"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="n">model</span> <span class="o">=</span> <span class="n">Post</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="c1"># Şablon içeriğini ebeveyn metottan alacağız.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">PostDetailView</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="c1"># Bütün tagları da şablon'a gönderelim!</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>        <span class="n">context</span><span class="p">[</span><span class="s1">'taglar'</span><span class="p">]</span> <span class="o">=</span> <span class="n">Tag</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">context</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Şablona gönderilecek içerik, get_context_data metodundan döndürülüyor.
 Bu metodun üzerine yazarak, şablona istediğimiz içeriği
@@ -178,42 +416,154 @@ gönderebiliyoruz.</p>
 bu objelerin bir alt kümesiyle çalışmak isteyeceksiniz. Üstünde çalışmak
 istediğiniz objeleri, statik olarak queryset değişkeniyle veya dinamik
 olarak get_queryset metodunun üzerine yazarak belirleyebilirsiniz.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">ListView</span>
-<span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">Post</span>
-
-<span class="k">class</span> <span class="nc">PostListView</span><span class="p">(</span><span class="n">ListView</span><span class="p">):</span>
-
-    <span class="n">context_object_name</span> <span class="o">=</span> <span class="s2">"publisher"</span>
-    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">yayinlandi</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"-pub_date"</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">ListView</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">Post</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">PostListView</span><span class="p">(</span><span class="n">ListView</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="n">context_object_name</span> <span class="o">=</span> <span class="s2">"publisher"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">yayinlandi</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"-pub_date"</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Dinamik olarak QuerySet'i ayarlamak için, Url bilgisinden gelen
 değişkenleri kullanacağız. Bunlara, self.args, self.kwargs ve
 self.request üzerinden ulaşabiliyoruz.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">blog.views</span> <span class="kn">import</span> <span class="n">TagListView</span>
-
-<span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span>
-    <span class="p">(</span><span class="sa">r</span><span class="s1">'^tag/(?P\w+)/$'</span><span class="p">,</span> <span class="n">TagListView</span><span class="o">.</span><span class="n">as_view</span><span class="p">()),</span>
-<span class="p">)</span>
-
-<span class="p">:::</span><span class="n">python</span>
-<span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">ListView</span>
-<span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">Tag</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">get_object_or_404</span>
-
-<span class="k">class</span> <span class="nc">TagListView</span><span class="p">(</span><span class="n">ListView</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># self.tag diyerek, bunu sınıf örneğine ait bir değişken yapabiliriz.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Tag</span><span class="p">,</span><span class="n">slug</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">"slug"</span><span class="p">])</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">post_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">yayinlandi</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="c1"># queryset alınırken, self.tag oluşturuldu, şimdi istersek onu da şablon'a gönderebiliriz.</span>
-        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">TagListView</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">"tag"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span>
-        <span class="k">return</span> <span class="n">context</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">blog.views</span> <span class="kn">import</span> <span class="n">TagListView</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="p">(</span><span class="sa">r</span><span class="s1">'^tag/(?P\w+)/$'</span><span class="p">,</span> <span class="n">TagListView</span><span class="o">.</span><span class="n">as_view</span><span class="p">()),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="p">:::</span><span class="n">python</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">ListView</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">blog.models</span> <span class="kn">import</span> <span class="n">Tag</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">get_object_or_404</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">TagListView</span><span class="p">(</span><span class="n">ListView</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>        <span class="c1"># self.tag diyerek, bunu sınıf örneğine ait bir değişken yapabiliriz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Tag</span><span class="p">,</span><span class="n">slug</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">"slug"</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">post_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">yayinlandi</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>        <span class="c1"># queryset alınırken, self.tag oluşturuldu, şimdi istersek onu da şablon'a gönderebiliriz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">TagListView</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>        <span class="n">context</span><span class="p">[</span><span class="s2">"tag"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-sinif-temelli-genel-gorunumler.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">context</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Basit olarak, bu kadar bilgi konuya giriş yapmak için yeterli olacaktır
 diye düşünüyorum. Bunlara ek olarak, mixin'ler var. Bunlar, biraz daha

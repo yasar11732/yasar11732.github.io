@@ -6,43 +6,11 @@
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <sitemap>
-  <loc>http://ysar.net/algoritma/rss.xml</loc>
-  <lastmod>2020-03-16T21:14:00Z</lastmod>
+  <loc>https://yasar11732.github.io/rss.xml</loc>
+  <lastmod>2021-07-30T23:07:00Z</lastmod>
  </sitemap>
  <sitemap>
-  <loc>http://ysar.net/assembly/rss.xml</loc>
-  <lastmod>2018-09-18T19:31:00Z</lastmod>
- </sitemap>
- <sitemap>
-  <loc>http://ysar.net/categories/mathjax.xml</loc>
-  <lastmod>2020-03-13T15:59:00Z</lastmod>
- </sitemap>
- <sitemap>
-  <loc>http://ysar.net/diger/rss.xml</loc>
-  <lastmod>2019-07-02T20:46:00Z</lastmod>
- </sitemap>
- <sitemap>
-  <loc>http://ysar.net/euler/rss.xml</loc>
-  <lastmod>2018-09-09T22:20:00Z</lastmod>
- </sitemap>
- <sitemap>
-  <loc>http://ysar.net/python/rss.xml</loc>
-  <lastmod>2019-06-04T18:03:00Z</lastmod>
- </sitemap>
- <sitemap>
-  <loc>http://ysar.net/rss.xml</loc>
-  <lastmod>2020-03-18T23:38:00Z</lastmod>
- </sitemap>
- <sitemap>
-  <loc>http://ysar.net/sitemap.xml</loc>
-  <lastmod>2020-03-18T23:38:00Z</lastmod>
- </sitemap>
- <sitemap>
-  <loc>http://ysar.net/windows/rss.xml</loc>
-  <lastmod>2019-05-26T20:17:00Z</lastmod>
- </sitemap>
- <sitemap>
-  <loc>http://ysar.net/yazilim-dunyasi/rss.xml</loc>
-  <lastmod>2020-03-18T23:38:00Z</lastmod>
+  <loc>https://yasar11732.github.io/sitemap.xml</loc>
+  <lastmod>2021-07-30T23:07:00Z</lastmod>
  </sitemap>
 </sitemapindex>

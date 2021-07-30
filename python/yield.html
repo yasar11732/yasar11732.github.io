@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Python'da bir generator objesi oluşturmak için kullanılan yield sözcüğünün amacını ve kullanımını öğrenmek için bu örnekli anlatımı okuyun.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/yield.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/yield.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="../yazilim-dunyasi/sayilarla-archlinux-paketcileri.html" title="Sayılarla ArchLinux Paketçileri" type="text/html">
 <link rel="next" href="decorator.html" title="Python ve decorator... Nedir, ne işe yarar?" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Python yield deyimi nedir? Ne işe yarar?">
-<meta property="og:url" content="http://ysar.net/python/yield.html">
-<meta property="og:description" content="Python'da bir generator objesi oluşturmak için kullanılan yield sözcüğünün amacını ve kullanımını öğrenmek için bu örnekli anlatımı okuyun.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2012-05-09T06:19:00+03:00">
 </head>
 <body>
 
@@ -68,11 +62,23 @@ Bu objeler, <code>iter()</code> fonksiyonu ile çağrıldığında, birer <em>it
 döndürüyor, ve bu <em>iterator</em>'lar bir koleksiyondan sırasıyla eleman
 almak için kullanılıyor. <!-- TEASER_END --></p>
 <p>Şu kod paçasına bir bakalım:</p>
-<pre class="code literal-block"><span></span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
-<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
- <span class="k">print</span> <span class="n">k</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code> <span class="nb">print</span> <span class="n">k</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu örnekte, sıradan bir liste ve for döngüsü görüyoruz. Buradaki liste,
 for döngüsünde kullandığımız herşey gibi, bir <em>iterable</em>. Python'da for
@@ -83,16 +89,48 @@ sonra, bu <em>iterator</em> elemanlar tükendi sinyali verene kadar, k
 değişkenini bir sonraki elemana atayıp, döngünün gövdesini
 çalıştırılıyor. Yani, yukarıdaki for döngüsü ile aşağıdaki kod parçacığı
 tamamen aynı çalışıyor.</p>
-<pre class="code literal-block"><span></span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
-<span class="n">b</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">k</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
- <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
-       <span class="k">break</span>
-   <span class="k">print</span> <span class="n">k</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">b</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>        <span class="n">k</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code> <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>       <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code>   <span class="nb">print</span> <span class="n">k</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yukarıdaki örnekte, ikinci satırda listenin elemanlarını sırasıyla elde
 etmek için bir <em>iterator</em> oluşturup, bunu b değişkenine atadık.
@@ -111,24 +149,88 @@ döngüsünde kullanabilirsiniz, ancak, bir <em>generator</em>'u yalnız bir ker
 for döngüsünde kullanabilirsiniz. Bunların bir diğer önemli farkı ise,
 tüm elemanların hafızada tutulmaması. <em>Generator</em>lar, sırası gelen
 elemanı üretip döndürür, daha sonra da bu elemanı unuturlar. Örneğin;</p>
-<pre class="code literal-block"><span></span><span class="n">generator</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
-<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">generator</span><span class="p">:</span>
-   <span class="k">print</span> <span class="n">k</span>
-<span class="sd">"""</span>
-<span class="sd">Ekrana şunu basar:</span>
-<span class="sd">0</span>
-<span class="sd">1</span>
-<span class="sd">8</span>
-<span class="sd">27</span>
-<span class="sd">64</span>
-<span class="sd">"""</span>
-<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">generator</span><span class="p">:</span>
-   <span class="k">print</span> <span class="n">k</span>
-<span class="sd">"""</span>
-<span class="sd">Ekrana hiçbir şey basılmaz, çünkü generator'u bir kere kullandık ve bitti.</span>
-<span class="sd">"""</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="n">generator</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">generator</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>   <span class="nb">print</span> <span class="n">k</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="sd">Ekrana şunu basar:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="sd">0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="sd">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="sd">8</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="sd">27</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="sd">64</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">generator</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>   <span class="nb">print</span> <span class="n">k</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="sd">Ekrana hiçbir şey basılmaz, çünkü generator'u bir kere kullandık ve bitti.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yukarıdaki örnekte, ilk satırda bir <em>generator</em> oluşturup, bunu
 generator isimli bir değişkene atadık. Şimdi bunu, istediğimiz gibi for
@@ -139,24 +241,88 @@ hafızadan siliniyorlar. Genel olarak <em>generator</em>ların olayı bu kadar.<
 <p>Artık <em>yield</em> deyimini anlamak için, yeterli altyapıya sahibiz. <em>yield</em>
 deyimi, <em>return</em> deyimi gibi fonksiyonlarda kullanılır, ancak, fonksiyon
 bir generator döndürür. Şu örneğe bakalım;</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">creategeneratorSquare</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
-     <span class="k">yield</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
-
-<span class="n">generator</span> <span class="o">=</span> <span class="n">creategeneratorSquare</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
-<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">generator</span><span class="p">:</span>
-   <span class="k">print</span> <span class="n">k</span>
-
-<span class="sd">"""</span>
-<span class="sd">Ekrana şunu basar:    </span>
-<span class="sd">1</span>
-<span class="sd">4</span>
-<span class="sd">9</span>
-<span class="sd">16</span>
-<span class="sd">25</span>
-<span class="sd">"""</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">creategeneratorSquare</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>     <span class="k">yield</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="n">generator</span> <span class="o">=</span> <span class="n">creategeneratorSquare</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">generator</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>   <span class="nb">print</span> <span class="n">k</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="sd">Ekrana şunu basar:    </span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="sd">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="sd">4</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="sd">9</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="sd">16</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="sd">25</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yukarıdaki kod parçacığında, creategeneratorSquare isimli bir fonksiyon
 oluşturduk. Bu fonksiyonun, normal fonksiyonlardan farkı, bir generator
@@ -171,24 +337,88 @@ gördüğünde sıradaki elemanı döndürüyor. Böylece, bu kod bloğu
 tamamlanıncaya kadar, 6. satırdaki for döngüsü k'ya farklı değerler
 atayıp, bunları ekrana bastırıyor.</p>
 <p>Bir örneğe daha bakalım;</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">fibogenerator</span><span class="p">():</span>
-  <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span>
-   <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-     <span class="k">yield</span> <span class="n">b</span>
-     <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
-
-
-<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">fibogenerator</span><span class="p">():</span>
-   <span class="k">if</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">10000000</span><span class="p">:</span>
-     <span class="k">print</span> <span class="n">k</span>
-     <span class="k">break</span>
-
-<span class="sd">"""</span>
-<span class="sd">Ekrana şunu basar:  </span>
-<span class="sd">14930352</span>
-<span class="sd">"""</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">fibogenerator</span><span class="p">():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>  <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>   <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>     <span class="k">yield</span> <span class="n">b</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>     <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">fibogenerator</span><span class="p">():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>   <span class="k">if</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">10000000</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>     <span class="nb">print</span> <span class="n">k</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>     <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="sd">Ekrana şunu basar:  </span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="sd">14930352</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="yield.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu örnekte, biz istedikçe bir sonraki fibonacci sayısını veren bir
 <em>generator</em> kullanmak istedik. Bunun için, fibogenerator isimli bir

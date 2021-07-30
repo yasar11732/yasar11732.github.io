@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
@@ -10,19 +10,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/algoritma/canonical-huffman-kodlamasi.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/algoritma/canonical-huffman-kodlamasi.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="lz77.html" title="LZ77 Sıkıştırma Algoritması" type="text/html">
 <link rel="next" href="../diger/setjmp-h.html" title="&lt;setjmp.h&gt; Ne İşe Yarar" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Canonical Huffman Kodlaması">
-<meta property="og:url" content="http://ysar.net/algoritma/canonical-huffman-kodlamasi.html">
-<meta property="og:description" content="Deflate formatını anlama konusunda sonlara yaklaştığımı hissediyorum. Huffman Kodlaması
-ve lz77 konusunu genel çerçevesiyle kavradım. Huffman kodlaması yapan ilk programı yazdığımda,
-oluşan kodların d">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2019-06-16T19:09:00+03:00">
 </head>
 <body>
 
@@ -62,93 +54,313 @@ depoluyorsunuz.</p>
 <p>RFC bu konuda biraz kriptik konuştuğu (ya da pek kafam çalışmadığı) için, işin aslını anlamak gayesiyle, farklı kaynaklardan
 araştırma yaptım. Yapılan işlem sadece, tüm kodlara sırasıyla numara atamakmış. Bir önceki yazıdaki prefix kodlama örneğine
 tekrar bakalım.</p>
-<pre class="code literal-block"><span></span>       / \             d: 000 (3 bit)
-      0   1            b: 001 (3 bit)
-    /   \   \          c: 01  (2 bit)
-   0     1   a         a: 1   (1 bit)
-  / \    /
- 0   1   c
-/    \
-d     b
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">       / \             d: 000 (3 bit)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">      0   1            b: 001 (3 bit)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="err">    /   \   \          c: 01  (2 bit)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="err">   0     1   a         a: 1   (1 bit)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="err">  / \    /</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="err"> 0   1   c</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="err">/    \</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code><span class="err">d     b</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bunu canonical kodlamaya çevirmek için, önce bit genişliğine göre, bit genişliği aynı olanları da alfabetik sıraya göre
 sıralıyoruz.</p>
-<pre class="code literal-block"><span></span><span class="n">a</span> <span class="o">:</span> <span class="mi">1</span>
-<span class="n">c</span> <span class="o">:</span> <span class="mi">2</span>
-<span class="n">b</span> <span class="o">:</span> <span class="mi">3</span>
-<span class="n">d</span> <span class="o">:</span> <span class="mi">3</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">:</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">c</span> <span class="o">:</span> <span class="mi">2</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="n">b</span> <span class="o">:</span> <span class="mi">3</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="n">d</span> <span class="o">:</span> <span class="mi">3</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Daha sonra, ilk sıradaki koda, bit genişliği kadar 0 yazıyoruz. Onu takip eden
 her bir kod için, bir önceki kodu 1 artırıp, eğer gerekiyorsa, bit genişliğini
 ayarlamak için kod değerini 1 bit sola kaydırıyoruz.</p>
-<pre class="code literal-block"><span></span>+----------+--------------+---------------------------------------+
-| Karakter | Huffman Kodu | Açıklama                              | 
-+----------+------------------------------------------------------+
-|   a      |        0     | İlk koda 1 bit genişliğinde 0 atadık. |
-+----------+--------------+---------------------------------------+
-|   c      |        10    | Kodu 1 artırıp, 1 kez sola kaydırdık. |
-+----------+--------------+---------------------------------------+
-|   b      |        110   | Kodu 1 artırıp, 1 kez sola kaydırdık. |
-+----------+--------------+---------------------------------------+
-|   d      |        111   | Kodu 1 artırdık, kaydırmaya gerek yok.|
-+----------+--------------+---------------------------------------+
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="err">+----------+--------------+---------------------------------------+</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="err">| Karakter | Huffman Kodu | Açıklama                              | </span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="err">+----------+------------------------------------------------------+</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="err">|   a      |        0     | İlk koda 1 bit genişliğinde 0 atadık. |</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="err">+----------+--------------+---------------------------------------+</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="err">|   c      |        10    | Kodu 1 artırıp, 1 kez sola kaydırdık. |</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="err">+----------+--------------+---------------------------------------+</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="err">|   b      |        110   | Kodu 1 artırıp, 1 kez sola kaydırdık. |</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="err">+----------+--------------+---------------------------------------+</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="err">|   d      |        111   | Kodu 1 artırdık, kaydırmaya gerek yok.|</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="err">+----------+--------------+---------------------------------------+</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Kağıt/Kalem ile canonical huffman kodlaması oluşturmak bu kadar basit. Ben tabii ki bunu bir programa
 yaptırmayı tercih ederim. Neyse ki, RFC'de bunun yazılmışı var :)</p>
 <p>Önce veri yapılarını konuşalım.</p>
-<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
-
-<span class="cm">/*</span>
-<span class="cm">* Deflate formatına uygun olması için,</span>
-<span class="cm">* bir kodun en fazla 15 bit olmasına izin vereceğiz.</span>
-<span class="cm">* Bu nedenle code için 16 bit veri yapısı yeterli.</span>
-<span class="cm">*/</span>
-<span class="k">struct</span> <span class="n">huffmancode</span> <span class="p">{</span>
-    <span class="kt">uint8_t</span> <span class="n">len</span><span class="p">;</span>
-    <span class="kt">uint16_t</span> <span class="n">code</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="c1">// her bir code için uzunluk ve kod değerlerini</span>
-<span class="c1">// tuttuğumuz array</span>
-<span class="k">struct</span> <span class="n">huffmancode</span> <span class="n">tree</span><span class="p">[</span><span class="mi">0</span><span class="n">XFF</span><span class="p">];</span>
-
-<span class="c1">// her uzunlukta kaç adet kod</span>
-<span class="c1">// olduğunu saymak için</span>
-<span class="kt">uint8_t</span> <span class="n">bl_count</span><span class="p">[</span><span class="mh">0x10</span><span class="p">];</span>
-
-<span class="c1">// her uzunluktaki kodlama için</span>
-<span class="c1">// atanacak kodu tutar</span>
-<span class="kt">uint16_t</span> <span class="n">next_code</span><span class="p">[</span><span class="mh">0x10</span><span class="p">];</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="cm">/*</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="cm">* Deflate formatına uygun olması için,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="cm">* bir kodun en fazla 15 bit olmasına izin vereceğiz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="cm">* Bu nedenle code için 16 bit veri yapısı yeterli.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="cm">*/</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="k">struct</span> <span class="n">huffmancode</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="kt">uint8_t</span> <span class="n">len</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="kt">uint16_t</span> <span class="n">code</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="p">};</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="c1">// her bir code için uzunluk ve kod değerlerini</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="c1">// tuttuğumuz array</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="k">struct</span> <span class="n">huffmancode</span> <span class="n">tree</span><span class="p">[</span><span class="mi">0</span><span class="n">XFF</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><span class="c1">// her uzunlukta kaç adet kod</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="c1">// olduğunu saymak için</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code><span class="kt">uint8_t</span> <span class="n">bl_count</span><span class="p">[</span><span class="mh">0x10</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="c1">// her uzunluktaki kodlama için</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code><span class="c1">// atanacak kodu tutar</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code><span class="kt">uint16_t</span> <span class="n">next_code</span><span class="p">[</span><span class="mh">0x10</span><span class="p">];</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Veri yapıları bakımından, bu ikisi yeterli olacaktır. Tabii öncelikle <code>tree</code> array'ini,
 her karakterin kaç bitle kodlanması gerektiği bilgisi ile doldurmak gerekiyor.
 Bunun için, önce Huffman ağacını oluşturmamız gerekiyor. Gerçi <a href="huffman-kodlamasi.html">burada</a>
 oluşmuşu var.</p>
 <p>Algoritmanın sonraki adımında, her bit genişliğine kaç kodlama düştüğünü saymamız gerekiyor.</p>
-<pre class="code literal-block"><span></span><span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mh">0xFF</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="n">bl_count</span><span class="p">[</span><span class="n">tree</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">len</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mh">0xFF</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="n">bl_count</span><span class="p">[</span><span class="n">tree</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">len</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Her bit genişliğine kaç adet kodlama düştüğünü bilmek, her bit genişliğinin ilk kodlamasını
 hesaplamamızı sağlayacak.</p>
-<pre class="code literal-block"><span></span><span class="n">code</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="n">bl_count</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mh">0x10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">code</span> <span class="o">=</span> <span class="p">(</span><span class="n">code</span> <span class="o">+</span> <span class="n">bl_counts</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="n">next_code</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">code</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">code</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">bl_count</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mh">0x10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="n">code</span> <span class="o">=</span> <span class="p">(</span><span class="n">code</span> <span class="o">+</span> <span class="n">bl_counts</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="n">next_code</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">code</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p><code>code</code> değişkeni, döngünün girişinde, bir önceki bit genişliğindeki kodlamanın başlangıç değerine
 eşit oluyor. Bu <code>code</code> değerine, önceki bit genişliğindeki kod sayısını ekleyip, 1 sola kaydırdığımızda,
@@ -156,16 +368,48 @@ o döngüde hesaplanan bit genişliğinin ilk kodu ortaya çıkıyor.</p>
 <p>Son olarak, <code>tree</code> array'inin üzerinden bir tur daha geçerek, bir önceki adımda hesaplanan kod başlangıç
 değerlerini birer artırarak, her karakterin kodunu oluşturuyoruz. Bu aşamada, <code>len</code> değeri 0 olan, yani
 kodlanan metinde hiç geçmeyen karakterlere herhangi bir kod atamamamız gerekiyor.</p>
-<pre class="code literal-block"><span></span><span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mh">0xFF</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kt">uint8_t</span> <span class="n">len</span> <span class="o">=</span> <span class="n">tree</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">len</span><span class="p">;</span>
-    <span class="k">if</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">tree</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">code</span> <span class="o">=</span> <span class="n">next_code</span><span class="p">[</span><span class="n">len</span><span class="p">];</span>
-        <span class="n">next_code</span><span class="p">[</span><span class="n">len</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mh">0xFF</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="kt">uint8_t</span> <span class="n">len</span> <span class="o">=</span> <span class="n">tree</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">len</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="k">if</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>        <span class="n">tree</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">code</span> <span class="o">=</span> <span class="n">next_code</span><span class="p">[</span><span class="n">len</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>        <span class="n">next_code</span><span class="p">[</span><span class="n">len</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="canonical-huffman-kodlamasi.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Canonical kodlama ile ilgili anlatılması gereken herşey bu kadar. Deflate formatını tamamlamaya ramak kaldı.</p>
 <p>Burayı kalabalık göstermemesi için, <a href="https://gist.github.com/yasar11732/30d2fc9c1c404d776218424e5e3ca795">kodların tamamını</a> gist olarak yükledim:</p>

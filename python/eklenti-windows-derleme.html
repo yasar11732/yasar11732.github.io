@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="C ile yazılmış bir eklenti modülünü Windows platformu üzerinde derlemeyi örneklerle anlatan bu yazıyı, Python için C eklentisi geliştirmek isteyenler okuyabilir.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/eklenti-windows-derleme.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/eklenti-windows-derleme.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="soket-socket-2.html" title="Python ile soketler - 2" type="text/html">
 <link rel="next" href="soket-socket-yardimci-fonksiyon.html" title="Python soketler için faydalı 2 fonksiyon" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Windows'da Python eklentisi nasıl derlenir?">
-<meta property="og:url" content="http://ysar.net/python/eklenti-windows-derleme.html">
-<meta property="og:description" content="C ile yazılmış bir eklenti modülünü Windows platformu üzerinde derlemeyi örneklerle anlatan bu yazıyı, Python için C eklentisi geliştirmek isteyenler okuyabilir.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2012-08-22T16:49:00+03:00">
 </head>
 <body>
 
@@ -47,39 +41,139 @@
 <p>Bir soru üzerine, windows'da Python eklenti modülü derlemeyi denemeye
 karar verdim. İlk önce deneme amaçlı olarak, internetten çok basit bir
 eklenti modülü arakladım ve <em>hello.c</em> ismiyle kaydettim. <!-- TEASER_END --></p>
-<pre class="code literal-block"><span></span><span class="cp">#include</span>
-
-
-<span class="cpf">static PyObject* helloworld(PyObject* self)</span><span class="cp"></span>
-<span class="p">{</span>
-    <span class="k">return</span> <span class="n">Py_BuildValue</span><span class="p">(</span><span class="s">"s"</span><span class="p">,</span> <span class="s">"Hello, Python extensions!!"</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="k">static</span> <span class="kt">char</span> <span class="n">helloworld_docs</span><span class="p">[]</span> <span class="o">=</span>
-    <span class="s">"helloworld( ): Any message you want to put here!!</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
-
-<span class="k">static</span> <span class="n">PyMethodDef</span> <span class="n">helloworld_funcs</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="p">{</span><span class="s">"helloworld"</span><span class="p">,</span> <span class="p">(</span><span class="n">PyCFunction</span><span class="p">)</span><span class="n">helloworld</span><span class="p">,</span> 
-     <span class="n">METH_NOARGS</span><span class="p">,</span> <span class="n">helloworld_docs</span><span class="p">},</span>
-    <span class="p">{</span><span class="nb">NULL</span><span class="p">}</span>
-<span class="p">};</span>
-
-<span class="kt">void</span> <span class="nf">inithelloworld</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">Py_InitModule3</span><span class="p">(</span><span class="s">"helloworld"</span><span class="p">,</span> <span class="n">helloworld_funcs</span><span class="p">,</span>
-                   <span class="s">"Extension module example!"</span><span class="p">);</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="cp">#include</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="cpf">static PyObject* helloworld(PyObject* self)</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">Py_BuildValue</span><span class="p">(</span><span class="s">"s"</span><span class="p">,</span> <span class="s">"Hello, Python extensions!!"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="k">static</span> <span class="kt">char</span> <span class="n">helloworld_docs</span><span class="p">[]</span> <span class="o">=</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="s">"helloworld( ): Any message you want to put here!!</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="k">static</span> <span class="n">PyMethodDef</span> <span class="n">helloworld_funcs</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="p">{</span><span class="s">"helloworld"</span><span class="p">,</span> <span class="p">(</span><span class="n">PyCFunction</span><span class="p">)</span><span class="n">helloworld</span><span class="p">,</span> 
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>     <span class="n">METH_NOARGS</span><span class="p">,</span> <span class="n">helloworld_docs</span><span class="p">},</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>    <span class="p">{</span><span class="nb">NULL</span><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="p">};</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">inithelloworld</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>    <span class="n">Py_InitModule3</span><span class="p">(</span><span class="s">"helloworld"</span><span class="p">,</span> <span class="n">helloworld_funcs</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>                   <span class="s">"Extension module example!"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Kaynak: <a href="http://www.tutorialspoint.com/python/python_further_extensions.htm">http://www.tutorialspoint.com/python/python_further_extensions.htm</a></p>
 <p>Daha sonra, bir windows'da bir derleyicim olmadığı için, <a href="http://sourceforge.net/projects/mingw/files/latest/download" title="mingw">mingw'nin son sürümünü</a> indirip, sorunsuzca kurdum. Daha sonra, yine aynı yerden
 gerekli setup.py dosyasını arakladım;</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">distutils.core</span> <span class="kn">import</span> <span class="n">setup</span><span class="p">,</span> <span class="n">Extension</span>
-<span class="n">setup</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'helloworld'</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">'1.0'</span><span class="p">,</span>  \
-      <span class="n">ext_modules</span><span class="o">=</span><span class="p">[</span><span class="n">Extension</span><span class="p">(</span><span class="s1">'helloworld'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'hello.c'</span><span class="p">])])</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">distutils.core</span> <span class="kn">import</span> <span class="n">setup</span><span class="p">,</span> <span class="n">Extension</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">setup</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'helloworld'</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">'1.0'</span><span class="p">,</span>  \
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>      <span class="n">ext_modules</span><span class="o">=</span><span class="p">[</span><span class="n">Extension</span><span class="p">(</span><span class="s1">'helloworld'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'hello.c'</span><span class="p">])])</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Daha sonra, mingw ve distutils'e birkaç ince ayar çekmem gerekti.
 Öncelikle, <em>C:\MinGW\bin</em> adresini Path'e ekledim. Tıpkı daha önce
@@ -97,36 +191,118 @@ henüz bunun güncellenmemesinden kaynaklanıyor. Herkesde bu hata
 olmayabilir.</p>
 <p>Daha sonra, windows komut satırından <em>hello.c</em> ve <em>setup.py</em>
 dosyalarının olduğu yere gelip, şu komutu verdim;</p>
-<pre class="code literal-block"><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+</code></td>
+</tr></table></div>
 
 <p>Sorunsuz bir şekilde derlendi
 ve <em>C:\Python27\Lib\site-packages\helloworld.pyd </em>dosyası
 oluşturuldu. Artık, python komut satırından modülümüzü import edip
 kullanabiliriz;</p>
-<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">helloworld</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">help</span><span class="p">(</span><span class="n">helloworld</span><span class="p">)</span>
-<span class="sd">"""</span>
-<span class="sd">Help on module helloworld:</span>
-
-<span class="sd">NAME</span>
-<span class="sd">    helloworld - Extension module example!</span>
-
-<span class="sd">FILE</span>
-<span class="sd">    c:\python27\lib\site-packages\helloworld.pyd</span>
-
-<span class="sd">FUNCTIONS</span>
-<span class="sd">    helloworld(...)</span>
-<span class="sd">        helloworld( ): Any message you want to put here!!</span>
-
-<span class="sd">&gt;&gt;&gt; dir(helloworld)</span>
-<span class="sd">['__doc__', '__file__', '__name__', '__package__', 'helloworld']</span>
-<span class="sd">&gt;&gt;&gt; helloworld.helloworld()</span>
-<span class="sd">'Hello, Python extensions!!'</span>
-<span class="sd">"""</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">helloworld</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">help</span><span class="p">(</span><span class="n">helloworld</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="sd">Help on module helloworld:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="sd">NAME</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="sd">    helloworld - Extension module example!</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="sd">FILE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="sd">    c:\python27\lib\site-packages\helloworld.pyd</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="sd">FUNCTIONS</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="sd">    helloworld(...)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="sd">        helloworld( ): Any message you want to put here!!</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="sd">&gt;&gt;&gt; dir(helloworld)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><span class="sd">['__doc__', '__file__', '__name__', '__package__', 'helloworld']</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="sd">&gt;&gt;&gt; helloworld.helloworld()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code><span class="sd">'Hello, Python extensions!!'</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="eklenti-windows-derleme.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>İlginç bir şekilde, .dll uzantılı bir dosya beklerken, .pyd uzantılı bir
 dosya elde ettim. Bunun nedenini araştırdım. <a href="http://docs.python.org/faq/windows.html#is-a-pyd-file-the-same-as-a-dll" title="Is a *.pyd file the same as a DLL?">Öğrendim ki</a>, pyd

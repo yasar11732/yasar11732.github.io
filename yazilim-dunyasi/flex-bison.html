@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Flex ve Bison kullanarak JSON işleyen Lexer/Parser tasarımı">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/yazilim-dunyasi/flex-bison.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/yazilim-dunyasi/flex-bison.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="autotools.html" title="Autotools Gizemini Çözüyoruz" type="text/html">
 <link rel="next" href="json-kutuphanesi.html" title="Flex ve Bison kullanarak JSON İşleme (2. Kısım)" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Flex ve Bison kullanarak JSON İşleme (1. Kısım)">
-<meta property="og:url" content="http://ysar.net/yazilim-dunyasi/flex-bison.html">
-<meta property="og:description" content="Flex ve Bison kullanarak JSON işleyen Lexer/Parser tasarımı">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2019-06-26T10:25:00+03:00">
 </head>
 <body>
 
@@ -65,20 +59,32 @@ metni kelimelerine ayırmak olarak düşünürsek, parser'ın görevini de kelim
 paragraflardan da makaleler oluşturacak şekilde tokenleri gramer kurallarına uygun gruplara ayırmak olarak düşünebiliriz.</p>
 <h2>Flex Programının Anatomisi</h2>
 <p>Detaylara girmeden önce, yazılabilecek en küçük flex dosyalarından birini inceleyerek başlayalım.</p>
-<pre class="code literal-block"><span></span><span class="o">%%</span>
-<span class="n">username</span> <span class="n">printf</span><span class="p">(</span><span class="s">"%s"</span><span class="p">,</span> <span class="n">getlogin</span><span class="p">());</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="o">%%</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">username</span> <span class="n">printf</span><span class="p">(</span><span class="s">"%s"</span><span class="p">,</span> <span class="n">getlogin</span><span class="p">());</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yukarıdaki 2 satırı <code>example.l</code> adıyla kaydedin. Bu dosyadan Lexer oluşturmak için, aşağıdaki komutu kullanacağız.</p>
-<pre class="code literal-block"><span></span>lex example.l
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code>lex example.l
+</code></td>
+</tr></table></div>
 
 <p><code>lex</code> programının çıktı dosyasının adı <code>lex.yy.c</code>'dir. Bu <code>.c</code> dosyasını derleyip, flex kütüphanesiyle linklememiz gerekiyor.</p>
-<pre class="code literal-block"><span></span>gcc lex.yy.c -lfl
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code>gcc lex.yy.c -lfl
+</code></td>
+</tr></table></div>
 
 <p>Sizin sisteminizde flex kütüphanesinin adı farklı olabilir. Linkleme hatası ile karşılaşırsanız, <code>-lfl</code> yerine <code>-ll</code>
 ile deneyebilirsiniz. Derlenen programı (gcc ile derlediyseniz <code>a.out</code>) çalıştırdığınızda, sizden birşeyler yazmanızı
@@ -103,23 +109,83 @@ aşağıdaki içeriği içine kopyalayın. Bu programı derlerken, <code>main</c
 kütüphanesi ile <span style="text-decoration: underline">linklememeniz</span> gerekiyor. Bu aşamada <code>yywrap</code> fonksiyonunun
 işlevi önemli değil. Olduğu gibi kabul edin. Kullandığımız <code>yylex</code> fonksiyonu ise, flex tarafından
 sağlanan ve asıl işi yapan fonksiyon.</p>
-<pre class="code literal-block"><span></span><span class="o">%</span><span class="p">{</span>
-<span class="kt">int</span> <span class="n">num_lines</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num_chars</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="o">%</span><span class="p">}</span>
-
-<span class="o">%%</span>
-<span class="err">\</span><span class="n">n</span> <span class="o">++</span><span class="n">num_lines</span><span class="p">;</span> <span class="o">++</span><span class="n">num_chars</span><span class="p">;</span>
-<span class="p">.</span>  <span class="o">++</span><span class="n">num_chars</span><span class="p">;</span>
-<span class="o">%%</span>
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">yylex</span><span class="p">();</span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">"satir sayisi = %d, karakter_sayisi = %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">num_lines</span><span class="p">,</span> <span class="n">num_chars</span><span class="p">);</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="kt">int</span> <span class="n">yywrap</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="o">%</span><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="n">num_lines</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num_chars</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="o">%</span><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="o">%%</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="err">\</span><span class="n">n</span> <span class="o">++</span><span class="n">num_lines</span><span class="p">;</span> <span class="o">++</span><span class="n">num_chars</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="p">.</span>  <span class="o">++</span><span class="n">num_chars</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="o">%%</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="n">yylex</span><span class="p">();</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="n">printf</span><span class="p">(</span><span class="s">"satir sayisi = %d, karakter_sayisi = %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">num_lines</span><span class="p">,</span> <span class="n">num_chars</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="n">yywrap</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span> <span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Tebrikler, Lex kullanarak, metin belgesindeki karakterleri ve satırları sayan bir program ürettiniz.</p>
 <h2>Bison Programının Anatomisi</h2>
@@ -164,59 +230,197 @@ kodlarını oluşturacak. İskelet proje içindeki diğer dosyalar build sistemi
 bu yazının konusunun dışında kalıyor. İskelet projeyi indirmeden devam etmek isteyenler için, <code>lexer.l</code> ve
 <code>parser.y</code> nin şablonları aşağıdaki şekilde;</p>
 <p><code>lexer.l</code></p>
-<pre class="code literal-block"><span></span><span class="o">%</span><span class="p">{</span>
-<span class="cp">#include</span> <span class="cpf">"parser.h" // bison -d tarafından otomatik oluşturuluyor</span><span class="cp"></span>
-<span class="o">%</span><span class="p">}</span>
-
-<span class="o">%%</span>
-
-<span class="o">%%</span>
-<span class="kt">int</span> <span class="n">yywrap</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="o">%</span><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">"parser.h" // bison -d tarafından otomatik oluşturuluyor</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="o">%</span><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="o">%%</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="o">%%</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="n">yywrap</span><span class="p">()</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p><code>parser.y</code></p>
-<pre class="code literal-block"><span></span><span class="o">%</span><span class="p">{</span>
-<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
-<span class="k">extern</span> <span class="kt">int</span> <span class="n">yylex</span><span class="p">();</span>
-<span class="k">extern</span> <span class="kt">int</span> <span class="nf">yyparse</span><span class="p">();</span>
-<span class="kt">void</span> <span class="nf">yyerror</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s</span><span class="p">);</span>
-<span class="o">%</span><span class="p">}</span>
-<span class="o">%</span><span class="n">start</span> <span class="n">line</span>
-<span class="o">%</span><span class="n">token</span> <span class="n">NEWLINE</span>
-<span class="o">%%</span>
-<span class="nl">line</span><span class="p">:</span> <span class="n">NEWLINE</span>
-<span class="o">%%</span>
-
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="kt">void</span> <span class="n">yyerror</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">"Parse error: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">s</span><span class="p">);</span>
-    <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="o">%</span><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="k">extern</span> <span class="kt">int</span> <span class="n">yylex</span><span class="p">();</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="k">extern</span> <span class="kt">int</span> <span class="nf">yyparse</span><span class="p">();</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">yyerror</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="o">%</span><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="o">%</span><span class="n">start</span> <span class="n">line</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="o">%</span><span class="n">token</span> <span class="n">NEWLINE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="o">%%</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="nl">line</span><span class="p">:</span> <span class="n">NEWLINE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="o">%%</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="n">yyerror</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>    <span class="n">printf</span><span class="p">(</span><span class="s">"Parse error: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">s</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>    <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <h2>İşe Koyulalım</h2>
 <p>Tanıyacağımız tokenleri <code>parser.y</code> içine ekleyerek başlayacağız. Bunun için iskelet projedeki <code>parser.y</code>
 dosyasındaki <code>%start</code> ve <code>%token</code> ile başlayan satırları silerek, bunun yerine aşağıdaki satırları ekleyin.</p>
-<pre class="code literal-block"><span></span><span class="nf">%start</span> <span class="n">JValue</span>
-<span class="nf">%token</span> <span class="n">T_STRING</span> <span class="n">T_NUMBER</span> <span class="n">T_TRUE</span> <span class="n">T_FALSE</span> <span class="n">T_NULL</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="nf">%start</span> <span class="n">JValue</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="nf">%token</span> <span class="n">T_STRING</span> <span class="n">T_NUMBER</span> <span class="n">T_TRUE</span> <span class="n">T_FALSE</span> <span class="n">T_NULL</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Tek karakterden oluşan tokenler için (virgül, süslü parantez vs.), token tanımı yapmaya gerek yok.
 Yukarıda <code>%start</code> ile başlayan satırda, gramer'in başlangıç sembolünü de değiştirdiğimiz için,
 <code>parser.y</code> içinde <code>line:</code> ile başlayan satırı da aşağıdaki şekilde değiştirin;</p>
-<pre class="code literal-block"><span></span><span class="n">JValue</span><span class="o">:</span> <span class="n">T_STRING</span> <span class="o">|</span> <span class="n">T_NUMBER</span> <span class="o">|</span> <span class="n">T_TRUE</span> <span class="o">|</span> <span class="n">T_FALSE</span> <span class="o">|</span> <span class="n">T_NULL</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">JValue</span><span class="o">:</span> <span class="n">T_STRING</span> <span class="o">|</span> <span class="n">T_NUMBER</span> <span class="o">|</span> <span class="n">T_TRUE</span> <span class="o">|</span> <span class="n">T_FALSE</span> <span class="o">|</span> <span class="n">T_NULL</span>
+</code></td>
+</tr></table></div>
 
 <p>Burada, gramer'imizin başlangıç kuralını da belirlemiş olduk. <code>JValue</code> kuralını <code>%start</code> kuralı
 olarak belirlediğimiz için, parser'ımız tüm girdisini bir <code>JValue</code>'ya indirgemeyi deneyecek.
@@ -227,125 +431,363 @@ ekleyeceğiz.</p>
 <p>Parser <code>T_STRING</code>, <code>T_NUMBER</code> gibi tokenleri, lexer'dan bekleyecek. Basit
 tokenleri lexer'a tanımlayarak başlayalım. Projedeki <code>lexer.l</code> dosyasını açıp, iki <code>%%</code> arasındaki boş satıra,
 aşağıdaki satırları ekleyin;</p>
-<pre class="code literal-block"><span></span>":" { return ':'; }
-"," { return ','; }
-"{" { return '{'; }
-"}" { return '}'; }
-"[" { return '['; }
-"]" { return ']'; }
-"null"  { return T_NULL; }
-"true"   { return T_TRUE; }
-"false"  { return T_FALSE; }
-[ \t\n\r]+ { /* ignore */ }
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="err">":" { return ':'; }</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="err">"," { return ','; }</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="err">"{" { return '{'; }</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="err">"}" { return '}'; }</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="err">"[" { return '['; }</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="err">"]" { return ']'; }</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="err">"null"  { return T_NULL; }</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="err">"true"   { return T_TRUE; }</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="err">"false"  { return T_FALSE; }</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="err">[ \t\n\r]+ { /* ignore */ }</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Program şu an derlenebilir aşamada, ancak, herhangi bir çıktı vermediğimiz
 için, ne başardığımızı test edemiyoruz. <code>parser.y</code> dosyası içindeki kuralları, aşağıdaki
 şekilde güncelleyin.</p>
-<pre class="code literal-block"><span></span><span class="n">JValue</span><span class="o">:</span> <span class="n">T_STRING</span> <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"String"</span><span class="o">);}</span>
-      <span class="o">|</span> <span class="n">T_NUMBER</span> <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"Number"</span><span class="o">);}</span>
-      <span class="o">|</span> <span class="n">T_TRUE</span>   <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"TRUE"</span><span class="o">);}</span>
-      <span class="o">|</span> <span class="n">T_FALSE</span>  <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"FALSE"</span><span class="o">);}</span>
-      <span class="o">|</span> <span class="n">T_NULL</span>   <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"NULL"</span><span class="o">);}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">JValue</span><span class="o">:</span> <span class="n">T_STRING</span> <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"String"</span><span class="o">);}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="n">T_NUMBER</span> <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"Number"</span><span class="o">);}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="n">T_TRUE</span>   <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"TRUE"</span><span class="o">);}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="n">T_FALSE</span>  <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"FALSE"</span><span class="o">);}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="n">T_NULL</span>   <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"NULL"</span><span class="o">);}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Nasıl lexer dosyasına eşleşme sağlandığında çalışacak kodlar ekleyebiliyorsak, parser
 dosyasına da yukarıdaki örnekte olduğu gibi, kod ekleyebiliyoruz. Böylece, bir eşleşme olduğunda,
 konsolda çıktı görebileceğiz. Parser'ımızın çalışması için, <code>main</code> fonksiyonuna, <code>yyparse</code> çağrısı
 eklemek gerekiyor.</p>
-<pre class="code literal-block"><span></span>int main(void) {
-    yyparse();
-    return 0;
-}
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">int main(void) {</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">    yyparse();</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="err">    return 0;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="err">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p><code>yyparse</code> fonksiyonu, bison tarafından sağlanan ve parser'ı çalıştıran fonksiyon. Artık projeyi derleyip (<code>make</code> komutu ile)
 aşağıdaki komutlarla test edebilirsiniz.</p>
-<pre class="code literal-block"><span></span>echo "true" | ./jsonparser
-echo "false" | ./jsonparser
-echo "null" | ./jsonparser
-echo "   true   " | ./jsonparser
-echo "yok" | ./jsonparser
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">echo "true" | ./jsonparser</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">echo "false" | ./jsonparser</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="err">echo "null" | ./jsonparser</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="err">echo "   true   " | ./jsonparser</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="err">echo "yok" | ./jsonparser</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Basit tokenleri bitirdikten sonra, düzenli ifade kullanmak zorunda kalacağımız
 tokenlere geçebiliriz. Önce, String ile eşleşen bir düzenli ifade ile başlayalım. <code>lexer.l</code>
 içine, aşağıdaki satırı ekleyip, programı tekrar derleyin.</p>
-<pre class="code literal-block"><span></span>\"(\\.|[^\\"\n])*\" { return T_STRING; }
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">\"(\\.|[^\\"\n])*\" { return T_STRING; }</span>
+</code></td>
+</tr></table></div>
 
 <p>Aşağıdaki şekilde, programı test edebilirsiniz.</p>
-<pre class="code literal-block"><span></span>echo "   \"metin var\"  " | ./jsonparser
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">echo "   \"metin var\"  " | ./jsonparser</span>
+</code></td>
+</tr></table></div>
 
 <p>Program çalıştığında konsolda "String" çıktısını göreceksiniz, ancak, <code>lexer.l</code>
 içindeki düzenli ifademiz çok karmaşık görünüyor. Bunu çözmek için,
 <code>lexer.l</code>'nin birinci kısmında bazı tanımlamalar yapacağız. Aşağıdaki kodları,
 <code>lexer.l</code>'deki ilk <code>%%</code> işaretinden hemen önce gelecek şekilde dosyaya ekleyin.</p>
-<pre class="code literal-block"><span></span>TIRNAK ["]
-BIRKARAKTER .
-TERSTAKSIM \\
-KACMAKARAKTER {TERSTAKSIM}{BIRKARAKTER}
-NORMALKARAKTER [^\\"\b\f\n\r\t]
-KARAKTER {NORMALKARAKTER}|{KACMAKARAKTER}
-KARAKTERLER {KARAKTER}+
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">TIRNAK ["]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">BIRKARAKTER .</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="err">TERSTAKSIM \\</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="err">KACMAKARAKTER {TERSTAKSIM}{BIRKARAKTER}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="err">NORMALKARAKTER [^\\"\b\f\n\r\t]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="err">KARAKTER {NORMALKARAKTER}|{KACMAKARAKTER}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="err">KARAKTERLER {KARAKTER}+</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Böylece, <code>\"(\\.|[^\\"\n])*\"</code> düzenli ifadesinin yerine, <code>{TIRNAK}{TIRNAK}|{TIRNAK}{KARAKTERLER}{TIRNAK}</code>
 yazabilirsiniz. Bu sayede, düzenli ifademiz çok daha okunaklı olur. <code>T_STRING</code> tokenimiz ile standart JSON
 string'i arasındaki küçük farklılıkları, yazıyı kısa tutmak adına dikkate almayacağım. <code>T_NUMBER</code> ile devam edelim.
 Önce aşağıdaki tanımları, <code>lexer.l</code>'nin tanımlar kısmına ekleyin.</p>
-<pre class="code literal-block"><span></span>ONDALIK [.]
-POZITIFRAKAM [1-9]
-SIFIR 0
-RAKAM {SIFIR}|{POZITIFRAKAM}
-E     [eE]
-EXP   {E}[-+]?{RAKAM}+
-FRAC  {ONDALIK}{RAKAM}+
-INT   {SIFIR}|{POZITIFRAKAM}{RAKAM}*
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">ONDALIK</span><span class="w"> </span><span class="o">[</span><span class="n">.</span><span class="o">]</span><span class="w"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">POZITIFRAKAM</span><span class="w"> </span><span class="o">[</span><span class="n">1-9</span><span class="o">]</span><span class="w"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="n">SIFIR</span><span class="w"> </span><span class="mi">0</span><span class="w"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="n">RAKAM</span><span class="w"> </span><span class="err">{</span><span class="n">SIFIR</span><span class="err">}</span><span class="o">|</span><span class="err">{</span><span class="n">POZITIFRAKAM</span><span class="err">}</span><span class="w"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="n">E</span><span class="w">     </span><span class="o">[</span><span class="n">eE</span><span class="o">]</span><span class="w"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="nf">EXP</span><span class="w">   </span><span class="err">{</span><span class="n">E</span><span class="err">}</span><span class="o">[</span><span class="n">-+</span><span class="o">]</span><span class="vm">?</span><span class="err">{</span><span class="n">RAKAM</span><span class="err">}</span><span class="o">+</span><span class="w"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="n">FRAC</span><span class="w">  </span><span class="err">{</span><span class="n">ONDALIK</span><span class="err">}{</span><span class="n">RAKAM</span><span class="err">}</span><span class="o">+</span><span class="w"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code><span class="nc">INT</span><span class="w">   </span><span class="err">{</span><span class="n">SIFIR</span><span class="err">}</span><span class="o">|</span><span class="err">{</span><span class="n">POZITIFRAKAM</span><span class="err">}{</span><span class="n">RAKAM</span><span class="err">}</span><span class="o">*</span><span class="w"></span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu tanımlamaları yaptıktan sonra, aşağıdaki kuralı, kurallar kısmına ekleyip, projeyi tekrar test edebiliriz.</p>
-<pre class="code literal-block"><span></span>[-]?{INT}{FRAC}?{EXP}?          { return T_NUMBER; }
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">[-]?{INT}{FRAC}?{EXP}?          { return T_NUMBER; }</span>
+</code></td>
+</tr></table></div>
 
 <p><code>lexer</code> artık <code>T_NUMBER</code> tokeni de gönderebildiğine göre, <code>lexer.l</code> ile daha fazla işimiz kalmadı. <code>parser.y</code> içinde
 hala Object ve Array türlerini tanımlamadık. Önce, Array ile başlayalım. <code>parser.y</code> içinde kuralları aşağıdaki şekilde
 yeniden düzenleyin.</p>
-<pre class="code literal-block"><span></span><span class="n">JValue</span><span class="o">:</span> <span class="n">T_STRING</span> <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"String"</span><span class="o">);}</span>
-      <span class="o">|</span> <span class="n">T_NUMBER</span> <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"Number"</span><span class="o">);}</span>
-      <span class="o">|</span> <span class="n">T_TRUE</span>   <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"TRUE"</span><span class="o">);}</span>
-      <span class="o">|</span> <span class="n">T_FALSE</span>  <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"FALSE"</span><span class="o">);}</span>
-      <span class="o">|</span> <span class="n">T_NULL</span>   <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"NULL"</span><span class="o">);}</span>
-      <span class="o">|</span> <span class="n">JArray</span>   <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"Array"</span><span class="o">);}</span>
-
-<span class="n">JArray</span><span class="o">:</span> <span class="s1">'['</span> <span class="s1">']'</span>
-      <span class="o">|</span> <span class="s1">'['</span> <span class="n">Liste</span> <span class="s1">']'</span>
-
-<span class="n">Liste</span><span class="o">:</span> <span class="n">JValue</span>
-     <span class="o">|</span> <span class="n">Liste</span> <span class="s1">','</span> <span class="n">JValue</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="n">JValue</span><span class="o">:</span> <span class="n">T_STRING</span> <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"String"</span><span class="o">);}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="n">T_NUMBER</span> <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"Number"</span><span class="o">);}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="n">T_TRUE</span>   <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"TRUE"</span><span class="o">);}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="n">T_FALSE</span>  <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"FALSE"</span><span class="o">);}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="n">T_NULL</span>   <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"NULL"</span><span class="o">);}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="n">JArray</span>   <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"Array"</span><span class="o">);}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="n">JArray</span><span class="o">:</span> <span class="s1">'['</span> <span class="s1">']'</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="s1">'['</span> <span class="n">Liste</span> <span class="s1">']'</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="n">Liste</span><span class="o">:</span> <span class="n">JValue</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>     <span class="o">|</span> <span class="n">Liste</span> <span class="s1">','</span> <span class="n">JValue</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Programı derleyip, şu komutla test ederseniz, aşağıdaki gibi bir çıktı göreceksiniz: <code>echo "[1, 2, 3, true, false, null ]" | ./jsonparser</code></p>
-<pre class="code literal-block"><span></span>Number
-Number
-Number
-TRUE
-FALSE
-NULL
-Array
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">Number</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">Number</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="err">Number</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="err">TRUE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="err">FALSE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="err">NULL</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="err">Array</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Eğer konsolda tek bir satır çıktı görmeyi beklediyseniz, şaşırmış olabilirsiniz. Yazdığımız kurallara
 dikkat ederseniz, <code>JValue</code> sembolü her oluştuğunda, konsola hangi türden bir <code>JValue</code> oluştuğunu
@@ -356,47 +798,135 @@ kaldığı için, konsolda "Array" çıktısını en son görüyoruz.</p>
 tek bir T_STRING tokeni, bir <code>JValue</code> tanımlamak için yeterli iken, bir <code>JArray</code> için en azından
 ardarda gelmiş <code>[</code> ve <code>]</code> tokenleri gerekiyor.</p>
 <p><code>JArray</code> içinde geçen <code>Liste</code> sembolü de, tanımladığımız ilk özyinelemeli (eng. recursive) sembol oldu.</p>
-<pre class="code literal-block"><span></span><span class="n">Liste</span><span class="o">:</span> <span class="n">JValue</span>
-     <span class="o">|</span> <span class="n">Liste</span> <span class="s1">','</span> <span class="n">JValue</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">Liste</span><span class="o">:</span> <span class="n">JValue</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>     <span class="o">|</span> <span class="n">Liste</span> <span class="s1">','</span> <span class="n">JValue</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada şunu ifade etmiş oluyoruz; tek başına <code>JValue</code> bir <code>Liste</code> tanımlar, ya da, <code>Liste</code> <code>,</code> <code>JValue</code>
 yanyana geldiğinde bir liste tanımlar. Böyle bir gramer, bir veya daha fazla <code>JValue</code> değerinin birbirine
 <code>,</code> ile bağlanarak bir liste oluşturduğunu ifade ediyor.</p>
 <p><code>Object</code> türünün gramer tanımı da, <code>JArray</code>'e çok yakın;</p>
-<pre class="code literal-block"><span></span>JObject: '{' '}'
-       | '{' KVListe '}'
-
-KVListe: KV
-       | KVListe ',' KV
-
-KV: T_STRING ':' JValue
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">JObject</span><span class="p">:</span> <span class="s1">'{'</span> <span class="s1">'}'</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>       <span class="o">|</span> <span class="s1">'{'</span> <span class="n">KVListe</span> <span class="s1">'}'</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="n">KVListe</span><span class="p">:</span> <span class="n">KV</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>       <span class="o">|</span> <span class="n">KVListe</span> <span class="s1">','</span> <span class="n">KV</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="n">KV</span><span class="p">:</span> <span class="n">T_STRING</span> <span class="s1">':'</span> <span class="n">JValue</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bunun tek farkı, süslü parantezler içinde değerler listesi değil de, anahtar-değer çiftleri listesi var. <code>JValue</code>
 tanımını da aşağıdaki şekilde güncelledikten sonra, programı yeniden derleyebiliriz.</p>
-<pre class="code literal-block"><span></span><span class="n">JValue</span><span class="o">:</span> <span class="n">T_STRING</span> <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"String"</span><span class="o">);}</span>
-  <span class="o">|</span> <span class="n">T_NUMBER</span> <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"Number"</span><span class="o">);}</span>
-  <span class="o">|</span> <span class="n">T_TRUE</span>   <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"TRUE"</span><span class="o">);}</span>
-  <span class="o">|</span> <span class="n">T_FALSE</span>  <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"FALSE"</span><span class="o">);}</span>
-  <span class="o">|</span> <span class="n">T_NULL</span>   <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"NULL"</span><span class="o">);}</span>
-  <span class="o">|</span> <span class="n">JArray</span>   <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"Array"</span><span class="o">);}</span>
-  <span class="o">|</span> <span class="n">JObject</span>  <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"Object"</span><span class="o">);}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">JValue</span><span class="o">:</span> <span class="n">T_STRING</span> <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"String"</span><span class="o">);}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>  <span class="o">|</span> <span class="n">T_NUMBER</span> <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"Number"</span><span class="o">);}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>  <span class="o">|</span> <span class="n">T_TRUE</span>   <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"TRUE"</span><span class="o">);}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>  <span class="o">|</span> <span class="n">T_FALSE</span>  <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"FALSE"</span><span class="o">);}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>  <span class="o">|</span> <span class="n">T_NULL</span>   <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"NULL"</span><span class="o">);}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>  <span class="o">|</span> <span class="n">JArray</span>   <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"Array"</span><span class="o">);}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>  <span class="o">|</span> <span class="n">JObject</span>  <span class="o">{</span><span class="n">puts</span><span class="o">(</span><span class="s2">"Object"</span><span class="o">);}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu programı, <code>echo "{\"sayi\":12, \"liste\": [true, false, null]}" | ./jsonparser</code> komutu
 ile test ederseniz, ekrana aşağıdaki çıktıyı alacaksınız.</p>
-<pre class="code literal-block"><span></span>Number
-TRUE
-FALSE
-NULL
-Array
-Object
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">Number</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">TRUE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="err">FALSE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="err">NULL</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="err">Array</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="flex-bison.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="err">Object</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Dikkat ederseniz, çıktının hiçbir yerinde String ifadesi geçmiyor. Anahtar-değer çiftlerinde
 anahtar görevi gören string'ler, kendi başlarına bir JValue ifade etmediği için, konsolda

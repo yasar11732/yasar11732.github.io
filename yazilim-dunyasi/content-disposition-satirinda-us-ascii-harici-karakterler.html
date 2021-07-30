@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="HTTP Multipart/Form-Data isteği gönderirken, ascii dışındaki isimlerin gönderimi konusunda sabit bir standart olmadığı anlaşılıyor.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/yazilim-dunyasi/content-disposition-satirinda-us-ascii-harici-karakterler.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/yazilim-dunyasi/content-disposition-satirinda-us-ascii-harici-karakterler.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="rfc2231.html" title="RFC2231 Kodlaması" type="text/html">
 <link rel="next" href="../python/senkronizasyon-araci-olarak-dosyalar.html" title="Senkronizasyon Aracı Olarak Dosyalar" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Content-Disposition Satırında US-ASCII Harici Karakterler Nasıl Kodlan">
-<meta property="og:url" content="http://ysar.net/yazilim-dunyasi/content-disposition-satirinda-us-ascii-harici-karakterler.html">
-<meta property="og:description" content="HTTP Multipart/Form-Data isteği gönderirken, ascii dışındaki isimlerin gönderimi konusunda sabit bir standart olmadığı anlaşılıyor.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2019-06-02T12:20:00+03:00">
 </head>
 <body>
 
@@ -45,48 +39,184 @@
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
 <p>Aşağıdaki sıradan dosya yükleme formuna bir göz atalım.</p>
-<pre class="code literal-block"><span></span><span class="cp">&lt;!DOCTYPE html&gt;</span>
-<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
-    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">"utf-8"</span> <span class="p">/&gt;</span>
-<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
-    <span class="p">&lt;</span><span class="nt">form</span> <span class="na">method</span><span class="o">=</span><span class="s">"POST"</span> <span class="na">action</span><span class="o">=</span><span class="s">"upload.php"</span> <span class="na">enctype</span><span class="o">=</span><span class="s">"multipart/form-data"</span><span class="p">&gt;</span>
-        <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">"file"</span> <span class="na">name</span><span class="o">=</span><span class="s">"dosya"</span> <span class="p">/&gt;</span>
-        <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">"submit"</span> <span class="na">value</span><span class="o">=</span><span class="s">"Gönder"</span><span class="p">&gt;</span>
-     <span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">"utf-8"</span> <span class="p">/&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="p">&lt;</span><span class="nt">form</span> <span class="na">method</span><span class="o">=</span><span class="s">"POST"</span> <span class="na">action</span><span class="o">=</span><span class="s">"upload.php"</span> <span class="na">enctype</span><span class="o">=</span><span class="s">"multipart/form-data"</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">"file"</span> <span class="na">name</span><span class="o">=</span><span class="s">"dosya"</span> <span class="p">/&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">"submit"</span> <span class="na">value</span><span class="o">=</span><span class="s">"Gönder"</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>     <span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu formu doldurup, Gönder'e bastığımızda, multipart/form-data formatında oluşturulmuş bir
 HTTP isteği sunucuya gönderilir. Aşağıda, bu formu Google Chrome ile gönderdiğimde,
 tarayıcı tarafından oluşturulan isteğin, wireshark ile yakalanmış bir örneğini bulabilirsiniz.</p>
-<pre class="code literal-block"><span></span><span class="nf">POST</span> <span class="nn">/upload.php</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Host</span><span class="o">:</span> <span class="l">develserver.site</span>
-<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
-<span class="na">Content-Length</span><span class="o">:</span> <span class="l">231</span>
-<span class="na">Cache-Control</span><span class="o">:</span> <span class="l">max-age=0</span>
-<span class="na">Origin</span><span class="o">:</span> <span class="l">http://develserver.site</span>
-<span class="na">Upgrade-Insecure-Requests</span><span class="o">:</span> <span class="l">1</span>
-<span class="na">DNT</span><span class="o">:</span> <span class="l">1</span>
-<span class="na">Content-Type</span><span class="o">:</span> <span class="l">multipart/form-data; boundary=----WebKitFormBoundaryAGtIBnrsMB1w90XW</span>
-<span class="na">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36</span>
-<span class="na">Accept</span><span class="o">:</span> <span class="l">text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3</span>
-<span class="na">Referer</span><span class="o">:</span> <span class="l">http://develserver.site/test.html</span>
-<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
-<span class="na">Accept-Language</span><span class="o">:</span> <span class="l">tr,en;q=0.9</span>
-
-------WebKitFormBoundaryAGtIBnrsMB1w90XW
-Content-Disposition: form-data; name="dosya"; filename="post-test.txt"
-Content-Type: text/plain
-
-
-Bu dosya örnek olarak oluşturulmuştur.
-------WebKitFormBoundaryAGtIBnrsMB1w90XW--
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="nf">POST</span> <span class="nn">/upload.php</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="na">Host</span><span class="o">:</span> <span class="l">develserver.site</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="na">Content-Length</span><span class="o">:</span> <span class="l">231</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="na">Cache-Control</span><span class="o">:</span> <span class="l">max-age=0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="na">Origin</span><span class="o">:</span> <span class="l">http://develserver.site</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="na">Upgrade-Insecure-Requests</span><span class="o">:</span> <span class="l">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="na">DNT</span><span class="o">:</span> <span class="l">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="na">Content-Type</span><span class="o">:</span> <span class="l">multipart/form-data; boundary=----WebKitFormBoundaryAGtIBnrsMB1w90XW</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="na">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="na">Accept</span><span class="o">:</span> <span class="l">text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="na">Referer</span><span class="o">:</span> <span class="l">http://develserver.site/test.html</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="na">Accept-Language</span><span class="o">:</span> <span class="l">tr,en;q=0.9</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>------WebKitFormBoundaryAGtIBnrsMB1w90XW
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>Content-Disposition: form-data; name="dosya"; filename="post-test.txt"
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>Content-Type: text/plain
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>Bu dosya örnek olarak oluşturulmuştur.
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>------WebKitFormBoundaryAGtIBnrsMB1w90XW--
+</code></td>
+</tr>
+</table></div>
 
 <p>Buraya kadar herşey normal, ama, yüklenen dosyanın adında, us-ascii ile kodlanamayacak
 karakterlerin olduğu durumlarda, <code>filename</code> parametresinin nasıl kodlanması gerektiği,
@@ -96,9 +226,11 @@ koyuldum.</p>
 <p>Bu konu ile ilgili çeşitli RFC'ler okumama rağmen, en net cevabı <a href="https://tools.ietf.org/html/rfc2231">RFC 2231</a>
 veriyor gibi görünüyor. Bu RFC'ye göre, karakter kodlaması ve içerik dili bilgisi içeren Content-Disposition ve Content-Type
 alanları aşağıdaki şekilde kodlanmalı.</p>
-<pre class="code literal-block"><span></span><span class="nt">Content-Disposition</span><span class="o">:</span> <span class="nt">form-data</span><span class="o">;</span> <span class="nt">name</span><span class="o">=</span><span class="s2">"dosya"</span><span class="o">;</span> <span class="nt">filename</span><span class="o">*=</span><span class="nt">utf-8</span><span class="s1">''</span><span class="nt">Ya</span><span class="o">%</span><span class="nt">C5</span><span class="o">%</span><span class="nt">9Far</span><span class="o">%</span><span class="nt">20Arabac</span><span class="o">%</span><span class="nt">C4</span><span class="o">%</span><span class="nt">B1</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="c">Content-Disposition: form-data; name="dosya"; filename*=utf-8''Ya%C5%9Far%20Arabac%C4%B1</span>
+</code></td>
+</tr></table></div>
 
 <p>Bu formatı kısaca incelemek gerekirse, <code>*=</code> ile tanımlanan parametreler, opsiyonel olarak
 karakter kodlama bilgisi, ve metin dili bilgisi içerebiliyor. Bu parametreler, birbirinden
@@ -125,30 +257,88 @@ tüm HTTP server'lar bu formattaki bir isteği doğru bir biçimde yorumlayabili
 <p>Bunu test etmek için, yukarıdaki örnek form ile `yaşar arabacı.txt' isimli bir
 dosyayı, farklı istemcilerden yükledim. Content-Disposition satırları şu şekilde
 oluştu:</p>
-<pre class="code literal-block"><span></span><span class="nt">Google</span> <span class="nt">Chrome</span><span class="o">:</span> <span class="o">(</span><span class="nt">parametre</span> <span class="nt">de</span><span class="err">ğ</span><span class="nt">eri</span> <span class="nt">utf8</span> <span class="nt">olarak</span> <span class="nt">kodlanm</span><span class="err">ış</span><span class="nt">t</span><span class="err">ı</span><span class="o">)</span>
-<span class="nt">Content-Disposition</span><span class="o">:</span> <span class="nt">form-data</span><span class="o">;</span> <span class="nt">name</span><span class="o">=</span><span class="s2">"dosya"</span><span class="o">;</span> <span class="nt">filename</span><span class="o">=</span><span class="s2">"ya..ar arabac...txt"</span>
-
-<span class="nt">Firefox</span><span class="o">:</span> <span class="o">(</span><span class="nt">parametre</span> <span class="nt">de</span><span class="err">ğ</span><span class="nt">eri</span> <span class="nt">utf8</span> <span class="nt">olarak</span> <span class="nt">kodlanm</span><span class="err">ış</span><span class="nt">t</span><span class="err">ı</span><span class="o">)</span>
-<span class="nt">Content-Disposition</span><span class="o">:</span> <span class="nt">form-data</span><span class="o">;</span> <span class="nt">name</span><span class="o">=</span><span class="s2">"dosya"</span><span class="o">;</span> <span class="nt">filename</span><span class="o">=</span><span class="s2">"ya..ar arabac...txt"</span>
-
-<span class="err">İ</span><span class="nt">nternet</span> <span class="nt">Explorer</span><span class="o">:</span> <span class="o">(</span><span class="nt">parametre</span> <span class="nt">de</span><span class="err">ğ</span><span class="nt">eri</span> <span class="nt">utf8</span> <span class="nt">olarak</span> <span class="nt">kodlanm</span><span class="err">ış</span><span class="nt">t</span><span class="err">ı</span><span class="o">)</span>
-<span class="nt">Content-Disposition</span><span class="o">:</span> <span class="nt">form-data</span><span class="o">;</span> <span class="nt">name</span><span class="o">=</span><span class="s2">"dosya"</span><span class="o">;</span> <span class="nt">filename</span><span class="o">=</span><span class="s2">"yaşar arabacı.txt"</span>
-
-<span class="p">.</span><span class="nc">NET</span> <span class="nt">HttpClient</span>
-<span class="nt">Content-Disposition</span><span class="o">:</span> <span class="nt">form-data</span><span class="o">;</span> <span class="nt">name</span><span class="o">=</span><span class="nt">dosya</span><span class="o">;</span> <span class="nt">filename</span><span class="o">=</span><span class="s2">"=?utf-8?B?eWHFn2FyIGFyYWJhY8SxLnR4dA==?="</span><span class="o">;</span> <span class="nt">filename</span><span class="o">*=</span><span class="nt">utf-8</span><span class="s1">''</span><span class="nt">ya</span><span class="o">%</span><span class="nt">C5</span><span class="o">%</span><span class="nt">9Far</span><span class="o">%</span><span class="nt">20arabac</span><span class="o">%</span><span class="nt">C4</span><span class="o">%</span><span class="nt">B1</span><span class="p">.</span><span class="nc">txt</span>
-
-<span class="nt">Windows</span> <span class="nt">i</span><span class="err">ç</span><span class="nt">in</span> <span class="nt">curl</span> <span class="o">(</span><span class="nt">parametre</span> <span class="nt">de</span><span class="err">ğ</span><span class="nt">eri</span> <span class="nt">latin-5</span> <span class="nt">olarak</span> <span class="nt">kodlanm</span><span class="err">ış</span><span class="nt">t</span><span class="err">ı</span><span class="o">)</span>
-<span class="nt">Content-Disposition</span><span class="o">:</span> <span class="nt">form-data</span><span class="o">;</span> <span class="nt">name</span><span class="o">=</span><span class="s2">"dosya"</span><span class="o">;</span> <span class="nt">filename</span><span class="o">=</span><span class="s2">"ya.ar arabac..txt"</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="nf">Google</span> <span class="no">Chrome</span><span class="p">:</span> <span class="p">(</span><span class="no">parametre</span> <span class="no">değeri</span> <span class="no">utf8</span> <span class="no">olarak</span> <span class="no">kodlanmıştı</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="nl">Content-Disposition:</span> <span class="nf">form-data</span><span class="c1">; name="dosya"; filename="ya..ar arabac...txt"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="nl">Firefox:</span> <span class="err">(</span><span class="nf">parametre</span> <span class="no">değeri</span> <span class="no">utf8</span> <span class="no">olarak</span> <span class="no">kodlanmıştı</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="nl">Content-Disposition:</span> <span class="nf">form-data</span><span class="c1">; name="dosya"; filename="ya..ar arabac...txt"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="err">İ</span><span class="nf">nternet</span> <span class="no">Explorer</span><span class="p">:</span> <span class="p">(</span><span class="no">parametre</span> <span class="no">değeri</span> <span class="no">utf8</span> <span class="no">olarak</span> <span class="no">kodlanmıştı</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="nl">Content-Disposition:</span> <span class="nf">form-data</span><span class="c1">; name="dosya"; filename="yaşar arabacı.txt"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="na">.NET</span> <span class="no">HttpClient</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="nl">Content-Disposition:</span> <span class="nf">form-data</span><span class="c1">; name=dosya; filename="=?utf-8?B?eWHFn2FyIGFyYWJhY8SxLnR4dA==?="; filename*=utf-8''ya%C5%9Far%20arabac%C4%B1.txt</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="nf">Windows</span> <span class="no">için</span> <span class="no">curl</span> <span class="p">(</span><span class="no">parametre</span> <span class="no">değeri</span> <span class="no">latin-5</span> <span class="no">olarak</span> <span class="no">kodlanmıştı</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="nl">Content-Disposition:</span> <span class="nf">form-data</span><span class="c1">; name="dosya"; filename="ya.ar arabac..txt"</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Örnek formu içeren html belgesinden
 <code>&lt;meta charset='utf-8'&gt;</code> etiketini kaldırırsam, oluşan HTTP isteğinin de
 değiştiğini gördüm. Örneğin, Google Chrome ve Firefox'da bu etiketi kaldırıp, formu gönderirsem
 Content-Disposition satırı şu şekilde oluştu:</p>
-<pre class="code literal-block"><span></span><span class="nt">Content-Disposition</span><span class="o">:</span> <span class="nt">form-data</span><span class="o">;</span> <span class="nt">name</span><span class="o">=</span><span class="s2">"dosya"</span><span class="o">;</span> <span class="nt">filename</span><span class="o">=</span><span class="s2">"ya&amp;#351;ar arabac&amp;#305;.txt"</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="c">Content-Disposition: form-data; name="dosya"; filename="ya&amp;#351;ar arabac&amp;#305;.txt"</span>
+</code></td>
+</tr></table></div>
 
 <p>Bu iki tarayıcı, filename kısmını kodlarken, html belgesinin kodlamasını kullanıyor. Eğer
 HTML belgesinin kodlamasını tespit edemezse, fallback olarak html-entity kodlaması
@@ -168,14 +358,38 @@ olduğu için, çoğu server bu .NET HttpClient ile gönderilen ve ASCII ile kod
 dosya isimlerini yanlış değerlendirecektir (malesef bunu çok acı bir şekilde tecrübe ettim).
 Örnek vermek gerekirse, sunucu tarafında çalışan en yaygın dillerden biri olan PHP ile
 yazılmış basit bir dosya yükleme betiği aşağıdaki şekilde olabilir.</p>
-<pre class="code literal-block"><span></span><span class="cp">&lt;?php</span>
-
-<span class="nv">$uploaddir</span> <span class="o">=</span> <span class="s2">"uploads/"</span><span class="p">;</span>
-<span class="nv">$targetfile</span> <span class="o">=</span> <span class="nv">$uploaddir</span> <span class="o">.</span> <span class="nb">basename</span><span class="p">(</span><span class="nv">$_FILES</span><span class="p">[</span><span class="s2">"dosya"</span><span class="p">][</span><span class="s2">"name"</span><span class="p">]);</span>
-
-<span class="nb">move_uploaded_file</span><span class="p">(</span><span class="nv">$_FILES</span><span class="p">[</span><span class="s2">"dosya"</span><span class="p">][</span><span class="s2">"tmp_name"</span><span class="p">],</span> <span class="nv">$targetfile</span><span class="p">);</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="cp">&lt;?php</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="nv">$uploaddir</span> <span class="o">=</span> <span class="s2">"uploads/"</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="nv">$targetfile</span> <span class="o">=</span> <span class="nv">$uploaddir</span> <span class="o">.</span> <span class="nb">basename</span><span class="p">(</span><span class="nv">$_FILES</span><span class="p">[</span><span class="s2">"dosya"</span><span class="p">][</span><span class="s2">"name"</span><span class="p">]);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="content-disposition-satirinda-us-ascii-harici-karakterler.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="nb">move_uploaded_file</span><span class="p">(</span><span class="nv">$_FILES</span><span class="p">[</span><span class="s2">"dosya"</span><span class="p">][</span><span class="s2">"tmp_name"</span><span class="p">],</span> <span class="nv">$targetfile</span><span class="p">);</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu kodu .NET HttpClient ile test ettiğimde, <code>$_FILES["dosya"]["name"]</code>
 değeri <code>=?utf-8?B?eWHFn2FyIGFyYWJhY8SxLnR4dA==?=</code> olarak görünüyordu.

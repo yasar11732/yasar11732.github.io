@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="description" content="Django şablonlarında php kodu nasıl kullanılır? django_php paketi, django şablon dili için PHP desteği sağlıyor.">
+<meta name="description" content="Django şablonlarında php kodu nasıl kullanılır? django_php paketi, django şablon dili için PHP desteği sağlıyor. ">
 <meta name="viewport" content="width=device-width">
 <title>Django şablonlarında php | YSAR.NET</title>
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900%7CUbuntu:300,400,500,700" rel="stylesheet">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/django-sablonlarinda-php.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/django-sablonlarinda-php.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="django-blog-uygulamasi/kurulum-ve-ilk-ayarlar.html" title="Django ile Blog Geliştirme - Kurulum ve İlk ayarlar" type="text/html">
 <link rel="next" href="django-blog-uygulamasi/uygulama-modeller.html" title="Django ile Blog Geliştirme - Modeller" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Django şablonlarında php">
-<meta property="og:url" content="http://ysar.net/python/django-sablonlarinda-php.html">
-<meta property="og:description" content="Django şablonlarında php kodu nasıl kullanılır? django_php paketi, django şablon dili için PHP desteği sağlıyor.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2011-08-06T00:44:00+03:00">
 </head>
 <body>
 
@@ -49,39 +43,65 @@ kullanmanız mümkün. Bunu neden yapmak isteyeceğiniz ise tamamen bir
 muamma... <!-- TEASER_END --></p>
 <h3>Kurulum</h3>
 <p>Komut satırından</p>
-<pre class="code literal-block"><span></span>easy_install django_php
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="django-sablonlarinda-php.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">easy_install django_php</span>
+</code></td>
+</tr></table></div>
 
 <p>veya</p>
-<pre class="code literal-block"><span></span>pip install django_php
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="django-sablonlarinda-php.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">pip install django_php</span>
+</code></td>
+</tr></table></div>
 
 <p>komutlarıyla kurabilirsiniz. Tabi ki bu komutları vermek için gerekli
 python paketlerinin yüklü olmasını gerektiğini unutmamak gerek.</p>
 <p>Daha sonra django_php'yi settings modülü içerisindeki INSTALLED_APPS
 listesine ekleyerek kullanmaya başlayabilirsiniz.</p>
-<pre class="code literal-block"><span></span><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
-   <span class="s1">'django_php'</span><span class="p">,</span>
-<span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="django-sablonlarinda-php.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="django-sablonlarinda-php.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>   <span class="s1">'django_php'</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="django-sablonlarinda-php.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>django_php'yi kullanmadan önce php_cgi'in sisteminizde yüklü
 olduğundan emin olun. Eğer php_cgi'in yerini belirtmeniz gerekiyorsa,
 settings modülü içerisinde</p>
-<pre class="code literal-block"><span></span><span class="n">PHP_CGI</span> <span class="o">=</span> <span class="s1">'/usr/local/bin/php-cgi'</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="django-sablonlarinda-php.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">PHP_CGI</span> <span class="o">=</span> <span class="s1">'/usr/local/bin/php-cgi'</span>
+</code></td>
+</tr></table></div>
 
 <p>şeklinde belirtebilirsiniz. Çoğu zaman bu ayarı yapmanıza gerek yoktur.</p>
 <p>Şablonlarınızın içine php'yi dahil etmek için de, şablon dosyalarınızın
 içinde:</p>
-<pre class="code literal-block"><span></span>{% load php %}
-{% php echo 9; %}
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="django-sablonlarinda-php.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">{% load php %}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="django-sablonlarinda-php.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">{% php echo 9; %}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>şeklinde kullanabilirsiniz. Daha fazla örnek kaynak kodlarının içinde
 mevcut.</p>

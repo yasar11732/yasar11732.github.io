@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
@@ -10,20 +10,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/algoritma/buyuk-sayi-islemleri-bolme.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/algoritma/buyuk-sayi-islemleri-bolme.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="rastgele-sayi-uretici.html" title="Rastgele Sayı Üretici" type="text/html">
-<link rel="next" href="buyuk-sayi-islemleri-tamsayilar.html" title="Büyük Sayı Algoritmaları - Tam Sayılar" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Büyük Sayı Algoritmaları - Bölme">
-<meta property="og:url" content="http://ysar.net/algoritma/buyuk-sayi-islemleri-bolme.html">
-<meta property="og:description" content="Daha önceki yazılarda, değişken-genişlikteki doğal sayılar üzerinde
-toplama, çıkarma ve çarpma algoritmalarına değinmiştik. Bu yazıda, D. Knuth'un
-The Art of The Computer Programming kitabının 4.3.1'i">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2020-03-04T23:18:00+03:00">
-<meta property="article:tag" content="mathjax">
+<link rel="next" href="buyuk-sayi-islemleri-tamsayilar.html" title="Büyük Sayı Algoritmaları - Tam Sayılara Giriş" type="text/html">
 </head>
 <body>
 
@@ -159,129 +150,585 @@ işleminden bir farkı yok. Kağıt/kalemle 4283352 sayısını, 912 ile bölere
 edebilirsiniz.</p>
 <p>Algoritmanın ilk adımında yapılacak kaydırma miktarını hesaplamak için, sayının üst 0 bitlerini
 saymamız gerekiyor. Bunun için, aşağıdaki <code>nlz</code> (number of leading zeros) fonksiyonunu kullanacağız.</p>
-<pre class="code literal-block"><span></span><span class="cp">#if defined(__GNUC__)</span>
-<span class="cp">#define nlz(x) __builtin_clz(x)</span>
-<span class="cp">#elif defined(_MSC_VER)</span>
-<span class="cp">#define nlz(x) __lzcnt(x)</span>
-<span class="cp">#else</span>
-<span class="kt">int</span> <span class="nf">nlz</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">value</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">value</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-        <span class="n">value</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="k">return</span> <span class="mi">32</span> <span class="o">-</span> <span class="n">i</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="cp">#endif</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="cp">#if defined(__GNUC__)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="cp">#define nlz(x) __builtin_clz(x)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="cp">#elif defined(_MSC_VER)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="cp">#define nlz(x) __lzcnt(x)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="cp">#else</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">nlz</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">value</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">value</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="n">value</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">32</span> <span class="o">-</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="cp">#endif</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Tanıdığımız derleyecilerde, derleyecilerin intrinsic fonksiyonlarını kullanacağız, aksi durumda,
 <code>nlz</code> fonksiyonunu kendimiz sağlamak zorundayız. Aşağıdaki fonksiyonda, kitaptakinden farklı bir
 notasyon kullandım. Bölüm ve kalan, yukarıdaki gibi <code>q</code> ve <code>r</code>, bölünen <code>n</code>, bölünenin uzunluğu <code>nlen</code>,
 bölen <code>d</code> ve bölenin uzunluğu <code>dlen</code>. Döngü sayacı olarak da, <code>j</code> yerine <code>i</code> kullandım.</p>
-<pre class="code literal-block"><span></span><span class="kt">void</span> <span class="nf">bn_div_n</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">q</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">r</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">n</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">nlen</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">d</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">dlen</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="c1">// Geçiçi kullanılacak hafıza alanları.</span>
-
-    <span class="c1">// nn =&gt; Bölünenin normalizasyon geçirmiş hali</span>
-    <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">nn</span> <span class="o">=</span> <span class="n">alloca</span><span class="p">((</span><span class="n">nlen</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">bn_digit_t</span><span class="p">));</span>
-
-    <span class="c1">// dn =&gt; Bölenin normalizasyon geçirmiş hali.</span>
-    <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">dn</span> <span class="o">=</span> <span class="n">alloca</span><span class="p">((</span><span class="n">dlen</span><span class="p">)</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">bn_digit_t</span><span class="p">));</span>
-
-
-    <span class="c1">// D.1</span>
-    <span class="c1">// ================</span>
-
-    <span class="c1">// normalizasyon için kaydırma miktarı</span>
-    <span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="n">nlz</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">dlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
-
-    <span class="c1">// Kaydırma işlemleri</span>
-    <span class="n">bn_size_t</span> <span class="n">i</span><span class="p">;</span>
-
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">dlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">dn</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">-</span> <span class="n">s</span><span class="p">));</span>
-    <span class="p">}</span>
-    <span class="n">dn</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">;</span>
-
-    <span class="n">nn</span><span class="p">[</span><span class="n">nlen</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)(</span><span class="n">n</span><span class="p">[</span><span class="n">nlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">-</span> <span class="n">s</span><span class="p">));</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">nlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">nn</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)(</span><span class="n">n</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">-</span> <span class="n">s</span><span class="p">));</span>
-    <span class="p">}</span>
-    <span class="n">nn</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">;</span>
-
-    <span class="c1">// D.2 DÖNGÜ</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">nlen</span> <span class="o">-</span> <span class="n">dlen</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="c1">// D.3 - şapkalı q hesabı için, 64 bit aritmetik kullanacağız.</span>
-        <span class="n">bn_long_digit_t</span> <span class="n">qhat</span><span class="p">;</span>
-        <span class="n">bn_long_digit_t</span> <span class="n">rhat</span><span class="p">;</span>
-        <span class="n">bn_long_digit_t</span> <span class="n">ulong</span> <span class="o">=</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)(</span><span class="n">nn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">+</span> <span class="n">i</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="n">BN_DIGIT_BITS</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">bn_long_digit_t</span><span class="p">)(</span><span class="n">nn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">+</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
-
-        <span class="n">qhat</span> <span class="o">=</span> <span class="n">ulong</span> <span class="o">/</span> <span class="n">dn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
-
-        <span class="c1">// Düzgün bir derleyici (i.e GCC/Clang) bunu optimize edecektir.</span>
-        <span class="c1">// eğer etmiyorsa, rhat = ulong - (qhat * dn[dlen - 1])</span>
-        <span class="n">rhat</span> <span class="o">=</span> <span class="n">ulong</span> <span class="o">%</span> <span class="n">dn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
-
-        <span class="c1">// qhat 2 haneli mi kontrolü</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">qhat</span> <span class="o">&gt;</span> <span class="n">BN_DIGIT_MAX</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="o">--</span><span class="n">qhat</span><span class="p">;</span>
-            <span class="n">rhat</span> <span class="o">+=</span> <span class="n">dn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
-        <span class="p">}</span>
-
-        <span class="c1">// Düzeltme döngüsü</span>
-        <span class="k">while</span> <span class="p">((</span><span class="n">rhat</span> <span class="o">&gt;&gt;</span> <span class="n">BN_DIGIT_BITS</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">qhat</span> <span class="o">*</span> <span class="n">dn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">-</span> <span class="mi">2</span><span class="p">])</span> <span class="o">&gt;</span><span class="p">((</span><span class="n">rhat</span> <span class="o">&lt;&lt;</span> <span class="n">BN_DIGIT_BITS</span><span class="p">)</span> <span class="o">+</span> <span class="n">nn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">+</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]))</span>
-        <span class="p">{</span>
-            <span class="o">--</span><span class="n">qhat</span><span class="p">;</span>
-            <span class="n">rhat</span> <span class="o">+=</span> <span class="n">dn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
-        <span class="p">}</span>
-
-        <span class="c1">// D.4 - Çarp-Çıkar</span>
-        <span class="n">bn_digit_t</span> <span class="n">borrow</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="n">bn_size_t</span> <span class="n">k</span><span class="p">;</span>
-        <span class="k">for</span> <span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">dlen</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">ulong</span> <span class="o">=</span> <span class="n">dn</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">qhat</span><span class="p">;</span>
-            <span class="n">ulong</span> <span class="o">+=</span> <span class="n">borrow</span><span class="p">;</span>
-            <span class="n">borrow</span> <span class="o">=</span> <span class="n">nn</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">((</span><span class="n">bn_digit_t</span><span class="p">)</span><span class="n">ulong</span><span class="p">);</span>
-            <span class="n">nn</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span> <span class="o">-=</span> <span class="p">(</span><span class="n">bn_digit_t</span><span class="p">)</span><span class="n">ulong</span><span class="p">;</span>
-            <span class="n">borrow</span> <span class="o">+=</span> <span class="n">ulong</span> <span class="o">&gt;&gt;</span> <span class="n">BN_DIGIT_BITS</span><span class="p">;</span>
-        <span class="p">}</span>
-
-        <span class="c1">// Elimizde kalanı bir üst haneye taşımak için</span>
-        <span class="n">ulong</span> <span class="o">=</span> <span class="n">borrow</span><span class="p">;</span>
-        <span class="n">borrow</span> <span class="o">=</span> <span class="p">(</span><span class="n">nn</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">borrow</span><span class="p">);</span>
-        <span class="n">nn</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span> <span class="o">-=</span> <span class="p">(</span><span class="n">bn_digit_t</span><span class="p">)</span><span class="n">ulong</span><span class="p">;</span>
-
-        <span class="c1">// D.6 - Çıkarma sonucu negatif ise, düzelt. Burası nadiren çalışacak.</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">borrow</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="o">--</span><span class="n">qhat</span><span class="p">;</span>
-            <span class="n">bn_add_n</span><span class="p">(</span><span class="n">nn</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">nn</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">dn</span><span class="p">,</span> <span class="n">dlen</span><span class="p">);</span>
-        <span class="p">}</span>
-
-        <span class="c1">// D.5 - Sonucun ilgili hanesini yazıyoruz.</span>
-        <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">bn_digit_t</span><span class="p">)</span><span class="n">qhat</span><span class="p">;</span>
-
-        <span class="c1">// D.7 - i'yi eksiltip, i &gt;= 0 ise D.3'e geç.</span>
-    <span class="p">}</span>
-
-    <span class="c1">// D.8 Eğer kalan istenmişse, düzelt</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">r</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">dlen</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">nn</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">s</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)</span><span class="n">nn</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">-</span> <span class="n">s</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">nn</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">s</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-1"><code data-line-number="  1"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">bn_div_n</span><span class="p">(</span><span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">q</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">r</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">n</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">nlen</span><span class="p">,</span> <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">d</span><span class="p">,</span> <span class="n">bn_size_t</span> <span class="n">dlen</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-2"><code data-line-number="  2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-3"><code data-line-number="  3"></code></a></td>
+<td class="code"><code>    <span class="c1">// Geçiçi kullanılacak hafıza alanları.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-4"><code data-line-number="  4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-5"><code data-line-number="  5"></code></a></td>
+<td class="code"><code>    <span class="c1">// nn =&gt; Bölünenin normalizasyon geçirmiş hali</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-6"><code data-line-number="  6"></code></a></td>
+<td class="code"><code>    <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">nn</span> <span class="o">=</span> <span class="n">alloca</span><span class="p">((</span><span class="n">nlen</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">bn_digit_t</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-7"><code data-line-number="  7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-8"><code data-line-number="  8"></code></a></td>
+<td class="code"><code>    <span class="c1">// dn =&gt; Bölenin normalizasyon geçirmiş hali.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-9"><code data-line-number="  9"></code></a></td>
+<td class="code"><code>    <span class="n">bn_digit_t</span> <span class="o">*</span><span class="n">dn</span> <span class="o">=</span> <span class="n">alloca</span><span class="p">((</span><span class="n">dlen</span><span class="p">)</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">bn_digit_t</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-10"><code data-line-number=" 10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-11"><code data-line-number=" 11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-12"><code data-line-number=" 12"></code></a></td>
+<td class="code"><code>    <span class="c1">// D.1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-13"><code data-line-number=" 13"></code></a></td>
+<td class="code"><code>    <span class="c1">// ================</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-14"><code data-line-number=" 14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-15"><code data-line-number=" 15"></code></a></td>
+<td class="code"><code>    <span class="c1">// normalizasyon için kaydırma miktarı</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-16"><code data-line-number=" 16"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="n">nlz</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">dlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-17"><code data-line-number=" 17"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-18"><code data-line-number=" 18"></code></a></td>
+<td class="code"><code>    <span class="c1">// Kaydırma işlemleri</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-19"><code data-line-number=" 19"></code></a></td>
+<td class="code"><code>    <span class="n">bn_size_t</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-20"><code data-line-number=" 20"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-21"><code data-line-number=" 21"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">dlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-22"><code data-line-number=" 22"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-23"><code data-line-number=" 23"></code></a></td>
+<td class="code"><code>        <span class="n">dn</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">-</span> <span class="n">s</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-24"><code data-line-number=" 24"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-25"><code data-line-number=" 25"></code></a></td>
+<td class="code"><code>    <span class="n">dn</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-26"><code data-line-number=" 26"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-27"><code data-line-number=" 27"></code></a></td>
+<td class="code"><code>    <span class="n">nn</span><span class="p">[</span><span class="n">nlen</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)(</span><span class="n">n</span><span class="p">[</span><span class="n">nlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">-</span> <span class="n">s</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-28"><code data-line-number=" 28"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">nlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-29"><code data-line-number=" 29"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-30"><code data-line-number=" 30"></code></a></td>
+<td class="code"><code>        <span class="n">nn</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)(</span><span class="n">n</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">-</span> <span class="n">s</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-31"><code data-line-number=" 31"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-32"><code data-line-number=" 32"></code></a></td>
+<td class="code"><code>    <span class="n">nn</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-33"><code data-line-number=" 33"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-34"><code data-line-number=" 34"></code></a></td>
+<td class="code"><code>    <span class="c1">// D.2 DÖNGÜ</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-35"><code data-line-number=" 35"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">nlen</span> <span class="o">-</span> <span class="n">dlen</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-36"><code data-line-number=" 36"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-37"><code data-line-number=" 37"></code></a></td>
+<td class="code"><code>        <span class="c1">// D.3 - şapkalı q hesabı için, 64 bit aritmetik kullanacağız.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-38"><code data-line-number=" 38"></code></a></td>
+<td class="code"><code>        <span class="n">bn_long_digit_t</span> <span class="n">qhat</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-39"><code data-line-number=" 39"></code></a></td>
+<td class="code"><code>        <span class="n">bn_long_digit_t</span> <span class="n">rhat</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-40"><code data-line-number=" 40"></code></a></td>
+<td class="code"><code>        <span class="n">bn_long_digit_t</span> <span class="n">ulong</span> <span class="o">=</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)(</span><span class="n">nn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">+</span> <span class="n">i</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="n">BN_DIGIT_BITS</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">bn_long_digit_t</span><span class="p">)(</span><span class="n">nn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">+</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-41"><code data-line-number=" 41"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-42"><code data-line-number=" 42"></code></a></td>
+<td class="code"><code>        <span class="n">qhat</span> <span class="o">=</span> <span class="n">ulong</span> <span class="o">/</span> <span class="n">dn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-43"><code data-line-number=" 43"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-44"><code data-line-number=" 44"></code></a></td>
+<td class="code"><code>        <span class="c1">// Düzgün bir derleyici (i.e GCC/Clang) bunu optimize edecektir.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-45"><code data-line-number=" 45"></code></a></td>
+<td class="code"><code>        <span class="c1">// eğer etmiyorsa, rhat = ulong - (qhat * dn[dlen - 1])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-46"><code data-line-number=" 46"></code></a></td>
+<td class="code"><code>        <span class="n">rhat</span> <span class="o">=</span> <span class="n">ulong</span> <span class="o">%</span> <span class="n">dn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-47"><code data-line-number=" 47"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-48"><code data-line-number=" 48"></code></a></td>
+<td class="code"><code>        <span class="c1">// qhat 2 haneli mi kontrolü</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-49"><code data-line-number=" 49"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="n">qhat</span> <span class="o">&gt;</span> <span class="n">BN_DIGIT_MAX</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-50"><code data-line-number=" 50"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-51"><code data-line-number=" 51"></code></a></td>
+<td class="code"><code>            <span class="o">--</span><span class="n">qhat</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-52"><code data-line-number=" 52"></code></a></td>
+<td class="code"><code>            <span class="n">rhat</span> <span class="o">+=</span> <span class="n">dn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-53"><code data-line-number=" 53"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-54"><code data-line-number=" 54"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-55"><code data-line-number=" 55"></code></a></td>
+<td class="code"><code>        <span class="c1">// Düzeltme döngüsü</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-56"><code data-line-number=" 56"></code></a></td>
+<td class="code"><code>        <span class="k">while</span> <span class="p">((</span><span class="n">rhat</span> <span class="o">&gt;&gt;</span> <span class="n">BN_DIGIT_BITS</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">qhat</span> <span class="o">*</span> <span class="n">dn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">-</span> <span class="mi">2</span><span class="p">])</span> <span class="o">&gt;</span><span class="p">((</span><span class="n">rhat</span> <span class="o">&lt;&lt;</span> <span class="n">BN_DIGIT_BITS</span><span class="p">)</span> <span class="o">+</span> <span class="n">nn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">+</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-57"><code data-line-number=" 57"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-58"><code data-line-number=" 58"></code></a></td>
+<td class="code"><code>            <span class="o">--</span><span class="n">qhat</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-59"><code data-line-number=" 59"></code></a></td>
+<td class="code"><code>            <span class="n">rhat</span> <span class="o">+=</span> <span class="n">dn</span><span class="p">[</span><span class="n">dlen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-60"><code data-line-number=" 60"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-61"><code data-line-number=" 61"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-62"><code data-line-number=" 62"></code></a></td>
+<td class="code"><code>        <span class="c1">// D.4 - Çarp-Çıkar</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-63"><code data-line-number=" 63"></code></a></td>
+<td class="code"><code>        <span class="n">bn_digit_t</span> <span class="n">borrow</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-64"><code data-line-number=" 64"></code></a></td>
+<td class="code"><code>        <span class="n">bn_size_t</span> <span class="n">k</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-65"><code data-line-number=" 65"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">dlen</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-66"><code data-line-number=" 66"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-67"><code data-line-number=" 67"></code></a></td>
+<td class="code"><code>            <span class="n">ulong</span> <span class="o">=</span> <span class="n">dn</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">qhat</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-68"><code data-line-number=" 68"></code></a></td>
+<td class="code"><code>            <span class="n">ulong</span> <span class="o">+=</span> <span class="n">borrow</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-69"><code data-line-number=" 69"></code></a></td>
+<td class="code"><code>            <span class="n">borrow</span> <span class="o">=</span> <span class="n">nn</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">((</span><span class="n">bn_digit_t</span><span class="p">)</span><span class="n">ulong</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-70"><code data-line-number=" 70"></code></a></td>
+<td class="code"><code>            <span class="n">nn</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span> <span class="o">-=</span> <span class="p">(</span><span class="n">bn_digit_t</span><span class="p">)</span><span class="n">ulong</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-71"><code data-line-number=" 71"></code></a></td>
+<td class="code"><code>            <span class="n">borrow</span> <span class="o">+=</span> <span class="n">ulong</span> <span class="o">&gt;&gt;</span> <span class="n">BN_DIGIT_BITS</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-72"><code data-line-number=" 72"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-73"><code data-line-number=" 73"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-74"><code data-line-number=" 74"></code></a></td>
+<td class="code"><code>        <span class="c1">// Elimizde kalanı bir üst haneye taşımak için</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-75"><code data-line-number=" 75"></code></a></td>
+<td class="code"><code>        <span class="n">ulong</span> <span class="o">=</span> <span class="n">borrow</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-76"><code data-line-number=" 76"></code></a></td>
+<td class="code"><code>        <span class="n">borrow</span> <span class="o">=</span> <span class="p">(</span><span class="n">nn</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">borrow</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-77"><code data-line-number=" 77"></code></a></td>
+<td class="code"><code>        <span class="n">nn</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span> <span class="o">-=</span> <span class="p">(</span><span class="n">bn_digit_t</span><span class="p">)</span><span class="n">ulong</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-78"><code data-line-number=" 78"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-79"><code data-line-number=" 79"></code></a></td>
+<td class="code"><code>        <span class="c1">// D.6 - Çıkarma sonucu negatif ise, düzelt. Burası nadiren çalışacak.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-80"><code data-line-number=" 80"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="n">borrow</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-81"><code data-line-number=" 81"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-82"><code data-line-number=" 82"></code></a></td>
+<td class="code"><code>            <span class="o">--</span><span class="n">qhat</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-83"><code data-line-number=" 83"></code></a></td>
+<td class="code"><code>            <span class="n">bn_add_n</span><span class="p">(</span><span class="n">nn</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">nn</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">dn</span><span class="p">,</span> <span class="n">dlen</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-84"><code data-line-number=" 84"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-85"><code data-line-number=" 85"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-86"><code data-line-number=" 86"></code></a></td>
+<td class="code"><code>        <span class="c1">// D.5 - Sonucun ilgili hanesini yazıyoruz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-87"><code data-line-number=" 87"></code></a></td>
+<td class="code"><code>        <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">bn_digit_t</span><span class="p">)</span><span class="n">qhat</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-88"><code data-line-number=" 88"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-89"><code data-line-number=" 89"></code></a></td>
+<td class="code"><code>        <span class="c1">// D.7 - i'yi eksiltip, i &gt;= 0 ise D.3'e geç.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-90"><code data-line-number=" 90"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-91"><code data-line-number=" 91"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-92"><code data-line-number=" 92"></code></a></td>
+<td class="code"><code>    <span class="c1">// D.8 Eğer kalan istenmişse, düzelt</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-93"><code data-line-number=" 93"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-94"><code data-line-number=" 94"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-95"><code data-line-number=" 95"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">dlen</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-96"><code data-line-number=" 96"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-97"><code data-line-number=" 97"></code></a></td>
+<td class="code"><code>            <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">nn</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">s</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">bn_long_digit_t</span><span class="p">)</span><span class="n">nn</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">BN_DIGIT_BITS</span> <span class="o">-</span> <span class="n">s</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-98"><code data-line-number=" 98"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-99"><code data-line-number=" 99"></code></a></td>
+<td class="code"><code>        <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">nn</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">s</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-100"><code data-line-number="100"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="buyuk-sayi-islemleri-bolme.html#-101"><code data-line-number="101"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu fonksiyonla ilgili değinmek istediğim birkaç husus var. Öncelikle, geçici hafıza için <code>malloc</code>/<code>free</code> yerine
 <code>alloca</code> kullandım. Geçici hafızayı stack üzerinde tutmak genellikle daha etkin olsa da, eğer çok büyük
@@ -303,11 +750,11 @@ görünüyor.</p>
     </div>
     <aside class="postpromonav"><nav><div class="pager">
                 <a href="rastgele-sayi-uretici.html" rel="prev" title="Rastgele Sayı Üretici">Önceki yazı</a>
-                <a href="buyuk-sayi-islemleri-tamsayilar.html" rel="next" title="Büyük Sayı Algoritmaları - Tam Sayılar">Sonraki yazı</a>
+                <a href="buyuk-sayi-islemleri-tamsayilar.html" rel="next" title="Büyük Sayı Algoritmaları - Tam Sayılara Giriş">Sonraki yazı</a>
         </div>
 
     </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
-	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script></article></main><script>
   if(document.location.hostname == "ysar.net")

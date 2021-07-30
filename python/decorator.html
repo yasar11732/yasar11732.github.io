@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Python'da fonksiyon adlarından önce gelen, '@' ile başlayan ve fonksiyonları modifiye eden decorator'ler neler yapılır, nasıl kullanılır?">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/decorator.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/decorator.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="yield.html" title="Python yield deyimi nedir? Ne işe yarar?" type="text/html">
 <link rel="next" href="soket-socket.html" title="Python ile soketlere giriş" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Python ve decorator... Nedir, ne işe yarar?">
-<meta property="og:url" content="http://ysar.net/python/decorator.html">
-<meta property="og:description" content="Python'da fonksiyon adlarından önce gelen, '@' ile başlayan ve fonksiyonları modifiye eden decorator'ler neler yapılır, nasıl kullanılır?">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2012-05-10T04:00:56+03:00">
 </head>
 <body>
 
@@ -62,19 +56,63 @@ Dolayısıyla, fonksiyonlar da bu özellikleri taşıyor. <!-- TEASER_END --></p
 <p>Pythondaki objelerin bir diğer özelliği de, diğer fonksiyonlar
 içerisinde tanımlanabilmeleri. Örneğin, aşağıdaki kod Python dilinde
 tamamen normal bir koddur.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">yazdiricifonksiyon</span><span class="p">(</span><span class="n">yazi</span><span class="p">):</span>
-  <span class="k">def</span> <span class="nf">gereksiz</span><span class="p">():</span>
-     <span class="k">print</span> <span class="n">yazi</span>
-  <span class="k">return</span> <span class="n">gereksiz</span>
-
-<span class="n">merhabade</span> <span class="o">=</span> <span class="n">yazdiricifonksiyon</span><span class="p">(</span><span class="s2">"merhaba"</span><span class="p">)</span>
-<span class="n">merhabade</span><span class="p">()</span>
-<span class="sd">"""</span>
-<span class="sd">Ekrana şunu basar:</span>
-<span class="sd">merhaba</span>
-<span class="sd">"""</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">yazdiricifonksiyon</span><span class="p">(</span><span class="n">yazi</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>  <span class="k">def</span> <span class="nf">gereksiz</span><span class="p">():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>     <span class="nb">print</span> <span class="n">yazi</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>  <span class="k">return</span> <span class="n">gereksiz</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="n">merhabade</span> <span class="o">=</span> <span class="n">yazdiricifonksiyon</span><span class="p">(</span><span class="s2">"merhaba"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="n">merhabade</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="sd">Ekrana şunu basar:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="sd">merhaba</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yukarıdaki örnekte, fonksiyonların nasıl birinci sınıf vatandaş
 olduklarını görüyoruz. İlk satırda tanımladığımız fonksiyon
@@ -83,26 +121,98 @@ oluşturuyor. Daha sonra, bu fonksiyon, yazdiricifonksiyon'un dönüş
 değeri olarak döndürülüyor. Gördünüz gibi, bu fonksiyonu bir değişkene
 atayabiliyor ve istediğimizde çağırabiliyoruz.</p>
 <p>Python'daki bu özellik sayesinde, şöyle şeyler de yapmak mümkün;</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">acikla</span><span class="p">(</span><span class="n">fonksiyon</span><span class="p">):</span>
- <span class="k">print</span> <span class="s2">"Su fonksiyonu cagiriyorum: </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="n">fonksiyon</span><span class="o">.</span><span class="vm">__name__</span>
-  <span class="k">return</span> <span class="n">fonksiyon</span><span class="p">()</span>
-
-<span class="n">acikla</span><span class="p">(</span><span class="n">gereksiz</span><span class="p">)</span>
-<span class="sd">"""</span>
-<span class="sd">Su fonksiyonu cagiriyorum: gereksiz</span>
-<span class="sd">"""</span>
-<span class="k">def</span> <span class="nf">unlemekle</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
- <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"!"</span>
-
-<span class="k">def</span> <span class="nf">yazidondur</span><span class="p">(</span><span class="n">yazi</span><span class="p">):</span>
- <span class="k">return</span> <span class="n">yazi</span>
-
-<span class="n">unlemekle</span><span class="p">(</span><span class="n">yazidondur</span><span class="p">,</span><span class="s2">"osman"</span><span class="p">)</span>
-<span class="sd">"""</span>
-<span class="sd">'osman!'</span>
-<span class="sd">"""</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">acikla</span><span class="p">(</span><span class="n">fonksiyon</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code> <span class="nb">print</span> <span class="s2">"Su fonksiyonu cagiriyorum: </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="n">fonksiyon</span><span class="o">.</span><span class="vm">__name__</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>  <span class="k">return</span> <span class="n">fonksiyon</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="n">acikla</span><span class="p">(</span><span class="n">gereksiz</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="sd">Su fonksiyonu cagiriyorum: gereksiz</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">unlemekle</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code> <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"!"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">yazidondur</span><span class="p">(</span><span class="n">yazi</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code> <span class="k">return</span> <span class="n">yazi</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="n">unlemekle</span><span class="p">(</span><span class="n">yazidondur</span><span class="p">,</span><span class="s2">"osman"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><span class="sd">'osman!'</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yukarıdaki örneklerden göreceğiniz gibi, argüman olarak fonksiyon alan
 fonksiyonlar sayesinde, asıl fonksiyon çağrılmadan önce fazladan bir iş
@@ -110,25 +220,93 @@ yapabilir veya, fonksiyonun dönüş değeri üzerinde düzenleme yapabiliriz.</
 <p>İşte decorator'lar da, tam bu işi yapmaya yarıyor. Python'da
 decorator'lar, argüman olarak fonksiyon alıp, sonuçta yine fonksiyon
 döndüren fonksiyonlara deniyor. Örneğin;</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">kalinyaz</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
-  <span class="k">def</span> <span class="nf">wrapper</span><span class="p">():</span>
-      <span class="k">return</span> <span class="s2">""</span> <span class="o">+</span> <span class="n">f</span><span class="p">()</span> <span class="o">+</span> <span class="s2">""</span>
- <span class="k">return</span> <span class="n">wrapper</span>
-
-<span class="k">def</span> <span class="nf">osman</span><span class="p">():</span>
-  <span class="k">return</span> <span class="s2">"osman"</span>
-
-<span class="n">kalinosman</span> <span class="o">=</span> <span class="n">kalinyaz</span><span class="p">(</span><span class="n">osman</span><span class="p">)</span>
-<span class="n">kalinosman</span><span class="p">()</span>
-<span class="sd">"""</span>
-<span class="sd">'&lt;b&gt;osman&lt;/b&gt;'</span>
-<span class="sd">"""</span>
-<span class="n">osman</span><span class="p">()</span>
-<span class="sd">"""</span>
-<span class="sd">'osman'</span>
-<span class="sd">"""</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">kalinyaz</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>  <span class="k">def</span> <span class="nf">wrapper</span><span class="p">():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>      <span class="k">return</span> <span class="s2">""</span> <span class="o">+</span> <span class="n">f</span><span class="p">()</span> <span class="o">+</span> <span class="s2">""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code> <span class="k">return</span> <span class="n">wrapper</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">osman</span><span class="p">():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>  <span class="k">return</span> <span class="s2">"osman"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="n">kalinosman</span> <span class="o">=</span> <span class="n">kalinyaz</span><span class="p">(</span><span class="n">osman</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="n">kalinosman</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="sd">'&lt;b&gt;osman&lt;/b&gt;'</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="n">osman</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="sd">'osman'</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yukarıdaki örnekte, kalinyaz bir decorator. Bu fonksiyon, argüman olarak
 bir fonksiyon alıp, yine bir fonksiyon döndürüyor. Döndürdüğü fonksiyon
@@ -136,15 +314,43 @@ bir fonksiyon alıp, yine bir fonksiyon döndürüyor. Döndürdüğü fonksiyon
 arasına alınıyor.</p>
 <p>Python bu işi kolaylaştırmak için, bize decorator söz dizimi gibi bir
 kolaylık da sağlıyor. O da şöyle;</p>
-<pre class="code literal-block"><span></span><span class="nd">@kalinyaz</span>
-<span class="k">def</span> <span class="nf">yasar</span><span class="p">():</span>
-    <span class="k">return</span> <span class="s2">"yasar"</span>
-<span class="n">yasar</span><span class="p">()</span>
-<span class="sd">"""</span>
-<span class="sd">'&lt;b&gt;yasar&lt;/b&gt;'</span>
-<span class="sd">"""</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="nd">@kalinyaz</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">yasar</span><span class="p">():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="s2">"yasar"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="n">yasar</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="sd">'&lt;b&gt;yasar&lt;/b&gt;'</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="decorator.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada @ işaretiyle, fonksiyona uygulamak istediğimiz decorator'u
 belirtiyoruz. Bunun yukarıda yaptığımızdan pek bir farkı yok aslında.

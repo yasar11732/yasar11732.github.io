@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Bugün Python ile fraktal şekiller çizdim, blog'da paylaşıyorum.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/fractal.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/fractal.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="threading-vs-multiprocessing.html" title="Threading mi, yoksa multiprocessing mi kullanmalıyım" type="text/html">
 <link rel="next" href="l-system-tool.html" title="Python L-Sistemi Aracı" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Python ile Fraktal Çizme">
-<meta property="og:url" content="http://ysar.net/python/fractal.html">
-<meta property="og:description" content="Bugün Python ile fraktal şekiller çizdim, blog'da paylaşıyorum.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2014-07-12T03:29:00+03:00">
 </head>
 <body>
 
@@ -51,46 +45,178 @@ aklıma fraktal çizmek geldi. Blog'dan da paylaşayım istedim.
 git, sağa dön sola dön gibi komutlar veriyorsunuz. Kamlumbağanın gittiği yol ekranda çizgi olarak görülüyor.</p>
 <p>Örneğin ekrana bir kare çizmek için, 4 kere 100 birim ilerle, 90 derece sola dön komutunu verebilirsiniz. Python'da bunu yapmak için, turtle kütüphanesini
 kullanıyoruz.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">turtle</span> <span class="kn">import</span> <span class="n">Turtle</span><span class="p">,</span> <span class="n">screen</span>
-
-<span class="n">wn</span> <span class="o">=</span> <span class="n">screen</span><span class="p">()</span> <span class="c1"># ekranı kontrol etmemizi sağlıyor</span>
-
-<span class="n">t</span> <span class="o">=</span> <span class="n">Turtle</span><span class="p">()</span>  <span class="c1"># bir adet kaplumbağa oluşturduk.</span>
-
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
-    <span class="n">t</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="c1"># kaplumbağa 100 birim ilerlesin</span>
-    <span class="n">t</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>     <span class="c1"># 90 derece sola dönsün</span>
-
-<span class="n">wn</span><span class="o">.</span><span class="n">exitonclick</span><span class="p">()</span> <span class="c1"># ekrana tıklanınca ekran kapansın</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">turtle</span> <span class="kn">import</span> <span class="n">Turtle</span><span class="p">,</span> <span class="n">screen</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="n">wn</span> <span class="o">=</span> <span class="n">screen</span><span class="p">()</span> <span class="c1"># ekranı kontrol etmemizi sağlıyor</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="n">t</span> <span class="o">=</span> <span class="n">Turtle</span><span class="p">()</span>  <span class="c1"># bir adet kaplumbağa oluşturduk.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">t</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="c1"># kaplumbağa 100 birim ilerlesin</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="n">t</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>     <span class="c1"># 90 derece sola dönsün</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="n">wn</span><span class="o">.</span><span class="n">exitonclick</span><span class="p">()</span> <span class="c1"># ekrana tıklanınca ekran kapansın</span>
+</code></td>
+</tr>
+</table></div>
 
 <p><strong> Şimdi de siz deneyin </strong>: Ekrana bir üçgen çizin!</p>
 <p>Fraktal çizmek için ise, en basit yol, recursive fonksiyon kullanmak. Mesela, bir ağaç çizelim;</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">turtle</span> <span class="kn">import</span> <span class="n">Turtle</span><span class="p">,</span> <span class="n">Screen</span>
-
-<span class="n">wn</span> <span class="o">=</span> <span class="n">Screen</span><span class="p">()</span>
-
-<span class="k">def</span> <span class="nf">tree</span><span class="p">(</span><span class="n">length</span><span class="p">,</span><span class="n">t</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">length</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
-        <span class="n">t</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">length</span><span class="p">)</span> <span class="c1"># ileri git</span>
-        <span class="n">t</span><span class="o">.</span><span class="n">right</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span>       <span class="c1"># sağa dön</span>
-        <span class="n">tree</span><span class="p">(</span><span class="n">length</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span><span class="n">t</span><span class="p">)</span> <span class="c1"># daha küçük bir ağaç çiz</span>
-        <span class="n">t</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="mi">80</span><span class="p">)</span>        <span class="c1"># sola dön</span>
-        <span class="n">tree</span><span class="p">(</span><span class="n">length</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span><span class="n">t</span><span class="p">)</span> <span class="c1"># daha küçük bir ağaç çiz</span>
-        <span class="n">t</span><span class="o">.</span><span class="n">right</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span>       <span class="c1"># Başladığın açıya geri dön</span>
-        <span class="n">t</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">length</span><span class="p">)</span><span class="c1"># Başladığın noktaya geri dön</span>
-
-
-<span class="n">t</span> <span class="o">=</span> <span class="n">Turtle</span><span class="p">()</span>
-<span class="n">t</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span> <span class="c1"># Yukarıya doğru çizmek için</span>
-<span class="n">t</span><span class="o">.</span><span class="n">speed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># en hızlı animasyon</span>
-
-<span class="n">tree</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
-
-<span class="n">wn</span><span class="o">.</span><span class="n">exitonclick</span><span class="p">()</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">turtle</span> <span class="kn">import</span> <span class="n">Turtle</span><span class="p">,</span> <span class="n">Screen</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="n">wn</span> <span class="o">=</span> <span class="n">Screen</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">tree</span><span class="p">(</span><span class="n">length</span><span class="p">,</span><span class="n">t</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">length</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>        <span class="n">t</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">length</span><span class="p">)</span> <span class="c1"># ileri git</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="n">t</span><span class="o">.</span><span class="n">right</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span>       <span class="c1"># sağa dön</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="n">tree</span><span class="p">(</span><span class="n">length</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span><span class="n">t</span><span class="p">)</span> <span class="c1"># daha küçük bir ağaç çiz</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="n">t</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="mi">80</span><span class="p">)</span>        <span class="c1"># sola dön</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="n">tree</span><span class="p">(</span><span class="n">length</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span><span class="n">t</span><span class="p">)</span> <span class="c1"># daha küçük bir ağaç çiz</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="n">t</span><span class="o">.</span><span class="n">right</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span>       <span class="c1"># Başladığın açıya geri dön</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>        <span class="n">t</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">length</span><span class="p">)</span><span class="c1"># Başladığın noktaya geri dön</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="n">t</span> <span class="o">=</span> <span class="n">Turtle</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><span class="n">t</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span> <span class="c1"># Yukarıya doğru çizmek için</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="n">t</span><span class="o">.</span><span class="n">speed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># en hızlı animasyon</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><span class="n">tree</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code><span class="n">wn</span><span class="o">.</span><span class="n">exitonclick</span><span class="p">()</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Şöyle bir resim oluşması gerekiyor;</p>
 <p><img alt="fractal tree" src="../images/Tk1EIT2.png"></p>
@@ -127,21 +253,73 @@ için, bunu tekrarlıyoruz. Eğer aynı işlemi 6. adıma kadar devam edersek, �
 
 <p>Burada, <code>f</code> aksiyonu ileri git, <code>+</code> aksiyonu 60 derece sola dön, <code>-</code> ise, 60 derece sağa dön manasına geliyor. Şimdi, bu kurallara göre, istediğimiz derinlikle
 L-dizisi oluşturacak bir fonksiyon yazalım.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">make_l_string</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">rules</span><span class="p">,</span> <span class="n">depth</span><span class="p">):</span>
-                <span class="n">string</span> <span class="o">=</span> <span class="n">start</span>
-                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">):</span>
-                        <span class="n">string</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rules</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">string</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">string</span>
-
-<span class="n">koch_rules</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">'f'</span> <span class="p">:</span> <span class="s1">'f+f--f+f'</span><span class="p">,</span>
-        <span class="s1">'+'</span> <span class="p">:</span> <span class="s1">'+'</span><span class="p">,</span>
-        <span class="s1">'-'</span> <span class="p">:</span> <span class="s1">'-'</span>
-<span class="p">}</span>
-
-<span class="k">print</span> <span class="n">make_l_string</span><span class="p">(</span><span class="s2">"f"</span><span class="p">,</span> <span class="n">koch_rules</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">make_l_string</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">rules</span><span class="p">,</span> <span class="n">depth</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>                <span class="n">string</span> <span class="o">=</span> <span class="n">start</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>                        <span class="n">string</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rules</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">string</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>                <span class="k">return</span> <span class="n">string</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="n">koch_rules</span> <span class="o">=</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="s1">'f'</span> <span class="p">:</span> <span class="s1">'f+f--f+f'</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="s1">'+'</span> <span class="p">:</span> <span class="s1">'+'</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="s1">'-'</span> <span class="p">:</span> <span class="s1">'-'</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="nb">print</span> <span class="n">make_l_string</span><span class="p">(</span><span class="s2">"f"</span><span class="p">,</span> <span class="n">koch_rules</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <pre>
 f+f--f+f+f+f--f+f--f+f--f+f+f+f--f+f+f+f--f+f+f+f--f+f--f+f--f+f+f+f--f+f--f+f--f+f+f+f--f+f--f+f--f+f+f+f--f+f+f+f--f+f+f+f--f+f--f+f--f+f+f+f--f+f
@@ -149,193 +327,933 @@ f+f--f+f+f+f--f+f--f+f--f+f+f+f--f+f+f+f--f+f+f+f--f+f--f+f--f+f+f+f--f+f--f+f--
 
 <p>Buradaki ana fikirden yola çıkarak, farklı fraktallar çizmek için kullanılabilecek python sınıfları hazırladım, kodlar aşağıda;</p>
 <p><strong> Güncelleme: </strong> <em>12.07.2014 10:55</em> Kodlara biraz daha çeki düzen verdim.</p>
-<pre class="code literal-block"><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">import</span> <span class="nn">turtle</span>
-
-<span class="k">class</span> <span class="nc">Lindenmayer</span><span class="p">(</span><span class="n">turtle</span><span class="o">.</span><span class="n">Turtle</span><span class="p">):</span>
-    <span class="s2">"Bracketed L System"</span>
-
-    <span class="n">syms</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">"F"</span><span class="p">:</span><span class="s2">"gforward"</span><span class="p">,</span>
-        <span class="s2">"f"</span><span class="p">:</span><span class="s2">"jforward"</span><span class="p">,</span>
-        <span class="s2">"+"</span><span class="p">:</span><span class="s2">"tright"</span><span class="p">,</span>
-        <span class="s2">"-"</span><span class="p">:</span><span class="s2">"tleft"</span><span class="p">,</span>
-        <span class="s2">"A"</span><span class="p">:</span><span class="s2">"gforward"</span><span class="p">,</span>
-        <span class="s2">"B"</span><span class="p">:</span><span class="s2">"gforward"</span><span class="p">,</span>
-        <span class="s2">"U"</span><span class="p">:</span><span class="s2">"penup"</span><span class="p">,</span>
-        <span class="s2">"D"</span><span class="p">:</span><span class="s2">"pendown"</span><span class="p">,</span>
-        <span class="s2">"["</span><span class="p">:</span><span class="s2">"push_stack"</span><span class="p">,</span>
-        <span class="s2">"]"</span><span class="p">:</span><span class="s2">"pop_stack"</span><span class="p">,</span>
-        <span class="s2">"1"</span><span class="p">:</span><span class="s2">"color1"</span><span class="p">,</span> <span class="c1"># black by default</span>
-        <span class="s2">"2"</span><span class="p">:</span><span class="s2">"color2"</span><span class="p">,</span> <span class="c1"># red by default</span>
-        <span class="s2">"3"</span><span class="p">:</span><span class="s2">"color3"</span><span class="p">,</span> <span class="c1"># green by default</span>
-        <span class="s2">"4"</span><span class="p">:</span><span class="s2">"color4"</span><span class="p">,</span> <span class="c1"># blue by default</span>
-    <span class="p">}</span>
-
-    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">hideturtle</span><span class="p">()</span> <span class="c1"># to speed up the drawing</span>
-        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">string</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">Lindenmayer</span><span class="o">.</span><span class="n">syms</span><span class="p">[</span><span class="n">x</span><span class="p">])()</span>
-            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-                <span class="s2">"For actions that don't do anything"</span>
-                <span class="k">pass</span>
-
-    <span class="k">def</span> <span class="nf">gforward</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">jforward</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">"Go forward, but don't draw"</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">penup</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pendown</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">tleft</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">"Turn left by degrees"</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">tright</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">"Turn right by degrees"</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">push_stack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">"push state to stack"</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_stack</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">heading</span><span class="p">()))</span>
-
-    <span class="k">def</span> <span class="nf">pop_stack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">"pop and restore state"</span>
-
-        <span class="n">pos</span><span class="p">,</span> <span class="n">heading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">penup</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setpos</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setheading</span><span class="p">(</span><span class="n">heading</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pendown</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">color1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pencolor</span><span class="p">(</span><span class="s2">"#000000"</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">color2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pencolor</span><span class="p">(</span><span class="s2">"#ff0000"</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">color3</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pencolor</span><span class="p">(</span><span class="s2">"#00ff00"</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">color4</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pencolor</span><span class="p">(</span><span class="s2">"#0000ff"</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">fix_rules</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">"Add unspecified conversions. They stay the same"</span>
-
-        <span class="n">parts</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
-
-        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
-
-    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="s2">"Prepare required variables before draw"</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_stack</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
-
-        <span class="n">string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">begin</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">fix_rules</span><span class="p">()</span>
-
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">depth</span><span class="p">):</span>
-
-            <span class="n">string</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">string</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">string</span> <span class="o">=</span> <span class="n">string</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">after_init</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">after_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">"Extra stuff, executed right after init function"</span>
-        <span class="k">pass</span>
-
-<span class="c1">#### Begin L-System Equations ###</span>
-
-<span class="k">class</span> <span class="nc">koch</span><span class="p">(</span><span class="n">Lindenmayer</span><span class="p">):</span>
-
-    <span class="n">rules</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'F'</span><span class="p">:</span><span class="s1">'F-F++F-F'</span><span class="p">}</span>
-    <span class="n">begin</span> <span class="o">=</span> <span class="s2">"F"</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="mi">60</span>
-
-    <span class="k">def</span> <span class="nf">after_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">400</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># set distance appopropiate to complexity</span>
-
-
-<span class="k">class</span> <span class="nc">square_koch</span><span class="p">(</span><span class="n">Lindenmayer</span><span class="p">):</span>
-
-    <span class="n">rules</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'F'</span><span class="p">:</span><span class="s1">'F-F+F+F-F'</span><span class="p">}</span>
-    <span class="n">begin</span> <span class="o">=</span> <span class="s2">"F"</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="mi">90</span>
-    <span class="k">def</span> <span class="nf">after_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">400</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-
-
-<span class="k">class</span> <span class="nc">sierpinsky</span><span class="p">(</span><span class="n">Lindenmayer</span><span class="p">):</span>
-
-    <span class="n">rules</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'A'</span><span class="p">:</span><span class="s1">'B-A-B'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">:</span><span class="s1">'A+B+A'</span><span class="p">}</span>
-    <span class="n">begin</span> <span class="o">=</span> <span class="s1">'A'</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="mi">60</span>
-
-    <span class="k">def</span> <span class="nf">after_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span> <span class="mi">300</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-
-<span class="k">class</span> <span class="nc">fibonacci_tree</span><span class="p">(</span><span class="n">Lindenmayer</span><span class="p">):</span>
-
-    <span class="n">rules</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'A'</span><span class="p">:</span><span class="s1">'AA'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">:</span> <span class="s1">'A[-B]+B'</span><span class="p">}</span>
-    <span class="n">begin</span> <span class="o">=</span> <span class="s2">"B"</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="mi">30</span>
-
-    <span class="k">def</span> <span class="nf">after_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span>  <span class="nb">max</span><span class="p">(</span><span class="mi">300</span> <span class="o">/</span> <span class="mi">2</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
-
-<span class="k">class</span> <span class="nc">dragon_curve</span><span class="p">(</span><span class="n">Lindenmayer</span><span class="p">):</span>
-
-    <span class="n">rules</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'x'</span><span class="p">:</span><span class="s1">'x+yF'</span><span class="p">,</span> <span class="s1">'y'</span><span class="p">:</span> <span class="s1">'Fx-y'</span><span class="p">}</span>
-    <span class="n">begin</span> <span class="o">=</span> <span class="s2">"Fx"</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="mi">90</span>
-
-    <span class="k">def</span> <span class="nf">after_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span><span class="nb">max</span><span class="p">(</span> <span class="mi">300</span> <span class="o">/</span> <span class="mf">1.5</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-
-
-
-<span class="k">class</span> <span class="nc">fractal_plant</span><span class="p">(</span><span class="n">Lindenmayer</span><span class="p">):</span>
-
-    <span class="n">rules</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'X'</span><span class="p">:</span><span class="s1">'F-[[X]+X]+F[+FX]-X'</span><span class="p">,</span> <span class="s1">'F'</span><span class="p">:</span> <span class="s1">'FF'</span><span class="p">}</span>
-    <span class="n">begin</span> <span class="o">=</span> <span class="s2">"X"</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="mi">25</span>
-
-    <span class="k">def</span> <span class="nf">after_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">120</span> <span class="o">/</span> <span class="mf">1.9</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pensize</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
-
-    <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
-    <span class="n">wn</span> <span class="o">=</span> <span class="n">turtle</span><span class="o">.</span><span class="n">Screen</span><span class="p">()</span>
-
-    <span class="n">things_to_draw</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="p">(</span><span class="n">koch</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">square_koch</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">sierpinsky</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">fibonacci_tree</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">dragon_curve</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">fractal_plant</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>   
-    <span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">things_to_draw</span><span class="p">:</span>
-        <span class="n">wn</span><span class="o">.</span><span class="n">clearscreen</span><span class="p">()</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="n">c</span><span class="p">()</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
-        <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
-    <span class="n">wn</span><span class="o">.</span><span class="n">exitonclick</span><span class="p">()</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-1"><code data-line-number="  1"></code></a></td>
+<td class="code"><code><span class="c1"># -*- coding: utf-8 -*-</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-2"><code data-line-number="  2"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">turtle</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-3"><code data-line-number="  3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-4"><code data-line-number="  4"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Lindenmayer</span><span class="p">(</span><span class="n">turtle</span><span class="o">.</span><span class="n">Turtle</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-5"><code data-line-number="  5"></code></a></td>
+<td class="code"><code>    <span class="s2">"Bracketed L System"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-6"><code data-line-number="  6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-7"><code data-line-number="  7"></code></a></td>
+<td class="code"><code>    <span class="n">syms</span> <span class="o">=</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-8"><code data-line-number="  8"></code></a></td>
+<td class="code"><code>        <span class="s2">"F"</span><span class="p">:</span><span class="s2">"gforward"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-9"><code data-line-number="  9"></code></a></td>
+<td class="code"><code>        <span class="s2">"f"</span><span class="p">:</span><span class="s2">"jforward"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-10"><code data-line-number=" 10"></code></a></td>
+<td class="code"><code>        <span class="s2">"+"</span><span class="p">:</span><span class="s2">"tright"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-11"><code data-line-number=" 11"></code></a></td>
+<td class="code"><code>        <span class="s2">"-"</span><span class="p">:</span><span class="s2">"tleft"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-12"><code data-line-number=" 12"></code></a></td>
+<td class="code"><code>        <span class="s2">"A"</span><span class="p">:</span><span class="s2">"gforward"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-13"><code data-line-number=" 13"></code></a></td>
+<td class="code"><code>        <span class="s2">"B"</span><span class="p">:</span><span class="s2">"gforward"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-14"><code data-line-number=" 14"></code></a></td>
+<td class="code"><code>        <span class="s2">"U"</span><span class="p">:</span><span class="s2">"penup"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-15"><code data-line-number=" 15"></code></a></td>
+<td class="code"><code>        <span class="s2">"D"</span><span class="p">:</span><span class="s2">"pendown"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-16"><code data-line-number=" 16"></code></a></td>
+<td class="code"><code>        <span class="s2">"["</span><span class="p">:</span><span class="s2">"push_stack"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-17"><code data-line-number=" 17"></code></a></td>
+<td class="code"><code>        <span class="s2">"]"</span><span class="p">:</span><span class="s2">"pop_stack"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-18"><code data-line-number=" 18"></code></a></td>
+<td class="code"><code>        <span class="s2">"1"</span><span class="p">:</span><span class="s2">"color1"</span><span class="p">,</span> <span class="c1"># black by default</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-19"><code data-line-number=" 19"></code></a></td>
+<td class="code"><code>        <span class="s2">"2"</span><span class="p">:</span><span class="s2">"color2"</span><span class="p">,</span> <span class="c1"># red by default</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-20"><code data-line-number=" 20"></code></a></td>
+<td class="code"><code>        <span class="s2">"3"</span><span class="p">:</span><span class="s2">"color3"</span><span class="p">,</span> <span class="c1"># green by default</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-21"><code data-line-number=" 21"></code></a></td>
+<td class="code"><code>        <span class="s2">"4"</span><span class="p">:</span><span class="s2">"color4"</span><span class="p">,</span> <span class="c1"># blue by default</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-22"><code data-line-number=" 22"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-23"><code data-line-number=" 23"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-24"><code data-line-number=" 24"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-25"><code data-line-number=" 25"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-26"><code data-line-number=" 26"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">hideturtle</span><span class="p">()</span> <span class="c1"># to speed up the drawing</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-27"><code data-line-number=" 27"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">string</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-28"><code data-line-number=" 28"></code></a></td>
+<td class="code"><code>            <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-29"><code data-line-number=" 29"></code></a></td>
+<td class="code"><code>                <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">Lindenmayer</span><span class="o">.</span><span class="n">syms</span><span class="p">[</span><span class="n">x</span><span class="p">])()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-30"><code data-line-number=" 30"></code></a></td>
+<td class="code"><code>            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-31"><code data-line-number=" 31"></code></a></td>
+<td class="code"><code>                <span class="s2">"For actions that don't do anything"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-32"><code data-line-number=" 32"></code></a></td>
+<td class="code"><code>                <span class="k">pass</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-33"><code data-line-number=" 33"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-34"><code data-line-number=" 34"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">gforward</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-35"><code data-line-number=" 35"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-36"><code data-line-number=" 36"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">jforward</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-37"><code data-line-number=" 37"></code></a></td>
+<td class="code"><code>        <span class="s2">"Go forward, but don't draw"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-38"><code data-line-number=" 38"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">penup</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-39"><code data-line-number=" 39"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-40"><code data-line-number=" 40"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">pendown</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-41"><code data-line-number=" 41"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-42"><code data-line-number=" 42"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">tleft</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-43"><code data-line-number=" 43"></code></a></td>
+<td class="code"><code>        <span class="s2">"Turn left by degrees"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-44"><code data-line-number=" 44"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-45"><code data-line-number=" 45"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-46"><code data-line-number=" 46"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">tright</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-47"><code data-line-number=" 47"></code></a></td>
+<td class="code"><code>        <span class="s2">"Turn right by degrees"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-48"><code data-line-number=" 48"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-49"><code data-line-number=" 49"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-50"><code data-line-number=" 50"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">push_stack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-51"><code data-line-number=" 51"></code></a></td>
+<td class="code"><code>        <span class="s2">"push state to stack"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-52"><code data-line-number=" 52"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">_stack</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">heading</span><span class="p">()))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-53"><code data-line-number=" 53"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-54"><code data-line-number=" 54"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">pop_stack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-55"><code data-line-number=" 55"></code></a></td>
+<td class="code"><code>        <span class="s2">"pop and restore state"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-56"><code data-line-number=" 56"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-57"><code data-line-number=" 57"></code></a></td>
+<td class="code"><code>        <span class="n">pos</span><span class="p">,</span> <span class="n">heading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-58"><code data-line-number=" 58"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">penup</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-59"><code data-line-number=" 59"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">setpos</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-60"><code data-line-number=" 60"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">setheading</span><span class="p">(</span><span class="n">heading</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-61"><code data-line-number=" 61"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">pendown</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-62"><code data-line-number=" 62"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-63"><code data-line-number=" 63"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">color1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-64"><code data-line-number=" 64"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">pencolor</span><span class="p">(</span><span class="s2">"#000000"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-65"><code data-line-number=" 65"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-66"><code data-line-number=" 66"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">color2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-67"><code data-line-number=" 67"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">pencolor</span><span class="p">(</span><span class="s2">"#ff0000"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-68"><code data-line-number=" 68"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-69"><code data-line-number=" 69"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">color3</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-70"><code data-line-number=" 70"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">pencolor</span><span class="p">(</span><span class="s2">"#00ff00"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-71"><code data-line-number=" 71"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-72"><code data-line-number=" 72"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">color4</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-73"><code data-line-number=" 73"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">pencolor</span><span class="p">(</span><span class="s2">"#0000ff"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-74"><code data-line-number=" 74"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-75"><code data-line-number=" 75"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">fix_rules</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-76"><code data-line-number=" 76"></code></a></td>
+<td class="code"><code>        <span class="s2">"Add unspecified conversions. They stay the same"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-77"><code data-line-number=" 77"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-78"><code data-line-number=" 78"></code></a></td>
+<td class="code"><code>        <span class="n">parts</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-79"><code data-line-number=" 79"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-80"><code data-line-number=" 80"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-81"><code data-line-number=" 81"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-82"><code data-line-number=" 82"></code></a></td>
+<td class="code"><code>                <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-83"><code data-line-number=" 83"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-84"><code data-line-number=" 84"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-85"><code data-line-number=" 85"></code></a></td>
+<td class="code"><code>        <span class="s2">"Prepare required variables before draw"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-86"><code data-line-number=" 86"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-87"><code data-line-number=" 87"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">_stack</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-88"><code data-line-number=" 88"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-89"><code data-line-number=" 89"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-90"><code data-line-number=" 90"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-91"><code data-line-number=" 91"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-92"><code data-line-number=" 92"></code></a></td>
+<td class="code"><code>        <span class="n">string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">begin</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-93"><code data-line-number=" 93"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-94"><code data-line-number=" 94"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">fix_rules</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-95"><code data-line-number=" 95"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-96"><code data-line-number=" 96"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">depth</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-97"><code data-line-number=" 97"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-98"><code data-line-number=" 98"></code></a></td>
+<td class="code"><code>            <span class="n">string</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">string</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-99"><code data-line-number=" 99"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-100"><code data-line-number="100"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">string</span> <span class="o">=</span> <span class="n">string</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-101"><code data-line-number="101"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-102"><code data-line-number="102"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">after_init</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-103"><code data-line-number="103"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-104"><code data-line-number="104"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">after_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-105"><code data-line-number="105"></code></a></td>
+<td class="code"><code>        <span class="s2">"Extra stuff, executed right after init function"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-106"><code data-line-number="106"></code></a></td>
+<td class="code"><code>        <span class="k">pass</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-107"><code data-line-number="107"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-108"><code data-line-number="108"></code></a></td>
+<td class="code"><code><span class="c1">#### Begin L-System Equations ###</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-109"><code data-line-number="109"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-110"><code data-line-number="110"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">koch</span><span class="p">(</span><span class="n">Lindenmayer</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-111"><code data-line-number="111"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-112"><code data-line-number="112"></code></a></td>
+<td class="code"><code>    <span class="n">rules</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'F'</span><span class="p">:</span><span class="s1">'F-F++F-F'</span><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-113"><code data-line-number="113"></code></a></td>
+<td class="code"><code>    <span class="n">begin</span> <span class="o">=</span> <span class="s2">"F"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-114"><code data-line-number="114"></code></a></td>
+<td class="code"><code>    <span class="n">a</span> <span class="o">=</span> <span class="mi">60</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-115"><code data-line-number="115"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-116"><code data-line-number="116"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">after_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">400</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># set distance appopropiate to complexity</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-117"><code data-line-number="117"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-118"><code data-line-number="118"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-119"><code data-line-number="119"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">square_koch</span><span class="p">(</span><span class="n">Lindenmayer</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-120"><code data-line-number="120"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-121"><code data-line-number="121"></code></a></td>
+<td class="code"><code>    <span class="n">rules</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'F'</span><span class="p">:</span><span class="s1">'F-F+F+F-F'</span><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-122"><code data-line-number="122"></code></a></td>
+<td class="code"><code>    <span class="n">begin</span> <span class="o">=</span> <span class="s2">"F"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-123"><code data-line-number="123"></code></a></td>
+<td class="code"><code>    <span class="n">a</span> <span class="o">=</span> <span class="mi">90</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-124"><code data-line-number="124"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">after_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">400</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-125"><code data-line-number="125"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-126"><code data-line-number="126"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-127"><code data-line-number="127"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">sierpinsky</span><span class="p">(</span><span class="n">Lindenmayer</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-128"><code data-line-number="128"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-129"><code data-line-number="129"></code></a></td>
+<td class="code"><code>    <span class="n">rules</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'A'</span><span class="p">:</span><span class="s1">'B-A-B'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">:</span><span class="s1">'A+B+A'</span><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-130"><code data-line-number="130"></code></a></td>
+<td class="code"><code>    <span class="n">begin</span> <span class="o">=</span> <span class="s1">'A'</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-131"><code data-line-number="131"></code></a></td>
+<td class="code"><code>    <span class="n">a</span> <span class="o">=</span> <span class="mi">60</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-132"><code data-line-number="132"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-133"><code data-line-number="133"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">after_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span> <span class="mi">300</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-134"><code data-line-number="134"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-135"><code data-line-number="135"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">fibonacci_tree</span><span class="p">(</span><span class="n">Lindenmayer</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-136"><code data-line-number="136"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-137"><code data-line-number="137"></code></a></td>
+<td class="code"><code>    <span class="n">rules</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'A'</span><span class="p">:</span><span class="s1">'AA'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">:</span> <span class="s1">'A[-B]+B'</span><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-138"><code data-line-number="138"></code></a></td>
+<td class="code"><code>    <span class="n">begin</span> <span class="o">=</span> <span class="s2">"B"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-139"><code data-line-number="139"></code></a></td>
+<td class="code"><code>    <span class="n">a</span> <span class="o">=</span> <span class="mi">30</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-140"><code data-line-number="140"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-141"><code data-line-number="141"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">after_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span>  <span class="nb">max</span><span class="p">(</span><span class="mi">300</span> <span class="o">/</span> <span class="mi">2</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-142"><code data-line-number="142"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-143"><code data-line-number="143"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">dragon_curve</span><span class="p">(</span><span class="n">Lindenmayer</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-144"><code data-line-number="144"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-145"><code data-line-number="145"></code></a></td>
+<td class="code"><code>    <span class="n">rules</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'x'</span><span class="p">:</span><span class="s1">'x+yF'</span><span class="p">,</span> <span class="s1">'y'</span><span class="p">:</span> <span class="s1">'Fx-y'</span><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-146"><code data-line-number="146"></code></a></td>
+<td class="code"><code>    <span class="n">begin</span> <span class="o">=</span> <span class="s2">"Fx"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-147"><code data-line-number="147"></code></a></td>
+<td class="code"><code>    <span class="n">a</span> <span class="o">=</span> <span class="mi">90</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-148"><code data-line-number="148"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-149"><code data-line-number="149"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">after_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span><span class="nb">max</span><span class="p">(</span> <span class="mi">300</span> <span class="o">/</span> <span class="mf">1.5</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-150"><code data-line-number="150"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-151"><code data-line-number="151"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-152"><code data-line-number="152"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-153"><code data-line-number="153"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">fractal_plant</span><span class="p">(</span><span class="n">Lindenmayer</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-154"><code data-line-number="154"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-155"><code data-line-number="155"></code></a></td>
+<td class="code"><code>    <span class="n">rules</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'X'</span><span class="p">:</span><span class="s1">'F-[[X]+X]+F[+FX]-X'</span><span class="p">,</span> <span class="s1">'F'</span><span class="p">:</span> <span class="s1">'FF'</span><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-156"><code data-line-number="156"></code></a></td>
+<td class="code"><code>    <span class="n">begin</span> <span class="o">=</span> <span class="s2">"X"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-157"><code data-line-number="157"></code></a></td>
+<td class="code"><code>    <span class="n">a</span> <span class="o">=</span> <span class="mi">25</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-158"><code data-line-number="158"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-159"><code data-line-number="159"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">after_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-160"><code data-line-number="160"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">120</span> <span class="o">/</span> <span class="mf">1.9</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-161"><code data-line-number="161"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-162"><code data-line-number="162"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">pensize</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-163"><code data-line-number="163"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-164"><code data-line-number="164"></code></a></td>
+<td class="code"><code><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-165"><code data-line-number="165"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-166"><code data-line-number="166"></code></a></td>
+<td class="code"><code>    <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-167"><code data-line-number="167"></code></a></td>
+<td class="code"><code>    <span class="n">wn</span> <span class="o">=</span> <span class="n">turtle</span><span class="o">.</span><span class="n">Screen</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-168"><code data-line-number="168"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-169"><code data-line-number="169"></code></a></td>
+<td class="code"><code>    <span class="n">things_to_draw</span> <span class="o">=</span> <span class="p">(</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-170"><code data-line-number="170"></code></a></td>
+<td class="code"><code>        <span class="p">(</span><span class="n">koch</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-171"><code data-line-number="171"></code></a></td>
+<td class="code"><code>        <span class="p">(</span><span class="n">square_koch</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-172"><code data-line-number="172"></code></a></td>
+<td class="code"><code>        <span class="p">(</span><span class="n">sierpinsky</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-173"><code data-line-number="173"></code></a></td>
+<td class="code"><code>        <span class="p">(</span><span class="n">fibonacci_tree</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-174"><code data-line-number="174"></code></a></td>
+<td class="code"><code>        <span class="p">(</span><span class="n">dragon_curve</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-175"><code data-line-number="175"></code></a></td>
+<td class="code"><code>        <span class="p">(</span><span class="n">fractal_plant</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>   
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-176"><code data-line-number="176"></code></a></td>
+<td class="code"><code>    <span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-177"><code data-line-number="177"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-178"><code data-line-number="178"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">things_to_draw</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-179"><code data-line-number="179"></code></a></td>
+<td class="code"><code>        <span class="n">wn</span><span class="o">.</span><span class="n">clearscreen</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-180"><code data-line-number="180"></code></a></td>
+<td class="code"><code>        <span class="n">f</span> <span class="o">=</span> <span class="n">c</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-181"><code data-line-number="181"></code></a></td>
+<td class="code"><code>        <span class="n">f</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-182"><code data-line-number="182"></code></a></td>
+<td class="code"><code>        <span class="n">f</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-183"><code data-line-number="183"></code></a></td>
+<td class="code"><code>        <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-184"><code data-line-number="184"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="fractal.html#-185"><code data-line-number="185"></code></a></td>
+<td class="code"><code>    <span class="n">wn</span><span class="o">.</span><span class="n">exitonclick</span><span class="p">()</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bunlar da sonuçlarımız (Büyük Hali İçin Tıklayınız);</p>
 <p><a href="../images/4hyocnt.png"> <img alt="Sonuçlar" src="../images/4hyocnt.png"></a></p>

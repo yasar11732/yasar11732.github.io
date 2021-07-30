@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="2 milyondan küçük asal sayıları toplayacağız">
@@ -11,18 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/euler/euler-10.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/euler/euler-10.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="euler-9.html" title="(Euler 9) Pisagor Üçlüsü" type="text/html">
 <link rel="next" href="euler-11.html" title="(Euler 11) 11. Euler Problemi Çözümü" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="(Euler 10) Asal Sayılar Toplamı">
-<meta property="og:url" content="http://ysar.net/euler/euler-10.html">
-<meta property="og:description" content="2 milyondan küçük asal sayıları toplayacağız">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2018-08-20T00:57:00+03:00">
-<meta property="article:tag" content="mathjax">
 </head>
 <body>
 
@@ -49,87 +42,305 @@
 <p>İki milyondan küçük asal sayıların toplamını bulunuz. <!-- TEASER_END --></p>
 <p>Bir başka asal sayı problemi. <a href="euler-7.html">7. Euler Problemi çözümünde</a> yazdığımız <code>basit_sieve2</code> fonksiyonu ile bu problemi
 kolayca çözebiliriz.</p>
-<pre class="code literal-block"><span></span><span class="k">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">basit_sieve2</span><span class="p">(</span><span class="mi">2000000</span><span class="p">))</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="nb">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">basit_sieve2</span><span class="p">(</span><span class="mi">2000000</span><span class="p">))</span>
+</code></td>
+</tr></table></div>
 
 <p>Bu problemin çözümünü bu kadar kısa tutmamak için, klasik kalbur yöntemine yapılabilecek geliştirmeleri biraz araştırdım. Sonuç olarak, aşağıdaki
 fonksiyonu yazdım. (<a href="https://stackoverflow.com/a/3035188/886669">Stackoverflowda daha hızlı çalışan fonksiyonlar var</a> ancak, daha anlaşılır olması
 açısından, kendi yazdığım versiyonu kullanacağım.)</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">basit_sieve3</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
-    <span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
-    <span class="n">candidates</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-
-    <span class="n">candidates</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">limit</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">c</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">c</span><span class="p">:</span>
-            <span class="n">candidates</span><span class="p">[(</span><span class="n">c</span><span class="o">*</span><span class="n">c</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="o">*</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">((</span><span class="n">limit</span> <span class="o">-</span> <span class="n">c</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">6</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">candidates</span><span class="p">[(</span><span class="n">c</span> <span class="o">*</span> <span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="mi">4</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">%</span><span class="mi">3</span><span class="o">==</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="o">*</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">((</span><span class="n">limit</span> <span class="o">-</span> <span class="n">c</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="mi">4</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">%</span><span class="mi">3</span><span class="o">==</span><span class="mi">2</span><span class="p">))</span> <span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">6</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">x</span><span class="p">]</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">basit_sieve3</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">candidates</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="n">candidates</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">limit</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="n">c</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">c</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>            <span class="n">candidates</span><span class="p">[(</span><span class="n">c</span><span class="o">*</span><span class="n">c</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="o">*</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">((</span><span class="n">limit</span> <span class="o">-</span> <span class="n">c</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">6</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>            <span class="n">candidates</span><span class="p">[(</span><span class="n">c</span> <span class="o">*</span> <span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="mi">4</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">%</span><span class="mi">3</span><span class="o">==</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="o">*</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">((</span><span class="n">limit</span> <span class="o">-</span> <span class="n">c</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="mi">4</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">%</span><span class="mi">3</span><span class="o">==</span><span class="mi">2</span><span class="p">))</span> <span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">6</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">x</span><span class="p">]</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>İlk görüşte bir hayli karışık geliyor, ancak, parça parça incelediğimizde her şey anlaşılır olacak. Öncelikle, burada yapılan optimizasyonun
 ana fikrini anlamak için, <a href="euler-3.html"><code>basit_sieve</code></a> ve <a href="euler-7"><code>basit_sieve2</code></a> fonksiyonlarını karşılaştıralım.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
-<span class="k">def</span> <span class="nf">basit_sieve</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
-    <span class="n">sieve_limit</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
-
-    <span class="n">primes</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-
-    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">next_prime</span> <span class="o">=</span> <span class="n">candidates</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">primes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_prime</span><span class="p">)</span>
-        <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="n">next_prime</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="n">next_prime</span> <span class="o">&gt;</span> <span class="n">sieve_limit</span><span class="p">:</span>
-            <span class="n">primes</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
-            <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">return</span> <span class="n">primes</span>
-
-<span class="k">def</span> <span class="nf">basit_sieve2</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
-
-    <span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
-    <span class="n">limit_sq_root</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">limit</span><span class="p">))</span>
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-        <span class="n">c</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">c</span> <span class="o">&gt;</span> <span class="n">limit_sq_root</span><span class="p">:</span>
-            <span class="k">break</span>
-
-        <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
-            <span class="n">slice_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-            <span class="n">candidates</span><span class="p">[</span><span class="n">i</span><span class="p">::</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">slice_size</span>
-
-    <span class="k">return</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">basit_sieve</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">sieve_limit</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="n">primes</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="n">next_prime</span> <span class="o">=</span> <span class="n">candidates</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="n">primes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_prime</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="n">next_prime</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">next_prime</span> <span class="o">&gt;</span> <span class="n">sieve_limit</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>            <span class="n">primes</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>            <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">primes</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">basit_sieve2</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>    <span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>    <span class="n">limit_sq_root</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">limit</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>        <span class="n">c</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">c</span> <span class="o">&gt;</span> <span class="n">limit_sq_root</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>            <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>            <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>            <span class="n">slice_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>            <span class="n">candidates</span><span class="p">[</span><span class="n">i</span><span class="p">::</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">slice_size</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada dikkat çekmek istediğim kısım, muhtemel asal sayı listelerinin nasıl oluşturulduğu. Önceki versiyonda, <code>candidates = range(2, limit+1)</code> iken,
 sonraki versiyonda <code>candidates = range(3, limit+1, 2)</code> olarak yazdık. İkinci versiyonda, 3'den başlayarak, sadece tek sayıları listeledik. Bunun
 nedeni, çift sayıların asal sayı olamayacağını biliyor olmamız. Peki, bu fikri daha ileriye götürebilir miyiz? Mesela, 2 ve 3'ün katları olmayan
 sayıları listeleyerek başlayabilir miyiz? Evet, yapabiliriz. </p>
-<pre class="code literal-block"><span></span><span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
-<span class="n">candidates</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-
-<span class="n">candidates</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">candidates</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="n">candidates</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu kodlar çalıştıdığında, örneğin <code>limit = 50</code> ise, <code>candidates = [5, 7, 11, 13, 17, 19, 23, 25, 29, 31, 35, 37, 41, 43, 47, 49]</code> olacak. Peki, bunun
 avantajı ne? Üzerinde çalıştığımız listenin uzunluğu, limitimizin üçte birine düştü. Bu avantajla birlikte, başka bir komplikasyon karşımıza çıkıyor.
 Listede olması gereken sayıların üçte ikisi yerinde olmadığı için, indekslerin ona göre kayıdırılması lazım. Aşağıdaki kısımların yaptığı da tam olarak bu;</p>
-<pre class="code literal-block"><span></span><span class="n">candidates</span><span class="p">[(</span><span class="n">c</span><span class="o">*</span><span class="n">c</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="o">*</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">((</span><span class="n">limit</span> <span class="o">-</span> <span class="n">c</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">6</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">candidates</span><span class="p">[(</span><span class="n">c</span> <span class="o">*</span> <span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="mi">4</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">%</span><span class="mi">3</span><span class="o">==</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="o">*</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">((</span><span class="n">limit</span> <span class="o">-</span> <span class="n">c</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="mi">4</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">%</span><span class="mi">3</span><span class="o">==</span><span class="mi">2</span><span class="p">))</span> <span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">6</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">candidates</span><span class="p">[(</span><span class="n">c</span><span class="o">*</span><span class="n">c</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="o">*</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">((</span><span class="n">limit</span> <span class="o">-</span> <span class="n">c</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">6</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">candidates</span><span class="p">[(</span><span class="n">c</span> <span class="o">*</span> <span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="mi">4</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">%</span><span class="mi">3</span><span class="o">==</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="o">*</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">((</span><span class="n">limit</span> <span class="o">-</span> <span class="n">c</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="mi">4</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">%</span><span class="mi">3</span><span class="o">==</span><span class="mi">2</span><span class="p">))</span> <span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">6</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Kodların karmaşasını ortadan kaldırmak için, küçük parçalar halinde inceleyeceğiz. Öncelikle, eskiden, asal sayı olmayan sayıları bir hamlede
 elekten geçirirken (<code>candidates[i::c] = [0] * slice_size</code>), şimdi, bunu iki kısım halinde yapıyoruz. Böylece, elememiz gereken sayıların indekslerini
@@ -154,13 +365,33 @@ $$</p>
 anlaşılıyor. \(n \equiv 0 (mod 3)\) olduduğu bir durum olamaz, çünkü, bu sayıları zaten baştan eledik. <code>c+4-2*(c%3==2)</code> ifadesi, <code>c</code>nin değerine
 göre, <code>c+2</code> veya <code>c+4</code> sayılarına eşit oluyor. Böylece, başlangıç noktasını hesaplayabiliyoruz. Programın geri kalanının, daha önce gördüklerimizden
 bir farkı yok. Şimdi de, zamanlamaya bir göz atalım.</p>
-<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">timeit</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s2">"sum(basit_sieve2(2000000))"</span><span class="p">,</span> <span class="s2">"from euler10 import basit_sieve2"</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="mf">29.754030365461645</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s2">"sum(basit_sieve3(2000000))"</span><span class="p">,</span> <span class="s2">"from euler10 import basit_sieve3"</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="mf">24.98745897986229</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">timeit</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s2">"sum(basit_sieve2(2000000))"</span><span class="p">,</span> <span class="s2">"from euler10 import basit_sieve2"</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="mf">29.754030365461645</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s2">"sum(basit_sieve3(2000000))"</span><span class="p">,</span> <span class="s2">"from euler10 import basit_sieve3"</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-10.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="mf">24.98745897986229</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yaklaşık yüzde 16 hız kazandık. Fonksiyonumuzun zaten bir hayli hızlı olduğunu göz önünde bulundurursak, gayet iyi bir performans artışı.</p>
 <h3>Kaynakça</h3>
@@ -204,7 +435,7 @@ bir farkı yok. Şimdi de, zamanlamaya bir göz atalım.</p>
         </div>
 
     </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
-	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script></article></main><script>
   if(document.location.hostname == "ysar.net")

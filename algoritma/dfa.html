@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
@@ -10,22 +10,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/algoritma/dfa.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/algoritma/dfa.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="../yazilim-dunyasi/json-kutuphanesi.html" title="Flex ve Bison kullanarak JSON İşleme (2. Kısım)" type="text/html">
 <link rel="next" href="../diger/cengel-bulmaca-1.html" title="Çengel Bulmaca" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Düzenli İfade (RegExp) Motorları ve Otomatlar">
-<meta property="og:url" content="http://ysar.net/algoritma/dfa.html">
-<meta property="og:description" content="Geçtiğimiz günlerde, Flex ve Bison ile JSON işlemeye yönelik tutorial yazdım.
-
-Flex ve Bison kullanarak JSON İşleme (1. Kısım)
-Flex ve Bison kullanarak JSON İşleme (2. Kısım)
-
-O iki yazı üzerinde çalı">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2019-07-01T21:44:00+03:00">
 </head>
 <body>
 
@@ -96,23 +85,59 @@ eşleşen bir metin tuşladığımızda başarılı ledi yanacak, aksi halde ba�
 Bunlar küçük harflerle 'a','b' ve 'c' tuşları olsun. Makinemizde, 3
 adet de durum ledi olacak, bunlar da büyük harflerle 'A','B' ve 'C' olsun.
 Bu şartlarda, <code>a</code> düzenli ifadesi ile eşleşecek bir DFA, aşağıdaki şemaya göre çalışabilir.</p>
-<p><img src="../../example1.svg"></p>
+<p><img src="example1.svg"></p>
 <p>Yukarıdaki şemada, 'A' ledi başlangıç durumunu, 'B' ledi başarılı eşleşmeyi,
 'C' ledi de başarısız eşlemeyi ifade etsin. Başlangıç durumunda iken, 'a' tuşuna
 bastığımızda, 'B' ledini yakacağız. Diğer tüm durumlarda, 'C' ledini yakacağız.
 Böylece, tek bir 'a' karakteri kabul eden bir DFA tasarlamış olduk.</p>
 <p>Aynı DFA'yı, aşağıdaki tablo ile de gösterebiliriz.</p>
-<pre class="code literal-block"><span></span>+-------+---+---+---+
-| Durum | a | b | c |
-+-------+------------
-|  A    | B | C | C |
-+-------+---+---+---+
-|  B    | C | C | C |
-+-------+---+---+---+
-|  C    | C | C | C |
-+-------+---+---+---+
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">+-------+---+---+---+</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">| Durum | a | b | c |</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="err">+-------+------------</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="err">|  A    | B | C | C |</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="err">+-------+---+---+---+</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="err">|  B    | C | C | C |</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="err">+-------+---+---+---+</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code><span class="err">|  C    | C | C | C |</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-9"><code data-line-number="9"></code></a></td>
+<td class="code"><code><span class="err">+-------+---+---+---+</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Soldaki sütun, o anki durumu, üst satır, işleyeceğimiz bir sonraki karakteri, hücre
 içindeki değerler de, o durumda o karakter işlendiğinde hangi duruma geçileceğini
@@ -121,11 +146,11 @@ ifade ediyor.</p>
 karakteri ile eşleme yapmak istiyoruz. Bunun için de, aşağıdaki şekilde bir DFA
 yapabiliriz. Burada, başlangıç ve başarılı ledi 'A' ledi, başarısız ledi 'B' ledi
 olsun. 'C' ye ihtiyacımız yok.</p>
-<p><img src="../../example2.svg"></p>
+<p><img src="example2.svg"></p>
 <p>Şimdi de, <code>a+</code> ifadesine bakalım. Bir öncekinden farkı, en az bir tane
 'a' karakterine ihtiyaç duyulması. Aşağıdaki DFA'da, başlangıç 'C',
 başarılı 'A' ve başarısız 'B' durumu olsun.</p>
-<p><img src="../../example3.svg"></p>
+<p><img src="example3.svg"></p>
 <p>Şimdiye kadar yaptığımız örneklerde, tüm durumlar ya başlangıç, ya başarılı
 eşleşme ya da hata belirtiyordu. Bunların haricinde, belirsizlik ifade
 eden durumlarımız da olabilir. Bu durumlar, eşlemenin sağlanıp sağlanmadığını
@@ -137,226 +162,946 @@ daha 'a' karakterine ihtiyacımız var. İlk okuduğumuz karakter 'a' veya 'b' i
 daha fazla karakter okumadan başarılı veya başarısız bir sonuç bildiremeyiz. Bu düzenli
 ifadeyi DFA'ya çevirmek için, dördüncü bir duruma ihtiyacımız olacak. Bu duruma da 'D'
 durumu diyelim.</p>
-<p><img src="../../example4.svg"></p>
+<p><img src="example4.svg"></p>
 <p>DFA'larımız büyüdükçe, başarısız her girdiyi bir noktaya toplamak şemalarımızın
 okunmasını zorlaştıracağı için, şemada belirtilmeyen her yolun başarısız durumuna
 gittiğini varsayabiliriz. Bu varsayıma dayanarak, yukarıdaki şema ile, aşağıdaki
 şema birbirine denk olarak değerlendirilmelidir.</p>
-<p><img src="../../example5.svg"></p>
+<p><img src="example5.svg"></p>
 <h2>DFA'yı Nasıl Kodlayacağız</h2>
 <p>Uygulamada,  "State Machine" (durum makinesi?) kodlamak için
 kullanılan en az iki farklı yöntem var. Bunlardan biri, durumlar arasındaki geçişi
 bir tabloda göstermek. Bir önceki başlık altında yaptığımız son örneği, bir
 tablo ile kodlamak istersek, aşağıdaki gibi kodlayabiliriz.</p>
-<pre class="code literal-block"><span></span><span class="kt">int</span> <span class="nf">ornek_5</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">string</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">char</span> <span class="n">tablo</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-              <span class="c1">//  a | b | c</span>
-        <span class="cm">/* A */</span> <span class="p">{</span><span class="sc">'B'</span><span class="p">,</span><span class="sc">'B'</span><span class="p">,</span><span class="sc">'D'</span><span class="p">},</span>
-        <span class="cm">/* B */</span> <span class="p">{</span><span class="sc">'C'</span><span class="p">,</span><span class="sc">'D'</span><span class="p">,</span><span class="sc">'D'</span><span class="p">},</span>
-        <span class="cm">/* C */</span> <span class="p">{</span><span class="sc">'D'</span><span class="p">,</span><span class="sc">'D'</span><span class="p">,</span><span class="sc">'D'</span><span class="p">},</span>
-        <span class="cm">/* D */</span> <span class="p">{</span><span class="sc">'D'</span><span class="p">,</span><span class="sc">'D'</span><span class="p">,</span><span class="sc">'D'</span><span class="p">},</span>
-    <span class="p">};</span>
-
-    <span class="kt">int</span> <span class="n">state</span> <span class="o">=</span> <span class="sc">'A'</span><span class="p">;</span> <span class="c1">// Başlangıç</span>
-
-    <span class="kt">int</span> <span class="n">match_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// kaç karakter eşledik</span>
-    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>          <span class="c1">// kaçıncı karakteri işliyoruz.</span>
-
-    <span class="k">while</span><span class="p">(</span><span class="n">state</span> <span class="o">!=</span> <span class="sc">'D'</span><span class="p">)</span> <span class="c1">// D başarısız durum</span>
-    <span class="p">{</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">state</span> <span class="o">==</span> <span class="sc">'C'</span><span class="p">)</span> <span class="c1">// C başarılı durum</span>
-            <span class="n">match_size</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
-
-        <span class="n">state</span> <span class="o">=</span> <span class="n">tablo</span><span class="p">[</span><span class="n">state</span> <span class="o">-</span> <span class="sc">'A'</span><span class="p">][</span><span class="n">string</span><span class="p">[</span><span class="n">i</span><span class="o">++</span><span class="p">]</span> <span class="o">-</span> <span class="sc">'a'</span><span class="p">];</span>
-    <span class="p">}</span>
-
-    <span class="k">return</span> <span class="n">i</span><span class="p">;</span> <span class="c1">// kaç karakter eşleyebildiğimizi döndür</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">ornek_5</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">string</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="n">tablo</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>              <span class="c1">//  a | b | c</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>        <span class="cm">/* A */</span> <span class="p">{</span><span class="sc">'B'</span><span class="p">,</span><span class="sc">'B'</span><span class="p">,</span><span class="sc">'D'</span><span class="p">},</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>        <span class="cm">/* B */</span> <span class="p">{</span><span class="sc">'C'</span><span class="p">,</span><span class="sc">'D'</span><span class="p">,</span><span class="sc">'D'</span><span class="p">},</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>        <span class="cm">/* C */</span> <span class="p">{</span><span class="sc">'D'</span><span class="p">,</span><span class="sc">'D'</span><span class="p">,</span><span class="sc">'D'</span><span class="p">},</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="cm">/* D */</span> <span class="p">{</span><span class="sc">'D'</span><span class="p">,</span><span class="sc">'D'</span><span class="p">,</span><span class="sc">'D'</span><span class="p">},</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="p">};</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">state</span> <span class="o">=</span> <span class="sc">'A'</span><span class="p">;</span> <span class="c1">// Başlangıç</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">match_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// kaç karakter eşledik</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>          <span class="c1">// kaçıncı karakteri işliyoruz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="k">while</span><span class="p">(</span><span class="n">state</span> <span class="o">!=</span> <span class="sc">'D'</span><span class="p">)</span> <span class="c1">// D başarısız durum</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>        <span class="k">if</span><span class="p">(</span><span class="n">state</span> <span class="o">==</span> <span class="sc">'C'</span><span class="p">)</span> <span class="c1">// C başarılı durum</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>            <span class="n">match_size</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>        <span class="n">state</span> <span class="o">=</span> <span class="n">tablo</span><span class="p">[</span><span class="n">state</span> <span class="o">-</span> <span class="sc">'A'</span><span class="p">][</span><span class="n">string</span><span class="p">[</span><span class="n">i</span><span class="o">++</span><span class="p">]</span> <span class="o">-</span> <span class="sc">'a'</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">i</span><span class="p">;</span> <span class="c1">// kaç karakter eşleyebildiğimizi döndür</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>DFA'yı kodlamak için kullanılabilecek bir diğer yöntem de, durum geçişlerini
 <code>switch</code> ifadesiyle göstermek. Bunun C kodunda karşılığı da aşağıdaki şekilde
 olabilir.</p>
-<pre class="code literal-block"><span></span><span class="kt">int</span> <span class="nf">ornek_5_2</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">string</span><span class="p">)</span>
-<span class="p">{</span>
-
-
-    <span class="kt">int</span> <span class="n">state</span> <span class="o">=</span> <span class="sc">'A'</span><span class="p">;</span> <span class="c1">// Başlangıç</span>
-
-    <span class="kt">int</span> <span class="n">match_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// kaç karakter eşledik</span>
-    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>          <span class="c1">// kaçıncı karakteri işliyoruz.</span>
-
-    <span class="k">while</span><span class="p">(</span><span class="n">state</span> <span class="o">!=</span> <span class="sc">'D'</span><span class="p">)</span> <span class="c1">// D başarısız durum</span>
-    <span class="p">{</span>
-        <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">string</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-        <span class="k">switch</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">case</span> <span class="sc">'A'</span><span class="o">:</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'a'</span> <span class="o">||</span> <span class="n">c</span> <span class="o">==</span> <span class="sc">'b'</span><span class="p">)</span>
-                    <span class="n">state</span> <span class="o">=</span> <span class="sc">'B'</span><span class="p">;</span>
-                <span class="k">else</span>
-                    <span class="n">state</span> <span class="o">=</span> <span class="sc">'D'</span><span class="p">;</span>
-            <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="sc">'B'</span><span class="o">:</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'a'</span><span class="p">)</span>
-                    <span class="n">state</span> <span class="o">=</span> <span class="sc">'C'</span><span class="p">;</span>
-                <span class="k">else</span>
-                    <span class="n">state</span> <span class="o">=</span> <span class="sc">'D'</span><span class="p">;</span>
-            <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="sc">'C'</span><span class="o">:</span>
-            <span class="k">case</span> <span class="sc">'D'</span><span class="o">:</span>
-                <span class="n">state</span> <span class="o">=</span> <span class="sc">'D'</span><span class="p">;</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="p">}</span>
-
-        <span class="o">++</span><span class="n">i</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">return</span> <span class="n">i</span><span class="p">;</span> <span class="c1">// kaç karakter eşleyebildiğimizi döndür</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">ornek_5_2</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">string</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">state</span> <span class="o">=</span> <span class="sc">'A'</span><span class="p">;</span> <span class="c1">// Başlangıç</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">match_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// kaç karakter eşledik</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>          <span class="c1">// kaçıncı karakteri işliyoruz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="k">while</span><span class="p">(</span><span class="n">state</span> <span class="o">!=</span> <span class="sc">'D'</span><span class="p">)</span> <span class="c1">// D başarısız durum</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">string</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>        <span class="k">switch</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>            <span class="k">case</span> <span class="sc">'A'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'a'</span> <span class="o">||</span> <span class="n">c</span> <span class="o">==</span> <span class="sc">'b'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>                    <span class="n">state</span> <span class="o">=</span> <span class="sc">'B'</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>                <span class="k">else</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>                    <span class="n">state</span> <span class="o">=</span> <span class="sc">'D'</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>            <span class="k">break</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>            <span class="k">case</span> <span class="sc">'B'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'a'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>                    <span class="n">state</span> <span class="o">=</span> <span class="sc">'C'</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>                <span class="k">else</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>                    <span class="n">state</span> <span class="o">=</span> <span class="sc">'D'</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>            <span class="k">break</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>            <span class="k">case</span> <span class="sc">'C'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>            <span class="k">case</span> <span class="sc">'D'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>                <span class="n">state</span> <span class="o">=</span> <span class="sc">'D'</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>            <span class="k">break</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>        <span class="o">++</span><span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">i</span><span class="p">;</span> <span class="c1">// kaç karakter eşleyebildiğimizi döndür</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Makrolarla biraz daha okunaklı olarak kodlayabiliriz.</p>
-<pre class="code literal-block"><span></span><span class="cp">#define SETSTATE(x) {state = (x); goto set_state_end; }</span>
-<span class="cp">#define END_OF_CASE SETSTATE(0)</span>
-<span class="cp">#define MATCH_FOUND (match_size = i);</span>
-<span class="kt">int</span> <span class="nf">ornek_5_3</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">string</span><span class="p">)</span>
-<span class="p">{</span>
-
-
-    <span class="kt">int</span> <span class="n">state</span> <span class="o">=</span> <span class="sc">'A'</span><span class="p">;</span> <span class="c1">// Başlangıç</span>
-
-    <span class="kt">int</span> <span class="n">match_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// kaç karakter eşledik</span>
-    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>          <span class="c1">// kaçıncı karakteri işliyoruz.</span>
-
-    <span class="k">while</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">string</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-        <span class="k">switch</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">case</span> <span class="sc">'A'</span><span class="o">:</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'a'</span> <span class="o">||</span> <span class="n">c</span> <span class="o">==</span> <span class="sc">'b'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'B'</span><span class="p">)</span>
-                <span class="n">END_OF_CASE</span>
-            <span class="k">case</span> <span class="sc">'B'</span><span class="o">:</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'a'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'C'</span><span class="p">)</span>
-                <span class="n">END_OF_CASE</span>
-            <span class="k">case</span> <span class="sc">'C'</span><span class="o">:</span>
-                <span class="n">MATCH_FOUND</span>
-                <span class="n">END_OF_CASE</span>
-        <span class="p">}</span>
-<span class="nl">set_state_end</span><span class="p">:</span>
-        <span class="o">++</span><span class="n">i</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">return</span> <span class="n">i</span><span class="p">;</span> <span class="c1">// kaç karakter eşleyebildiğimizi döndür</span>
-<span class="p">}</span>
-<span class="cp">#undef SETSTATE</span>
-<span class="cp">#undef END_OF_CASE</span>
-<span class="cp">#undef MATCH_FOUND</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="cp">#define SETSTATE(x) {state = (x); goto set_state_end; }</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="cp">#define END_OF_CASE SETSTATE(0)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="cp">#define MATCH_FOUND (match_size = i);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">ornek_5_3</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">string</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">state</span> <span class="o">=</span> <span class="sc">'A'</span><span class="p">;</span> <span class="c1">// Başlangıç</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">match_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// kaç karakter eşledik</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>          <span class="c1">// kaçıncı karakteri işliyoruz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="k">while</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">string</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>        <span class="k">switch</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>            <span class="k">case</span> <span class="sc">'A'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'a'</span> <span class="o">||</span> <span class="n">c</span> <span class="o">==</span> <span class="sc">'b'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'B'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>                <span class="n">END_OF_CASE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>            <span class="k">case</span> <span class="sc">'B'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'a'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'C'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>                <span class="n">END_OF_CASE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>            <span class="k">case</span> <span class="sc">'C'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>                <span class="n">MATCH_FOUND</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>                <span class="n">END_OF_CASE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code><span class="nl">set_state_end</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>        <span class="o">++</span><span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">i</span><span class="p">;</span> <span class="c1">// kaç karakter eşleyebildiğimizi döndür</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code><span class="cp">#undef SETSTATE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code><span class="cp">#undef END_OF_CASE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code><span class="cp">#undef MATCH_FOUND</span>
+</code></td>
+</tr>
+</table></div>
 
 <h2>Sayı Eşleyen DFA</h2>
 <p><code>[-]?(0|[1-9][0-9]*)([.][0-9]+)?([eE][-+]?[0-9]+)?</code> düzenli ifadesine karşılık gelen DFA'yı
 aşağıdaki şekilde oluşturdum.</p>
-<p><img src="../../dfa_graph.svg"></p>
+<p><img src="dfa_graph.svg"></p>
 <p>İlk yaptığımız örneklere nazaran, biraz daha uzun bir DFA, ancak, temel prensipleri
 doğru kavradıysanız, şema ile düzenli ifadeyi karşılaştırarak, nasıl çalıştığını
 rahatlıkla anlayabilirsiniz diye düşünüyorum. Bu DFA'nın C kodu olarak karşılığı
 da, son yaptığım örneğin, biraz daha uzunu olacak.</p>
-<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
-
-<span class="kt">unsigned</span> <span class="kt">long</span> <span class="nf">match_number</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s</span><span class="p">)</span>
-<span class="p">{</span>
-<span class="cp">#define SETSTATE(x) {state = (x); goto set_state_end; }</span>
-<span class="cp">#define END_OF_CASE SETSTATE(0)</span>
-<span class="cp">#define MATCH_FOUND (match_size = i);</span>
-
-    <span class="kt">int</span> <span class="n">state</span> <span class="o">=</span> <span class="sc">'A'</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">match_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="k">while</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-
-        <span class="k">switch</span> <span class="p">(</span><span class="n">state</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">case</span> <span class="sc">'A'</span><span class="o">:</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'0'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'B'</span><span class="p">)</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'-'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'C'</span><span class="p">)</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'1'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'D'</span><span class="p">)</span>
-                <span class="n">END_OF_CASE</span>
-            <span class="k">case</span> <span class="sc">'B'</span><span class="o">:</span>
-                <span class="n">MATCH_FOUND</span> <span class="c1">// 0 veya -0 esledik</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'.'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'E'</span><span class="p">)</span>
-                <span class="n">END_OF_CASE</span>
-            <span class="k">case</span> <span class="sc">'C'</span><span class="o">:</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'0'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'B'</span><span class="p">)</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'1'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'D'</span><span class="p">)</span>
-                <span class="n">END_OF_CASE</span>
-            <span class="k">case</span> <span class="sc">'D'</span><span class="o">:</span>
-                <span class="n">MATCH_FOUND</span> <span class="c1">// pozitif tamsayı esledik</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'D'</span><span class="p">)</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'.'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'E'</span><span class="p">)</span>
-                <span class="n">END_OF_CASE</span>
-            <span class="k">case</span> <span class="sc">'E'</span><span class="o">:</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'F'</span><span class="p">)</span>
-                <span class="n">END_OF_CASE</span>
-            <span class="k">case</span> <span class="sc">'F'</span><span class="o">:</span>
-                <span class="n">MATCH_FOUND</span> <span class="c1">// ondalikli sayi esledik</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'F'</span><span class="p">)</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'e'</span> <span class="o">||</span> <span class="n">c</span> <span class="o">==</span> <span class="sc">'E'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'G'</span><span class="p">)</span>
-                <span class="n">END_OF_CASE</span>
-            <span class="k">case</span> <span class="sc">'G'</span><span class="o">:</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'-'</span> <span class="o">||</span> <span class="n">c</span> <span class="o">==</span> <span class="sc">'+'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'H'</span><span class="p">)</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'J'</span><span class="p">)</span>
-                <span class="n">END_OF_CASE</span>
-            <span class="k">case</span> <span class="sc">'H'</span><span class="o">:</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'J'</span><span class="p">)</span>
-                <span class="n">END_OF_CASE</span>
-            <span class="k">case</span> <span class="sc">'J'</span><span class="o">:</span>
-                <span class="n">MATCH_FOUND</span> <span class="c1">// bilimsel gosterimli sayi esledik</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'J'</span><span class="p">)</span>
-                <span class="n">END_OF_CASE</span>
-        <span class="p">}</span>
-
-<span class="nl">set_state_end</span><span class="p">:</span>
-        <span class="o">++</span><span class="n">i</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">return</span> <span class="n">match_size</span><span class="p">;</span>
-
-<span class="cp">#undef MATCH_FOUND</span>
-<span class="cp">#undef END_OF_CASE</span>
-<span class="cp">#undef SETSTATE</span>
-<span class="p">}</span>
-
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
-<span class="p">{</span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">"Match </span><span class="se">\"</span><span class="s">%s</span><span class="se">\"</span><span class="s">: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">match_number</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]));</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="kt">unsigned</span> <span class="kt">long</span> <span class="nf">match_number</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="cp">#define SETSTATE(x) {state = (x); goto set_state_end; }</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="cp">#define END_OF_CASE SETSTATE(0)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="cp">#define MATCH_FOUND (match_size = i);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">state</span> <span class="o">=</span> <span class="sc">'A'</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">match_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="k">while</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>        <span class="k">switch</span> <span class="p">(</span><span class="n">state</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>        <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>            <span class="k">case</span> <span class="sc">'A'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'0'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'B'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'-'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'C'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'1'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'D'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>                <span class="n">END_OF_CASE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>            <span class="k">case</span> <span class="sc">'B'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>                <span class="n">MATCH_FOUND</span> <span class="c1">// 0 veya -0 esledik</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'.'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'E'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>                <span class="n">END_OF_CASE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>            <span class="k">case</span> <span class="sc">'C'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'0'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'B'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'1'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'D'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>                <span class="n">END_OF_CASE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>            <span class="k">case</span> <span class="sc">'D'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>                <span class="n">MATCH_FOUND</span> <span class="c1">// pozitif tamsayı esledik</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'D'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'.'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'E'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code>                <span class="n">END_OF_CASE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code>            <span class="k">case</span> <span class="sc">'E'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-38"><code data-line-number="38"></code></a></td>
+<td class="code"><code>                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'F'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-39"><code data-line-number="39"></code></a></td>
+<td class="code"><code>                <span class="n">END_OF_CASE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-40"><code data-line-number="40"></code></a></td>
+<td class="code"><code>            <span class="k">case</span> <span class="sc">'F'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-41"><code data-line-number="41"></code></a></td>
+<td class="code"><code>                <span class="n">MATCH_FOUND</span> <span class="c1">// ondalikli sayi esledik</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-42"><code data-line-number="42"></code></a></td>
+<td class="code"><code>                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'F'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-43"><code data-line-number="43"></code></a></td>
+<td class="code"><code>                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'e'</span> <span class="o">||</span> <span class="n">c</span> <span class="o">==</span> <span class="sc">'E'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'G'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-44"><code data-line-number="44"></code></a></td>
+<td class="code"><code>                <span class="n">END_OF_CASE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-45"><code data-line-number="45"></code></a></td>
+<td class="code"><code>            <span class="k">case</span> <span class="sc">'G'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-46"><code data-line-number="46"></code></a></td>
+<td class="code"><code>                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'-'</span> <span class="o">||</span> <span class="n">c</span> <span class="o">==</span> <span class="sc">'+'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'H'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-47"><code data-line-number="47"></code></a></td>
+<td class="code"><code>                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'J'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-48"><code data-line-number="48"></code></a></td>
+<td class="code"><code>                <span class="n">END_OF_CASE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-49"><code data-line-number="49"></code></a></td>
+<td class="code"><code>            <span class="k">case</span> <span class="sc">'H'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-50"><code data-line-number="50"></code></a></td>
+<td class="code"><code>                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'J'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-51"><code data-line-number="51"></code></a></td>
+<td class="code"><code>                <span class="n">END_OF_CASE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-52"><code data-line-number="52"></code></a></td>
+<td class="code"><code>            <span class="k">case</span> <span class="sc">'J'</span><span class="o">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-53"><code data-line-number="53"></code></a></td>
+<td class="code"><code>                <span class="n">MATCH_FOUND</span> <span class="c1">// bilimsel gosterimli sayi esledik</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-54"><code data-line-number="54"></code></a></td>
+<td class="code"><code>                <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">'9'</span><span class="p">)</span> <span class="n">SETSTATE</span><span class="p">(</span><span class="sc">'J'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-55"><code data-line-number="55"></code></a></td>
+<td class="code"><code>                <span class="n">END_OF_CASE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-56"><code data-line-number="56"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-57"><code data-line-number="57"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-58"><code data-line-number="58"></code></a></td>
+<td class="code"><code><span class="nl">set_state_end</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-59"><code data-line-number="59"></code></a></td>
+<td class="code"><code>        <span class="o">++</span><span class="n">i</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-60"><code data-line-number="60"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-61"><code data-line-number="61"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-62"><code data-line-number="62"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">match_size</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-63"><code data-line-number="63"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-64"><code data-line-number="64"></code></a></td>
+<td class="code"><code><span class="cp">#undef MATCH_FOUND</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-65"><code data-line-number="65"></code></a></td>
+<td class="code"><code><span class="cp">#undef END_OF_CASE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-66"><code data-line-number="66"></code></a></td>
+<td class="code"><code><span class="cp">#undef SETSTATE</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-67"><code data-line-number="67"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-68"><code data-line-number="68"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-69"><code data-line-number="69"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-70"><code data-line-number="70"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-71"><code data-line-number="71"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-72"><code data-line-number="72"></code></a></td>
+<td class="code"><code>    <span class="n">printf</span><span class="p">(</span><span class="s">"Match </span><span class="se">\"</span><span class="s">%s</span><span class="se">\"</span><span class="s">: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">match_number</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-73"><code data-line-number="73"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-74"><code data-line-number="74"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Fonksiyonu komut satırından test edebilmek için, <code>main</code> fonksiyonu da yazdım. Komut satırından
 vereceğiniz 1. argüman üzerinde eşleme işlemini yapıyor. Aşağıdaki gibi farklı sayı çeşitleriyle
 test edebilirsiniz.</p>
-<pre class="code literal-block"><span></span>0
--0
-1
-12
-12.4
--12.4
-12.4E-02
--12.42e+12
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">-0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="err">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="err">12</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="err">12.4</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="err">-12.4</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="err">12.4E-02</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dfa.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code><span class="err">-12.42e+12</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Artık düzenli ifadelerin nasıl çalıştığı konusunda biraz bilgi sahibi oldunuz. Hayatınıza
 daha bilgili olarak devam edebilirsiniz.</p>

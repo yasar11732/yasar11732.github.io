@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Birden fazla sayının en küçük ortak katını hesaplayacağız.">
@@ -11,18 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/euler/euler-5.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/euler/euler-5.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="euler-4.html" title="(Euler 4) Palindrom" type="text/html">
-<link rel="next" href="euler-6.html" title="(Euler 6) Ardışık Sayıların Toplamı" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="(Euler 5) EBOB EKOK">
-<meta property="og:url" content="http://ysar.net/euler/euler-5.html">
-<meta property="og:description" content="Birden fazla sayının en küçük ortak katını hesaplayacağız.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2018-07-26T21:13:00+03:00">
-<meta property="article:tag" content="mathjax">
+<link rel="next" href="euler-6.html" title="(Euler 6) Ardışık Sayıların Toplamı " type="text/html">
 </head>
 <body>
 
@@ -53,61 +46,273 @@ standard ekok bulma yöntemini ikiden fazla sayı için de aynen kullanabiliriz.
 <p>Bu algoritmayı uygulayabilmek için öncelikle sayıların içindeki en büyük sayıya kadar olan asal sayıları tespit etmeliyiz.
 Bunun için <a href="euler-3.html">3. Euler Problemi çözümünde</a> oluşturduğumuz <code>basit_sieve</code> yöntemini kullanacağız. Ekok tespiti için
 ise yukarıdaki resimdeki yönteme aynen bağlı kalacağız.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="nb">reduce</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
-
-<span class="k">def</span> <span class="nf">basit_sieve</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
-    <span class="n">sieve_limit</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
-
-    <span class="n">primes</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-
-    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">next_prime</span> <span class="o">=</span> <span class="n">candidates</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">primes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_prime</span><span class="p">)</span>
-        <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="n">next_prime</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="n">next_prime</span> <span class="o">&gt;</span> <span class="n">sieve_limit</span><span class="p">:</span>
-            <span class="n">primes</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
-            <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">return</span> <span class="n">primes</span>
-
-<span class="k">def</span> <span class="nf">toplu_ekok</span><span class="p">(</span><span class="n">numbers</span><span class="p">):</span>
-
-    <span class="n">primes</span> <span class="o">=</span> <span class="n">basit_sieve</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">numbers</span><span class="p">))</span>
-    <span class="n">prime_index</span> <span class="o">=</span> <span class="mi">0</span>
-
-    <span class="n">prods</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">prime</span> <span class="o">=</span> <span class="n">primes</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-
-    <span class="k">while</span> <span class="n">numbers</span><span class="p">:</span>
-
-
-        <span class="n">t1</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="n">prime_used</span> <span class="o">=</span> <span class="bp">False</span>
-
-        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">numbers</span><span class="p">:</span>
-            <span class="n">d</span><span class="p">,</span><span class="n">m</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">prime</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">m</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">t1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-                <span class="n">prime_used</span> <span class="o">=</span> <span class="bp">True</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">t1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-
-
-        <span class="k">if</span> <span class="n">prime_used</span><span class="p">:</span>
-            <span class="n">prods</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prime</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">prime</span> <span class="o">=</span> <span class="n">primes</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-
-        <span class="n">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">t1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">]</span>
-
-    <span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="n">prods</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">reduce</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">basit_sieve</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="n">sieve_limit</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="n">primes</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">candidates</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">limit</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="n">next_prime</span> <span class="o">=</span> <span class="n">candidates</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="n">primes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_prime</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>        <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="n">next_prime</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">next_prime</span> <span class="o">&gt;</span> <span class="n">sieve_limit</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>            <span class="n">primes</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>            <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">primes</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">toplu_ekok</span><span class="p">(</span><span class="n">numbers</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>    <span class="n">primes</span> <span class="o">=</span> <span class="n">basit_sieve</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">numbers</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>    <span class="n">prime_index</span> <span class="o">=</span> <span class="mi">0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>    <span class="n">prods</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>    <span class="n">prime</span> <span class="o">=</span> <span class="n">primes</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="n">numbers</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>        <span class="n">t1</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>        <span class="n">prime_used</span> <span class="o">=</span> <span class="kc">False</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">numbers</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code>            <span class="n">d</span><span class="p">,</span><span class="n">m</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">prime</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-38"><code data-line-number="38"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-39"><code data-line-number="39"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">m</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-40"><code data-line-number="40"></code></a></td>
+<td class="code"><code>                <span class="n">t1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-41"><code data-line-number="41"></code></a></td>
+<td class="code"><code>                <span class="n">prime_used</span> <span class="o">=</span> <span class="kc">True</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-42"><code data-line-number="42"></code></a></td>
+<td class="code"><code>            <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-43"><code data-line-number="43"></code></a></td>
+<td class="code"><code>                <span class="n">t1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-44"><code data-line-number="44"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-45"><code data-line-number="45"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-46"><code data-line-number="46"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">prime_used</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-47"><code data-line-number="47"></code></a></td>
+<td class="code"><code>            <span class="n">prods</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prime</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-48"><code data-line-number="48"></code></a></td>
+<td class="code"><code>        <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-49"><code data-line-number="49"></code></a></td>
+<td class="code"><code>            <span class="n">prime</span> <span class="o">=</span> <span class="n">primes</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-50"><code data-line-number="50"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-51"><code data-line-number="51"></code></a></td>
+<td class="code"><code>        <span class="n">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">t1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-52"><code data-line-number="52"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-53"><code data-line-number="53"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="n">prods</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yukarıdaki <code>toplu_ekok</code> fonksiyonunu <code>toplu_ekok(range(1,21))</code> şeklinde çağırarak,
 bu euler probleminin sonucunu elde edebilirsiniz.</p>
@@ -129,22 +334,78 @@ olmak zorundadır. Böylece, \(ebob(a,b)\) problemini biraz daha basitleştirmi�
  devam ettiğimizde, elimizde kalan \(b\) sayısı, ilk terimin ebob'u olacaktır. Bu şekilde ebob bulmaya, öklit algoritması deniyor.</li>
 </ol>
 <p>Yukarıdaki gözlemlerden yola çıkarak, euler problemini aşağıdaki şekilde çözebiliriz.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="nb">reduce</span>
-<span class="k">def</span> <span class="nf">ebob</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
-    <span class="s2">"Iki sayinin e.b.o.b'unu bulur"</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">y</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">x</span>
-    <span class="k">return</span> <span class="n">ebob</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">%</span> <span class="n">y</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">ekok</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
-    <span class="s2">"Iki sayinin ekokunu bulur"</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">)</span><span class="o">//</span><span class="n">ebob</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">euler5</span><span class="p">(</span><span class="n">sayilar</span><span class="p">):</span>
-    <span class="s2">"Verilen sayilarin toplu halde ekokunu bulur"</span>
-    <span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">ekok</span><span class="p">,</span> <span class="n">sayilar</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">reduce</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">ebob</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="s2">"Iki sayinin e.b.o.b'unu bulur"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="ow">not</span> <span class="n">y</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">x</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">ebob</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">%</span> <span class="n">y</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">ekok</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="s2">"Iki sayinin ekokunu bulur"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">)</span><span class="o">//</span><span class="n">ebob</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">euler5</span><span class="p">(</span><span class="n">sayilar</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="s2">"Verilen sayilarin toplu halde ekokunu bulur"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-5.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">reduce</span><span class="p">(</span><span class="n">ekok</span><span class="p">,</span> <span class="n">sayilar</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Öklit algoritmasıyla ilk kez karşılaşıyorsanız, elinize kağıt kalem alarak farklı sayılarla algoritmayı deneyerek, çalışma
 tarzını anlamaya çalışmanızı tavsiye ederim.</p>
@@ -159,11 +420,11 @@ karelerinin toplamı ile toplamlarının karesi arasındaki farkı bulunuz.</p>
     </div>
     <aside class="postpromonav"><nav><div class="pager">
                 <a href="euler-4.html" rel="prev" title="(Euler 4) Palindrom">Önceki yazı</a>
-                <a href="euler-6.html" rel="next" title="(Euler 6) Ardışık Sayıların Toplamı">Sonraki yazı</a>
+                <a href="euler-6.html" rel="next" title="(Euler 6) Ardışık Sayıların Toplamı ">Sonraki yazı</a>
         </div>
 
     </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
-	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script></article></main><script>
   if(document.location.hostname == "ysar.net")

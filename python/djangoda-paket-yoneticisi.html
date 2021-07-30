@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Django modelleri web programı geliştirmek için değil, bir paket yöneticisi yapmak için kullanılabilir mi?">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/djangoda-paket-yoneticisi.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/djangoda-paket-yoneticisi.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="if-else-mi-try-except-mi.html" title="If..Else yada Try..Except, hangisi ne zaman kullanılmalı?" type="text/html">
 <link rel="next" href="../algoritma/benzer-yazi-analizi.html" title="Benzer yazı analizi 1" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Django Modelleriyle Paket Yöneticisi">
-<meta property="og:url" content="http://ysar.net/python/djangoda-paket-yoneticisi.html">
-<meta property="og:description" content="Django modelleri web programı geliştirmek için değil, bir paket yöneticisi yapmak için kullanılabilir mi?">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2011-08-17T14:49:00+03:00">
 </head>
 <body>
 
@@ -57,160 +51,674 @@ yöneticisi yazacağız. Lütfen örnekdeki kodu çalıştırmaya çalışmayın
 Örnek olsun diye yazılmış, bir kez bile denenmemiştir. Bunu açıklığa
 kavuşturduğumuza göre, işe koyulalım. İlk iş, uygulamanız için bir dizin
 oluşturup, içinde bir Django projesine başlamak.</p>
-<pre class="code literal-block"><span></span>mkdir PaketYoneticisi
-cd PaketYoneticisi
-django-admin.py startproject veritabani
-cd veritabani
-django-admin.py startapp Paket
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">mkdir PaketYoneticisi</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">cd PaketYoneticisi</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="err">django-admin.py startproject veritabani</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="err">cd veritabani</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="err">django-admin.py startapp Paket</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Gerekli dizin yapılanmasını ayarladıktan sonra, Django projesi
 ayarlarından gereksiz kısımları atabilirsiniz. Sadece veritabanı
 kullanacağımız için, şu kadar ayar yeterli olacaktır:</p>
-<pre class="code literal-block"><span></span><span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">'default'</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">'ENGINE'</span><span class="p">:</span> <span class="s1">'django.db.backends.sqlite3'</span><span class="p">,</span> <span class="c1"># Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.</span>
-        <span class="s1">'NAME'</span><span class="p">:</span> <span class="s1">'paketler.db'</span><span class="p">,</span>                      <span class="c1"># Or path to database file if using sqlite3.</span>
-        <span class="s1">'USER'</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>                      <span class="c1"># Not used with sqlite3.</span>
-        <span class="s1">'PASSWORD'</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>                  <span class="c1"># Not used with sqlite3.</span>
-        <span class="s1">'HOST'</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>                      <span class="c1"># Set to empty string for localhost. Not used with sqlite3.</span>
-        <span class="s1">'PORT'</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>                      <span class="c1"># Set to empty string for default. Not used with sqlite3.</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span> <span class="s2">"Paket"</span><span class="p">,</span> <span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="s1">'default'</span><span class="p">:</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>        <span class="s1">'ENGINE'</span><span class="p">:</span> <span class="s1">'django.db.backends.sqlite3'</span><span class="p">,</span> <span class="c1"># Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>        <span class="s1">'NAME'</span><span class="p">:</span> <span class="s1">'paketler.db'</span><span class="p">,</span>                      <span class="c1"># Or path to database file if using sqlite3.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>        <span class="s1">'USER'</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>                      <span class="c1"># Not used with sqlite3.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>        <span class="s1">'PASSWORD'</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>                  <span class="c1"># Not used with sqlite3.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>        <span class="s1">'HOST'</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>                      <span class="c1"># Set to empty string for localhost. Not used with sqlite3.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="s1">'PORT'</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>                      <span class="c1"># Set to empty string for default. Not used with sqlite3.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span> <span class="s2">"Paket"</span><span class="p">,</span> <span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Artık paket modelini yazabiliriz. Mümkün olduğu kadar kısa tutacağım. Bu
 kodlar, Paket uygulamasının, models modülü içerisinde olmalı.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
-
-<span class="c1"># Create your models here.</span>
-
-<span class="k">class</span> <span class="nc">Paket</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">isim</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
-    <span class="n">versiyon</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-    <span class="n">dosyalar</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="s2">"Dosya Listesi"</span><span class="p">)</span>
-    <span class="n">gerekli</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="s2">"self"</span><span class="p">,</span><span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">symmetrical</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">related_name</span><span class="o">=</span><span class="s2">"bagimlilik"</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="c1"># Create your models here.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Paket</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="n">isim</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>    <span class="n">versiyon</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code>    <span class="n">dosyalar</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="s2">"Dosya Listesi"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-9"><code data-line-number="9"></code></a></td>
+<td class="code"><code>    <span class="n">gerekli</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="s2">"self"</span><span class="p">,</span><span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">symmetrical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">related_name</span><span class="o">=</span><span class="s2">"bagimlilik"</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Artık veritabanında gerekli tabloları oluşturabilirsiniz. Django projesi
 ana dizinindeyken, şu komutla veritabanlarını oluşturabiilrsiniz.</p>
-<pre class="code literal-block"><span></span>python manage.py syncdb
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">python manage.py syncdb</span>
+</code></td>
+</tr></table></div>
 
 <p>Django'yla alakalı kısımlar, kendi projenize dahil edilmek için hazır.
 Şimdi, kendi projenizin kök dizinde, yani, bu örnekde oluşturduğumuz
 PaketYoneticisi dizini içerisinde, uygulamanızı geliştirmeye
 başlayabilirsiniz. Örnek kodlar yorumlarıyla birlikte aşağıda:</p>
-<pre class="code literal-block"><span></span><span class="c1"># -*- coding:utf-8 -*-</span>
-
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">imp</span>
-<span class="kn">import</span> <span class="nn">tarfile</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-
-<span class="c1"># Django'yu projeye dahil etmeden önce, DJANGO_SETTINGS_MODULE çevre değişkenini</span>
-<span class="c1"># ayarlamak gerek!</span>
-
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"DJANGO_SETTINGS_MODULE"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"veritabani.settings"</span>
-
-<span class="c1"># veritabani klasörünü python yoluna ekleyelim :)</span>
-
-<span class="n">PROJE_DIZINI</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PROJE_DIZINI</span><span class="p">,</span><span class="s2">"veritabani"</span><span class="p">))</span>
-
-<span class="c1"># artık modellerimizi projemize dahil edebiliriz.</span>
-<span class="kn">from</span> <span class="nn">Paket.models</span> <span class="kn">import</span> <span class="n">Paket</span>
-
-<span class="k">def</span> <span class="nf">yukle</span><span class="p">(</span><span class="n">paket_yolu</span><span class="p">):</span>
-    <span class="c1"># Basitleştirilmiş bir paket yükleme fonksiyonu</span>
-    <span class="c1"># Örnek amaçlıdır, çalışmaz! KULLANMAYIN!!</span>
-
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">paket</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">paket_yolu</span><span class="p">,</span><span class="s1">'r|gz'</span><span class="p">)</span>
-    <span class="k">except</span><span class="p">:</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
-    <span class="c1"># paketi geçici bir klasöre açalım,</span>
-    <span class="c1"># uzatmamak için rastgele isim üretmedim.</span>
-    <span class="n">paket</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="sa">u</span><span class="s2">"/tmp/rasgeleuretilmişisim"</span><span class="p">)</span>
-
-    <span class="c1"># Şimdi paket bilgilerini yüklemeliyiz, bu örnekte</span>
-    <span class="c1"># paket bilgilerinin bir python modülünde olduğunu varsayıyorum</span>
-    <span class="c1"># üstünde çalışması daha kolay :)</span>
-
-    <span class="n">paket_bilgileri</span> <span class="o">=</span> <span class="n">imp</span><span class="o">.</span><span class="n">load_source</span><span class="p">(</span><span class="s2">"paket_bilgisi"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"/tmp/rasgeleuretilmiçisim/ayarlar.py"</span><span class="p">)</span>
-
-    <span class="c1"># Eğer paket zaten yüklüyse, hata vererek çıkıcaz.</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">Paket</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">isim</span><span class="o">=</span><span class="n">paket_bilgileri</span><span class="o">.</span><span class="n">isim</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">except</span><span class="p">:</span>
-        <span class="k">pass</span>
-
-    <span class="c1"># paket gereksinimleri sağlanmış mı?</span>
-
-    <span class="k">for</span> <span class="n">paket</span> <span class="ow">in</span> <span class="n">paket_bilgileri</span><span class="o">.</span><span class="n">gereksinimler</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">Paket</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">isim</span><span class="o">=</span><span class="n">paket</span><span class="p">)</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
-
-    <span class="c1"># Eğer paketle yüklemeye çalıştığımız dosyalar sistemde zaten mevcutsa, yine hata vereceğiz!</span>
-
-    <span class="k">for</span> <span class="n">dosya</span> <span class="ow">in</span> <span class="n">paket_bilgileri</span><span class="o">.</span><span class="n">dosyalar</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">dosya</span><span class="p">):</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
-    <span class="c1"># Dosyaları sisteme kopyalayabiliriz.</span>
-
-    <span class="k">for</span> <span class="n">dosya</span> <span class="ow">in</span> <span class="n">paket_bilgileri</span><span class="o">.</span><span class="n">dosyalar</span><span class="p">:</span>
-        <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="sa">u</span><span class="s2">"/tmp/rasgeleuretilmisisim/"</span> <span class="o">+</span> <span class="n">dosya</span><span class="p">,</span> <span class="n">dosya</span><span class="p">)</span>
-
-    <span class="c1"># paketi veritabanına kaydedelim</span>
-
-    <span class="n">p</span> <span class="o">=</span> <span class="n">Paket</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-        <span class="n">isim</span><span class="o">=</span><span class="n">paket_bilgileri</span><span class="o">.</span><span class="n">isim</span><span class="p">,</span>
-        <span class="n">versiyon</span> <span class="o">=</span> <span class="n">paket_bilgileri</span><span class="o">.</span><span class="n">versiyon</span><span class="p">,</span>
-        <span class="n">dosyalar</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">paket_bilgiler</span><span class="o">.</span><span class="n">dosyalar</span><span class="p">)</span>
-    <span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">paket</span> <span class="ow">in</span> <span class="n">paket_bilgileri</span><span class="o">.</span><span class="n">gereksinimler</span><span class="p">:</span>
-        <span class="n">gereksinim</span> <span class="o">=</span> <span class="n">Paket</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">isim</span><span class="o">=</span><span class="n">paket</span><span class="p">)</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">gereklis</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">gereksinim</span><span class="p">)</span>
-
-    <span class="n">p</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-
-<span class="k">def</span> <span class="nf">sil</span><span class="p">(</span><span class="n">paket_adi</span><span class="p">):</span>
-    <span class="s2">"Basit bir paket silme programı, örnketir, KULLANMAYINIZ"</span>
-
-    <span class="c1"># gerekli paket bilgisini yükleyelim</span>
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">silinecek</span> <span class="o">=</span> <span class="n">Paket</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">isim</span><span class="o">=</span><span class="n">paket_adi</span><span class="p">)</span>
-    <span class="k">except</span><span class="p">:</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
-    <span class="c1"># Eğer bu pakete ihtiyaç duyan varsa, silme işlemini iptal etmeliyiz.</span>
-
-    <span class="k">if</span> <span class="n">silinecek</span><span class="o">.</span><span class="n">bagimlilik</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
-    <span class="n">dosyalar</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">silinecek</span><span class="o">.</span><span class="n">dosyalar</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">dosya</span> <span class="ow">in</span> <span class="n">dosyalar</span><span class="p">:</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
-    <span class="n">silinecek</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-1"><code data-line-number="  1"></code></a></td>
+<td class="code"><code><span class="c1"># -*- coding:utf-8 -*-</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-2"><code data-line-number="  2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-3"><code data-line-number="  3"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">os</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-4"><code data-line-number="  4"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">sys</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-5"><code data-line-number="  5"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">imp</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-6"><code data-line-number="  6"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">tarfile</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-7"><code data-line-number="  7"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">shutil</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-8"><code data-line-number="  8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-9"><code data-line-number="  9"></code></a></td>
+<td class="code"><code><span class="c1"># Django'yu projeye dahil etmeden önce, DJANGO_SETTINGS_MODULE çevre değişkenini</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-10"><code data-line-number=" 10"></code></a></td>
+<td class="code"><code><span class="c1"># ayarlamak gerek!</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-11"><code data-line-number=" 11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-12"><code data-line-number=" 12"></code></a></td>
+<td class="code"><code><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"DJANGO_SETTINGS_MODULE"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"veritabani.settings"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-13"><code data-line-number=" 13"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-14"><code data-line-number=" 14"></code></a></td>
+<td class="code"><code><span class="c1"># veritabani klasörünü python yoluna ekleyelim :)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-15"><code data-line-number=" 15"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-16"><code data-line-number=" 16"></code></a></td>
+<td class="code"><code><span class="n">PROJE_DIZINI</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-17"><code data-line-number=" 17"></code></a></td>
+<td class="code"><code><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PROJE_DIZINI</span><span class="p">,</span><span class="s2">"veritabani"</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-18"><code data-line-number=" 18"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-19"><code data-line-number=" 19"></code></a></td>
+<td class="code"><code><span class="c1"># artık modellerimizi projemize dahil edebiliriz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-20"><code data-line-number=" 20"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">Paket.models</span> <span class="kn">import</span> <span class="n">Paket</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-21"><code data-line-number=" 21"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-22"><code data-line-number=" 22"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">yukle</span><span class="p">(</span><span class="n">paket_yolu</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-23"><code data-line-number=" 23"></code></a></td>
+<td class="code"><code>    <span class="c1"># Basitleştirilmiş bir paket yükleme fonksiyonu</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-24"><code data-line-number=" 24"></code></a></td>
+<td class="code"><code>    <span class="c1"># Örnek amaçlıdır, çalışmaz! KULLANMAYIN!!</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-25"><code data-line-number=" 25"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-26"><code data-line-number=" 26"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-27"><code data-line-number=" 27"></code></a></td>
+<td class="code"><code>    <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-28"><code data-line-number=" 28"></code></a></td>
+<td class="code"><code>        <span class="n">paket</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">paket_yolu</span><span class="p">,</span><span class="s1">'r|gz'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-29"><code data-line-number=" 29"></code></a></td>
+<td class="code"><code>    <span class="k">except</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-30"><code data-line-number=" 30"></code></a></td>
+<td class="code"><code>        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-31"><code data-line-number=" 31"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-32"><code data-line-number=" 32"></code></a></td>
+<td class="code"><code>    <span class="c1"># paketi geçici bir klasöre açalım,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-33"><code data-line-number=" 33"></code></a></td>
+<td class="code"><code>    <span class="c1"># uzatmamak için rastgele isim üretmedim.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-34"><code data-line-number=" 34"></code></a></td>
+<td class="code"><code>    <span class="n">paket</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="sa">u</span><span class="s2">"/tmp/rasgeleuretilmişisim"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-35"><code data-line-number=" 35"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-36"><code data-line-number=" 36"></code></a></td>
+<td class="code"><code>    <span class="c1"># Şimdi paket bilgilerini yüklemeliyiz, bu örnekte</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-37"><code data-line-number=" 37"></code></a></td>
+<td class="code"><code>    <span class="c1"># paket bilgilerinin bir python modülünde olduğunu varsayıyorum</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-38"><code data-line-number=" 38"></code></a></td>
+<td class="code"><code>    <span class="c1"># üstünde çalışması daha kolay :)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-39"><code data-line-number=" 39"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-40"><code data-line-number=" 40"></code></a></td>
+<td class="code"><code>    <span class="n">paket_bilgileri</span> <span class="o">=</span> <span class="n">imp</span><span class="o">.</span><span class="n">load_source</span><span class="p">(</span><span class="s2">"paket_bilgisi"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"/tmp/rasgeleuretilmiçisim/ayarlar.py"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-41"><code data-line-number=" 41"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-42"><code data-line-number=" 42"></code></a></td>
+<td class="code"><code>    <span class="c1"># Eğer paket zaten yüklüyse, hata vererek çıkıcaz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-43"><code data-line-number=" 43"></code></a></td>
+<td class="code"><code>    <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-44"><code data-line-number=" 44"></code></a></td>
+<td class="code"><code>        <span class="n">Paket</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">isim</span><span class="o">=</span><span class="n">paket_bilgileri</span><span class="o">.</span><span class="n">isim</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-45"><code data-line-number=" 45"></code></a></td>
+<td class="code"><code>        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-46"><code data-line-number=" 46"></code></a></td>
+<td class="code"><code>    <span class="k">except</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-47"><code data-line-number=" 47"></code></a></td>
+<td class="code"><code>        <span class="k">pass</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-48"><code data-line-number=" 48"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-49"><code data-line-number=" 49"></code></a></td>
+<td class="code"><code>    <span class="c1"># paket gereksinimleri sağlanmış mı?</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-50"><code data-line-number=" 50"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-51"><code data-line-number=" 51"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">paket</span> <span class="ow">in</span> <span class="n">paket_bilgileri</span><span class="o">.</span><span class="n">gereksinimler</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-52"><code data-line-number=" 52"></code></a></td>
+<td class="code"><code>        <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-53"><code data-line-number=" 53"></code></a></td>
+<td class="code"><code>            <span class="n">Paket</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">isim</span><span class="o">=</span><span class="n">paket</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-54"><code data-line-number=" 54"></code></a></td>
+<td class="code"><code>        <span class="k">except</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-55"><code data-line-number=" 55"></code></a></td>
+<td class="code"><code>            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-56"><code data-line-number=" 56"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-57"><code data-line-number=" 57"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-58"><code data-line-number=" 58"></code></a></td>
+<td class="code"><code>    <span class="c1"># Eğer paketle yüklemeye çalıştığımız dosyalar sistemde zaten mevcutsa, yine hata vereceğiz!</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-59"><code data-line-number=" 59"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-60"><code data-line-number=" 60"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">dosya</span> <span class="ow">in</span> <span class="n">paket_bilgileri</span><span class="o">.</span><span class="n">dosyalar</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-61"><code data-line-number=" 61"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">dosya</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-62"><code data-line-number=" 62"></code></a></td>
+<td class="code"><code>            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-63"><code data-line-number=" 63"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-64"><code data-line-number=" 64"></code></a></td>
+<td class="code"><code>    <span class="c1"># Dosyaları sisteme kopyalayabiliriz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-65"><code data-line-number=" 65"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-66"><code data-line-number=" 66"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">dosya</span> <span class="ow">in</span> <span class="n">paket_bilgileri</span><span class="o">.</span><span class="n">dosyalar</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-67"><code data-line-number=" 67"></code></a></td>
+<td class="code"><code>        <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="sa">u</span><span class="s2">"/tmp/rasgeleuretilmisisim/"</span> <span class="o">+</span> <span class="n">dosya</span><span class="p">,</span> <span class="n">dosya</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-68"><code data-line-number=" 68"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-69"><code data-line-number=" 69"></code></a></td>
+<td class="code"><code>    <span class="c1"># paketi veritabanına kaydedelim</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-70"><code data-line-number=" 70"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-71"><code data-line-number=" 71"></code></a></td>
+<td class="code"><code>    <span class="n">p</span> <span class="o">=</span> <span class="n">Paket</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-72"><code data-line-number=" 72"></code></a></td>
+<td class="code"><code>        <span class="n">isim</span><span class="o">=</span><span class="n">paket_bilgileri</span><span class="o">.</span><span class="n">isim</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-73"><code data-line-number=" 73"></code></a></td>
+<td class="code"><code>        <span class="n">versiyon</span> <span class="o">=</span> <span class="n">paket_bilgileri</span><span class="o">.</span><span class="n">versiyon</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-74"><code data-line-number=" 74"></code></a></td>
+<td class="code"><code>        <span class="n">dosyalar</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">paket_bilgiler</span><span class="o">.</span><span class="n">dosyalar</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-75"><code data-line-number=" 75"></code></a></td>
+<td class="code"><code>    <span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-76"><code data-line-number=" 76"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-77"><code data-line-number=" 77"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">paket</span> <span class="ow">in</span> <span class="n">paket_bilgileri</span><span class="o">.</span><span class="n">gereksinimler</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-78"><code data-line-number=" 78"></code></a></td>
+<td class="code"><code>        <span class="n">gereksinim</span> <span class="o">=</span> <span class="n">Paket</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">isim</span><span class="o">=</span><span class="n">paket</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-79"><code data-line-number=" 79"></code></a></td>
+<td class="code"><code>        <span class="n">p</span><span class="o">.</span><span class="n">gereklis</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">gereksinim</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-80"><code data-line-number=" 80"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-81"><code data-line-number=" 81"></code></a></td>
+<td class="code"><code>    <span class="n">p</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-82"><code data-line-number=" 82"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-83"><code data-line-number=" 83"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">sil</span><span class="p">(</span><span class="n">paket_adi</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-84"><code data-line-number=" 84"></code></a></td>
+<td class="code"><code>    <span class="s2">"Basit bir paket silme programı, örnketir, KULLANMAYINIZ"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-85"><code data-line-number=" 85"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-86"><code data-line-number=" 86"></code></a></td>
+<td class="code"><code>    <span class="c1"># gerekli paket bilgisini yükleyelim</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-87"><code data-line-number=" 87"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-88"><code data-line-number=" 88"></code></a></td>
+<td class="code"><code>    <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-89"><code data-line-number=" 89"></code></a></td>
+<td class="code"><code>        <span class="n">silinecek</span> <span class="o">=</span> <span class="n">Paket</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">isim</span><span class="o">=</span><span class="n">paket_adi</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-90"><code data-line-number=" 90"></code></a></td>
+<td class="code"><code>    <span class="k">except</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-91"><code data-line-number=" 91"></code></a></td>
+<td class="code"><code>        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-92"><code data-line-number=" 92"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-93"><code data-line-number=" 93"></code></a></td>
+<td class="code"><code>    <span class="c1"># Eğer bu pakete ihtiyaç duyan varsa, silme işlemini iptal etmeliyiz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-94"><code data-line-number=" 94"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-95"><code data-line-number=" 95"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">silinecek</span><span class="o">.</span><span class="n">bagimlilik</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-96"><code data-line-number=" 96"></code></a></td>
+<td class="code"><code>        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-97"><code data-line-number=" 97"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-98"><code data-line-number=" 98"></code></a></td>
+<td class="code"><code>    <span class="n">dosyalar</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">silinecek</span><span class="o">.</span><span class="n">dosyalar</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-99"><code data-line-number=" 99"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-100"><code data-line-number="100"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">dosya</span> <span class="ow">in</span> <span class="n">dosyalar</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-101"><code data-line-number="101"></code></a></td>
+<td class="code"><code>        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="djangoda-paket-yoneticisi.html#-102"><code data-line-number="102"></code></a></td>
+<td class="code"><code>    <span class="n">silinecek</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Böylece, kısaca, Django'nun belli kısımlarını kendi projemiz içerisine
 dahil edebileceğimiz gördük. Ben burada gerçekten işe yarayan bir örnek

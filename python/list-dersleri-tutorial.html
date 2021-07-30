@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Python listeleri hakkında baştan sonra bir yazı. Listelerde ekleme, çıkarma, arama, birleştirme, dilimleme, döngü'de kullanma gibi birçok özellik anlatılıyor.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/list-dersleri-tutorial.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/list-dersleri-tutorial.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="narsist-sayi.html" title="Python narsist sayılar" type="text/html">
 <link rel="next" href="../yazilim-dunyasi/python-olum-istatistik.html" title="Ben senin 80 yaşına kadar yaşama ihtimalini sevdim." type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Python list -- Bir çırpıda listeler">
-<meta property="og:url" content="http://ysar.net/python/list-dersleri-tutorial.html">
-<meta property="og:description" content="Python listeleri hakkında baştan sonra bir yazı. Listelerde ekleme, çıkarma, arama, birleştirme, dilimleme, döngü'de kullanma gibi birçok özellik anlatılıyor.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2012-12-30T00:09:02+02:00">
 </head>
 <body>
 
@@ -53,44 +47,80 @@ derseniz, kümeler (set) ve sözlükler (dict) bunlara örnek olarak
 gösterilebilir. <!-- TEASER_END --></p>
 <p>Bir list oluşturmak için, köşeli parantezler arasında, virgüllerle
 ayrılmış ifadeler sıralarız;</p>
-<pre class="code literal-block"><span></span><span class="n">Listem</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># boş list</span>
-<span class="n">Listem</span> <span class="o">=</span> <span class="p">[</span><span class="n">ifade1</span><span class="p">,</span> <span class="n">ifade2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">Listem</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># boş list</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">Listem</span> <span class="o">=</span> <span class="p">[</span><span class="n">ifade1</span><span class="p">,</span> <span class="n">ifade2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu açık olarak Python list oluşturma şeklidir. Aynı zamanda hesaplanmış
 bir liste oluşturabilirsiniz, ki bunlara Python jargonunda "<a href="http://www.istihza.com/forum/viewtopic.php?f=25&amp;t=331">List
 Comprehension</a>" derler. Yazımı da şöyledir;</p>
-<pre class="code literal-block"><span></span><span class="n">Listem</span> <span class="o">=</span> <span class="p">[</span><span class="n">ifade</span> <span class="k">for</span> <span class="n">degisken</span> <span class="ow">in</span> <span class="n">sequence</span><span class="p">]</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">Listem</span> <span class="o">=</span> <span class="p">[</span><span class="n">ifade</span> <span class="k">for</span> <span class="n">degisken</span> <span class="ow">in</span> <span class="n">sequence</span><span class="p">]</span>
+</code></td>
+</tr></table></div>
 
 <p>İfade olarak geçerli herhangi bir Python ifadesi yazılabilir. Bu ifade
 sequnence ile belirtilen objenin her elemanı için hesaplanır ve sonuç
 listeye dahil edilir. Örneğin;</p>
-<pre class="code literal-block"><span></span><span class="n">Listem</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">)]</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">Listem</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">)]</span>
+</code></td>
+</tr></table></div>
 
 <p>Yukarıdaki Python ifadesi bize <code>[1 4 9 16 25]</code> listesini verir.</p>
 <p>Ayrıca yerleşik (built-in) list tipini kullanarak da liste
 oluşturabilirsiniz;</p>
-<pre class="code literal-block"><span></span><span class="n">Listem</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span> <span class="c1"># boş liste</span>
-<span class="n">Listem</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span> <span class="c1"># sequence içindeki elemanlardan oluşan liste</span>
-<span class="n">Listem</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ifade</span> <span class="k">for</span> <span class="n">degisken</span> <span class="ow">in</span> <span class="n">sequence</span><span class="p">)</span> <span class="c1"># Hesaplanan bir liste</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">Listem</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span> <span class="c1"># boş liste</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">Listem</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span> <span class="c1"># sequence içindeki elemanlardan oluşan liste</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="n">Listem</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ifade</span> <span class="k">for</span> <span class="n">degisken</span> <span class="ow">in</span> <span class="n">sequence</span><span class="p">)</span> <span class="c1"># Hesaplanan bir liste</span>
+</code></td>
+</tr>
+</table></div>
 
 <h4>Elemanlara Ulaşmak</h4>
 <p>Benzer objelerde yapabildiğiniz gibi, list objelerinde de Len(Listem)
 listedeki eleman sayısını, Listem[n] n'inci sıradaki elamanı,
 Listem[n:k] ise n'inci sıradaki elemandan, k'ıncı sıradaki elemana kadar
 olan elemanlardan oluşan listeyi döndürür.</p>
-<pre class="code literal-block"><span></span><span class="n">uzunluk</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">Listem</span><span class="p">)</span>
-<span class="n">eleman</span> <span class="o">=</span> <span class="n">Listem</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
-<span class="n">dilim</span> <span class="o">=</span> <span class="n">Listem</span><span class="p">[</span><span class="n">baslangic</span><span class="p">:</span><span class="n">bitis</span><span class="p">]</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">uzunluk</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">Listem</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">eleman</span> <span class="o">=</span> <span class="n">Listem</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="n">dilim</span> <span class="o">=</span> <span class="n">Listem</span><span class="p">[</span><span class="n">baslangic</span><span class="p">:</span><span class="n">bitis</span><span class="p">]</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Eğer index olarak negatif bir sayı girerseniz, Python o sayıya listenin
 uzunluğunu ekler. Örneğin, 10 elemanlı bir listeye, <code>Listem[-1]</code>
@@ -101,169 +131,370 @@ ki, kendisi son eleman olur. (ilk eleman 0'ıncı indexde olduğundan.)</p>
 kullanıyorsanız, başlangıç ve bitiş indexleri sadece sınır noktaları
 olduğundan, <strong>IndexError</strong> hatası vermez.</p>
 <p>Liste dilimlerken, adımlama (slice stepping) da kullanabilirsiniz;</p>
-<pre class="code literal-block"><span></span><span class="n">dilim</span> <span class="o">=</span> <span class="n">Liste</span><span class="p">[</span><span class="n">baslangic</span><span class="p">:</span><span class="n">bitis</span><span class="p">:</span><span class="n">adim</span><span class="p">]</span>
-<span class="n">dilim</span> <span class="o">=</span> <span class="n">Listem</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># ilk elemandan başlayarak her ikinci elemanı alır.</span>
-<span class="n">dilim</span> <span class="o">=</span> <span class="n">Listem</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># ikinci elemandan başlayarak her ikinci elemanı alır.</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">dilim</span> <span class="o">=</span> <span class="n">Liste</span><span class="p">[</span><span class="n">baslangic</span><span class="p">:</span><span class="n">bitis</span><span class="p">:</span><span class="n">adim</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">dilim</span> <span class="o">=</span> <span class="n">Listem</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># ilk elemandan başlayarak her ikinci elemanı alır.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="n">dilim</span> <span class="o">=</span> <span class="n">Listem</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># ikinci elemandan başlayarak her ikinci elemanı alır.</span>
+</code></td>
+</tr>
+</table></div>
 
 <h4>Listeler'de Döngüler</h4>
 <p>For-in yapısı, liste elemanları üzerinde gezinmek için en basit
 yollardan biridir;</p>
-<pre class="code literal-block"><span></span><span class="k">for</span> <span class="n">eleman</span> <span class="ow">in</span> <span class="n">L</span><span class="p">:</span>
-    <span class="k">print</span> <span class="n">eleman</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">eleman</span> <span class="ow">in</span> <span class="n">L</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span> <span class="n">eleman</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Eğer elemanların index'ine de ihtiyaç duyuyorsanız, <code>enumerate()</code>sizin
 en iyi dostunuz olabilir;</p>
-<pre class="code literal-block"><span></span><span class="k">for</span> <span class="n">index</span><span class="p">,</span><span class="n">eleman</span> <span class="ow">in</span> <span class="n">L</span><span class="p">:</span>
-    <span class="k">print</span> <span class="n">index</span><span class="p">,</span><span class="n">eleman</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">index</span><span class="p">,</span><span class="n">eleman</span> <span class="ow">in</span> <span class="n">L</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span> <span class="n">index</span><span class="p">,</span><span class="n">eleman</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Eğer sadece indexlerle ilgileniyorsanız, <code>len()</code> ve <code>range()</code>
 kullanabilirsiniz;</p>
-<pre class="code literal-block"><span></span><span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">)):</span>
-    <span class="k">print</span> <span class="n">index</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">)):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span> <span class="n">index</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Sık kullanılan liste işleriniz için, Python'un bazı yerleşik
 fonksiyonlarını kullanabilirsiniz. Mesela, eğer liste sadece sayılardan
 oluşuyorsa, <strong>sum</strong> fonksiyonu bu sayıların toplamını bulur.</p>
-<pre class="code literal-block"><span></span><span class="n">toplam</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
-<span class="n">toplam</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">altoplam</span><span class="p">)</span> <span class="c1"># toplamı altoplama ekler...</span>
-<span class="n">ortalama</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">L</span><span class="p">))</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">toplam</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">toplam</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">altoplam</span><span class="p">)</span> <span class="c1"># toplamı altoplama ekler...</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="n">ortalama</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">L</span><span class="p">))</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Eğer liste stringlerden oluştuyorsa, bunları <strong>join </strong>ile
 birleştirebilirsiniz;</p>
-<pre class="code literal-block"><span></span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+</code></td>
+</tr></table></div>
 
 <h4>Listeleri Değiştirmek</h4>
 <p>list belirli bir elemanı veya bir aralığı değiştirmenize imkan sağlar;</p>
-<pre class="code literal-block"><span></span><span class="n">L</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">yenieleman</span>
-<span class="n">L</span><span class="p">[</span><span class="n">baslangic</span><span class="p">:</span><span class="n">bitis</span><span class="p">]</span> <span class="o">=</span> <span class="n">sequnce</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">L</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">yenieleman</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">L</span><span class="p">[</span><span class="n">baslangic</span><span class="p">:</span><span class="n">bitis</span><span class="p">]</span> <span class="o">=</span> <span class="n">sequnce</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu tarz işlemler listeyi kendi üzerinde değiştirecektir. Eğer bir
 kopyasını almak isterseniz dilimleme ve list fonksiyonu
 kullanabilirsiniz;</p>
-<pre class="code literal-block"><span></span><span class="n">kopyaL</span> <span class="o">=</span> <span class="n">L</span><span class="p">[:]</span>
-<span class="n">kopyaL</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">kopyaL</span> <span class="o">=</span> <span class="n">L</span><span class="p">[:]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">kopyaL</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Aynı zamanda listeye eklemeler de yapabilirsiniz. Sona tek bir eleman
 eklemek için <strong>append</strong>, başka bir listeyi eklemek için <strong>extend</strong>,
 belirli bir index'e yerleştirmek için <strong>insert</strong> fonksiyonları
 kullanılır.</p>
-<pre class="code literal-block"><span></span><span class="n">L</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eleman</span><span class="p">)</span>
-<span class="n">L</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sequnce</span><span class="p">)</span>
-<span class="n">L</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="n">eleman</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">L</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eleman</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">L</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sequnce</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="n">L</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="n">eleman</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Başka bir listeden elemanları belli bir noktaya eklemek isterseniz,
 dilimleme notasyonunu kullanabilirsiniz;</p>
-<pre class="code literal-block"><span></span><span class="n">L</span><span class="p">[</span><span class="n">index</span><span class="p">:</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">sequence</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">L</span><span class="p">[</span><span class="n">index</span><span class="p">:</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">sequence</span>
+</code></td>
+</tr></table></div>
 
 <p>Aynı zamanda listeden eleman da silebilirsiniz. <strong>del</strong> ifadesi belli
 bir elemanı veya aralığı silerken, <strong>pop</strong> belirli bir elemanı siler ve
 sildiği elemanı döndürür. <strong>remove</strong> ise bir elemanı arar ve siler.</p>
-<pre class="code literal-block"><span></span><span class="k">del</span> <span class="n">L</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
-<span class="k">del</span> <span class="n">L</span><span class="p">[</span><span class="n">baslangic</span><span class="p">:</span><span class="n">bitis</span><span class="p">]</span>
-<span class="n">eleman</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span> <span class="c1"># son elemanı siler ve döndürür.</span>
-<span class="n">eleman</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># ilk elemanı siler ve döndürür.</span>
-<span class="n">eleman</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="c1"># indexdeki elemanı siler ve döndürür.</span>
-<span class="n">L</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">eleman</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">del</span> <span class="n">L</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="k">del</span> <span class="n">L</span><span class="p">[</span><span class="n">baslangic</span><span class="p">:</span><span class="n">bitis</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="n">eleman</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span> <span class="c1"># son elemanı siler ve döndürür.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="n">eleman</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># ilk elemanı siler ve döndürür.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="n">eleman</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="c1"># indexdeki elemanı siler ve döndürür.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="n">L</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">eleman</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Son olarak, list tipi <strong>reverse</strong> metoduyla yerinde ters çevirilebilir;</p>
-<pre class="code literal-block"><span></span><span class="n">L</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">L</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+</code></td>
+</tr></table></div>
 
 <p>Ters çevirmek oldukça hızlıdır. Dolayısıyla listenin başına ekleme
 çıkarmalar yapacaksanız önce ters çevirip, sonra işlemleri yapıp, tekrar
 ters çevirerek zaman kazanabilirsiniz, çünkü listenin sonuna ekleme
 yapmak, başına ekleme yapmaktan çok daha hızlıdır.</p>
-<pre class="code literal-block"><span></span><span class="n">L</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
-<span class="c1"># append/insert/pop/delete ile sondaki elemanları değiştirin</span>
-<span class="n">L</span><span class="o">.</span><span class="n">reserve</span><span class="p">()</span> <span class="c1"># listeyi eski haline döndürün.</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">L</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="c1"># append/insert/pop/delete ile sondaki elemanları değiştirin</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="n">L</span><span class="o">.</span><span class="n">reserve</span><span class="p">()</span> <span class="c1"># listeyi eski haline döndürün.</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Listelerde sıkça kullanılan işlemlerden biri, her elamanı bir fonksiyona
 sokmak, ve bu elemanı fonksiyonun dönüş değeriyle değiştirmektir.</p>
-<pre class="code literal-block"><span></span><span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">eleman</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
-    <span class="n">L</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">fonksiyon</span><span class="p">(</span><span class="n">eleman</span><span class="p">)</span>
-
-<span class="n">yeni</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">eleman</span> <span class="ow">in</span> <span class="n">L</span><span class="p">:</span>
-    <span class="n">yeni</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fonksiyon</span><span class="p">(</span><span class="n">eleman</span><span class="p">))</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">eleman</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="n">L</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">fonksiyon</span><span class="p">(</span><span class="n">eleman</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="n">yeni</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">eleman</span> <span class="ow">in</span> <span class="n">L</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="n">yeni</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fonksiyon</span><span class="p">(</span><span class="n">eleman</span><span class="p">))</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yukarıdaki kod <strong>map</strong> veya list comprehension kullanarak daha iyi bir
 şekilde yazılabilir.</p>
-<pre class="code literal-block"><span></span><span class="n">yeni</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">fonksiyon</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
-<span class="n">yeni</span> <span class="o">=</span> <span class="p">[</span><span class="n">fonksiyon</span><span class="p">(</span><span class="n">eleman</span><span class="p">)</span> <span class="k">for</span> <span class="n">eleman</span> <span class="ow">in</span> <span class="n">L</span><span class="p">]</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">yeni</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">fonksiyon</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">yeni</span> <span class="o">=</span> <span class="p">[</span><span class="n">fonksiyon</span><span class="p">(</span><span class="n">eleman</span><span class="p">)</span> <span class="k">for</span> <span class="n">eleman</span> <span class="ow">in</span> <span class="n">L</span><span class="p">]</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Dümdüz fonksiyon çağırmanın gerekli olduğu zamanlarda <strong>map</strong> fonksiyonu
 daha verimlidir. Ancak, eğer biraz daha karmaşık bir şey yapıyorsanız,
 list comprehension daha verimli olabilir.</p>
 <p>Daha önce de bahsedildiği gibi, eğer hem elemana hem indexe ihtiyacınız
 varsa, <strong>enumerate</strong> kullanın.</p>
-<pre class="code literal-block"><span></span><span class="n">yeni</span> <span class="o">=</span> <span class="p">[</span><span class="n">fonksiyon</span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="n">eleman</span><span class="p">)</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">eleman</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">L</span><span class="p">)]</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">yeni</span> <span class="o">=</span> <span class="p">[</span><span class="n">fonksiyon</span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="n">eleman</span><span class="p">)</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">eleman</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">L</span><span class="p">)]</span>
+</code></td>
+</tr></table></div>
 
 <h4>Listede arama</h4>
 <p><strong>in</strong> operatörünü bir elemanın listede olup olmadığını anlamak için
 kullanırız. </p>
-<pre class="code literal-block"><span></span><span class="k">if</span> <span class="n">eleman</span> <span class="ow">in</span> <span class="n">L</span><span class="p">:</span>
-    <span class="k">print</span> <span class="s2">"L içinde "</span><span class="p">,</span> <span class="n">eleman</span><span class="p">,</span> <span class="s2">" var!"</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">if</span> <span class="n">eleman</span> <span class="ow">in</span> <span class="n">L</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span> <span class="s2">"L içinde "</span><span class="p">,</span> <span class="n">eleman</span><span class="p">,</span> <span class="s2">" var!"</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>İlk eşleşen elemanın indexini bulmak için <strong>index </strong>metodunu kullanın.</p>
-<pre class="code literal-block"><span></span><span class="n">L</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">eleman</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">L</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">eleman</span><span class="p">)</span>
+</code></td>
+</tr></table></div>
 
 <p>Tüm eşleşen elemanları bulmak için bir döngü kurup, <strong>index</strong>'e
 başlangış adresi verebilirsiniz;</p>
-<pre class="code literal-block"><span></span>    <span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">i</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">deger</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-            <span class="k">print</span> <span class="n">i</span><span class="p">,</span><span class="s2">" hanesinde eşleşme var."</span>
-    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="k">pass</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code>    <span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>        <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>            <span class="n">i</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">deger</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>            <span class="nb">print</span> <span class="n">i</span><span class="p">,</span><span class="s2">" hanesinde eşleşme var."</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>        <span class="k">pass</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Eşleşen elemanları saymak için <strong>count</strong> metodunu kullanın.</p>
-<pre class="code literal-block"><span></span><span class="n">n</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">eleman</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">n</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">eleman</span><span class="p">)</span>
+</code></td>
+</tr></table></div>
 
 <p>En küçük ve en büyük değerleri bulmak için <strong>max</strong> ve <strong>min</strong>
 fonksiyonlarını kullanın.</p>
-<pre class="code literal-block"><span></span><span class="n">minik</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
-<span class="n">buyuk</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
-</pre>
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">minik</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="list-dersleri-tutorial.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">buyuk</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 </div>
     </div>
     <aside class="postpromonav"><nav><div class="pager">

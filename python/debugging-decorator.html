@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Python'da debug işlerini kolaylaştıracak bir decorator">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/debugging-decorator.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/debugging-decorator.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="sha256-ftputil.html" title="Bloğu nasıl sunucuya yüklüyorum?" type="text/html">
 <link rel="next" href="neden-str-toplamamalisiniz.html" title="Neden str toplamamalısınız" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Debugging Decorator">
-<meta property="og:url" content="http://ysar.net/python/debugging-decorator.html">
-<meta property="og:description" content="Python'da debug işlerini kolaylaştıracak bir decorator">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2013-10-26T02:37:00+03:00">
 </head>
 <body>
 
@@ -48,107 +42,487 @@
 print serpiştiriyordum ki, neler döndüğünü görebileyim. Ancak malumunuz, bu printleri
 teker teker yazması, sonra teker teker silmesi bir hayli zahmetli bir işe dönüşebiliyor.
 Bu problemin üstesinden gelmek için, aşağıdaki decorator'u yazdım. İndirmek isteyenler <a href="https://gist.github.com/yasar11732/7163528/raw/3aac84a23fd57d3c4ee28d627c7607d68c3ac24b/debugging.py">debugging.py</a> adresinden indirebilir.<!-- TEASER_END --></p>
-<pre class="code literal-block"><span></span><span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">import</span> <span class="nn">ast</span>
-
-
-<span class="k">def</span> <span class="nf">make_print_node</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">ast</span><span class="o">.</span><span class="n">Print</span><span class="p">(</span><span class="n">dest</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Str</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)],</span> <span class="n">nl</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">make_print_with_percent_formatting</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">make_print_node</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-
-    <span class="n">printnode</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Print</span><span class="p">(</span><span class="n">dest</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">nl</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">binop</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">BinOp</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Str</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">),</span> <span class="n">op</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Mod</span><span class="p">())</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">binop</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Load</span><span class="p">())</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">name_list</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
-            <span class="n">name_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">arg</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Load</span><span class="p">()))</span>
-        <span class="n">binop</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">(</span><span class="n">elts</span><span class="o">=</span><span class="n">name_list</span><span class="p">)</span>
-
-    <span class="n">printnode</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">binop</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">printnode</span>
-
-<span class="k">def</span> <span class="nf">debugging</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-    <span class="n">tree</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">func</span><span class="p">))</span>
-    <span class="n">func_ast</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">tree</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">FunctionDef</span><span class="p">)</span> <span class="ow">and</span> <span class="n">n</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">func</span><span class="o">.</span><span class="n">func_name</span><span class="p">:</span>
-            <span class="n">func_ast</span> <span class="o">=</span> <span class="n">n</span>
-            <span class="k">break</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">func_ast</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">func</span>
-
-    <span class="c1"># print ast.dump(func_ast)</span>
-
-    <span class="n">new_function_body</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="c1"># print called function's name</span>
-    <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_print_node</span><span class="p">(</span><span class="s2">"function </span><span class="si">%s</span><span class="s2"> called"</span> <span class="o">%</span> <span class="n">func</span><span class="o">.</span><span class="n">func_name</span><span class="p">))</span>
-
-    <span class="c1"># print function's locals</span>
-    <span class="n">mystr</span> <span class="o">=</span><span class="s2">"""for k, v in locals().items():</span>
-<span class="s2">    print k,v</span>
-<span class="s2">    """</span>
-    <span class="n">for_loop</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">mystr</span><span class="p">)</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">for_loop</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">func_ast</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Return</span><span class="p">):</span>
-            <span class="sd">"""</span>
-<span class="sd">            convert:</span>
-<span class="sd">                return expr</span>
-<span class="sd">            to:</span>
-<span class="sd">                __return_value__ = expr</span>
-<span class="sd">                print "returning %s" % __return_value__</span>
-<span class="sd">                return __return_value__</span>
-<span class="sd">            """</span>
-
-            <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">(</span><span class="n">targets</span><span class="o">=</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">'__return_value__'</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Store</span><span class="p">())],</span> <span class="n">value</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
-            <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_print_with_percent_formatting</span><span class="p">(</span><span class="s1">'returning </span><span class="si">%s</span><span class="s1">'</span><span class="p">,</span> <span class="s1">'__return_value__'</span><span class="p">))</span>
-            <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">'__return_value__'</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Load</span><span class="p">())))</span>
-
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">):</span>
-            <span class="sd">"""</span>
-<span class="sd">            convert:</span>
-<span class="sd">                a = expr</span>
-<span class="sd">            to:</span>
-<span class="sd">                a = expr</span>
-<span class="sd">                print "assigned new value to a, %r" % a</span>
-<span class="sd">            """</span>
-            <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">targets</span><span class="p">:</span>
-                <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-                <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_print_with_percent_formatting</span><span class="p">(</span><span class="s1">'assigned new value to '</span> <span class="o">+</span> <span class="n">target</span><span class="o">.</span><span class="n">id</span> <span class="o">+</span> <span class="s1">': </span><span class="si">%r</span><span class="s1">'</span><span class="p">,</span> <span class="n">target</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
-
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-
-
-
-
-    <span class="n">func_ast</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">new_function_body</span>
-    <span class="c1"># if you don't do this, compile&amp;exec will call this function recursively.</span>
-    <span class="n">func_ast</span><span class="o">.</span><span class="n">decorator_list</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="c1"># func_ast = ast.fix_missing_locations(func_ast)</span>
-    <span class="c1"># print "trying to compile this function:", ast.dump(func_ast)</span>
-    <span class="n">modul_ast</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">fix_missing_locations</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="p">[</span><span class="n">func_ast</span><span class="p">]))</span>
-    <span class="k">exec</span> <span class="nb">compile</span><span class="p">(</span><span class="n">modul_ast</span><span class="p">,</span><span class="s1">'&lt;string&gt;'</span><span class="p">,</span><span class="s1">'exec'</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">locals</span><span class="p">()[</span><span class="n">func</span><span class="o">.</span><span class="n">func_name</span><span class="p">]</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">inspect</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">ast</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">make_print_node</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">ast</span><span class="o">.</span><span class="n">Print</span><span class="p">(</span><span class="n">dest</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Str</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)],</span> <span class="n">nl</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">make_print_with_percent_formatting</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">make_print_node</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="n">printnode</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Print</span><span class="p">(</span><span class="n">dest</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nl</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="n">binop</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">BinOp</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Str</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">),</span> <span class="n">op</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Mod</span><span class="p">())</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="n">binop</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Load</span><span class="p">())</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>        <span class="n">name_list</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>            <span class="n">name_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">arg</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Load</span><span class="p">()))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>        <span class="n">binop</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">(</span><span class="n">elts</span><span class="o">=</span><span class="n">name_list</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>    <span class="n">printnode</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">binop</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">printnode</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">debugging</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>    <span class="n">tree</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">func</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>    <span class="n">func_ast</span> <span class="o">=</span> <span class="kc">None</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">tree</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">FunctionDef</span><span class="p">)</span> <span class="ow">and</span> <span class="n">n</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">func</span><span class="o">.</span><span class="n">func_name</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>            <span class="n">func_ast</span> <span class="o">=</span> <span class="n">n</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>            <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="ow">not</span> <span class="n">func_ast</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">func</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>    <span class="c1"># print ast.dump(func_ast)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code>    <span class="n">new_function_body</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-38"><code data-line-number="38"></code></a></td>
+<td class="code"><code>    <span class="c1"># print called function's name</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-39"><code data-line-number="39"></code></a></td>
+<td class="code"><code>    <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_print_node</span><span class="p">(</span><span class="s2">"function </span><span class="si">%s</span><span class="s2"> called"</span> <span class="o">%</span> <span class="n">func</span><span class="o">.</span><span class="n">func_name</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-40"><code data-line-number="40"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-41"><code data-line-number="41"></code></a></td>
+<td class="code"><code>    <span class="c1"># print function's locals</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-42"><code data-line-number="42"></code></a></td>
+<td class="code"><code>    <span class="n">mystr</span> <span class="o">=</span><span class="s2">"""for k, v in locals().items():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-43"><code data-line-number="43"></code></a></td>
+<td class="code"><code><span class="s2">    print k,v</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-44"><code data-line-number="44"></code></a></td>
+<td class="code"><code><span class="s2">    """</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-45"><code data-line-number="45"></code></a></td>
+<td class="code"><code>    <span class="n">for_loop</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">mystr</span><span class="p">)</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-46"><code data-line-number="46"></code></a></td>
+<td class="code"><code>    <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">for_loop</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-47"><code data-line-number="47"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-48"><code data-line-number="48"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">func_ast</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-49"><code data-line-number="49"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Return</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-50"><code data-line-number="50"></code></a></td>
+<td class="code"><code>            <span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-51"><code data-line-number="51"></code></a></td>
+<td class="code"><code><span class="sd">            convert:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-52"><code data-line-number="52"></code></a></td>
+<td class="code"><code><span class="sd">                return expr</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-53"><code data-line-number="53"></code></a></td>
+<td class="code"><code><span class="sd">            to:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-54"><code data-line-number="54"></code></a></td>
+<td class="code"><code><span class="sd">                __return_value__ = expr</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-55"><code data-line-number="55"></code></a></td>
+<td class="code"><code><span class="sd">                print "returning %s" % __return_value__</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-56"><code data-line-number="56"></code></a></td>
+<td class="code"><code><span class="sd">                return __return_value__</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-57"><code data-line-number="57"></code></a></td>
+<td class="code"><code><span class="sd">            """</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-58"><code data-line-number="58"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-59"><code data-line-number="59"></code></a></td>
+<td class="code"><code>            <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">(</span><span class="n">targets</span><span class="o">=</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">'__return_value__'</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Store</span><span class="p">())],</span> <span class="n">value</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-60"><code data-line-number="60"></code></a></td>
+<td class="code"><code>            <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_print_with_percent_formatting</span><span class="p">(</span><span class="s1">'returning </span><span class="si">%s</span><span class="s1">'</span><span class="p">,</span> <span class="s1">'__return_value__'</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-61"><code data-line-number="61"></code></a></td>
+<td class="code"><code>            <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">'__return_value__'</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Load</span><span class="p">())))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-62"><code data-line-number="62"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-63"><code data-line-number="63"></code></a></td>
+<td class="code"><code>        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-64"><code data-line-number="64"></code></a></td>
+<td class="code"><code>            <span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-65"><code data-line-number="65"></code></a></td>
+<td class="code"><code><span class="sd">            convert:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-66"><code data-line-number="66"></code></a></td>
+<td class="code"><code><span class="sd">                a = expr</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-67"><code data-line-number="67"></code></a></td>
+<td class="code"><code><span class="sd">            to:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-68"><code data-line-number="68"></code></a></td>
+<td class="code"><code><span class="sd">                a = expr</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-69"><code data-line-number="69"></code></a></td>
+<td class="code"><code><span class="sd">                print "assigned new value to a, %r" % a</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-70"><code data-line-number="70"></code></a></td>
+<td class="code"><code><span class="sd">            """</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-71"><code data-line-number="71"></code></a></td>
+<td class="code"><code>            <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-72"><code data-line-number="72"></code></a></td>
+<td class="code"><code>            <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">targets</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-73"><code data-line-number="73"></code></a></td>
+<td class="code"><code>                <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-74"><code data-line-number="74"></code></a></td>
+<td class="code"><code>                <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_print_with_percent_formatting</span><span class="p">(</span><span class="s1">'assigned new value to '</span> <span class="o">+</span> <span class="n">target</span><span class="o">.</span><span class="n">id</span> <span class="o">+</span> <span class="s1">': </span><span class="si">%r</span><span class="s1">'</span><span class="p">,</span> <span class="n">target</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-75"><code data-line-number="75"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-76"><code data-line-number="76"></code></a></td>
+<td class="code"><code>        <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-77"><code data-line-number="77"></code></a></td>
+<td class="code"><code>            <span class="n">new_function_body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-78"><code data-line-number="78"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-79"><code data-line-number="79"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-80"><code data-line-number="80"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-81"><code data-line-number="81"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-82"><code data-line-number="82"></code></a></td>
+<td class="code"><code>    <span class="n">func_ast</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">new_function_body</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-83"><code data-line-number="83"></code></a></td>
+<td class="code"><code>    <span class="c1"># if you don't do this, compile&amp;exec will call this function recursively.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-84"><code data-line-number="84"></code></a></td>
+<td class="code"><code>    <span class="n">func_ast</span><span class="o">.</span><span class="n">decorator_list</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-85"><code data-line-number="85"></code></a></td>
+<td class="code"><code>    <span class="c1"># func_ast = ast.fix_missing_locations(func_ast)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-86"><code data-line-number="86"></code></a></td>
+<td class="code"><code>    <span class="c1"># print "trying to compile this function:", ast.dump(func_ast)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-87"><code data-line-number="87"></code></a></td>
+<td class="code"><code>    <span class="n">modul_ast</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">fix_missing_locations</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="p">[</span><span class="n">func_ast</span><span class="p">]))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-88"><code data-line-number="88"></code></a></td>
+<td class="code"><code>    <span class="n">exec</span> <span class="nb">compile</span><span class="p">(</span><span class="n">modul_ast</span><span class="p">,</span><span class="s1">'&lt;string&gt;'</span><span class="p">,</span><span class="s1">'exec'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-89"><code data-line-number="89"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="nb">locals</span><span class="p">()[</span><span class="n">func</span><span class="o">.</span><span class="n">func_name</span><span class="p">]</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Kullanımı çok basit. Örneğin şu kodu inceleyelim:</p>
-<pre class="code literal-block"><span></span><span class="nd">@debugging</span>
-<span class="k">def</span> <span class="nf">osman</span><span class="p">(</span><span class="n">ali</span><span class="p">,</span> <span class="n">veli</span><span class="p">,</span> <span class="n">mehmet</span><span class="p">,</span> <span class="n">zeynep</span> <span class="o">=</span> <span class="mi">48</span><span class="p">):</span>
-    <span class="n">ali</span> <span class="o">=</span> <span class="mi">129</span>
-    <span class="k">return</span> <span class="n">ali</span> <span class="o">+</span> <span class="n">veli</span>
-
-<span class="k">print</span> <span class="n">osman</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="mi">32</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="nd">@debugging</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">osman</span><span class="p">(</span><span class="n">ali</span><span class="p">,</span> <span class="n">veli</span><span class="p">,</span> <span class="n">mehmet</span><span class="p">,</span> <span class="n">zeynep</span> <span class="o">=</span> <span class="mi">48</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="n">ali</span> <span class="o">=</span> <span class="mi">129</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">ali</span> <span class="o">+</span> <span class="n">veli</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="debugging-decorator.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="nb">print</span> <span class="n">osman</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="mi">32</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu kod şöyle bir çıktı veriyor:
 </p>

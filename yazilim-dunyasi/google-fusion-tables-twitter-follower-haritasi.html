@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Google Fusion Tables ve Twitter api kullanarak, google maps üzerinde sizi takip eden kişilerin bir haritasını oluşturmak mümkün. Ayrıca, göze güzel görünüyor.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/yazilim-dunyasi/google-fusion-tables-twitter-follower-haritasi.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/yazilim-dunyasi/google-fusion-tables-twitter-follower-haritasi.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="xlib-ne-kadar-zor-olabilir-ki.html" title="Xlib, ne kadar zor olabilir ki?" type="text/html">
 <link rel="next" href="../python/iki-tarih-arasindaki-gun-farki.html" title="Python'da iki tarih arasındaki gün farkı" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="İki adımda takipçi haritanızı oluşturun">
-<meta property="og:url" content="http://ysar.net/yazilim-dunyasi/google-fusion-tables-twitter-follower-haritasi.html">
-<meta property="og:description" content="Google Fusion Tables ve Twitter api kullanarak, google maps üzerinde sizi takip eden kişilerin bir haritasını oluşturmak mümkün. Ayrıca, göze güzel görünüyor.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2013-02-01T22:12:00+02:00">
 </head>
 <body>
 
@@ -46,121 +40,573 @@
     <div>
 <h4>1 - Takipçilerin bilgilerini csv formatında kaydedin.</h4>
 <p>Öncelikle gerekli datayı twitter api'sinden almamız gerekiyor. Bunun için aşağıdaki kodları kullanacağız: <!-- TEASER_END --></p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">urlencode</span>
-<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">makedirs</span>
-<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">dirname</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-
-<span class="k">def</span> <span class="nf">lookup</span><span class="p">(</span><span class="n">screenname</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">screenname</span> <span class="ow">is</span> <span class="bp">False</span> <span class="ow">and</span> <span class="n">user_id</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Suppy either screenname or user_id"</span><span class="p">)</span>
-
-    <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
-
-    <span class="k">if</span> <span class="n">screenname</span><span class="p">:</span>
-        <span class="n">params</span><span class="p">[</span><span class="s2">"screen_name"</span><span class="p">]</span> <span class="o">=</span> <span class="n">screenname</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">params</span><span class="p">[</span><span class="s2">"user_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_id</span>
-
-    <span class="k">return</span> <span class="n">call_twitter_api</span><span class="p">(</span><span class="s2">"users/lookup.json"</span><span class="p">,</span><span class="n">params</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">call_twitter_api</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    Calls twitter api, and parses returned json, than returns.</span>
-
-<span class="sd">    string, {"string": ?} -&gt; ?</span>
-<span class="sd">    """</span>
-
-    <span class="n">query</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">?</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">params</span><span class="p">,</span><span class="n">doseq</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
-    <span class="k">print</span> <span class="n">query</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">makedirs</span><span class="p">(</span><span class="n">dirname</span><span class="p">(</span><span class="n">query</span><span class="p">))</span>
-    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
-        <span class="k">pass</span>
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">query</span><span class="p">,</span><span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya</span><span class="p">:</span>
-            <span class="n">raw_json</span> <span class="o">=</span> <span class="n">dosya</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">raw_json</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>        
-        <span class="n">url</span> <span class="o">=</span> <span class="s2">"https://api.twitter.com/1/</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">query</span><span class="p">)</span>
-        <span class="n">conn</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-        <span class="n">raw_json</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-
-        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="n">parsed</span>  <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">raw_json</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">"error"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parsed</span><span class="p">:</span>  
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">query</span><span class="p">,</span><span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya</span><span class="p">:</span>
-                <span class="n">dosya</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">raw_json</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">TwitterError</span><span class="p">(</span><span class="n">parsed</span><span class="p">[</span><span class="s2">"error"</span><span class="p">])</span>
-
-        <span class="k">return</span> <span class="n">parsed</span>
-
-
-<span class="k">def</span> <span class="nf">get_follower_ids</span><span class="p">(</span><span class="n">screenname</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-
-    <span class="k">if</span> <span class="n">screenname</span> <span class="ow">is</span> <span class="bp">False</span> <span class="ow">and</span> <span class="n">user_id</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Suppy either screenname or user_id"</span><span class="p">)</span>
-
-    <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
-
-    <span class="k">if</span> <span class="n">screenname</span><span class="p">:</span>
-        <span class="n">params</span><span class="p">[</span><span class="s2">"screen_name"</span><span class="p">]</span> <span class="o">=</span> <span class="n">screenname</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">params</span><span class="p">[</span><span class="s2">"user_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_id</span>
-
-    <span class="k">return</span> <span class="n">call_twitter_api</span><span class="p">(</span><span class="s2">"followers/ids.json"</span><span class="p">,</span><span class="n">params</span><span class="p">)[</span><span class="s2">"ids"</span><span class="p">]</span>
-
-<span class="k">def</span> <span class="nf">export_users</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">user_ids</span><span class="p">):</span>
-    <span class="n">columnheaders</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">"userid"</span><span class="p">,</span>
-        <span class="s2">"screenname"</span><span class="p">,</span>
-        <span class="s2">"fullname"</span><span class="p">,</span>
-        <span class="s2">"statusses"</span><span class="p">,</span>
-        <span class="s2">"friends"</span><span class="p">,</span>
-        <span class="s2">"followers"</span><span class="p">,</span>
-        <span class="s2">"favourites"</span><span class="p">,</span>
-        <span class="s2">"url"</span><span class="p">,</span>
-        <span class="s2">"lang"</span><span class="p">,</span>
-        <span class="s2">"location"</span><span class="p">,</span>
-        <span class="s2">"created"</span><span class="p">,</span>
-        <span class="s2">"timezone"</span><span class="p">,</span>
-        <span class="p">]</span>
-
-    <span class="n">headerline</span> <span class="o">=</span> <span class="s2">","</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">"</span><span class="se">\"</span><span class="si">%s</span><span class="se">\"</span><span class="s2">"</span> <span class="o">%</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">columnheaders</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
-    <span class="n">lineformat</span> <span class="o">=</span> <span class="s2">","</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">"</span><span class="se">\"</span><span class="si">%s</span><span class="se">\"</span><span class="s2">"</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">columnheaders</span><span class="p">))</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
-
-    <span class="k">print</span> <span class="n">lineformat</span>
-
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya</span><span class="p">:</span>
-        <span class="n">dosya</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">headerline</span><span class="p">)</span>
-        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-        <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">user_ids</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">user</span> <span class="o">=</span> <span class="n">lookup</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="nb">id</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-                <span class="k">continue</span>
-
-            <span class="n">dosya</span><span class="o">.</span><span class="n">write</span><span class="p">(</span> <span class="p">(</span><span class="n">lineformat</span> <span class="o">%</span> <span class="p">(</span>
-                    <span class="n">user</span><span class="p">[</span><span class="s2">"id_str"</span><span class="p">],</span>
-                    <span class="n">user</span><span class="p">[</span><span class="s2">"screen_name"</span><span class="p">],</span>
-                    <span class="n">user</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span>
-                    <span class="n">user</span><span class="p">[</span><span class="s2">"statuses_count"</span><span class="p">],</span>
-                    <span class="n">user</span><span class="p">[</span><span class="s2">"friends_count"</span><span class="p">],</span>
-                    <span class="n">user</span><span class="p">[</span><span class="s2">"followers_count"</span><span class="p">],</span>
-                    <span class="n">user</span><span class="p">[</span><span class="s2">"favourites_count"</span><span class="p">],</span>
-                    <span class="n">user</span><span class="p">[</span><span class="s2">"url"</span><span class="p">],</span>
-                    <span class="n">user</span><span class="p">[</span><span class="s2">"lang"</span><span class="p">],</span>
-                    <span class="n">user</span><span class="p">[</span><span class="s2">"location"</span><span class="p">],</span>
-                    <span class="n">user</span><span class="p">[</span><span class="s2">"created_at"</span><span class="p">],</span>
-                    <span class="n">user</span><span class="p">[</span><span class="s2">"time_zone"</span><span class="p">],</span>
-                    <span class="p">))</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">))</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-1"><code data-line-number="  1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">urlencode</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-2"><code data-line-number="  2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">makedirs</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-3"><code data-line-number="  3"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">dirname</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-4"><code data-line-number="  4"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">json</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-5"><code data-line-number="  5"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-6"><code data-line-number="  6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-7"><code data-line-number="  7"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">lookup</span><span class="p">(</span><span class="n">screenname</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-8"><code data-line-number="  8"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">screenname</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">and</span> <span class="n">user_id</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-9"><code data-line-number="  9"></code></a></td>
+<td class="code"><code>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Suppy either screenname or user_id"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-10"><code data-line-number=" 10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-11"><code data-line-number=" 11"></code></a></td>
+<td class="code"><code>    <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-12"><code data-line-number=" 12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-13"><code data-line-number=" 13"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">screenname</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-14"><code data-line-number=" 14"></code></a></td>
+<td class="code"><code>        <span class="n">params</span><span class="p">[</span><span class="s2">"screen_name"</span><span class="p">]</span> <span class="o">=</span> <span class="n">screenname</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-15"><code data-line-number=" 15"></code></a></td>
+<td class="code"><code>    <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-16"><code data-line-number=" 16"></code></a></td>
+<td class="code"><code>        <span class="n">params</span><span class="p">[</span><span class="s2">"user_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_id</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-17"><code data-line-number=" 17"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-18"><code data-line-number=" 18"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">call_twitter_api</span><span class="p">(</span><span class="s2">"users/lookup.json"</span><span class="p">,</span><span class="n">params</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-19"><code data-line-number=" 19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-20"><code data-line-number=" 20"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">call_twitter_api</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-21"><code data-line-number=" 21"></code></a></td>
+<td class="code"><code>    <span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-22"><code data-line-number=" 22"></code></a></td>
+<td class="code"><code><span class="sd">    Calls twitter api, and parses returned json, than returns.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-23"><code data-line-number=" 23"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-24"><code data-line-number=" 24"></code></a></td>
+<td class="code"><code><span class="sd">    string, {"string": ?} -&gt; ?</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-25"><code data-line-number=" 25"></code></a></td>
+<td class="code"><code><span class="sd">    """</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-26"><code data-line-number=" 26"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-27"><code data-line-number=" 27"></code></a></td>
+<td class="code"><code>    <span class="n">query</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">?</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">params</span><span class="p">,</span><span class="n">doseq</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-28"><code data-line-number=" 28"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span> <span class="n">query</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-29"><code data-line-number=" 29"></code></a></td>
+<td class="code"><code>    <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-30"><code data-line-number=" 30"></code></a></td>
+<td class="code"><code>        <span class="n">makedirs</span><span class="p">(</span><span class="n">dirname</span><span class="p">(</span><span class="n">query</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-31"><code data-line-number=" 31"></code></a></td>
+<td class="code"><code>    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-32"><code data-line-number=" 32"></code></a></td>
+<td class="code"><code>        <span class="k">pass</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-33"><code data-line-number=" 33"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-34"><code data-line-number=" 34"></code></a></td>
+<td class="code"><code>    <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-35"><code data-line-number=" 35"></code></a></td>
+<td class="code"><code>        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">query</span><span class="p">,</span><span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-36"><code data-line-number=" 36"></code></a></td>
+<td class="code"><code>            <span class="n">raw_json</span> <span class="o">=</span> <span class="n">dosya</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-37"><code data-line-number=" 37"></code></a></td>
+<td class="code"><code>            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">raw_json</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-38"><code data-line-number=" 38"></code></a></td>
+<td class="code"><code>    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>        
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-39"><code data-line-number=" 39"></code></a></td>
+<td class="code"><code>        <span class="n">url</span> <span class="o">=</span> <span class="s2">"https://api.twitter.com/1/</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-40"><code data-line-number=" 40"></code></a></td>
+<td class="code"><code>        <span class="n">conn</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-41"><code data-line-number=" 41"></code></a></td>
+<td class="code"><code>        <span class="n">raw_json</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-42"><code data-line-number=" 42"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-43"><code data-line-number=" 43"></code></a></td>
+<td class="code"><code>        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-44"><code data-line-number=" 44"></code></a></td>
+<td class="code"><code>        <span class="n">parsed</span>  <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">raw_json</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-45"><code data-line-number=" 45"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="s2">"error"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parsed</span><span class="p">:</span>  
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-46"><code data-line-number=" 46"></code></a></td>
+<td class="code"><code>            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">query</span><span class="p">,</span><span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-47"><code data-line-number=" 47"></code></a></td>
+<td class="code"><code>                <span class="n">dosya</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">raw_json</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-48"><code data-line-number=" 48"></code></a></td>
+<td class="code"><code>        <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-49"><code data-line-number=" 49"></code></a></td>
+<td class="code"><code>            <span class="k">raise</span> <span class="n">TwitterError</span><span class="p">(</span><span class="n">parsed</span><span class="p">[</span><span class="s2">"error"</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-50"><code data-line-number=" 50"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-51"><code data-line-number=" 51"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">parsed</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-52"><code data-line-number=" 52"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-53"><code data-line-number=" 53"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-54"><code data-line-number=" 54"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">get_follower_ids</span><span class="p">(</span><span class="n">screenname</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-55"><code data-line-number=" 55"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-56"><code data-line-number=" 56"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">screenname</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">and</span> <span class="n">user_id</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-57"><code data-line-number=" 57"></code></a></td>
+<td class="code"><code>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Suppy either screenname or user_id"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-58"><code data-line-number=" 58"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-59"><code data-line-number=" 59"></code></a></td>
+<td class="code"><code>    <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-60"><code data-line-number=" 60"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-61"><code data-line-number=" 61"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">screenname</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-62"><code data-line-number=" 62"></code></a></td>
+<td class="code"><code>        <span class="n">params</span><span class="p">[</span><span class="s2">"screen_name"</span><span class="p">]</span> <span class="o">=</span> <span class="n">screenname</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-63"><code data-line-number=" 63"></code></a></td>
+<td class="code"><code>    <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-64"><code data-line-number=" 64"></code></a></td>
+<td class="code"><code>        <span class="n">params</span><span class="p">[</span><span class="s2">"user_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_id</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-65"><code data-line-number=" 65"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-66"><code data-line-number=" 66"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">call_twitter_api</span><span class="p">(</span><span class="s2">"followers/ids.json"</span><span class="p">,</span><span class="n">params</span><span class="p">)[</span><span class="s2">"ids"</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-67"><code data-line-number=" 67"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-68"><code data-line-number=" 68"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">export_users</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">user_ids</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-69"><code data-line-number=" 69"></code></a></td>
+<td class="code"><code>    <span class="n">columnheaders</span> <span class="o">=</span> <span class="p">[</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-70"><code data-line-number=" 70"></code></a></td>
+<td class="code"><code>        <span class="s2">"userid"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-71"><code data-line-number=" 71"></code></a></td>
+<td class="code"><code>        <span class="s2">"screenname"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-72"><code data-line-number=" 72"></code></a></td>
+<td class="code"><code>        <span class="s2">"fullname"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-73"><code data-line-number=" 73"></code></a></td>
+<td class="code"><code>        <span class="s2">"statusses"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-74"><code data-line-number=" 74"></code></a></td>
+<td class="code"><code>        <span class="s2">"friends"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-75"><code data-line-number=" 75"></code></a></td>
+<td class="code"><code>        <span class="s2">"followers"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-76"><code data-line-number=" 76"></code></a></td>
+<td class="code"><code>        <span class="s2">"favourites"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-77"><code data-line-number=" 77"></code></a></td>
+<td class="code"><code>        <span class="s2">"url"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-78"><code data-line-number=" 78"></code></a></td>
+<td class="code"><code>        <span class="s2">"lang"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-79"><code data-line-number=" 79"></code></a></td>
+<td class="code"><code>        <span class="s2">"location"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-80"><code data-line-number=" 80"></code></a></td>
+<td class="code"><code>        <span class="s2">"created"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-81"><code data-line-number=" 81"></code></a></td>
+<td class="code"><code>        <span class="s2">"timezone"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-82"><code data-line-number=" 82"></code></a></td>
+<td class="code"><code>        <span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-83"><code data-line-number=" 83"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-84"><code data-line-number=" 84"></code></a></td>
+<td class="code"><code>    <span class="n">headerline</span> <span class="o">=</span> <span class="s2">","</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">"</span><span class="se">\"</span><span class="si">%s</span><span class="se">\"</span><span class="s2">"</span> <span class="o">%</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">columnheaders</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-85"><code data-line-number=" 85"></code></a></td>
+<td class="code"><code>    <span class="n">lineformat</span> <span class="o">=</span> <span class="s2">","</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">"</span><span class="se">\"</span><span class="si">%s</span><span class="se">\"</span><span class="s2">"</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">columnheaders</span><span class="p">))</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-86"><code data-line-number=" 86"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-87"><code data-line-number=" 87"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span> <span class="n">lineformat</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-88"><code data-line-number=" 88"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-89"><code data-line-number=" 89"></code></a></td>
+<td class="code"><code>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-90"><code data-line-number=" 90"></code></a></td>
+<td class="code"><code>        <span class="n">dosya</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">headerline</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-91"><code data-line-number=" 91"></code></a></td>
+<td class="code"><code>        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-92"><code data-line-number=" 92"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">user_ids</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-93"><code data-line-number=" 93"></code></a></td>
+<td class="code"><code>            <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-94"><code data-line-number=" 94"></code></a></td>
+<td class="code"><code>                <span class="n">user</span> <span class="o">=</span> <span class="n">lookup</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="nb">id</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-95"><code data-line-number=" 95"></code></a></td>
+<td class="code"><code>            <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-96"><code data-line-number=" 96"></code></a></td>
+<td class="code"><code>                <span class="k">continue</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-97"><code data-line-number=" 97"></code></a></td>
+<td class="code"><code>            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-98"><code data-line-number=" 98"></code></a></td>
+<td class="code"><code>                <span class="k">continue</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-99"><code data-line-number=" 99"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-100"><code data-line-number="100"></code></a></td>
+<td class="code"><code>            <span class="n">dosya</span><span class="o">.</span><span class="n">write</span><span class="p">(</span> <span class="p">(</span><span class="n">lineformat</span> <span class="o">%</span> <span class="p">(</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-101"><code data-line-number="101"></code></a></td>
+<td class="code"><code>                    <span class="n">user</span><span class="p">[</span><span class="s2">"id_str"</span><span class="p">],</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-102"><code data-line-number="102"></code></a></td>
+<td class="code"><code>                    <span class="n">user</span><span class="p">[</span><span class="s2">"screen_name"</span><span class="p">],</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-103"><code data-line-number="103"></code></a></td>
+<td class="code"><code>                    <span class="n">user</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-104"><code data-line-number="104"></code></a></td>
+<td class="code"><code>                    <span class="n">user</span><span class="p">[</span><span class="s2">"statuses_count"</span><span class="p">],</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-105"><code data-line-number="105"></code></a></td>
+<td class="code"><code>                    <span class="n">user</span><span class="p">[</span><span class="s2">"friends_count"</span><span class="p">],</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-106"><code data-line-number="106"></code></a></td>
+<td class="code"><code>                    <span class="n">user</span><span class="p">[</span><span class="s2">"followers_count"</span><span class="p">],</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-107"><code data-line-number="107"></code></a></td>
+<td class="code"><code>                    <span class="n">user</span><span class="p">[</span><span class="s2">"favourites_count"</span><span class="p">],</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-108"><code data-line-number="108"></code></a></td>
+<td class="code"><code>                    <span class="n">user</span><span class="p">[</span><span class="s2">"url"</span><span class="p">],</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-109"><code data-line-number="109"></code></a></td>
+<td class="code"><code>                    <span class="n">user</span><span class="p">[</span><span class="s2">"lang"</span><span class="p">],</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-110"><code data-line-number="110"></code></a></td>
+<td class="code"><code>                    <span class="n">user</span><span class="p">[</span><span class="s2">"location"</span><span class="p">],</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-111"><code data-line-number="111"></code></a></td>
+<td class="code"><code>                    <span class="n">user</span><span class="p">[</span><span class="s2">"created_at"</span><span class="p">],</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-112"><code data-line-number="112"></code></a></td>
+<td class="code"><code>                    <span class="n">user</span><span class="p">[</span><span class="s2">"time_zone"</span><span class="p">],</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="google-fusion-tables-twitter-follower-haritasi.html#-113"><code data-line-number="113"></code></a></td>
+<td class="code"><code>                    <span class="p">))</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">))</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Önce <a href="https://gist.github.com/raw/4693569/0387520d2b391c971b2a272a47bcc65be7138da9/twit.py">Twitter follower bilgilerini kaydeden kodlar</a>ı kaydedin, daha sonra
 <code>export_users("myfollowers.csv",get_follower_ids("y_arabaci"))</code> şeklinde

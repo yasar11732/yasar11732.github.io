@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Haskell, tamamen fonksiyonel, zarif ve ifade gücü yüksek bir dil. Örnek kodlar ve kullanım alanlarını anlattım.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/yazilim-dunyasi/haskell-tanitim.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/yazilim-dunyasi/haskell-tanitim.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="../python/windows-exe-yapma-alternatifi.html" title="cx_freeze ve py2exe alternatifi" type="text/html">
 <link rel="next" href="../python/lexical-analiz.html" title="Lexical Analiz" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Haskell Öğreniyorum">
-<meta property="og:url" content="http://ysar.net/yazilim-dunyasi/haskell-tanitim.html">
-<meta property="og:description" content="Haskell, tamamen fonksiyonel, zarif ve ifade gücü yüksek bir dil. Örnek kodlar ve kullanım alanlarını anlattım.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2013-10-13T12:51:18+03:00">
 </head>
 <body>
 
@@ -58,11 +52,23 @@ olduğunu belirtmenize gerek yok, Haskell kendi anlıyor.</p>
 <p>Haskell <strong>zarif ve ifade gücü yüksek</strong> bir dil. Python'dan hatırlayacağınız, <em>list comprehension</em> yapısı Haskell
 kaynaklı. Ne kadar az kod, o kadar kolay bakım gereksinimi ve o kadar az bug demek. <!-- TEASER_END --></p>
 <h3>Haskell Örnek Kodlar</h3>
-<pre class="code literal-block"><span></span><span class="nf">primesTo</span> <span class="n">m</span> <span class="ow">=</span> <span class="n">eratos</span> <span class="p">[</span><span class="mi">2</span><span class="o">..</span><span class="n">m</span><span class="p">]</span>  <span class="kr">where</span>
-   <span class="n">eratos</span> <span class="kt">[]</span>     <span class="ow">=</span> <span class="kt">[]</span>
-   <span class="n">eratos</span> <span class="p">(</span><span class="n">p</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="n">p</span> <span class="kt">:</span> <span class="n">eratos</span> <span class="p">(</span><span class="n">xs</span> <span class="p">`</span><span class="n">minus</span><span class="p">`</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="o">+</span><span class="n">p</span><span class="o">..</span><span class="n">m</span><span class="p">])</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="haskell-tanitim.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="nf">primesTo</span> <span class="n">m</span> <span class="ow">=</span> <span class="n">eratos</span> <span class="p">[</span><span class="mi">2</span><span class="o">..</span><span class="n">m</span><span class="p">]</span>  <span class="kr">where</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="haskell-tanitim.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>   <span class="n">eratos</span> <span class="kt">[]</span>     <span class="ow">=</span> <span class="kt">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="haskell-tanitim.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>   <span class="n">eratos</span> <span class="p">(</span><span class="n">p</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="n">p</span> <span class="kt">:</span> <span class="n">eratos</span> <span class="p">(</span><span class="n">xs</span> <span class="p">`</span><span class="n">minus</span><span class="p">`</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="o">+</span><span class="n">p</span><span class="o">..</span><span class="n">m</span><span class="p">])</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yukarıda, <em>sieve of eratosthenes</em> yöntemiyle asal sayıları bulan bir fonksiyon görüyoruz. <code>primesTo</code> fonksiyonu tek bir
 argüman alıyor, ve <code>eratos</code> isminde bir başka fonksiyonu 2'den başlayıp o sayıya kadar olan sayılaradan oluşan bir liste

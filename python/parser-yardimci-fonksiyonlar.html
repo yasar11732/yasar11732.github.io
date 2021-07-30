@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Yazdığımız parser yardımcı fonksiyonlara değineceğiz, temel sembol sınıfı yazacağız ve bir sembol tablosu oluşturacağız.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/parser-yardimci-fonksiyonlar.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/parser-yardimci-fonksiyonlar.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="python-ile-parser-yapimi.html" title="Python ile parser yapımı" type="text/html">
 <link rel="next" href="parser-statement.html" title="Parser - Statement" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Parser - Yardımcı Fonksiyonlar">
-<meta property="og:url" content="http://ysar.net/python/parser-yardimci-fonksiyonlar.html">
-<meta property="og:description" content="Yazdığımız parser yardımcı fonksiyonlara değineceğiz, temel sembol sınıfı yazacağız ve bir sembol tablosu oluşturacağız.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2013-10-16T20:50:00+03:00">
 </head>
 <body>
 
@@ -47,14 +41,38 @@
 <p><a href="python-ile-parser-yapimi.html">Python ile parser yapımı</a> yazısı, kullanacağımız algoritmayı tanıtmak üzerineydi. Bu yazıda
 ise, Parser yapmakta kullanacağımız yardımcı fonksiyon ve sınıflara değineceğiz. <!-- TEASER_END --></p>
 <h3>Parser Sınıfı</h3>
-<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">Parser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_q</span> <span class="o">=</span> <span class="n">queue</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_sym</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_prepareSymTable</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nextToken</span><span class="p">()</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Parser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">_q</span> <span class="o">=</span> <span class="n">queue</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">_sym</span> <span class="o">=</span> <span class="p">{}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">_prepareSymTable</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nextToken</span><span class="p">()</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Parser sınıfı, bir Queue objesi alıyor. Token'lerimizi bu Queue üzerinden okuyacağız. Bu Queue'e, daha önceki yazılarda
 yazmış olduğumuz Lexer sınıfı tokenleri koyacak.</p>
@@ -62,29 +80,113 @@ yazmış olduğumuz Lexer sınıfı tokenleri koyacak.</p>
 Bu metodu daha sonra inceleyeceğiz.</p>
 <p><code>_nextToken</code> ise, daha sonraki token'i almak için kullanılıyor. Ancak, bir sonraki token'e ilerlemek için, bu metot
 yerine, aşağıdaki <code>_advance</code> metodunu kullanacağız.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">_nextToken</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="n">ttype</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">tvalue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_q</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="c1"># if we can't get a new token in next 5 secs, raise an exception</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">lineno</span> <span class="o">=</span> <span class="n">lineno</span>      
-    <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sym</span><span class="p">[</span><span class="n">ttype</span><span class="p">]()</span>
-
-    <span class="k">if</span> <span class="n">ttype</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"NUMBER"</span><span class="p">,</span><span class="s2">"FLOAT"</span><span class="p">,</span><span class="s2">"STRING"</span><span class="p">,</span><span class="s2">"NAME"</span><span class="p">]:</span>
-        <span class="n">s</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">tvalue</span>
-    <span class="k">return</span> <span class="n">s</span>
-
-<span class="k">def</span> <span class="nf">_advance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idlist</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">"END"</span><span class="p">:</span>
-        <span class="k">return</span>
-
-    <span class="k">if</span> <span class="n">idlist</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="n">idlist</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nextToken</span><span class="p">()</span>
-    <span class="k">elif</span> <span class="ow">not</span> <span class="n">idlist</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nextToken</span><span class="p">()</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span><span class="s2">"""Expected one of </span><span class="si">%s</span><span class="s2"></span>
-<span class="s2">found </span><span class="si">%r</span><span class="s2"> instead. (line: </span><span class="si">%i</span><span class="s2">)"""</span> <span class="o">%</span> <span class="p">(</span><span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">idlist</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lineno</span><span class="p">))</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">_nextToken</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="n">ttype</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">tvalue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_q</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="c1"># if we can't get a new token in next 5 secs, raise an exception</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="bp">self</span><span class="o">.</span><span class="n">lineno</span> <span class="o">=</span> <span class="n">lineno</span>      
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sym</span><span class="p">[</span><span class="n">ttype</span><span class="p">]()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">ttype</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"NUMBER"</span><span class="p">,</span><span class="s2">"FLOAT"</span><span class="p">,</span><span class="s2">"STRING"</span><span class="p">,</span><span class="s2">"NAME"</span><span class="p">]:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>        <span class="n">s</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">tvalue</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">s</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">_advance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idlist</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">"END"</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>        <span class="k">return</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">idlist</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="n">idlist</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nextToken</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>    <span class="k">elif</span> <span class="ow">not</span> <span class="n">idlist</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nextToken</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>    <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>        <span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span><span class="s2">"""Expected one of </span><span class="si">%s</span><span class="s2"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="s2">found </span><span class="si">%r</span><span class="s2"> instead. (line: </span><span class="si">%i</span><span class="s2">)"""</span> <span class="o">%</span> <span class="p">(</span><span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">idlist</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lineno</span><span class="p">))</span>
+</code></td>
+</tr>
+</table></div>
 
 <p><code>_nextToken</code>, Queue'den bir token alıyor. Parser'ın bulunduğu satırı, Lexer'dan gelen bilgiye göre güncelliyor. Daha sonra,
 sembol tablosundan o token'e karşılık gelen sınıfı bulup, yeni bir örneğini oluşturuyor. Eğer, o anki token bir literal ise,
@@ -93,26 +195,98 @@ literal'in değerini ayarlayıp, sembolü gönderiyor.</p>
 değilse, ParseError veriyor. Bunun kullanımını daha sonra göreceğiz. Bunun dışında, eğer token sırası bitmişse, hiçbirşey yapmıyor.</p>
 <p>Sıra geldi, sembol tablomuzun oluşturulmasına. Sembol tablomuza koyacağımız her sembol için, tek tek yeni sınıf oluşturmak yerine,
 temel sembol sınıfı oluşturacağız. Diğer semboller bunun uzantısı olacak.</p>
-<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">BaseSymbol</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="nb">id</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="n">value</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="n">parent</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="n">first</span> <span class="o">=</span> <span class="n">second</span> <span class="o">=</span> <span class="n">third</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="n">beginStatement</span> <span class="o">=</span> <span class="bp">False</span>
-
-    <span class="k">def</span> <span class="nf">nud</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span><span class="s2">"Parse error (</span><span class="si">%r</span><span class="s2">)"</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">led</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span><span class="s2">"Unknown operator (</span><span class="si">%r</span><span class="s2">)"</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"NAME"</span><span class="p">,</span><span class="s2">"NUMBER"</span><span class="p">,</span><span class="s2">"FLOAT"</span><span class="p">,</span><span class="s2">"STRING"</span><span class="p">]:</span>
-            <span class="k">return</span> <span class="s2">"(</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">)"</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">third</span><span class="p">]</span>
-        <span class="k">return</span> <span class="s2">"("</span> <span class="o">+</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="nb">filter</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span><span class="n">out</span><span class="p">)))</span> <span class="o">+</span> <span class="s2">")"</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">BaseSymbol</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="nb">id</span> <span class="o">=</span> <span class="kc">None</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">value</span> <span class="o">=</span> <span class="kc">None</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="n">first</span> <span class="o">=</span> <span class="n">second</span> <span class="o">=</span> <span class="n">third</span> <span class="o">=</span> <span class="kc">None</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="n">beginStatement</span> <span class="o">=</span> <span class="kc">False</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">nud</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span><span class="s2">"Parse error (</span><span class="si">%r</span><span class="s2">)"</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">led</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span><span class="s2">"Unknown operator (</span><span class="si">%r</span><span class="s2">)"</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"NAME"</span><span class="p">,</span><span class="s2">"NUMBER"</span><span class="p">,</span><span class="s2">"FLOAT"</span><span class="p">,</span><span class="s2">"STRING"</span><span class="p">]:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>            <span class="k">return</span> <span class="s2">"(</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">)"</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>        <span class="n">out</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">third</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="s2">"("</span> <span class="o">+</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span><span class="n">out</span><span class="p">)))</span> <span class="o">+</span> <span class="s2">")"</span>
+</code></td>
+</tr>
+</table></div>
 
 <p><code>id</code>, "NUMBER", "FLOAT" gibi, o tokenin tipini gösteren bir string. <code>value</code> literaller tarafından kullanılacak, o tokenin değerini
 gösteriyor. <code>first</code>, <code>second</code>, <code>third</code> değikenleri, birkaç kısımdan oluşan sembollerin kısımlarını göstermek için kullanılacak. Örneğin,
@@ -120,79 +294,303 @@ gösteriyor. <code>first</code>, <code>second</code>, <code>third</code> değike
 <code>beginStatement</code> ise, bu sembolün bir statement başlatıp başlatmadığını gösteriyor. Henüz bir statement parse etmeye başlamadık, ama
 başladığımız zaman kullanacağız bu değişkeni.</p>
 <p>Şimdi de, factory rolünü üstlenecek metoda bir bakalım:</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">_symbol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">bp</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sym</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
-    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-        <span class="k">class</span> <span class="nc">s</span><span class="p">(</span><span class="n">BaseSymbol</span><span class="p">):</span>
-            <span class="k">pass</span>
-        <span class="n">s</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s2">"symbol-"</span> <span class="o">+</span> <span class="nb">id</span>
-        <span class="n">s</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
-        <span class="n">s</span><span class="o">.</span><span class="n">lbp</span> <span class="o">=</span> <span class="n">bp</span>
-        <span class="n">s</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_sym</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">s</span><span class="o">.</span><span class="n">lbp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">bp</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">lbp</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">s</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">_symbol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">bp</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sym</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>        <span class="k">class</span> <span class="nc">s</span><span class="p">(</span><span class="n">BaseSymbol</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>            <span class="k">pass</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>        <span class="n">s</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s2">"symbol-"</span> <span class="o">+</span> <span class="nb">id</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="n">s</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="n">s</span><span class="o">.</span><span class="n">lbp</span> <span class="o">=</span> <span class="n">bp</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="n">s</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">_sym</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>        <span class="n">s</span><span class="o">.</span><span class="n">lbp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">bp</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">lbp</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">s</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu metodun yaptığı az çok belli, çok üstünde durmayacağım. Özetle, eğer sembol önceden oluşturulmuşsa, sembol tablosundan
 döndürüyor, aksi halde yeni bir sembol oluşturup, tabloya ekleyip onu döndürüyor.</p>
 <p>Artık, <code>_prepareSymTable</code> ne yapıyor bakabiliriz. Bu metodun işi, Parser'ın tanıdığı tüm sembolleri, sembol tablosuna
 eklemek. Önce, 4 işlem sembollerini ekleyelim:</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">_prepareSymTable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">plusled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">=</span> <span class="n">left</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">second</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span>
-
-    <span class="bp">self</span><span class="o">.</span><span class="n">_symbol</span><span class="p">(</span><span class="s2">"+"</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">led</span> <span class="o">=</span> <span class="n">plusled</span>
-
-    <span class="k">def</span> <span class="nf">minusled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">=</span> <span class="n">left</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">second</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="n">bp</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span>
-
-    <span class="bp">self</span><span class="o">.</span><span class="n">_symbol</span><span class="p">(</span><span class="s2">"-"</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">led</span> <span class="o">=</span> <span class="n">minusled</span>
-
-    <span class="k">def</span> <span class="nf">multiled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">=</span> <span class="n">left</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">second</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span>
-
-    <span class="bp">self</span><span class="o">.</span><span class="n">_symbol</span><span class="p">(</span><span class="s2">"*"</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">led</span> <span class="o">=</span> <span class="n">multiled</span>
-
-    <span class="k">def</span> <span class="nf">divideled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">=</span> <span class="n">left</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">second</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span>
-
-    <span class="bp">self</span><span class="o">.</span><span class="n">_symbol</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">led</span> <span class="o">=</span> <span class="n">divideled</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">_prepareSymTable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">plusled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">=</span> <span class="n">left</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">second</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="bp">self</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="bp">self</span><span class="o">.</span><span class="n">_symbol</span><span class="p">(</span><span class="s2">"+"</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">led</span> <span class="o">=</span> <span class="n">plusled</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">minusled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">=</span> <span class="n">left</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">second</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="n">bp</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="bp">self</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="bp">self</span><span class="o">.</span><span class="n">_symbol</span><span class="p">(</span><span class="s2">"-"</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">led</span> <span class="o">=</span> <span class="n">minusled</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">multiled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">=</span> <span class="n">left</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">second</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="bp">self</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>    <span class="bp">self</span><span class="o">.</span><span class="n">_symbol</span><span class="p">(</span><span class="s2">"*"</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">led</span> <span class="o">=</span> <span class="n">multiled</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">divideled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">=</span> <span class="n">left</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">second</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="bp">self</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>    <span class="bp">self</span><span class="o">.</span><span class="n">_symbol</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">led</span> <span class="o">=</span> <span class="n">divideled</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Şaka, şaka... Böyle ekliycez:</p>
-<pre class="code literal-block"><span></span> <span class="k">def</span> <span class="nf">_prepareSymTable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-     <span class="k">def</span> <span class="nf">infix</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">bp</span><span class="p">):</span>
-        <span class="k">def</span> <span class="nf">led</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">=</span> <span class="n">left</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">second</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="n">bp</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_symbol</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">bp</span><span class="p">)</span><span class="o">.</span><span class="n">led</span> <span class="o">=</span> <span class="n">led</span>
-
-    <span class="n">infix</span><span class="p">(</span><span class="s2">"+"</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span> <span class="n">infix</span><span class="p">(</span><span class="s2">"-"</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span> <span class="n">infix</span><span class="p">(</span><span class="s2">"*"</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span> <span class="n">infix</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code> <span class="k">def</span> <span class="nf">_prepareSymTable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>     <span class="k">def</span> <span class="nf">infix</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">bp</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>        <span class="k">def</span> <span class="nf">led</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>            <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">=</span> <span class="n">left</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>            <span class="bp">self</span><span class="o">.</span><span class="n">second</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="n">bp</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>            <span class="k">return</span> <span class="bp">self</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">_symbol</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">bp</span><span class="p">)</span><span class="o">.</span><span class="n">led</span> <span class="o">=</span> <span class="n">led</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-9"><code data-line-number="9"></code></a></td>
+<td class="code"><code>    <span class="n">infix</span><span class="p">(</span><span class="s2">"+"</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span> <span class="n">infix</span><span class="p">(</span><span class="s2">"-"</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span> <span class="n">infix</span><span class="p">(</span><span class="s2">"*"</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span> <span class="n">infix</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Evet, literallerimizi de ekleyelim:</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">literal</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_symbol</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">nud</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span>
-
-<span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"NUMBER"</span><span class="p">,</span><span class="s2">"FLOAT"</span><span class="p">,</span><span class="s2">"NAME"</span><span class="p">,</span><span class="s2">"STRING"</span><span class="p">]:</span>
-    <span class="n">literal</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">literal</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="bp">self</span><span class="o">.</span><span class="n">_symbol</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">nud</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"NUMBER"</span><span class="p">,</span><span class="s2">"FLOAT"</span><span class="p">,</span><span class="s2">"NAME"</span><span class="p">,</span><span class="s2">"STRING"</span><span class="p">]:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="parser-yardimci-fonksiyonlar.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="n">literal</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Evet, böylece, şimdiye kadar kullandığımız sembolleri sembol tablosuna eklemiş olduk. Daha statement'lara girmediğimiz için,
 henüz onların sembollerini tabloya eklemedim. Onu da bir sonraki yazıda yapacağız.</p>

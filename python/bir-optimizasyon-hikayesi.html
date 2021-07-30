@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Basit bir Python fonksiyonunu optimize ederek, 10 kattan fazla bir hız artışı elde ettim.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/bir-optimizasyon-hikayesi.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/bir-optimizasyon-hikayesi.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="../algoritma/pixel-siralama-videolari.html" title="Pixel Sıralama Videoları" type="text/html">
 <link rel="next" href="../algoritma/exact-cover-dancing-links-ve-sudoku-cozme.html" title="Exact Cover, Dancing Links ve Sudoku Çözme" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Bir optimizasyon hikayesi">
-<meta property="og:url" content="http://ysar.net/python/bir-optimizasyon-hikayesi.html">
-<meta property="og:description" content="Basit bir Python fonksiyonunu optimize ederek, 10 kattan fazla bir hız artışı elde ettim.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2013-11-02T21:00:00+02:00">
 </head>
 <body>
 
@@ -52,19 +46,63 @@ vereceği sonuç <code>[(1, 3), (1, 6), (1, 8), (1, 10), (3, 6), (3, 8), (3, 10)
 olmalı. Örnekten de anlayacağınız üzere, alt stringi oluşturmak için, büyük string'den alacağım
 karakterlerin sırasının değişmesini istemiyorum. Diğer bir deyişle, sonuçlar içinde (3,1) istemiyorum.</p>
 <p>Bu problemi çözmek için yazdığım ilk algoritma şu oldu: <!-- TEASER_END --></p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">makesubstr</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">substring</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">substring</span><span class="p">:</span>
-        <span class="k">yield</span> <span class="nb">tuple</span><span class="p">()</span>
-        <span class="k">raise</span> <span class="ne">StopIteration</span>
-
-    <span class="n">lookfor</span> <span class="o">=</span> <span class="n">substring</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="n">lookfor</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">remaining</span> <span class="ow">in</span> <span class="n">makesubstr</span><span class="p">(</span><span class="n">string</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">:],</span> <span class="n">substring</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
-                <span class="k">yield</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">i</span><span class="p">,))</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">+</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">remaining</span><span class="p">))</span>
-    <span class="k">raise</span> <span class="ne">StopIteration</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">makesubstr</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">substring</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="ow">not</span> <span class="n">substring</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>        <span class="k">yield</span> <span class="nb">tuple</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>        <span class="k">raise</span> <span class="ne">StopIteration</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="n">lookfor</span> <span class="o">=</span> <span class="n">substring</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="n">lookfor</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>            <span class="k">for</span> <span class="n">remaining</span> <span class="ow">in</span> <span class="n">makesubstr</span><span class="p">(</span><span class="n">string</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">:],</span> <span class="n">substring</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>                <span class="k">yield</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">i</span><span class="p">,))</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">+</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">remaining</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="k">raise</span> <span class="ne">StopIteration</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Algoritma basit, recursive bir algoritma. Substring'deki ilk karakteri büyük string içinde bulup, devamını bulmak
 için kendini tekrar çağırıyor. Bu algoritmayı kullanarak, şu dosyanın içinde lorem'leri aradım.</p>
@@ -90,55 +128,215 @@ sürdü. Daha iyisini yapabilirim diye düşündüm. İlk dikkatimi çeken, recu
 çağrısında, bunlar kopyalanacak demek. Yukarıdaki girdi için, fonksiyon 1138342 kere kendini
 çağırıyor. Dolayısıyla, dilimlemek yerine, aşağıdaki gibi bir fonksiyon yazsak, bir hayli
 iş yükünden kurtulmuş oluyoruz:</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">makesubstr2</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">substring</span><span class="p">,</span> <span class="n">strstart</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">substart</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">substring</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">substart</span><span class="p">:</span>
-        <span class="k">yield</span> <span class="nb">tuple</span><span class="p">()</span>
-        <span class="k">raise</span> <span class="ne">StopIteration</span>
-
-    <span class="n">c</span> <span class="o">=</span> <span class="n">substring</span><span class="p">[</span><span class="n">substart</span><span class="p">]</span>
-    <span class="n">strlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
-
-    <span class="k">while</span> <span class="n">strstart</span> <span class="o">&lt;</span> <span class="n">strlen</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">string</span><span class="p">[</span><span class="n">strstart</span><span class="p">]</span> <span class="o">==</span> <span class="n">c</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">rest</span> <span class="ow">in</span> <span class="n">makesubstr2</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">substring</span><span class="p">,</span> <span class="n">strstart</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">substart</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-                <span class="k">yield</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">strstart</span><span class="p">,))</span> <span class="o">+</span> <span class="n">rest</span>
-        <span class="n">strstart</span> <span class="o">+=</span> <span class="mi">1</span>
-
-    <span class="k">raise</span> <span class="ne">StopIteration</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">makesubstr2</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">substring</span><span class="p">,</span> <span class="n">strstart</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">substart</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">substring</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">substart</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>        <span class="k">yield</span> <span class="nb">tuple</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>        <span class="k">raise</span> <span class="ne">StopIteration</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="n">c</span> <span class="o">=</span> <span class="n">substring</span><span class="p">[</span><span class="n">substart</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">strlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="n">strstart</span> <span class="o">&lt;</span> <span class="n">strlen</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">string</span><span class="p">[</span><span class="n">strstart</span><span class="p">]</span> <span class="o">==</span> <span class="n">c</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>            <span class="k">for</span> <span class="n">rest</span> <span class="ow">in</span> <span class="n">makesubstr2</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">substring</span><span class="p">,</span> <span class="n">strstart</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">substart</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>                <span class="k">yield</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">strstart</span><span class="p">,))</span> <span class="o">+</span> <span class="n">rest</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>        <span class="n">strstart</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="k">raise</span> <span class="ne">StopIteration</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Evet, stringleri kopyalamak yerine, sadece indeksleri recursive olarak gönderdiğimiz
 için, bu fonksiyon ortalama 9 saniye sürdü. Evet, tam olarak 4 saniye kazandık!</p>
 <p>Daha iyisini de yapabiliriz. Şu anda fonksiyon recursive. Python'da fonksiyon çağırmak
 pahalı bir operasyon. Bu yüzden recursion'dan vazgeçip, fonksiyonu şu şekilde yazabiliriz:</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">makesubstr3</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">substring</span><span class="p">):</span>
-
-    <span class="n">strlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
-    <span class="n">substrlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">substring</span><span class="p">)</span>
-
-    <span class="n">callstack</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">())])</span>
-
-    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">strstart</span><span class="p">,</span> <span class="n">substart</span><span class="p">,</span> <span class="n">positions</span> <span class="o">=</span> <span class="n">callstack</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
-        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-            <span class="k">break</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">substrlen</span> <span class="o">&gt;</span> <span class="n">substart</span><span class="p">:</span> <span class="c1"># position of last added to positions</span>
-            <span class="k">yield</span> <span class="n">positions</span>
-            <span class="k">continue</span>
-
-        <span class="n">c</span> <span class="o">=</span> <span class="n">substring</span><span class="p">[</span><span class="n">substart</span><span class="p">]</span>
-        <span class="k">while</span> <span class="n">strstart</span> <span class="o">&lt;</span> <span class="n">strlen</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">string</span><span class="p">[</span><span class="n">strstart</span><span class="p">]</span> <span class="o">==</span> <span class="n">c</span><span class="p">:</span>
-                <span class="n">callstack</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">strstart</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">substart</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">positions</span> <span class="o">+</span> <span class="p">(</span><span class="n">strstart</span><span class="p">,)))</span>
-            <span class="n">strstart</span><span class="o">+=</span><span class="mi">1</span>
-
-    <span class="k">raise</span> <span class="ne">StopIteration</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">makesubstr3</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">substring</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">strlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">substrlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">substring</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="n">callstack</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">())])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>            <span class="n">strstart</span><span class="p">,</span> <span class="n">substart</span><span class="p">,</span> <span class="n">positions</span> <span class="o">=</span> <span class="n">callstack</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>            <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="ow">not</span> <span class="n">substrlen</span> <span class="o">&gt;</span> <span class="n">substart</span><span class="p">:</span> <span class="c1"># position of last added to positions</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>            <span class="k">yield</span> <span class="n">positions</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>            <span class="k">continue</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>        <span class="n">c</span> <span class="o">=</span> <span class="n">substring</span><span class="p">[</span><span class="n">substart</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>        <span class="k">while</span> <span class="n">strstart</span> <span class="o">&lt;</span> <span class="n">strlen</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">string</span><span class="p">[</span><span class="n">strstart</span><span class="p">]</span> <span class="o">==</span> <span class="n">c</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>                <span class="n">callstack</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">strstart</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">substart</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">positions</span> <span class="o">+</span> <span class="p">(</span><span class="n">strstart</span><span class="p">,)))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>            <span class="n">strstart</span><span class="o">+=</span><span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>    <span class="k">raise</span> <span class="ne">StopIteration</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada işler biraz daha komplike bir hal aldı. Aslına bakarsanız bunu doğru bir şekilde yazabilmek beni
 biraz uğraştırdı. Ama özetle, recursion tarafından oluşturulacak call stack'i fonksiyon içinde kendim
@@ -146,75 +344,311 @@ oluşturdum. Böylece ek fonksiyon çağrısı yükünden kurtulmuş oldum. Fonk
 ortalama 6.95 saniye sürdü. Yaklaşık 2 saniye daha kazandık! Ama, daha iyisini de yapabiliriz.</p>
 <p>Python'da loop içinde Attribute erişimi (yani ali.veli gibi, alinin bir attribute'una erişmek) yerine
 bu işlemi loop dışına taşıyarak, biraz daha verim elde edebiliriz:</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">makesubstr4</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">substring</span><span class="p">):</span>
-
-    <span class="n">strlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
-    <span class="n">substrlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">substring</span><span class="p">)</span>
-
-    <span class="n">callstack</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">())])</span>
-
-    <span class="n">_csappend</span> <span class="o">=</span> <span class="n">callstack</span><span class="o">.</span><span class="n">append</span>
-    <span class="n">_cspopleft</span> <span class="o">=</span> <span class="n">callstack</span><span class="o">.</span><span class="n">popleft</span>
-
-
-    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">strstart</span><span class="p">,</span> <span class="n">substart</span><span class="p">,</span> <span class="n">positions</span> <span class="o">=</span> <span class="n">_cspopleft</span><span class="p">()</span>
-        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-            <span class="k">break</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">substrlen</span> <span class="o">&gt;</span> <span class="n">substart</span><span class="p">:</span>
-            <span class="k">yield</span> <span class="n">positions</span>
-            <span class="k">continue</span>
-
-        <span class="n">c</span> <span class="o">=</span> <span class="n">substring</span><span class="p">[</span><span class="n">substart</span><span class="p">]</span>
-        <span class="k">while</span> <span class="n">strstart</span> <span class="o">&lt;</span> <span class="n">strlen</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">string</span><span class="p">[</span><span class="n">strstart</span><span class="p">]</span> <span class="o">==</span> <span class="n">c</span><span class="p">:</span>
-                <span class="n">_csappend</span><span class="p">((</span><span class="n">strstart</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">substart</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">positions</span> <span class="o">+</span> <span class="p">(</span><span class="n">strstart</span><span class="p">,)))</span>
-            <span class="n">strstart</span><span class="o">+=</span><span class="mi">1</span>
-
-    <span class="k">raise</span> <span class="ne">StopIteration</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">makesubstr4</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">substring</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">strlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">substrlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">substring</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="n">callstack</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">())])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">_csappend</span> <span class="o">=</span> <span class="n">callstack</span><span class="o">.</span><span class="n">append</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="n">_cspopleft</span> <span class="o">=</span> <span class="n">callstack</span><span class="o">.</span><span class="n">popleft</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>        <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>            <span class="n">strstart</span><span class="p">,</span> <span class="n">substart</span><span class="p">,</span> <span class="n">positions</span> <span class="o">=</span> <span class="n">_cspopleft</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>            <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="ow">not</span> <span class="n">substrlen</span> <span class="o">&gt;</span> <span class="n">substart</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>            <span class="k">yield</span> <span class="n">positions</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>            <span class="k">continue</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>        <span class="n">c</span> <span class="o">=</span> <span class="n">substring</span><span class="p">[</span><span class="n">substart</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>        <span class="k">while</span> <span class="n">strstart</span> <span class="o">&lt;</span> <span class="n">strlen</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">string</span><span class="p">[</span><span class="n">strstart</span><span class="p">]</span> <span class="o">==</span> <span class="n">c</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>                <span class="n">_csappend</span><span class="p">((</span><span class="n">strstart</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">substart</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">positions</span> <span class="o">+</span> <span class="p">(</span><span class="n">strstart</span><span class="p">,)))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>            <span class="n">strstart</span><span class="o">+=</span><span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>    <span class="k">raise</span> <span class="ne">StopIteration</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu haliyle ortalam çalışma süresi 6.85 saniye oldu. Pek dişe dokunur bir gelişme değil, ama biraz daha
 hızlandık. Ama, daha iyisini de yapabiliriz!</p>
 <p>Algoritmamızda şöyle bir sıkıntı var ki, aynı string üzerinde belki milyonlarca defa karakter
 araması yapıyoruz. Bunun yerine, karakterleri bir defa arayıp, pozisyonlarını bir sözlük
 içine kaydedebiliriz. Yani şöyle:</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">makesubstr6</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">substring</span><span class="p">):</span>
-    <span class="n">posdict</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">sublen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">substring</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">substring</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">posdict</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-                <span class="n">posdict</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span>
-
-    <span class="n">callstack</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nb">tuple</span><span class="p">())])</span>
-
-    <span class="n">_popleft</span> <span class="o">=</span> <span class="n">callstack</span><span class="o">.</span><span class="n">popleft</span>
-    <span class="n">_append</span> <span class="o">=</span> <span class="n">callstack</span><span class="o">.</span><span class="n">append</span>
-
-    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">start</span><span class="p">,</span> <span class="n">subindex</span><span class="p">,</span> <span class="n">positions</span> <span class="o">=</span> <span class="n">_popleft</span><span class="p">()</span>
-        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-            <span class="k">break</span>
-
-        <span class="k">if</span> <span class="n">subindex</span> <span class="o">&gt;=</span> <span class="n">sublen</span><span class="p">:</span>
-            <span class="k">yield</span> <span class="n">positions</span>
-            <span class="k">continue</span>
-
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">posdict</span><span class="p">[</span><span class="n">substring</span><span class="p">[</span><span class="n">subindex</span><span class="p">]]:</span>
-            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">start</span><span class="p">:</span>
-                <span class="n">_append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">subindex</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">positions</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span><span class="p">,)))</span>
-
-    <span class="k">raise</span> <span class="ne">StopIteration</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">makesubstr6</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">substring</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="n">posdict</span> <span class="o">=</span> <span class="p">{}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">sublen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">substring</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">substring</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>            <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>                <span class="n">posdict</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>                <span class="n">posdict</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="n">callstack</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nb">tuple</span><span class="p">())])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="n">_popleft</span> <span class="o">=</span> <span class="n">callstack</span><span class="o">.</span><span class="n">popleft</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>    <span class="n">_append</span> <span class="o">=</span> <span class="n">callstack</span><span class="o">.</span><span class="n">append</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>        <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>            <span class="n">start</span><span class="p">,</span> <span class="n">subindex</span><span class="p">,</span> <span class="n">positions</span> <span class="o">=</span> <span class="n">_popleft</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>            <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">subindex</span> <span class="o">&gt;=</span> <span class="n">sublen</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>            <span class="k">yield</span> <span class="n">positions</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>            <span class="k">continue</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">posdict</span><span class="p">[</span><span class="n">substring</span><span class="p">[</span><span class="n">subindex</span><span class="p">]]:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">start</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>                <span class="n">_append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">subindex</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">positions</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span><span class="p">,)))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bir-optimizasyon-hikayesi.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>    <span class="k">raise</span> <span class="ne">StopIteration</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu algoritma ortalama 1.25 saniye sürdü. İlk algoritmaya göre 10 kattan daha fazla bir hız artışı
 elde ettik. Bundan daha iyisini yapabilir miyiz? Muhtemelen yapılabilir. Ben birkaç şey daha denedim,

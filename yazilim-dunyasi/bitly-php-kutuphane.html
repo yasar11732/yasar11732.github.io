@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Bir php kütüphanesi aracılığıyla, bitly api'ye bağlanıp, url kısaltma, uzatma ve url istatistikleri alma örneklerle anlatılıyor.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/yazilim-dunyasi/bitly-php-kutuphane.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/yazilim-dunyasi/bitly-php-kutuphane.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="bitly-php-library.html" title="Announcing php library for bitly api" type="text/html">
 <link rel="next" href="real-scientists-make-their-own-data.html" title="Real scientists make their own data" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Bitly ve php ile url kısaltmak">
-<meta property="og:url" content="http://ysar.net/yazilim-dunyasi/bitly-php-kutuphane.html">
-<meta property="og:description" content="Bir php kütüphanesi aracılığıyla, bitly api'ye bağlanıp, url kısaltma, uzatma ve url istatistikleri alma örneklerle anlatılıyor.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2013-01-23T00:18:30+02:00">
 </head>
 <body>
 
@@ -53,21 +47,53 @@ anahtarına da ihtiyaç duyacaksınız. Bunlara <a href="https://bitly.com/a/you
 Ya da <a href="https://bitly.com/a/oauth_apps" title="Bitly access token">Bitly access token</a> sayfasından bitly servislerine ulaşmak için kullanacağınız access
 token'ı alabilirsiniz. Bunları yaptıktan sonra, yeni bir Bitly objesi
 oluşturarak başlayalım; <!-- TEASER_END --></p>
-<pre class="code literal-block"><span></span><span class="cp">&lt;?php</span>
-<span class="k">include</span><span class="p">(</span><span class="s2">"bitly_api.php"</span><span class="p">);</span>
-<span class="nv">$bitly</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bitly</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s2">"login"</span> <span class="o">=&gt;</span> <span class="s2">"----"</span><span class="p">,</span> <span class="s2">"api_key"</span> <span class="o">=&gt;</span> <span class="s2">"----"</span><span class="p">));</span> <span class="c1"># kendi bilgileriniz doldurun.</span>
-<span class="c1"># ya da oauth 2 kullanmak için, access token kullanın.</span>
-<span class="nv">$bitly</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bitly</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s2">"access_token"</span> <span class="o">=&gt;</span> <span class="s2">"----"</span><span class="p">))</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="cp">&lt;?php</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="k">include</span><span class="p">(</span><span class="s2">"bitly_api.php"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="nv">$bitly</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bitly</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s2">"login"</span> <span class="o">=&gt;</span> <span class="s2">"----"</span><span class="p">,</span> <span class="s2">"api_key"</span> <span class="o">=&gt;</span> <span class="s2">"----"</span><span class="p">));</span> <span class="c1"># kendi bilgileriniz doldurun.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="c1"># ya da oauth 2 kullanmak için, access token kullanın.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="nv">$bitly</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bitly</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s2">"access_token"</span> <span class="o">=&gt;</span> <span class="s2">"----"</span><span class="p">))</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Artık bitly apisini kullanmaya başlayabiliriz, öncelikle nasıl url
 kısaltacağımız görelim;</p>
-<pre class="code literal-block"><span></span><span class="cp">&lt;?php</span>
-<span class="nv">$data</span> <span class="o">=</span> <span class="nv">$bitly</span><span class="o">-&gt;</span><span class="na">shorten</span><span class="p">(</span><span class="s2">"http://betaworks.com/page?parameter=value#anchor"</span><span class="p">);</span>
-<span class="nb">print_r</span><span class="p">(</span><span class="nv">$data</span><span class="p">);</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="cp">&lt;?php</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="nv">$data</span> <span class="o">=</span> <span class="nv">$bitly</span><span class="o">-&gt;</span><span class="na">shorten</span><span class="p">(</span><span class="s2">"http://betaworks.com/page?parameter=value#anchor"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="nb">print_r</span><span class="p">(</span><span class="nv">$data</span><span class="p">);</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Şuna benzer bir çıktı alacağız;
 </p>
@@ -85,14 +111,38 @@ Array
 array'in url anahtarında.  Şimdi de kısaltılmış bir linkin uzun halini
 nasıl alabiliriz ona bakalım, bunun için kısa linki veya bunun hash
 değerini sorgulatabiliriz.</p>
-<pre class="code literal-block"><span></span><span class="cp">&lt;?php</span>
-<span class="nv">$params</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
-            <span class="s2">"hash"</span> <span class="o">=&gt;</span> <span class="s2">"XkH7mN"</span>
-        <span class="p">);</span>
-<span class="nv">$data</span>   <span class="o">=</span> <span class="nv">$bitly</span><span class="o">-&gt;</span><span class="na">expand</span><span class="p">(</span><span class="nv">$params</span><span class="p">);</span>
-<span class="nb">print_r</span><span class="p">(</span><span class="nv">$data</span><span class="p">);</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="cp">&lt;?php</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="nv">$params</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>            <span class="s2">"hash"</span> <span class="o">=&gt;</span> <span class="s2">"XkH7mN"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>        <span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="nv">$data</span>   <span class="o">=</span> <span class="nv">$bitly</span><span class="o">-&gt;</span><span class="na">expand</span><span class="p">(</span><span class="nv">$params</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="nb">print_r</span><span class="p">(</span><span class="nv">$data</span><span class="p">);</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Çıktı:
 </p>
@@ -109,17 +159,53 @@ Array
 <p>) </p></pre>
 <p>Aynı zamanda, birden fazla hash değerini (api 15'e kadar destekliyor)
 sorgulatabilirsiniz:</p>
-<pre class="code literal-block"><span></span><span class="cp">&lt;?php</span>
-<span class="nv">$params</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
-            <span class="s2">"hash"</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
-                <span class="s2">"Xky7y9"</span><span class="p">,</span>
-                <span class="s2">"VR455I"</span>
-            <span class="p">)</span>
-        <span class="p">);</span>
-<span class="nv">$data</span>   <span class="o">=</span> <span class="nv">$bitly</span><span class="o">-&gt;</span><span class="na">expand</span><span class="p">(</span><span class="nv">$params</span><span class="p">);</span>
-<span class="nb">print_r</span><span class="p">(</span><span class="nv">$data</span><span class="p">);</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="cp">&lt;?php</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="nv">$params</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>            <span class="s2">"hash"</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>                <span class="s2">"Xky7y9"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>                <span class="s2">"VR455I"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>            <span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>        <span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code><span class="nv">$data</span>   <span class="o">=</span> <span class="nv">$bitly</span><span class="o">-&gt;</span><span class="na">expand</span><span class="p">(</span><span class="nv">$params</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-9"><code data-line-number="9"></code></a></td>
+<td class="code"><code><span class="nb">print_r</span><span class="p">(</span><span class="nv">$data</span><span class="p">);</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Çıktı:</p>
 <pre>
@@ -146,10 +232,18 @@ Array
 <p>Linklerle ilgili ulaşabileceğimiz birkaç metrik var. Tıklanma verileri,
 ülkeler, paylaşımlar vs. gibi metrikler var. Tıklanma ilgili metriklere
 nasıl ulaşacağımıza bakalım;</p>
-<pre class="code literal-block"><span></span><span class="cp">&lt;?php</span>
-<span class="nb">print_r</span><span class="p">(</span><span class="nv">$bitly</span><span class="o">-&gt;</span><span class="na">link_clicks</span><span class="p">(</span><span class="s2">"http://bit.ly/XkH7mN"</span><span class="p">));</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="cp">&lt;?php</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-kutuphane.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="nb">print_r</span><span class="p">(</span><span class="nv">$bitly</span><span class="o">-&gt;</span><span class="na">link_clicks</span><span class="p">(</span><span class="s2">"http://bit.ly/XkH7mN"</span><span class="p">));</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu bize çıktı olarak bir sayı verecek. Sonuç olarak, bitly api'si derya
 deniz, hepsine tek tek giremiyeceğim, gerisini çözmeyi de okuyucuya

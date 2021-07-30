@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="C Programlama Dilinde Array İndeksi, Pointer Aritmetiği ve String ile ilgili ilginç bir program">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/yazilim-dunyasi/c-array-ve-string.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/yazilim-dunyasi/c-array-ve-string.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="sablon-doldurucu.html" title="C ile Komut Okuyan ve Şablon Dolduran Program" type="text/html">
 <link rel="next" href="../euler/euler-17.html" title="(Euler 17) Sayıların Harf Sayısı" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="C Programlama Dilinde Array İndeksi ve Pointer Aritmetiği">
-<meta property="og:url" content="http://ysar.net/yazilim-dunyasi/c-array-ve-string.html">
-<meta property="og:description" content="C Programlama Dilinde Array İndeksi, Pointer Aritmetiği ve String ile ilgili ilginç bir program">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2018-08-31T22:28:00+03:00">
 </head>
 <body>
 
@@ -53,15 +47,43 @@ img[alt=c-array]
 <p>Üç yıl önce twitter'dan şöyle birşey paylaşmıştım.</p>
 <p><img alt="c-array" src="../c-array.png"></p>
 <p>Linkteki program şu şekilde;</p>
-<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
-<span class="p">{</span>
-    <span class="n">printf</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="mh">0x02</span><span class="p">)[</span><span class="s">"</span><span class="se">\12\12</span><span class="s">y%s</span><span class="se">\0</span><span class="s">ar arabaci</span><span class="se">\12\12</span><span class="s">"</span><span class="p">],</span> <span class="s">"basar</span><span class="se">\0</span><span class="s">ilar diler"</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="n">printf</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="mh">0x02</span><span class="p">)[</span><span class="s">"</span><span class="se">\12\12</span><span class="s">y%s</span><span class="se">\0</span><span class="s">ar arabaci</span><span class="se">\12\12</span><span class="s">"</span><span class="p">],</span> <span class="s">"basar</span><span class="se">\0</span><span class="s">ilar diler"</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bugün nereden düştüyse, bu program aklıma düştü. Bu program, bana kalırsa, C mülakatlarında kullanılabilecek özellikte bir program.
 Bu programın çıktısını, derlemeden anlayabilenleri tebrik ediyorum. Eğer anlamadıysanız ve biraz kafa yormak istiyorsanız,
@@ -71,71 +93,247 @@ yazıyı okumaya bu noktada ara verebilirsiniz.</p>
 adresini tutar. Bu array üzerinde, <code>y[2]</code> ifadesi ile, <code>*(y+2)</code> ifadesi aynı sonucu doğurur. Aynı fikirden devam edersek, <code>2[y]</code> ise,
 <code>*(2+y)</code> olur. Daha açık söylemek gerekirse, <code>y[2]</code> ile <code>2[y]</code> ifadeleri aynı görevi görür. Bu bilgiler ışığında, orjinal program ile,
 aşağıdaki eşdeğer olur;</p>
-<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
-<span class="p">{</span>
-    <span class="n">printf</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="s">"</span><span class="se">\12\12</span><span class="s">y%s</span><span class="se">\0</span><span class="s">ar arabaci</span><span class="se">\12\12</span><span class="s">"</span><span class="p">[</span><span class="mh">0x02</span><span class="p">]),</span> <span class="s">"basar</span><span class="se">\0</span><span class="s">ilar diler"</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="n">printf</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="s">"</span><span class="se">\12\12</span><span class="s">y%s</span><span class="se">\0</span><span class="s">ar arabaci</span><span class="se">\12\12</span><span class="s">"</span><span class="p">[</span><span class="mh">0x02</span><span class="p">]),</span> <span class="s">"basar</span><span class="se">\0</span><span class="s">ilar diler"</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Daha anlaşılır olması için, string literaller yerine, değişken kullanabilir.</p>
-<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
-<span class="p">{</span>
-    <span class="kt">char</span> <span class="o">*</span><span class="n">s1</span> <span class="o">=</span> <span class="s">"</span><span class="se">\12\12</span><span class="s">y%s</span><span class="se">\0</span><span class="s">ar arabaci</span><span class="se">\12\12</span><span class="s">"</span><span class="p">;</span>
-    <span class="kt">char</span> <span class="o">*</span><span class="n">s2</span> <span class="o">=</span> <span class="s">"basar</span><span class="se">\0</span><span class="s">ilar diler"</span><span class="p">;</span>
-
-    <span class="n">printf</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="n">s1</span><span class="p">[</span><span class="mh">0x02</span><span class="p">]),</span> <span class="n">s2</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">s1</span> <span class="o">=</span> <span class="s">"</span><span class="se">\12\12</span><span class="s">y%s</span><span class="se">\0</span><span class="s">ar arabaci</span><span class="se">\12\12</span><span class="s">"</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">s2</span> <span class="o">=</span> <span class="s">"basar</span><span class="se">\0</span><span class="s">ilar diler"</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">printf</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="n">s1</span><span class="p">[</span><span class="mh">0x02</span><span class="p">]),</span> <span class="n">s2</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>String üzerinden işlem yapan tüm standart C fonksiyonları gibi, <code>printf</code> fonksiyonu da, bir string'in NULL karakterle bittiğini düşünür. Dolayısıyla,
 <code>s1</code> ve <code>s2</code> de, NULL karakterden sonrasını silerek, programı daha da sadeleştirebiliriz. Ayrıca, hexadecimal <code>0x02</code>, decimal olarak <code>2</code> eder. İndeksleme
 yerine de, pointer aritmetiği kullanabiliriz.</p>
-<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
-<span class="p">{</span>
-    <span class="kt">char</span> <span class="o">*</span><span class="n">s1</span> <span class="o">=</span> <span class="s">"</span><span class="se">\12\12</span><span class="s">y%s"</span><span class="p">;</span>
-    <span class="kt">char</span> <span class="o">*</span><span class="n">s2</span> <span class="o">=</span> <span class="s">"basar"</span><span class="p">;</span>
-
-    <span class="n">printf</span><span class="p">(</span><span class="n">s1</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span> <span class="n">s2</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">s1</span> <span class="o">=</span> <span class="s">"</span><span class="se">\12\12</span><span class="s">y%s"</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">s2</span> <span class="o">=</span> <span class="s">"basar"</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">printf</span><span class="p">(</span><span class="n">s1</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span> <span class="n">s2</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p><code>s1+2</code> ve <code>s2+1</code>, <code>s1</code> değişkenini üçüncü karakterden itibaren, <code>s2</code> değişkenini de ikinci karakterden itibaren <code>printf</code> fonksiyonuna
 gönderiyor. Bunu da sadeleştirebiliriz (\12 ifadesi, ascii kodu 12 olan karakter yerine geçiyor. Yani, \12 tek bir karakter);</p>
-<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
-<span class="p">{</span>
-    <span class="kt">char</span> <span class="o">*</span><span class="n">s1</span> <span class="o">=</span> <span class="s">"y%s"</span><span class="p">;</span>
-    <span class="kt">char</span> <span class="o">*</span><span class="n">s2</span> <span class="o">=</span> <span class="s">"asar"</span><span class="p">;</span>
-
-    <span class="n">printf</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">);</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">s1</span> <span class="o">=</span> <span class="s">"y%s"</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span> <span class="o">*</span><span class="n">s2</span> <span class="o">=</span> <span class="s">"asar"</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">printf</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Kodlar yeterince sadeleştiğine göre, <code>s1</code> ve <code>s2</code> değişkenlerine ihtiyacımız kalmadı.</p>
-<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
-<span class="p">{</span>        
-    <span class="n">printf</span><span class="p">(</span><span class="s">"y%s"</span><span class="p">,</span> <span class="s">"asar"</span><span class="p">);</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="p">{</span>        
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="n">printf</span><span class="p">(</span><span class="s">"y%s"</span><span class="p">,</span> <span class="s">"asar"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="c-array-ve-string.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu programın çıktısı da, kendini belli ediyor. Siz kendinizi nasıl hissedersiniz bilmem ama, ben array indekslemenin
 tersten de çalıştığını öğrendiğimde, kendimi bir hayli aydınlanmış hissetmiştim.</p>

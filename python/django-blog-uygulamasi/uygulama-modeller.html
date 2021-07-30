@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Django uygulaması nasıl oluşturulur? Django uygulamasında veri yapıları nasıl belirlenir? Örnekleriyle django modelleri ve veritabanı işlemleri...">
@@ -11,17 +11,11 @@
 <link href="../../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/django-blog-uygulamasi/uygulama-modeller.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/django-blog-uygulamasi/uygulama-modeller.html">
 <!--[if lt IE 9]><script src="../../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="../django-sablonlarinda-php.html" title="Django şablonlarında php" type="text/html">
 <link rel="next" href="yonetici-paneli.html" title="Django ile Blog Geliştirme - Yönetici Paneli" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Django ile Blog Geliştirme - Modeller">
-<meta property="og:url" content="http://ysar.net/python/django-blog-uygulamasi/uygulama-modeller.html">
-<meta property="og:description" content="Django uygulaması nasıl oluşturulur? Django uygulamasında veri yapıları nasıl belirlenir? Örnekleriyle django modelleri ve veritabanı işlemleri...">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2011-08-06T22:09:00+03:00">
 </head>
 <body>
 
@@ -51,9 +45,11 @@ uygulamasına başlayacağız ve uygulamamızın modellerini yazacağız. <!-- T
 deposu</a>ndan ulaşabilirsiniz.</p>
 <p>Django'da yeni bir uygulamaya başlamak için, komut satırından başlamış
 olduğumuz projenin ana dizininin içindeyken <!-- TEASER_END --></p>
-<pre class="code literal-block"><span></span>python manage.py startapp blog
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">python manage.py startapp blog</span>
+</code></td>
+</tr></table></div>
 
 <p>komutunu vererek, projemizin içinde blog isminde yeni bir uygulamaya
 başlayabiliriz. Her django projesi bir veya birden fazla uygulamadan
@@ -88,20 +84,36 @@ dizisinin ilerleyen bölümlerinde disqus kullanmaya değineceğiz.</p>
 modülünü dahil edildiğini görüyoruz. Buraya kendi modelimizi eklemek
 için, django'nun models modülünde bulunan Model sınıfından kalıtım alan
 (inheritance) yeni bir sınıf tanımlamamız gerekiyor.</p>
-<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">makale</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-  <span class="k">pass</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">makale</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>  <span class="k">pass</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Böylece yeni bir model üretmiş olduk. Bu model veritabanınızda bir
 tabloya karşılık geliyor. Bu modelin karşılık geldiği tabloda sütun
 oluşturmak için, modelimize bir alan girmemiz gerekiyor. Örneğin
 makelemizin bir başlığa ihtiyacı var. Makale modelimize bir başlık
 ekleyelim:</p>
-<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">makale</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-  <span class="n">baslik</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">makale</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>  <span class="n">baslik</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Böylece, makale modelimize bir <code>baslik</code> alanı eklemiş olduk. Başlık
 alanımız bir karakter dizisi olacak. models.CharField bir karakter
@@ -109,9 +121,11 @@ dizisine karşılık geliyor. Bu karakter dizisinin uzunluğu 60 karakterle
 sınırlı olacak. Django alanlarına max_length gibi birçok argüman
 verebiliriz. Yeri geldikçe bunlardan bahsedeceğim. Şimdi de diğer
 alanlarımızı ekleyelim.</p>
-<pre class="code literal-block"><span></span><span class="n">slug</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SlugField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">slug</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SlugField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></td>
+</tr></table></div>
 
 <p>Burada bir slug alanı ekliyoruz. Slug alanı sadece harfler, rakamlar,
 tireler ve alttirelerden oluşan bir karakter dizisidir. Örneğin, şu anda
@@ -119,24 +133,30 @@ adres çubuğunun son kısmına baktığınızda gördüğünüz şey veritaban�
 bir slug alanında tutuluyor. <em>unique=True</em> argümanı bu slug alanının
 özgün olmasını sağlıyor. Bu alanı makaleye ait linki tutmak için
 kullanacağımızdan, bu alanın özgün olması gerekiyor.</p>
-<pre class="code literal-block"><span></span><span class="n">giris</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">giris</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+</code></td>
+</tr></table></div>
 
 <p>Burada ise bir yazı alanı tanımlıyoruz. Bu alanı her makalenin ilk
 paragrafını tutması için kullanacağız. Bu alanı makalenin özetine
 ihtiyaç duyan birkaç farklı yerde kullanacağız. Örneğin bu blogun
 anasayfasına bakarsanız göreceğiniz makalelere ait özetleri bu alanda
 tutuyorum.</p>
-<pre class="code literal-block"><span></span><span class="n">makale</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">makale</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</code></td>
+</tr></table></div>
 
 <p>Burada da makalenin kalanı olacak. Maksimum değeri kullanmıyorum.
 Makalelerimizi istediğimiz kadar uzun yazabiliriz.</p>
-<pre class="code literal-block"><span></span><span class="n">yayin_tarihi</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="s2">"Yayınlanma Tarihi"</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">yayin_tarihi</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="s2">"Yayınlanma Tarihi"</span><span class="p">)</span>
+</code></td>
+</tr></table></div>
 
 <p>Bu alanda makalemizin yayınlanma tarihini tutacağız. Argüman olarak
 verdiğimiz karakter dizgesi, bu alanın görünen adı olacak. Bu adın ne
@@ -145,10 +165,18 @@ tanımlamış olduk.</p>
 <p>Ancak modelimize birkaç tane de metod eklememiz gerekiyor. Modellerinize
 ihtiyaç duyduğunuz kadar metod ekleyebilirsiniz. <code>__unicode__()</code>
 metodunu tanımlayalım.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="fm">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">slug</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">slug</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu metodun döndürdüğü değer makalemizin görünen adı olacak. Bu ad
 ileride işe yarayacak. O yüzden şimdiden tanımlamakta fayda var. Bu
@@ -156,29 +184,93 @@ fonksiyondan birşey döndürdüğünüzden emin olun. makale modelimize
 ileride tekrar dönüp birkaç tane metod ekleyeceğiz. Ama şimdilik bu
 kadar yeterli. makale modelimizi bitirdiğimizde şu şekilde görünüyor
 olmalı:</p>
-<pre class="code literal-block"><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
-<span class="k">class</span> <span class="nc">makale</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">baslik</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
-    <span class="n">slug</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SlugField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">giris</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
-    <span class="n">makale</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
-    <span class="n">yayin_tarihi</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="s2">"Yayınlanma Tarihi"</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">slug</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="c1"># -*- coding: utf-8 -*-</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">makale</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">baslik</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="n">slug</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SlugField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="n">giris</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="n">makale</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">yayin_tarihi</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="s2">"Yayınlanma Tarihi"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">slug</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Şimdi de etiket modelimizi yazalım. <code>makale</code> modeline nazaran kolay bir
 model olacak. Sadece tek bir alanı var, yazi:</p>
-<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">etiket</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">yazi</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">yazi</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">etiket</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="n">yazi</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">yazi</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yalnız bu modele küçük bir ekleme yapmak istiyorum. Bu modelin yazi
 alanındaki değeri url olarak kullanacağım için, url olmaya uygun
@@ -186,20 +278,42 @@ olduğundan emin olmam gerekiyor. Bunun için validator (doğrulayıcı)
 kullanacağım. Validator'lerin detaylarına şu anda girmek istemiyorum.
 Bizim ihtiyacımın olan validator'u kullanmak için önce yeni bir import
 (dahil etmek) yapmamız gerekiyor.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">django.core.validators</span> <span class="kn">import</span> <span class="n">validate_slug</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.core.validators</span> <span class="kn">import</span> <span class="n">validate_slug</span>
+</code></td>
+</tr></table></div>
 
 <p>Bu ifade bizim için django içerisinde hazır gelen validator
 fonksiyonlarından validate_slug'ı modülümüze dahil edecek. Şimdi
 modelimizi şu şekilde değiştireceğiz.</p>
-<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">etiket</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">yazi</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">validate_slug</span><span class="p">])</span>
-
-    <span class="k">def</span> <span class="fm">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">yazi</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">etiket</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="n">yazi</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">validate_slug</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">yazi</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Böylece yazi alanına yeni bir doğrulayıcı eklemiş olduk. Django artık bu
 alana yeni bir kayıt eklemeden önce, bu kaydın url çubuğuna uygun olup
@@ -210,18 +324,58 @@ zamanda, bir makale modeline ait, birden fazla etiket olabilir. Bu tip
 ilişkilere çokdan-çoğa ilişki diyoruz (en azından ben öyle diyorum).
 Django bu tip ilişkileri kullanmak için ManyToManyField kullanıyoruz.
 Şimdi makele modelimizi şu hale getirelim:</p>
-<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">makale</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">baslik</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
-    <span class="n">slug</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SlugField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">giris</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
-    <span class="n">makale</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
-    <span class="n">yayin_tarihi</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="s2">"Yayınlanma Tarihi"</span><span class="p">)</span>
-    <span class="n">etiketler</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">etiket</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">slug</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">makale</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="n">baslik</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">slug</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SlugField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">giris</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="n">makale</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="n">yayin_tarihi</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="s2">"Yayınlanma Tarihi"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="n">etiketler</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">etiket</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">slug</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Böylece makalemizi çoktan-çoğa olacak bir şekilde etiketlerle
 ilişkilendirdik. ManyToManyField'ı ilişkinin hangi tarafına koyduğunuzun
@@ -232,26 +386,64 @@ makalelere ekledik. Artık modellerimiz kullanıma hazır.</p>
 edebiliriz. Projemizin ana dizinindeki settings modülünde
 INSTALLED_APPS şeklinde bir liste göreceksiniz. Bu listeye
 hazırladığımız uygulamayı ekleyelim:</p>
-<pre class="code literal-block"><span></span><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s1">'django.contrib.auth'</span><span class="p">,</span>
-    <span class="s1">'django.contrib.contenttypes'</span><span class="p">,</span>
-    <span class="s1">'django.contrib.sessions'</span><span class="p">,</span>
-    <span class="s1">'django.contrib.sites'</span><span class="p">,</span>
-    <span class="s1">'django.contrib.messages'</span><span class="p">,</span>
-    <span class="s1">'django.contrib.staticfiles'</span><span class="p">,</span>
-    <span class="s1">'projem.blog'</span><span class="p">,</span>
-<span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="s1">'django.contrib.auth'</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="s1">'django.contrib.contenttypes'</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="s1">'django.contrib.sessions'</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="s1">'django.contrib.sites'</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="s1">'django.contrib.messages'</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>    <span class="s1">'django.contrib.staticfiles'</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code>    <span class="s1">'projem.blog'</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-9"><code data-line-number="9"></code></a></td>
+<td class="code"><code><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada "projem" projenizin adı, blog ise uygulamınızın adı. İsimleri
 kendize göre düzeltmeniz gerekiyor.</p>
 <p>Artık veritabanımızda gerekli tabloları oluşturabiliriz. Daha doğrusu,
 django bizim için gerekli tabloları oluşturacak. Projemizin ana
 dizininden şu komutu verelim:</p>
-<pre class="code literal-block"><span></span>python manage.py syncdb
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="uygulama-modeller.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">python manage.py syncdb</span>
+</code></td>
+</tr></table></div>
 
 <p>Bu komut veritabanımızda gerekli tabloları oluşturacak. Eğer yüklü
 uygulamalarınızın içerisinde admin varsa, sizden bir superuser

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Zaman içinde Python ve programlama hakkında bana sorulan sorulara verdiğim cevapların bir derlemesi">
@@ -11,15 +11,9 @@
 <link href="assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
-<link rel="canonical" href="http://ysar.net/soru-cevap.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/soru-cevap.html">
 <!--[if lt IE 9]><script src="assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Soru &amp; Cevap">
-<meta property="og:url" content="http://ysar.net/soru-cevap.html">
-<meta property="og:description" content="Zaman içinde Python ve programlama hakkında bana sorulan sorulara verdiğim cevapların bir derlemesi">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2013-10-06T10:15:05+03:00">
 </head>
 <body>
 
@@ -111,17 +105,53 @@ kullanımını göstermişsiniz ve çok güzel de bir ders olmuş. Benim sormak
 istediğim <code>&lt;img src="kaynak"&gt;&lt;/img&gt;</code> kodundaki kaynağı nasıl alabileceğim olacaktı.
 Şimdiden teşekkürler. :)</p>
 </blockquote>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">BeautifulSoup</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
-<span class="n">basit_html</span> <span class="o">=</span> <span class="s2">"""</span>
-<span class="s2">&lt;html&gt;&lt;head&gt;&lt;title&gt;Başlık buraya&gt;/title&gt;&lt;/head&gt;</span>
-<span class="s2">&lt;body&gt;&lt;p&gt;Paragraf 1&lt;img src="http://www.blogcdn.com/wow.joystiq.com/media/2008/01/maiev.jpg"&gt;&lt;/p&gt;&lt;p class="hebele"&gt;Paragraf 2&lt;/p&gt;&lt;/body&gt;</span>
-<span class="s2">&lt;/html&gt;"""</span>
-<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">basit_html</span><span class="p">)</span>
-<span class="n">imgs</span> <span class="o">=</span> <span class="n">soup</span><span class="p">(</span><span class="s2">"img"</span><span class="p">)</span> <span class="c1"># img taglarının listesini al</span>
-<span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">imgs</span><span class="p">:</span>
-    <span class="k">print</span> <span class="n">img</span><span class="p">[</span><span class="s2">"src"</span><span class="p">]</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="soru-cevap.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">BeautifulSoup</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soru-cevap.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">basit_html</span> <span class="o">=</span> <span class="s2">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soru-cevap.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="s2">&lt;html&gt;&lt;head&gt;&lt;title&gt;Başlık buraya&gt;/title&gt;&lt;/head&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soru-cevap.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="s2">&lt;body&gt;&lt;p&gt;Paragraf 1&lt;img src="http://www.blogcdn.com/wow.joystiq.com/media/2008/01/maiev.jpg"&gt;&lt;/p&gt;&lt;p class="hebele"&gt;Paragraf 2&lt;/p&gt;&lt;/body&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soru-cevap.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="s2">&lt;/html&gt;"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soru-cevap.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">basit_html</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soru-cevap.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="n">imgs</span> <span class="o">=</span> <span class="n">soup</span><span class="p">(</span><span class="s2">"img"</span><span class="p">)</span> <span class="c1"># img taglarının listesini al</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soru-cevap.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">imgs</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soru-cevap.html#-9"><code data-line-number="9"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span> <span class="n">img</span><span class="p">[</span><span class="s2">"src"</span><span class="p">]</span>
+</code></td>
+</tr>
+</table></div>
 
 <h3>Django modelleri</h3>
 <blockquote>
@@ -174,10 +204,18 @@ yazacak diye birşey de yok. Ne zaman uygun görürse o zaman yazar. Eğer
 işletim sistemini hemen yazmaya zorlamak istiyorsan, <a href="http://docs.python.org/2/library/os.html#os.fsync" title="os.fsync">fsync fonksiyonu</a> işini görebilir.</p>
 <p>Son olarak da, Python kullanırken dosyalarını <code>close()</code> ile kapatma.
 Python 2.5’den beri olan <code>with</code> yapısını kullan. Örneğin;</p>
-<pre class="code literal-block"><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"a"</span><span class="p">,</span><span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya1</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"b"</span><span class="p">,</span><span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya2</span><span class="p">:</span>
-    <span class="n">dosya1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">dosya2</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="soru-cevap.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"a"</span><span class="p">,</span><span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya1</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"b"</span><span class="p">,</span><span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">dosya2</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soru-cevap.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="n">dosya1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">dosya2</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Eğer dosyayı açtığın yer ile, <code>close()</code> metodunu çağırdığın yer arasında
 bir hata olursa, <code>close()</code> satırına ulaşamayabilir. Bu yüzden dosya açık
@@ -195,11 +233,23 @@ de o değişkeni silebilirsin.</p>
 <p>Bu arada, <code>open()</code> fonksiyonuna tekrar bir göz attım. <code>open()</code>fonksiyonu
 arabellek modunu belirlemene izin veriyor. Bunun için üçüncü argümanı
 kullanıyorsun.</p>
-<pre class="code literal-block"><span></span>open("a.txt","w",0) # arabellek kullanma (sadece işlemin kendi arabelleğini etkiler, işletim sisteminin arabelleğini etkilemez)
-open("a.txt","w",1) # yeni satır arabellek modu
-open("a.txt","w",4096) # boyutu belirtilen değer kadar olan bir arabellek kullan. Her 4096 bayt yazıldığında işletim sistemine yazım için istek gidecek
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="soru-cevap.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">open("a.txt","w",0) # arabellek kullanma (sadece işlemin kendi arabelleğini etkiler, işletim sisteminin arabelleğini etkilemez)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soru-cevap.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">open("a.txt","w",1) # yeni satır arabellek modu</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soru-cevap.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="err">open("a.txt","w",4096) # boyutu belirtilen değer kadar olan bir arabellek kullan. Her 4096 bayt yazıldığında işletim sistemine yazım için istek gidecek</span>
+</code></td>
+</tr>
+</table></div>
 
 <h3>GNU Lisansı ve versiyonlama</h3>
 <p><a href="http://eraygezer.tumblr.com/">eraygezer</a></p>

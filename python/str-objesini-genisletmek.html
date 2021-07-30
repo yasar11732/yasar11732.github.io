@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Python'da Immutable (oluşturulduktan sonra değiştirilemeyen) sınıfların alt sınıflarını oluştururken karşılaşılabilecek sorunlar ve çözümleri">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/str-objesini-genisletmek.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/str-objesini-genisletmek.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="birkac-soruya-cevap.html" title="Python Hakkında Birkaç Soruya Cevap" type="text/html">
 <link rel="next" href="profile-modulu.html" title="Python'da Hız Ölçme: profile Modülü" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Python'da str Objesini Genişletmek">
-<meta property="og:url" content="http://ysar.net/python/str-objesini-genisletmek.html">
-<meta property="og:description" content="Python'da Immutable (oluşturulduktan sonra değiştirilemeyen) sınıfların alt sınıflarını oluştururken karşılaşılabilecek sorunlar ve çözümleri">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2011-08-31T16:34:00+03:00">
 </head>
 <body>
 
@@ -52,161 +46,738 @@ kendi objenizin kaybolmasına neden olur. Bu problemin önüne geçmek için,
 örnekte, çoğul eki, iyelik eki ve ismin hallerini bulan bununla
 birlikte, bir unicode objesinin de tüm metotlarına erişebilen bir sınıf
 tanımlayacağız. <!-- TEASER_END --></p>
-<pre class="code literal-block"><span></span><span class="c1"># -*- coding:utf-8 -*-</span>
-<span class="n">kalin</span> <span class="o">=</span> <span class="p">(</span><span class="sa">u</span><span class="s2">"a"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"ı"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"o"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"u"</span><span class="p">)</span>
-<span class="n">ince</span> <span class="o">=</span> <span class="p">(</span><span class="sa">u</span><span class="s2">"e"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"i"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"ö"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"ü"</span><span class="p">)</span>
-
-<span class="n">yumusayan</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="sa">u</span><span class="s2">"k"</span><span class="p">:</span> <span class="sa">u</span><span class="s2">"ğ"</span><span class="p">,</span>
-    <span class="sa">u</span><span class="s2">"t"</span><span class="p">:</span> <span class="sa">u</span><span class="s2">"d"</span><span class="p">,</span>
-    <span class="sa">u</span><span class="s2">"p"</span><span class="p">:</span> <span class="sa">u</span><span class="s2">"b"</span>
-<span class="p">}</span>
-
-<span class="n">sertlestirenler</span> <span class="o">=</span> <span class="p">(</span><span class="sa">u</span><span class="s2">"f"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"s"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"t"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"k"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"ç"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"ş"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"h"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"p"</span><span class="p">)</span>
-
-<span class="k">class</span> <span class="nc">kelime</span><span class="p">(</span><span class="nb">unicode</span><span class="p">):</span>
-
-    <span class="k">def</span> <span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">isim</span><span class="p">):</span>
-        <span class="s2">"unicodedan gerekli metodu alır, sonucu kelime olarak döndürür."</span>
-        <span class="n">att</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">kelime</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">isim</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">att</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">att</span>
-
-        <span class="k">def</span> <span class="nf">sonra_cagir</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-            <span class="n">sonuc</span> <span class="o">=</span> <span class="n">att</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sonuc</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">sonuc</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">sonuc</span>
-        <span class="k">return</span> <span class="n">sonra_cagir</span>
-
-    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">other</span><span class="p">):</span>
-        <span class="s2">"iki kelimeyi unicode toplamıyla toplar, sonucu kelime olarak döndürür"</span>
-        <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="nb">unicode</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">other</span><span class="p">))</span>
-
-    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">other</span><span class="p">):</span>
-        <span class="s2">"bir kelimeyi bir sayıyla unicode olarak çarpar. Sonucu kelime olarak döndürür"</span>
-        <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="nb">unicode</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">other</span><span class="p">))</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">lar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">"Kelimeye çoğuk eki ekler"</span>
-        <span class="k">for</span> <span class="n">harf</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">harf</span> <span class="ow">in</span> <span class="n">kalin</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="bp">self</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"lar"</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">harf</span> <span class="ow">in</span> <span class="n">ince</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="bp">self</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"ler"</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="bp">self</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"lar"</span><span class="p">)</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">in_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">"kelimeye iyelik eki ekler"</span>
-        <span class="n">_kelime</span> <span class="o">=</span> <span class="bp">self</span>
-        <span class="k">if</span> <span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">yumusayan</span><span class="p">:</span>
-            <span class="n">_kelime</span> <span class="o">=</span> <span class="n">_kelime</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">yumusayan</span><span class="p">[</span><span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
-        <span class="k">elif</span> <span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">kalin</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"nın"</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">ince</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"nin"</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">harf</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">_kelime</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">harf</span> <span class="ow">in</span> <span class="n">kalin</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"ın"</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">harf</span> <span class="ow">in</span> <span class="n">ince</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"in"</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"ın"</span><span class="p">)</span>
-    <span class="nd">@property</span>   
-    <span class="k">def</span> <span class="nf">e</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">"kelimeye ismin e halini ekler"</span>
-        <span class="n">_kelime</span> <span class="o">=</span> <span class="bp">self</span>
-        <span class="k">if</span> <span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">yumusayan</span><span class="p">:</span>
-            <span class="n">_kelime</span> <span class="o">=</span> <span class="n">_kelime</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">yumusayan</span><span class="p">[</span><span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
-        <span class="k">elif</span> <span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">kalin</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"ya"</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">ince</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"ye"</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">harf</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">_kelime</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">harf</span> <span class="ow">in</span> <span class="n">kalin</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"a"</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">harf</span> <span class="ow">in</span> <span class="n">ince</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"e"</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"a"</span><span class="p">)</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">i</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">"kelimeye ismin i halini ekler"</span>
-        <span class="n">_kelime</span> <span class="o">=</span> <span class="bp">self</span>
-
-        <span class="k">if</span> <span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">yumusayan</span><span class="p">:</span>
-            <span class="n">_kelime</span> <span class="o">=</span> <span class="n">_kelime</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">yumusayan</span><span class="p">[</span><span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
-        <span class="k">elif</span> <span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">kalin</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"yı"</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">ince</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"yi"</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">harf</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">_kelime</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">harf</span> <span class="ow">in</span> <span class="n">kalin</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"ı"</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">harf</span> <span class="ow">in</span> <span class="n">ince</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"i"</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"ı"</span><span class="p">)</span>
-    <span class="nd">@property</span>   
-    <span class="k">def</span> <span class="nf">de</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">"kelimeye ismin de halini ekler."</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">sertlestirenler</span><span class="p">:</span>
-            <span class="n">ek</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">"t"</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">ek</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">"d"</span>
-
-        <span class="k">for</span> <span class="n">harf</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">harf</span> <span class="ow">in</span> <span class="n">kalin</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="bp">self</span> <span class="o">+</span> <span class="n">ek</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"a"</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">harf</span> <span class="ow">in</span> <span class="n">ince</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="bp">self</span> <span class="o">+</span> <span class="n">ek</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"e"</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="bp">self</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"da"</span><span class="p">)</span>
-    <span class="nd">@property</span>   
-    <span class="k">def</span> <span class="nf">den</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">"kelime ismin den halini ekler"</span>
-        <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">de</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"n"</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-1"><code data-line-number="  1"></code></a></td>
+<td class="code"><code><span class="c1"># -*- coding:utf-8 -*-</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-2"><code data-line-number="  2"></code></a></td>
+<td class="code"><code><span class="n">kalin</span> <span class="o">=</span> <span class="p">(</span><span class="sa">u</span><span class="s2">"a"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"ı"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"o"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"u"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-3"><code data-line-number="  3"></code></a></td>
+<td class="code"><code><span class="n">ince</span> <span class="o">=</span> <span class="p">(</span><span class="sa">u</span><span class="s2">"e"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"i"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"ö"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"ü"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-4"><code data-line-number="  4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-5"><code data-line-number="  5"></code></a></td>
+<td class="code"><code><span class="n">yumusayan</span> <span class="o">=</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-6"><code data-line-number="  6"></code></a></td>
+<td class="code"><code>    <span class="sa">u</span><span class="s2">"k"</span><span class="p">:</span> <span class="sa">u</span><span class="s2">"ğ"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-7"><code data-line-number="  7"></code></a></td>
+<td class="code"><code>    <span class="sa">u</span><span class="s2">"t"</span><span class="p">:</span> <span class="sa">u</span><span class="s2">"d"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-8"><code data-line-number="  8"></code></a></td>
+<td class="code"><code>    <span class="sa">u</span><span class="s2">"p"</span><span class="p">:</span> <span class="sa">u</span><span class="s2">"b"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-9"><code data-line-number="  9"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-10"><code data-line-number=" 10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-11"><code data-line-number=" 11"></code></a></td>
+<td class="code"><code><span class="n">sertlestirenler</span> <span class="o">=</span> <span class="p">(</span><span class="sa">u</span><span class="s2">"f"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"s"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"t"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"k"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"ç"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"ş"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"h"</span><span class="p">,</span><span class="sa">u</span><span class="s2">"p"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-12"><code data-line-number=" 12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-13"><code data-line-number=" 13"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">kelime</span><span class="p">(</span><span class="n">unicode</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-14"><code data-line-number=" 14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-15"><code data-line-number=" 15"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">isim</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-16"><code data-line-number=" 16"></code></a></td>
+<td class="code"><code>        <span class="s2">"unicodedan gerekli metodu alır, sonucu kelime olarak döndürür."</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-17"><code data-line-number=" 17"></code></a></td>
+<td class="code"><code>        <span class="n">att</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">kelime</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">isim</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-18"><code data-line-number=" 18"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-19"><code data-line-number=" 19"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">att</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-20"><code data-line-number=" 20"></code></a></td>
+<td class="code"><code>            <span class="k">return</span> <span class="n">att</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-21"><code data-line-number=" 21"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-22"><code data-line-number=" 22"></code></a></td>
+<td class="code"><code>        <span class="k">def</span> <span class="nf">sonra_cagir</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-23"><code data-line-number=" 23"></code></a></td>
+<td class="code"><code>            <span class="n">sonuc</span> <span class="o">=</span> <span class="n">att</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-24"><code data-line-number=" 24"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sonuc</span><span class="p">,</span> <span class="n">unicode</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-25"><code data-line-number=" 25"></code></a></td>
+<td class="code"><code>                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">sonuc</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-26"><code data-line-number=" 26"></code></a></td>
+<td class="code"><code>            <span class="k">return</span> <span class="n">sonuc</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-27"><code data-line-number=" 27"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">sonra_cagir</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-28"><code data-line-number=" 28"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-29"><code data-line-number=" 29"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">other</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-30"><code data-line-number=" 30"></code></a></td>
+<td class="code"><code>        <span class="s2">"iki kelimeyi unicode toplamıyla toplar, sonucu kelime olarak döndürür"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-31"><code data-line-number=" 31"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">unicode</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">other</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-32"><code data-line-number=" 32"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-33"><code data-line-number=" 33"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">other</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-34"><code data-line-number=" 34"></code></a></td>
+<td class="code"><code>        <span class="s2">"bir kelimeyi bir sayıyla unicode olarak çarpar. Sonucu kelime olarak döndürür"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-35"><code data-line-number=" 35"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">unicode</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">other</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-36"><code data-line-number=" 36"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-37"><code data-line-number=" 37"></code></a></td>
+<td class="code"><code>    <span class="nd">@property</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-38"><code data-line-number=" 38"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">lar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-39"><code data-line-number=" 39"></code></a></td>
+<td class="code"><code>        <span class="s2">"Kelimeye çoğuk eki ekler"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-40"><code data-line-number=" 40"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">harf</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-41"><code data-line-number=" 41"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">harf</span> <span class="ow">in</span> <span class="n">kalin</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-42"><code data-line-number=" 42"></code></a></td>
+<td class="code"><code>                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="bp">self</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"lar"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-43"><code data-line-number=" 43"></code></a></td>
+<td class="code"><code>            <span class="k">elif</span> <span class="n">harf</span> <span class="ow">in</span> <span class="n">ince</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-44"><code data-line-number=" 44"></code></a></td>
+<td class="code"><code>                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="bp">self</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"ler"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-45"><code data-line-number=" 45"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-46"><code data-line-number=" 46"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="bp">self</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"lar"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-47"><code data-line-number=" 47"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-48"><code data-line-number=" 48"></code></a></td>
+<td class="code"><code>    <span class="nd">@property</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-49"><code data-line-number=" 49"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">in_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-50"><code data-line-number=" 50"></code></a></td>
+<td class="code"><code>        <span class="s2">"kelimeye iyelik eki ekler"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-51"><code data-line-number=" 51"></code></a></td>
+<td class="code"><code>        <span class="n">_kelime</span> <span class="o">=</span> <span class="bp">self</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-52"><code data-line-number=" 52"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">yumusayan</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-53"><code data-line-number=" 53"></code></a></td>
+<td class="code"><code>            <span class="n">_kelime</span> <span class="o">=</span> <span class="n">_kelime</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">yumusayan</span><span class="p">[</span><span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-54"><code data-line-number=" 54"></code></a></td>
+<td class="code"><code>        <span class="k">elif</span> <span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">kalin</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-55"><code data-line-number=" 55"></code></a></td>
+<td class="code"><code>            <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"nın"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-56"><code data-line-number=" 56"></code></a></td>
+<td class="code"><code>        <span class="k">elif</span> <span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">ince</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-57"><code data-line-number=" 57"></code></a></td>
+<td class="code"><code>            <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"nin"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-58"><code data-line-number=" 58"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-59"><code data-line-number=" 59"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">harf</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">_kelime</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-60"><code data-line-number=" 60"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">harf</span> <span class="ow">in</span> <span class="n">kalin</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-61"><code data-line-number=" 61"></code></a></td>
+<td class="code"><code>                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"ın"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-62"><code data-line-number=" 62"></code></a></td>
+<td class="code"><code>            <span class="k">elif</span> <span class="n">harf</span> <span class="ow">in</span> <span class="n">ince</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-63"><code data-line-number=" 63"></code></a></td>
+<td class="code"><code>                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"in"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-64"><code data-line-number=" 64"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-65"><code data-line-number=" 65"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"ın"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-66"><code data-line-number=" 66"></code></a></td>
+<td class="code"><code>    <span class="nd">@property</span>   
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-67"><code data-line-number=" 67"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">e</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-68"><code data-line-number=" 68"></code></a></td>
+<td class="code"><code>        <span class="s2">"kelimeye ismin e halini ekler"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-69"><code data-line-number=" 69"></code></a></td>
+<td class="code"><code>        <span class="n">_kelime</span> <span class="o">=</span> <span class="bp">self</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-70"><code data-line-number=" 70"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">yumusayan</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-71"><code data-line-number=" 71"></code></a></td>
+<td class="code"><code>            <span class="n">_kelime</span> <span class="o">=</span> <span class="n">_kelime</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">yumusayan</span><span class="p">[</span><span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-72"><code data-line-number=" 72"></code></a></td>
+<td class="code"><code>        <span class="k">elif</span> <span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">kalin</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-73"><code data-line-number=" 73"></code></a></td>
+<td class="code"><code>            <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"ya"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-74"><code data-line-number=" 74"></code></a></td>
+<td class="code"><code>        <span class="k">elif</span> <span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">ince</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-75"><code data-line-number=" 75"></code></a></td>
+<td class="code"><code>            <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"ye"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-76"><code data-line-number=" 76"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-77"><code data-line-number=" 77"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">harf</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">_kelime</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-78"><code data-line-number=" 78"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">harf</span> <span class="ow">in</span> <span class="n">kalin</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-79"><code data-line-number=" 79"></code></a></td>
+<td class="code"><code>                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"a"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-80"><code data-line-number=" 80"></code></a></td>
+<td class="code"><code>            <span class="k">elif</span> <span class="n">harf</span> <span class="ow">in</span> <span class="n">ince</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-81"><code data-line-number=" 81"></code></a></td>
+<td class="code"><code>                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"e"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-82"><code data-line-number=" 82"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-83"><code data-line-number=" 83"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"a"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-84"><code data-line-number=" 84"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-85"><code data-line-number=" 85"></code></a></td>
+<td class="code"><code>    <span class="nd">@property</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-86"><code data-line-number=" 86"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">i</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-87"><code data-line-number=" 87"></code></a></td>
+<td class="code"><code>        <span class="s2">"kelimeye ismin i halini ekler"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-88"><code data-line-number=" 88"></code></a></td>
+<td class="code"><code>        <span class="n">_kelime</span> <span class="o">=</span> <span class="bp">self</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-89"><code data-line-number=" 89"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-90"><code data-line-number=" 90"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">yumusayan</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-91"><code data-line-number=" 91"></code></a></td>
+<td class="code"><code>            <span class="n">_kelime</span> <span class="o">=</span> <span class="n">_kelime</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">yumusayan</span><span class="p">[</span><span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-92"><code data-line-number=" 92"></code></a></td>
+<td class="code"><code>        <span class="k">elif</span> <span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">kalin</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-93"><code data-line-number=" 93"></code></a></td>
+<td class="code"><code>            <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"yı"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-94"><code data-line-number=" 94"></code></a></td>
+<td class="code"><code>        <span class="k">elif</span> <span class="n">_kelime</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">ince</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-95"><code data-line-number=" 95"></code></a></td>
+<td class="code"><code>            <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"yi"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-96"><code data-line-number=" 96"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-97"><code data-line-number=" 97"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">harf</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">_kelime</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-98"><code data-line-number=" 98"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">harf</span> <span class="ow">in</span> <span class="n">kalin</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-99"><code data-line-number=" 99"></code></a></td>
+<td class="code"><code>                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"ı"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-100"><code data-line-number="100"></code></a></td>
+<td class="code"><code>            <span class="k">elif</span> <span class="n">harf</span> <span class="ow">in</span> <span class="n">ince</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-101"><code data-line-number="101"></code></a></td>
+<td class="code"><code>                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"i"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-102"><code data-line-number="102"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-103"><code data-line-number="103"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">_kelime</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"ı"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-104"><code data-line-number="104"></code></a></td>
+<td class="code"><code>    <span class="nd">@property</span>   
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-105"><code data-line-number="105"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">de</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-106"><code data-line-number="106"></code></a></td>
+<td class="code"><code>        <span class="s2">"kelimeye ismin de halini ekler."</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-107"><code data-line-number="107"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">sertlestirenler</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-108"><code data-line-number="108"></code></a></td>
+<td class="code"><code>            <span class="n">ek</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">"t"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-109"><code data-line-number="109"></code></a></td>
+<td class="code"><code>        <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-110"><code data-line-number="110"></code></a></td>
+<td class="code"><code>            <span class="n">ek</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">"d"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-111"><code data-line-number="111"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-112"><code data-line-number="112"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">harf</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-113"><code data-line-number="113"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">harf</span> <span class="ow">in</span> <span class="n">kalin</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-114"><code data-line-number="114"></code></a></td>
+<td class="code"><code>                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="bp">self</span> <span class="o">+</span> <span class="n">ek</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"a"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-115"><code data-line-number="115"></code></a></td>
+<td class="code"><code>            <span class="k">elif</span> <span class="n">harf</span> <span class="ow">in</span> <span class="n">ince</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-116"><code data-line-number="116"></code></a></td>
+<td class="code"><code>                <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="bp">self</span> <span class="o">+</span> <span class="n">ek</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"e"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-117"><code data-line-number="117"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-118"><code data-line-number="118"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="bp">self</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"da"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-119"><code data-line-number="119"></code></a></td>
+<td class="code"><code>    <span class="nd">@property</span>   
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-120"><code data-line-number="120"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">den</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-121"><code data-line-number="121"></code></a></td>
+<td class="code"><code>        <span class="s2">"kelime ismin den halini ekler"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-122"><code data-line-number="122"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">de</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">"n"</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yukarıdaki örneği şu şekilde çalıştırabilirsiniz.</p>
-<pre class="code literal-block"><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">kelime</span><span class="p">(</span><span class="sa">u</span><span class="s2">"yaşar"</span><span class="p">)</span>
-<span class="sd">"""</span>
-<span class="sd">Normalde unicode'a ait metotları kullanmak, farklı bir unicode döndürmesi</span>
-<span class="sd">gerekir. Ama __getattribute__ metodunun üzerine yazarak, bunun üstesinden geldik.</span>
-<span class="sd">"""</span>
-<span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span> <span class="c1"># &lt;class 'kelime'&gt;</span>
-<span class="sd">"""</span>
-<span class="sd">Her defasından kendi sınıfımız döndürüldüğü için, unicode sınıfının ve kendi sınıfımızın metotlarını</span>
-<span class="sd">istediğimiz gibi zincirleyebiliriz.</span>
-<span class="sd">"""</span>
-<span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="o">.</span><span class="n">lar</span><span class="o">.</span><span class="n">de</span><span class="p">)</span> <span class="c1"># "Yaşarlarda"</span>
-<span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">lar</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="o">.</span><span class="n">de</span><span class="p">)</span> <span class="c1"># &lt;class 'kelime'&gt;</span>
-<span class="k">print</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="s2">" hebele"</span><span class="p">)</span> <span class="c1"># "yaşar hebele"</span>
-<span class="nb">type</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">hebele</span><span class="p">)</span> <span class="c1"># &lt;class 'kelime'&gt;</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="n">a</span> <span class="o">=</span> <span class="n">kelime</span><span class="p">(</span><span class="sa">u</span><span class="s2">"yaşar"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="sd">Normalde unicode'a ait metotları kullanmak, farklı bir unicode döndürmesi</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="sd">gerekir. Ama __getattribute__ metodunun üzerine yazarak, bunun üstesinden geldik.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span> <span class="c1"># &lt;class 'kelime'&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="sd">Her defasından kendi sınıfımız döndürüldüğü için, unicode sınıfının ve kendi sınıfımızın metotlarını</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="sd">istediğimiz gibi zincirleyebiliriz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="o">.</span><span class="n">lar</span><span class="o">.</span><span class="n">de</span><span class="p">)</span> <span class="c1"># "Yaşarlarda"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">lar</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="o">.</span><span class="n">de</span><span class="p">)</span> <span class="c1"># &lt;class 'kelime'&gt;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="nb">print</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="s2">" hebele"</span><span class="p">)</span> <span class="c1"># "yaşar hebele"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="nb">type</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">hebele</span><span class="p">)</span> <span class="c1"># &lt;class 'kelime'&gt;</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu sistemin bütün mahareti, <code>__getattribute__()</code> içinde tanımladığımız
 sonra_cagir fonksiyonu. Örneğin, <code>kelime.lower()</code> çağırıldığında,
 aslında çalışan fonksiyon şöyle oluyor.</p>
-<pre class="code literal-block"><span></span><span class="n">sonuc</span> <span class="o">=</span> <span class="nb">unicode</span><span class="o">.</span><span class="n">lower</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-<span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">sonuc</span><span class="p">,</span><span class="nb">basestring</span><span class="p">):</span>
-    <span class="c1"># sonuc bir unicode idi, döndürmeden önce bunu tekrar kelime yapıyoruz.</span>
-    <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">sonuc</span><span class="p">)</span>
-
-<span class="c1"># unicode objesinin bazı metotları, yazı harici şeyler döndürebilir. Bu durumlarda</span>
-<span class="c1"># ne aldıysak onu döndürüyoruz.</span>
-<span class="k">return</span> <span class="n">sonuc</span>
-</pre>
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">sonuc</span> <span class="o">=</span> <span class="n">unicode</span><span class="o">.</span><span class="n">lower</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">sonuc</span><span class="p">,</span><span class="n">basestring</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="c1"># sonuc bir unicode idi, döndürmeden önce bunu tekrar kelime yapıyoruz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">kelime</span><span class="p">(</span><span class="n">sonuc</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="c1"># unicode objesinin bazı metotları, yazı harici şeyler döndürebilir. Bu durumlarda</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="c1"># ne aldıysak onu döndürüyoruz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="str-objesini-genisletmek.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code><span class="k">return</span> <span class="n">sonuc</span>
+</code></td>
+</tr>
+</table></div>
 </div>
     </div>
     <aside class="postpromonav"><nav><div class="pager">

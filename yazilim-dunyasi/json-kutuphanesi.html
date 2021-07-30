@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="C dilinde JSON Kütüphanesi Tasarımı ve Flex/Bison Parser ile Entegre Edilmesi">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/yazilim-dunyasi/json-kutuphanesi.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/yazilim-dunyasi/json-kutuphanesi.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="flex-bison.html" title="Flex ve Bison kullanarak JSON İşleme (1. Kısım)" type="text/html">
 <link rel="next" href="../algoritma/dfa.html" title="Düzenli İfade (RegExp) Motorları ve Otomatlar" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Flex ve Bison kullanarak JSON İşleme (2. Kısım)">
-<meta property="og:url" content="http://ysar.net/yazilim-dunyasi/json-kutuphanesi.html">
-<meta property="og:description" content="C dilinde JSON Kütüphanesi Tasarımı ve Flex/Bison Parser ile Entegre Edilmesi">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2019-06-28T00:17:00+03:00">
 </head>
 <body>
 
@@ -54,36 +48,148 @@ ulaşabilirsiniz. Projeyi derlemeye hazırlamak için <code>./configure</code>
 komutunu vermeyi unutmayın.</p>
 <h2>Kütüphane Arayüzü</h2>
 <p><code>json.h</code> header dosyası içine aşağıdaki satırları ekleyin. </p>
-<pre class="code literal-block"><span></span><span class="k">typedef</span> <span class="k">enum</span> <span class="p">{</span>
-    <span class="n">JTYPE_NULL</span><span class="p">,</span>
-    <span class="n">JTYPE_BOOL</span><span class="p">,</span>
-    <span class="n">JTYPE_NUMBER</span><span class="p">,</span>
-    <span class="n">JTYPE_STRING</span><span class="p">,</span>
-    <span class="n">JTYPE_ARRAY</span><span class="p">,</span>
-    <span class="n">JTYPE_OBJECT</span>
-<span class="p">}</span> <span class="n">JType</span><span class="p">;</span>
-
-<span class="k">typedef</span> <span class="k">struct</span> <span class="n">_json</span> <span class="n">JSON</span><span class="p">;</span>
-
-<span class="c1">// deger olusturmak icin </span>
-<span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_null</span><span class="p">();</span>
-<span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_bool</span><span class="p">(</span><span class="kt">int</span> <span class="n">c</span><span class="p">);</span>
-<span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_number</span><span class="p">(</span><span class="kt">double</span> <span class="n">d</span><span class="p">);</span>
-<span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_string</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">c</span><span class="p">);</span>
-<span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_array</span><span class="p">();</span>
-<span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_object</span><span class="p">();</span>
-
-<span class="c1">// json tipini almak icin</span>
-<span class="n">JType</span> <span class="nf">json_get_type</span><span class="p">(</span><span class="n">JSON</span> <span class="o">*</span><span class="n">j</span><span class="p">);</span>
-
-<span class="c1">// array ve object icine elemen eklemek icin gerekli fonksiyonlar</span>
-<span class="n">JSON</span> <span class="o">*</span><span class="nf">json_array_push</span><span class="p">(</span><span class="n">JSON</span> <span class="o">*</span><span class="n">arr</span><span class="p">,</span> <span class="n">JSON</span> <span class="o">*</span><span class="n">value</span><span class="p">);</span>
-<span class="n">JSON</span> <span class="o">*</span><span class="nf">json_object_add</span><span class="p">(</span><span class="n">JSON</span> <span class="o">*</span><span class="n">obj</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">key</span><span class="p">,</span> <span class="n">JSON</span> <span class="o">*</span><span class="n">value</span><span class="p">);</span>
-
-<span class="c1">// konsola yazdirmak icin</span>
-<span class="kt">void</span> <span class="nf">json_print</span><span class="p">(</span><span class="n">JSON</span> <span class="o">*</span><span class="n">j</span><span class="p">,</span> <span class="kt">int</span> <span class="n">indentation</span><span class="p">);</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">typedef</span> <span class="k">enum</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="n">JTYPE_NULL</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">JTYPE_BOOL</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">JTYPE_NUMBER</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="n">JTYPE_STRING</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="n">JTYPE_ARRAY</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="n">JTYPE_OBJECT</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="p">}</span> <span class="n">JType</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_json</span> <span class="n">JSON</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="c1">// deger olusturmak icin </span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_null</span><span class="p">();</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_bool</span><span class="p">(</span><span class="kt">int</span> <span class="n">c</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_number</span><span class="p">(</span><span class="kt">double</span> <span class="n">d</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_string</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">c</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_array</span><span class="p">();</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_object</span><span class="p">();</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><span class="c1">// json tipini almak icin</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="n">JType</span> <span class="nf">json_get_type</span><span class="p">(</span><span class="n">JSON</span> <span class="o">*</span><span class="n">j</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code><span class="c1">// array ve object icine elemen eklemek icin gerekli fonksiyonlar</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code><span class="n">JSON</span> <span class="o">*</span><span class="nf">json_array_push</span><span class="p">(</span><span class="n">JSON</span> <span class="o">*</span><span class="n">arr</span><span class="p">,</span> <span class="n">JSON</span> <span class="o">*</span><span class="n">value</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code><span class="n">JSON</span> <span class="o">*</span><span class="nf">json_object_add</span><span class="p">(</span><span class="n">JSON</span> <span class="o">*</span><span class="n">obj</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">key</span><span class="p">,</span> <span class="n">JSON</span> <span class="o">*</span><span class="n">value</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code><span class="c1">// konsola yazdirmak icin</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">json_print</span><span class="p">(</span><span class="n">JSON</span> <span class="o">*</span><span class="n">j</span><span class="p">,</span> <span class="kt">int</span> <span class="n">indentation</span><span class="p">);</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>JSON kütüphanemizin oldukça basit bir arayüzü var. 6 farklı türde JSON oluşturmak
 için, 6 farklı <code>json_make_*</code> fonksiyonumuz var. <code>json_get_type</code> adından anlaşılacağı
@@ -92,25 +198,63 @@ ve <code>json_object_add</code> sırasıyla Array ve Object türlerine eleman ek
 <code>json_print</code> fonksiyonunu da okuduğumuz JSON verisini güzel bir formatta çıktı vermek
 için kullanacağız.  </p>
 <h2>Kütüphane Kodları</h2>
-<pre class="code literal-block"><span></span>Bu başlık altında yazacağımız kodları, `json.c` dosyasına ekleyin.
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">Bu başlık altında yazacağımız kodları, `json.c` dosyasına ekleyin.</span>
+</code></td>
+</tr></table></div>
 
 <p>Kütüphanenin tek bir <code>_struct json</code> veri yapısı ile çalışabilmesi için,
 bu veri yapısının 6 farklı türde JSON verisini bünyesinde barındıracak
 şekilde tasarlarlanması gerekiyor. Benim kullanacağım veri yapısı aşağıdaki
 gibi;</p>
-<pre class="code literal-block"><span></span><span class="k">struct</span> <span class="n">_json</span> <span class="p">{</span>
-    <span class="n">JType</span> <span class="n">type</span><span class="p">;</span>
-    <span class="k">struct</span> <span class="n">_json</span> <span class="o">*</span><span class="n">prev</span><span class="p">;</span>
-    <span class="k">struct</span> <span class="n">_json</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span>
-    <span class="kt">char</span>   <span class="o">*</span><span class="n">key</span><span class="p">;</span>
-    <span class="k">struct</span> <span class="n">_json</span> <span class="o">*</span><span class="n">elems</span><span class="p">;</span>
-    <span class="kt">char</span>   <span class="o">*</span><span class="n">s_val</span><span class="p">;</span>
-    <span class="kt">double</span> <span class="n">d_val</span><span class="p">;</span>
-<span class="p">};</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">struct</span> <span class="n">_json</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="n">JType</span> <span class="n">type</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="k">struct</span> <span class="n">_json</span> <span class="o">*</span><span class="n">prev</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="k">struct</span> <span class="n">_json</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span>   <span class="o">*</span><span class="n">key</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="k">struct</span> <span class="n">_json</span> <span class="o">*</span><span class="n">elems</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>    <span class="kt">char</span>   <span class="o">*</span><span class="n">s_val</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code>    <span class="kt">double</span> <span class="n">d_val</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-9"><code data-line-number="9"></code></a></td>
+<td class="code"><code><span class="p">};</span>
+</code></td>
+</tr>
+</table></div>
 
 <p><code>struct _json</code> yazacağımız kütüphanenin merkezinde olacağı için, detaylı bir açıklamayı
 hak ediyor.</p>
@@ -129,100 +273,408 @@ hak ediyor.</p>
 <code>d_val</code> : Number ve Boolean türlerinde, değeri tutmak için kullanılacak.</li>
 </ul>
 <p>Farklı JSON türlerinde değer oluşturacak fonksiyonlarla devam edelim.</p>
-<pre class="code literal-block"><span></span><span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_empty</span><span class="p">(</span><span class="n">JType</span> <span class="n">type</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">JSON</span> <span class="o">*</span><span class="n">j</span> <span class="o">=</span> <span class="n">calloc</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">JSON</span><span class="p">));</span>
-    <span class="n">j</span><span class="o">-&gt;</span><span class="n">type</span> <span class="o">=</span> <span class="n">type</span><span class="p">;</span>
-    <span class="k">return</span> <span class="n">j</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_null</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="k">return</span> <span class="n">json_make_empty</span><span class="p">(</span><span class="n">JTYPE_NULL</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_bool</span><span class="p">(</span><span class="kt">int</span> <span class="n">c</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">JSON</span> <span class="o">*</span><span class="n">j</span> <span class="o">=</span> <span class="n">json_make_empty</span><span class="p">(</span><span class="n">JTYPE_BOOL</span><span class="p">);</span>
-    <span class="n">j</span><span class="o">-&gt;</span><span class="n">d_val</span> <span class="o">=</span> <span class="o">!!</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
-    <span class="k">return</span> <span class="n">j</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_number</span><span class="p">(</span><span class="kt">double</span> <span class="n">d</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">JSON</span> <span class="o">*</span><span class="n">j</span> <span class="o">=</span> <span class="n">json_make_empty</span><span class="p">(</span><span class="n">JTYPE_NUMBER</span><span class="p">);</span>
-    <span class="n">j</span><span class="o">-&gt;</span><span class="n">d_val</span> <span class="o">=</span> <span class="n">d</span><span class="p">;</span>
-    <span class="k">return</span> <span class="n">j</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_string</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">c</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">JSON</span> <span class="o">*</span><span class="n">j</span> <span class="o">=</span> <span class="n">json_make_empty</span><span class="p">(</span><span class="n">JTYPE_STRING</span><span class="p">);</span>
-    <span class="n">j</span><span class="o">-&gt;</span><span class="n">s_val</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
-    <span class="k">return</span> <span class="n">j</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_array</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="k">return</span> <span class="n">json_make_empty</span><span class="p">(</span><span class="n">JTYPE_ARRAY</span><span class="p">);</span>
-
-<span class="p">}</span>
-
-<span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_object</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="k">return</span> <span class="n">json_make_empty</span><span class="p">(</span><span class="n">JTYPE_OBJECT</span><span class="p">);</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_empty</span><span class="p">(</span><span class="n">JType</span> <span class="n">type</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">JSON</span> <span class="o">*</span><span class="n">j</span> <span class="o">=</span> <span class="n">calloc</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">JSON</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">j</span><span class="o">-&gt;</span><span class="n">type</span> <span class="o">=</span> <span class="n">type</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">j</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_null</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">json_make_empty</span><span class="p">(</span><span class="n">JTYPE_NULL</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_bool</span><span class="p">(</span><span class="kt">int</span> <span class="n">c</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>    <span class="n">JSON</span> <span class="o">*</span><span class="n">j</span> <span class="o">=</span> <span class="n">json_make_empty</span><span class="p">(</span><span class="n">JTYPE_BOOL</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="n">j</span><span class="o">-&gt;</span><span class="n">d_val</span> <span class="o">=</span> <span class="o">!!</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">j</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_number</span><span class="p">(</span><span class="kt">double</span> <span class="n">d</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>    <span class="n">JSON</span> <span class="o">*</span><span class="n">j</span> <span class="o">=</span> <span class="n">json_make_empty</span><span class="p">(</span><span class="n">JTYPE_NUMBER</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>    <span class="n">j</span><span class="o">-&gt;</span><span class="n">d_val</span> <span class="o">=</span> <span class="n">d</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">j</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code><span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_string</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">c</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>    <span class="n">JSON</span> <span class="o">*</span><span class="n">j</span> <span class="o">=</span> <span class="n">json_make_empty</span><span class="p">(</span><span class="n">JTYPE_STRING</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>    <span class="n">j</span><span class="o">-&gt;</span><span class="n">s_val</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">j</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code><span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_array</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">json_make_empty</span><span class="p">(</span><span class="n">JTYPE_ARRAY</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-38"><code data-line-number="38"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-39"><code data-line-number="39"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-40"><code data-line-number="40"></code></a></td>
+<td class="code"><code><span class="n">JSON</span> <span class="o">*</span><span class="nf">json_make_object</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-41"><code data-line-number="41"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-42"><code data-line-number="42"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">json_make_empty</span><span class="p">(</span><span class="n">JTYPE_OBJECT</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-43"><code data-line-number="43"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu fonksiyonlar yeterince sade olduğu için, ekstra bir açıklamaya gerek duymuyorum. <code>json_get_type</code>
 fonksiyonu da, gayet basit:</p>
-<pre class="code literal-block"><span></span>JType json_get_type(JSON *j)
-{
-    return j-&gt;type;
-}
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">JType json_get_type(JSON *j)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="err">    return j-&gt;type;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="err">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Object ve Array türlerine eleman eklemek için, aşağıdaki fonksiyonları kullanacağız.</p>
-<pre class="code literal-block"><span></span><span class="n">JSON</span> <span class="o">*</span><span class="nf">_array_push</span><span class="p">(</span><span class="n">JSON</span> <span class="o">*</span><span class="n">head</span><span class="p">,</span> <span class="n">JSON</span> <span class="o">*</span><span class="n">new</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">if</span><span class="p">(</span><span class="n">head</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">new</span><span class="p">;</span>
-
-    <span class="n">JSON</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
-    <span class="k">for</span><span class="p">(</span><span class="n">p</span> <span class="o">=</span> <span class="n">head</span><span class="p">;</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">;</span> <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="cm">/* skip */</span>
-    <span class="p">}</span>
-
-    <span class="n">p</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">new</span><span class="p">;</span>
-    <span class="k">return</span> <span class="n">head</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="n">JSON</span> <span class="o">*</span><span class="nf">json_array_push</span><span class="p">(</span><span class="n">JSON</span> <span class="o">*</span><span class="n">arr</span><span class="p">,</span> <span class="n">JSON</span> <span class="o">*</span><span class="n">j</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">arr</span><span class="o">-&gt;</span><span class="n">elems</span> <span class="o">=</span> <span class="n">_array_push</span><span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">elems</span><span class="p">,</span> <span class="n">j</span><span class="p">);</span>
-    <span class="k">return</span> <span class="n">arr</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="n">JSON</span> <span class="o">*</span><span class="nf">json_object_add</span><span class="p">(</span><span class="n">JSON</span> <span class="o">*</span><span class="n">obj</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">key</span><span class="p">,</span> <span class="n">JSON</span> <span class="o">*</span><span class="n">j</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="n">j</span><span class="o">-&gt;</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="p">;</span>
-    <span class="n">obj</span><span class="o">-&gt;</span><span class="n">elems</span><span class="o">=</span> <span class="n">_array_push</span><span class="p">(</span><span class="n">obj</span><span class="o">-&gt;</span><span class="n">elems</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
-    <span class="k">return</span> <span class="n">obj</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="n">JSON</span> <span class="o">*</span><span class="nf">_array_push</span><span class="p">(</span><span class="n">JSON</span> <span class="o">*</span><span class="n">head</span><span class="p">,</span> <span class="n">JSON</span> <span class="o">*</span><span class="n">new</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="k">if</span><span class="p">(</span><span class="n">head</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="n">new</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="n">JSON</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="k">for</span><span class="p">(</span><span class="n">p</span> <span class="o">=</span> <span class="n">head</span><span class="p">;</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">;</span> <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="cm">/* skip */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="n">p</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">new</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">head</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="n">JSON</span> <span class="o">*</span><span class="nf">json_array_push</span><span class="p">(</span><span class="n">JSON</span> <span class="o">*</span><span class="n">arr</span><span class="p">,</span> <span class="n">JSON</span> <span class="o">*</span><span class="n">j</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>    <span class="n">arr</span><span class="o">-&gt;</span><span class="n">elems</span> <span class="o">=</span> <span class="n">_array_push</span><span class="p">(</span><span class="n">arr</span><span class="o">-&gt;</span><span class="n">elems</span><span class="p">,</span> <span class="n">j</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">arr</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code><span class="n">JSON</span> <span class="o">*</span><span class="nf">json_object_add</span><span class="p">(</span><span class="n">JSON</span> <span class="o">*</span><span class="n">obj</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">key</span><span class="p">,</span> <span class="n">JSON</span> <span class="o">*</span><span class="n">j</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>    <span class="n">j</span><span class="o">-&gt;</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>    <span class="n">obj</span><span class="o">-&gt;</span><span class="n">elems</span><span class="o">=</span> <span class="n">_array_push</span><span class="p">(</span><span class="n">obj</span><span class="o">-&gt;</span><span class="n">elems</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">obj</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <h2>Parser, Lexer ve Kütüphane'yi Tanıştırmak</h2>
 <p>Lexer ve Parser'ın kütüphanemizle uyumlu çalışabilmesi için, öncelikle, aşağıdaki kod bloğunu <code>parser.y</code>'nin
 ilk satırına eklememiz gerekiyor.</p>
-<pre class="code literal-block"><span></span><span class="nf">%code</span> <span class="n">requires</span> <span class="p">{</span>
-      <span class="cp">#include</span> <span class="cpf">"json.h"</span><span class="cp"></span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="nf">%code</span> <span class="k">requires</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>      <span class="cp">#include</span> <span class="cpf">"json.h"</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yazının devamında, parser'ın tanıdığı sembolleri, <code>JSON</code> veri tipine dönüştüreceğiz.
 Bunun için, <code>#include "json.h"</code> direktifi ile,  parser'ımıza kütüphanemizi
@@ -235,34 +687,86 @@ için, token ve sembollerin veri tiplerini tanıtmamız gerekiyor. Bunun ilk
 adımı da, kullanacağımız veri tipi çeşitlerini, <code>%union</code> direktifi ile
 göstermek. Aşağıdaki bloğu, <code>%code requires</code> bloğunun
 hemen altına ekleyin.</p>
-<pre class="code literal-block"><span></span><span class="nf">%union</span>
-<span class="p">{</span>
-      <span class="kt">char</span> <span class="o">*</span><span class="n">s_val</span><span class="p">;</span>
-      <span class="kt">double</span> <span class="n">d_val</span><span class="p">;</span>
-      <span class="n">JSON</span>   <span class="o">*</span><span class="n">j_val</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="nf">%union</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>      <span class="kt">char</span> <span class="o">*</span><span class="n">s_val</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>      <span class="kt">double</span> <span class="n">d_val</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>      <span class="n">JSON</span>   <span class="o">*</span><span class="n">j_val</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Sembol ve tokenlerin veri tiplerini de, aşağıdaki şekilde göstereceğiz. <code>parser.y</code>
 içindeki sembol ve token tanımlarını aşağıdaki şekilde değiştirin.</p>
-<pre class="code literal-block"><span></span><span class="nf">%start</span> <span class="n">JValue</span>
-<span class="nf">%type</span>  <span class="o">&lt;</span><span class="n">j_val</span><span class="o">&gt;</span> <span class="n">JValue</span> <span class="n">JArray</span> <span class="n">JObject</span> <span class="n">Liste</span> <span class="n">KVListe</span>
-<span class="nf">%token</span> <span class="o">&lt;</span><span class="n">s_val</span><span class="o">&gt;</span> <span class="n">T_STRING</span>
-<span class="nf">%token</span> <span class="o">&lt;</span><span class="n">d_val</span><span class="o">&gt;</span> <span class="n">T_NUMBER</span>
-<span class="nf">%token</span> <span class="n">T_TRUE</span> <span class="n">T_FALSE</span> <span class="n">T_NULL</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="nf">%start</span> <span class="n">JValue</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="nf">%type</span>  <span class="o">&lt;</span><span class="n">j_val</span><span class="o">&gt;</span> <span class="n">JValue</span> <span class="n">JArray</span> <span class="n">JObject</span> <span class="n">Liste</span> <span class="n">KVListe</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="nf">%token</span> <span class="o">&lt;</span><span class="n">s_val</span><span class="o">&gt;</span> <span class="n">T_STRING</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="nf">%token</span> <span class="o">&lt;</span><span class="n">d_val</span><span class="o">&gt;</span> <span class="n">T_NUMBER</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="nf">%token</span> <span class="n">T_TRUE</span> <span class="n">T_FALSE</span> <span class="n">T_NULL</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>T_TRUE, T_FALSE ve T_NULL tokenlerinin bir değer taşımasına gerek yok. Zaten tokenin
 kendisi ihtiyacımız olan tüm bilgiyi bize sağlıyor. <code>T_STRING</code> için <code>char *</code> türünde,
 <code>T_NUMBER</code> için de <code>double</code> türünde veri tutacağız. Bunları bize metinden okuduğu değere
 göre, lexer sağlayacak. <code>lexer.l</code> içindeki T_NUMBER ve T_STRING döndüren kuralları, aşağıdaki
 şekilde değiştirin.</p>
-<pre class="code literal-block"><span></span>{TIRNAK}{TIRNAK}|{TIRNAK}{KARAKTERLER}{TIRNAK} { yylval.s_val = strdup(yytext); return T_STRING; }
-[-]?{INT}{FRAC}?{EXP}?                         { yylval.d_val = atof(yytext); return T_NUMBER; }
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">{TIRNAK}{TIRNAK}|{TIRNAK}{KARAKTERLER}{TIRNAK} { yylval.s_val = strdup(yytext); return T_STRING; }</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">[-]?{INT}{FRAC}?{EXP}?                         { yylval.d_val = atof(yytext); return T_NUMBER; }</span>
+</code></td>
+</tr>
+</table></div>
 
 <p><code>yylval</code>, lexer ve parser arasında veri transferi yapmaya yarayan global bir değişken. Eğer <code>%union</code>
 direktifi ile ayarlama yapmamış olsaydık, <code>yylval</code> global değişkeni <code>char *yylval</code> olarak tanımlanacaktı.
@@ -272,27 +776,103 @@ tanımı sayesinde de, <code>T_STRING</code> tokeni ile, <code>s_val</code> değ
 durum <code>T_NUMBER</code> için de geçerli.</p>
 <p>Tokenlerimize değer tanımladık, sıra diğer sembollerin değerlerini oluşturmaya geldi. <code>parser.y</code>
 içindeki kuralları aşağıdaki gibi değiştireceğiz;</p>
-<pre class="code literal-block"><span></span><span class="n">JValue</span><span class="o">:</span> <span class="n">T_STRING</span> <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">parse_result</span> <span class="o">=</span> <span class="n">json_make_string</span><span class="o">(</span><span class="n">$1</span><span class="o">);</span> <span class="o">}</span>
-      <span class="o">|</span> <span class="n">T_NUMBER</span> <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">parse_result</span> <span class="o">=</span> <span class="n">json_make_number</span><span class="o">(</span><span class="n">$1</span><span class="o">);</span> <span class="o">}</span>
-      <span class="o">|</span> <span class="n">T_TRUE</span>   <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">parse_result</span> <span class="o">=</span> <span class="n">json_make_bool</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>    <span class="o">}</span>
-      <span class="o">|</span> <span class="n">T_FALSE</span>  <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">parse_result</span> <span class="o">=</span> <span class="n">json_make_bool</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>    <span class="o">}</span>
-      <span class="o">|</span> <span class="n">T_NULL</span>   <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">parse_result</span> <span class="o">=</span> <span class="n">json_make_null</span><span class="o">();</span>     <span class="o">}</span>
-      <span class="o">|</span> <span class="n">JArray</span>   <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">parse_result</span> <span class="o">=</span> <span class="n">$1</span><span class="o">;</span>                   <span class="o">}</span>
-      <span class="o">|</span> <span class="n">JObject</span>  <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">parse_result</span> <span class="o">=</span> <span class="n">$1</span><span class="o">;</span>                   <span class="o">}</span>
-
-<span class="n">JArray</span><span class="o">:</span> <span class="s1">'['</span> <span class="s1">']'</span>                         <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">json_make_array</span><span class="o">();</span> <span class="o">}</span>
-      <span class="o">|</span> <span class="s1">'['</span> <span class="n">Liste</span> <span class="s1">']'</span>                   <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">$2</span><span class="o">;</span> <span class="o">}</span>
-
-<span class="n">Liste</span><span class="o">:</span> <span class="n">JValue</span>                           <span class="o">{</span><span class="n">JSON</span> <span class="o">*</span><span class="n">arr</span> <span class="o">=</span> <span class="n">json_make_array</span><span class="o">();</span> <span class="n">$$</span> <span class="o">=</span> <span class="n">json_array_push</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="n">$1</span><span class="o">);</span> <span class="o">}</span>
-     <span class="o">|</span> <span class="n">Liste</span> <span class="s1">','</span> <span class="n">JValue</span>                 <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">json_array_push</span><span class="o">(</span><span class="n">$1</span><span class="o">,</span> <span class="n">$3</span><span class="o">);</span> <span class="o">}</span>
-
-<span class="n">JObject</span><span class="o">:</span> <span class="s1">'{'</span> <span class="s1">'}'</span>                         <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">json_make_object</span><span class="o">();</span> <span class="o">}</span>
-       <span class="o">|</span> <span class="s1">'{'</span> <span class="n">KVListe</span> <span class="s1">'}'</span>                 <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">$2</span>                <span class="o">;</span> <span class="o">}</span>
-
-<span class="n">KVListe</span><span class="o">:</span> <span class="n">T_STRING</span> <span class="s1">':'</span> <span class="n">JValue</span>             <span class="o">{</span> <span class="n">JSON</span> <span class="o">*</span><span class="n">obj</span> <span class="o">=</span> <span class="n">json_make_object</span><span class="o">();</span> <span class="n">$$</span> <span class="o">=</span> <span class="n">json_object_add</span><span class="o">(</span><span class="n">obj</span><span class="o">,</span> <span class="n">$1</span><span class="o">,</span> <span class="n">$3</span><span class="o">);</span> <span class="o">}</span>
-       <span class="o">|</span> <span class="n">KVListe</span> <span class="s1">','</span> <span class="n">T_STRING</span> <span class="s1">':'</span> <span class="n">JValue</span> <span class="o">{</span> <span class="n">$$</span> <span class="o">=</span> <span class="n">json_object_add</span><span class="o">(</span><span class="n">$1</span><span class="o">,</span> <span class="n">$3</span><span class="o">,</span> <span class="n">$5</span><span class="o">)</span> <span class="o">;}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="n">JValue</span><span class="o">:</span> <span class="n">T_STRING</span> <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">parse_result</span> <span class="o">=</span> <span class="n">json_make_string</span><span class="o">(</span><span class="n">$1</span><span class="o">);</span> <span class="o">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="n">T_NUMBER</span> <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">parse_result</span> <span class="o">=</span> <span class="n">json_make_number</span><span class="o">(</span><span class="n">$1</span><span class="o">);</span> <span class="o">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="n">T_TRUE</span>   <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">parse_result</span> <span class="o">=</span> <span class="n">json_make_bool</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>    <span class="o">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="n">T_FALSE</span>  <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">parse_result</span> <span class="o">=</span> <span class="n">json_make_bool</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>    <span class="o">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="n">T_NULL</span>   <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">parse_result</span> <span class="o">=</span> <span class="n">json_make_null</span><span class="o">();</span>     <span class="o">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="n">JArray</span>   <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">parse_result</span> <span class="o">=</span> <span class="n">$1</span><span class="o">;</span>                   <span class="o">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="n">JObject</span>  <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">parse_result</span> <span class="o">=</span> <span class="n">$1</span><span class="o">;</span>                   <span class="o">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="n">JArray</span><span class="o">:</span> <span class="s1">'['</span> <span class="s1">']'</span>                         <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">json_make_array</span><span class="o">();</span> <span class="o">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="s1">'['</span> <span class="n">Liste</span> <span class="s1">']'</span>                   <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">$2</span><span class="o">;</span> <span class="o">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="n">Liste</span><span class="o">:</span> <span class="n">JValue</span>                           <span class="o">{</span><span class="n">JSON</span> <span class="o">*</span><span class="n">arr</span> <span class="o">=</span> <span class="n">json_make_array</span><span class="o">();</span> <span class="n">$$</span> <span class="o">=</span> <span class="n">json_array_push</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="n">$1</span><span class="o">);</span> <span class="o">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>     <span class="o">|</span> <span class="n">Liste</span> <span class="s1">','</span> <span class="n">JValue</span>                 <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">json_array_push</span><span class="o">(</span><span class="n">$1</span><span class="o">,</span> <span class="n">$3</span><span class="o">);</span> <span class="o">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="n">JObject</span><span class="o">:</span> <span class="s1">'{'</span> <span class="s1">'}'</span>                         <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">json_make_object</span><span class="o">();</span> <span class="o">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>       <span class="o">|</span> <span class="s1">'{'</span> <span class="n">KVListe</span> <span class="s1">'}'</span>                 <span class="o">{</span><span class="n">$$</span> <span class="o">=</span> <span class="n">$2</span>                <span class="o">;</span> <span class="o">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="n">KVListe</span><span class="o">:</span> <span class="n">T_STRING</span> <span class="s1">':'</span> <span class="n">JValue</span>             <span class="o">{</span> <span class="n">JSON</span> <span class="o">*</span><span class="n">obj</span> <span class="o">=</span> <span class="n">json_make_object</span><span class="o">();</span> <span class="n">$$</span> <span class="o">=</span> <span class="n">json_object_add</span><span class="o">(</span><span class="n">obj</span><span class="o">,</span> <span class="n">$1</span><span class="o">,</span> <span class="n">$3</span><span class="o">);</span> <span class="o">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>       <span class="o">|</span> <span class="n">KVListe</span> <span class="s1">','</span> <span class="n">T_STRING</span> <span class="s1">':'</span> <span class="n">JValue</span> <span class="o">{</span> <span class="n">$$</span> <span class="o">=</span> <span class="n">json_object_add</span><span class="o">(</span><span class="n">$1</span><span class="o">,</span> <span class="n">$3</span><span class="o">,</span> <span class="n">$5</span><span class="o">)</span> <span class="o">;}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Sanırım konunun en can alıcı yerine geldik. Öncelikle, <code>parse_result</code> değişkeniyle başlayalım.
 Bu değişkeni, <code>parser.y</code>'nin birinci kısmında, <code>%{</code> ve <code>%}</code> arasındaki bloğun içinde, <code>JSON *parse_result</code>
@@ -302,27 +882,103 @@ erişebileceğim.</p>
 sembole değer atamak için, <code>$1</code>,<code>$2</code>,<code>$3</code> gibi değişkenler de, gramer tanımındaki
 1., 2., 3. vb. sembollerin değerlerine erişmek için kullanılıyor. Yukarıda yapılan
 tanımları, aşağıdaki gibi hayal edebilirsiniz.</p>
-<pre class="code literal-block"><span></span>    <span class="nt">JValue</span><span class="o">:</span> <span class="nt">T_STRING</span> <span class="p">{</span><span class="err">JValue</span> <span class="err">=</span> <span class="err">parse_result</span> <span class="err">=</span> <span class="err">json_make_string(yylval.s_val)</span><span class="p">;</span> <span class="p">}</span>
-      <span class="o">|</span> <span class="nt">T_NUMBER</span> <span class="p">{</span><span class="err">JValue</span> <span class="err">=</span> <span class="err">parse_result</span> <span class="err">=</span> <span class="err">json_make_number(yylval.d_val)</span><span class="p">;</span> <span class="p">}</span>
-      <span class="o">|</span> <span class="nt">T_TRUE</span>   <span class="p">{</span><span class="err">JValue</span> <span class="err">=</span> <span class="err">parse_result</span> <span class="err">=</span> <span class="err">json_make_bool(1)</span><span class="p">;</span>    <span class="p">}</span>
-      <span class="o">|</span> <span class="nt">T_FALSE</span>  <span class="p">{</span><span class="err">JValue</span> <span class="err">=</span> <span class="err">parse_result</span> <span class="err">=</span> <span class="err">json_make_bool(0)</span><span class="p">;</span>    <span class="p">}</span>
-      <span class="o">|</span> <span class="nt">T_NULL</span>   <span class="p">{</span><span class="err">JValue</span> <span class="err">=</span> <span class="err">parse_result</span> <span class="err">=</span> <span class="err">json_make_null()</span><span class="p">;</span>     <span class="p">}</span>
-      <span class="o">|</span> <span class="nt">JArray</span>   <span class="p">{</span><span class="err">JValue</span> <span class="err">=</span> <span class="err">parse_result</span> <span class="err">=</span> <span class="err">JArray</span><span class="p">;</span>                   <span class="p">}</span>
-      <span class="o">|</span> <span class="nt">JObject</span>  <span class="p">{</span><span class="err">JValue</span> <span class="err">=</span> <span class="err">parse_result</span> <span class="err">=</span> <span class="err">JArray</span><span class="p">;</span>                   <span class="p">}</span>
-
-<span class="nt">JArray</span><span class="o">:</span> <span class="s1">'</span><span class="cp">[</span><span class="s1">' '</span><span class="cp">]</span><span class="s1">'</span>                         <span class="p">{</span><span class="err">JArray</span> <span class="err">=</span> <span class="err">json_make_array()</span><span class="p">;</span> <span class="p">}</span>
-      <span class="o">|</span> <span class="s1">'</span><span class="cp">[</span><span class="s1">' Liste '</span><span class="cp">]</span><span class="s1">'</span>                   <span class="p">{</span><span class="err">JArray</span> <span class="err">=</span> <span class="err">Liste</span><span class="p">;</span> <span class="p">}</span>
-
-<span class="nt">Liste</span><span class="o">:</span> <span class="nt">JValue</span>                           <span class="p">{</span><span class="err">JSON</span> <span class="err">*arr</span> <span class="err">=</span> <span class="err">json_make_array()</span><span class="p">;</span> <span class="err">Liste</span> <span class="err">=</span> <span class="err">json_array_push(arr,</span> <span class="err">JValue)</span><span class="p">;</span> <span class="p">}</span>
-     <span class="o">|</span> <span class="nt">Liste</span> <span class="s1">','</span> <span class="nt">JValue</span>                 <span class="p">{</span><span class="err">Liste</span> <span class="err">=</span> <span class="err">json_array_push(Liste,</span> <span class="err">JValue)</span><span class="p">;</span> <span class="p">}</span>
-
-<span class="nt">JObject</span><span class="o">:</span> <span class="s1">'{'</span> <span class="s1">'}'</span>                         <span class="p">{</span><span class="err">JObject</span> <span class="err">=</span> <span class="err">json_make_object()</span><span class="p">;</span> <span class="p">}</span>
-       <span class="o">|</span> <span class="s1">'{'</span> <span class="nt">KVListe</span> <span class="s1">'}'</span>                 <span class="p">{</span><span class="err">JObject</span> <span class="err">=</span> <span class="err">KVListe</span>                <span class="p">;</span> <span class="p">}</span>
-
-<span class="nt">KVListe</span><span class="o">:</span> <span class="nt">T_STRING</span> <span class="s1">':'</span> <span class="nt">JValue</span>             <span class="p">{</span> <span class="err">JSON</span> <span class="err">*obj</span> <span class="err">=</span> <span class="err">json_make_object()</span><span class="p">;</span> <span class="err">KVListe</span> <span class="err">=</span> <span class="err">json_object_add(obj,</span> <span class="err">yylval.s_val,</span> <span class="err">JValue)</span><span class="p">;</span> <span class="p">}</span>
-       <span class="o">|</span> <span class="nt">KVListe</span> <span class="s1">','</span> <span class="nt">T_STRING</span> <span class="s1">':'</span> <span class="nt">JValue</span> <span class="p">{</span> <span class="err">KVListe</span> <span class="err">=</span> <span class="err">json_object_add(KVListe,</span> <span class="err">yylval.s_val,</span> <span class="err">JValue)</span> <span class="p">;}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code>    <span class="nt">JValue</span><span class="o">:</span> <span class="nt">T_STRING</span> <span class="p">{</span><span class="err">JValue</span> <span class="err">=</span> <span class="err">parse_result</span> <span class="err">=</span> <span class="err">json_make_string(yylval.s_val)</span><span class="p">;</span> <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="nt">T_NUMBER</span> <span class="p">{</span><span class="err">JValue</span> <span class="err">=</span> <span class="err">parse_result</span> <span class="err">=</span> <span class="err">json_make_number(yylval.d_val)</span><span class="p">;</span> <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="nt">T_TRUE</span>   <span class="p">{</span><span class="err">JValue</span> <span class="err">=</span> <span class="err">parse_result</span> <span class="err">=</span> <span class="err">json_make_bool(1)</span><span class="p">;</span>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="nt">T_FALSE</span>  <span class="p">{</span><span class="err">JValue</span> <span class="err">=</span> <span class="err">parse_result</span> <span class="err">=</span> <span class="err">json_make_bool(0)</span><span class="p">;</span>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="nt">T_NULL</span>   <span class="p">{</span><span class="err">JValue</span> <span class="err">=</span> <span class="err">parse_result</span> <span class="err">=</span> <span class="err">json_make_null()</span><span class="p">;</span>     <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="nt">JArray</span>   <span class="p">{</span><span class="err">JValue</span> <span class="err">=</span> <span class="err">parse_result</span> <span class="err">=</span> <span class="err">JArray</span><span class="p">;</span>                   <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="nt">JObject</span>  <span class="p">{</span><span class="err">JValue</span> <span class="err">=</span> <span class="err">parse_result</span> <span class="err">=</span> <span class="err">JArray</span><span class="p">;</span>                   <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="nt">JArray</span><span class="o">:</span> <span class="s1">'</span><span class="cp">[</span><span class="s1">' '</span><span class="cp">]</span><span class="s1">'</span>                         <span class="p">{</span><span class="err">JArray</span> <span class="err">=</span> <span class="err">json_make_array()</span><span class="p">;</span> <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>      <span class="o">|</span> <span class="s1">'</span><span class="cp">[</span><span class="s1">' Liste '</span><span class="cp">]</span><span class="s1">'</span>                   <span class="p">{</span><span class="err">JArray</span> <span class="err">=</span> <span class="err">Liste</span><span class="p">;</span> <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="nt">Liste</span><span class="o">:</span> <span class="nt">JValue</span>                           <span class="p">{</span><span class="err">JSON</span> <span class="err">*arr</span> <span class="err">=</span> <span class="err">json_make_array()</span><span class="p">;</span> <span class="err">Liste</span> <span class="err">=</span> <span class="err">json_array_push(arr,</span> <span class="err">JValue)</span><span class="p">;</span> <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>     <span class="o">|</span> <span class="nt">Liste</span> <span class="s1">','</span> <span class="nt">JValue</span>                 <span class="p">{</span><span class="err">Liste</span> <span class="err">=</span> <span class="err">json_array_push(Liste,</span> <span class="err">JValue)</span><span class="p">;</span> <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="nt">JObject</span><span class="o">:</span> <span class="s1">'{'</span> <span class="s1">'}'</span>                         <span class="p">{</span><span class="err">JObject</span> <span class="err">=</span> <span class="err">json_make_object()</span><span class="p">;</span> <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>       <span class="o">|</span> <span class="s1">'{'</span> <span class="nt">KVListe</span> <span class="s1">'}'</span>                 <span class="p">{</span><span class="err">JObject</span> <span class="err">=</span> <span class="err">KVListe</span>                <span class="p">;</span> <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="nt">KVListe</span><span class="o">:</span> <span class="nt">T_STRING</span> <span class="s1">':'</span> <span class="nt">JValue</span>             <span class="p">{</span> <span class="err">JSON</span> <span class="err">*obj</span> <span class="err">=</span> <span class="err">json_make_object()</span><span class="p">;</span> <span class="err">KVListe</span> <span class="err">=</span> <span class="err">json_object_add(obj,</span> <span class="err">yylval.s_val,</span> <span class="err">JValue)</span><span class="p">;</span> <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="json-kutuphanesi.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>       <span class="o">|</span> <span class="nt">KVListe</span> <span class="s1">','</span> <span class="nt">T_STRING</span> <span class="s1">':'</span> <span class="nt">JValue</span> <span class="p">{</span> <span class="err">KVListe</span> <span class="err">=</span> <span class="err">json_object_add(KVListe,</span> <span class="err">yylval.s_val,</span> <span class="err">JValue)</span> <span class="p">;}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Kodların normal haliyle, bu hayali kodlar karşılaştırıldığında, <code>$</code> değişkenlerinin işlevi yeterince kendini
 belli etti diye düşünüyorum.</p>
@@ -330,7 +986,7 @@ belli etti diye düşünüyorum.</p>
 C ile istediğimiz şekilde değerlendirebiliriz. Benim aklıma ilk gelen şey, JSON formatlama oldu.</p>
 <h2>Formatlanmış JSON Çıktısı</h2>
 <p>Konuyu fazla dağıtmamak adına, JSON formatlama ile ilgili kodlara burada değinmeyeceğim. İsteyenler,
-<a href="../../jsonparser-skeleton.2.tar.gz">projenin tamamlanmış hali'ni</a> indirerek, bu kodları
+<a href="jsonparser-skeleton.2.tar.gz">projenin tamamlanmış hali'ni</a> indirerek, bu kodları
 inceleyebilir. Projeyi indirip, bir yere açtıktan sonra, <code>./configure</code> ve <code>make</code> komutları
 ile, projeyi derleyebilirsiniz. Klasörün içinde, projeyi test etmeniz için, <code>example1.json</code>,
 <code>example2.json</code> ve <code>example3.json</code> adında 3 adet dosya var. <code>./jsonparser &lt; example1.json &gt; example1-pretty.json</code>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Django'da veritabanı, admin paneli, gzip ve önbellek gibi konularda, işinizi kolaylaştıracak 5 ipucuyu bu yazıda bulabilirsiniz.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/5-django-ipucu.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/5-django-ipucu.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="dotcloud.html" title="Django sunucusu olarak dotcloud" type="text/html">
 <link rel="next" href="url-duzeltme-algoritmasi.html" title="Django ve Url Düzeltme" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="5 Django İpucu">
-<meta property="og:url" content="http://ysar.net/python/5-django-ipucu.html">
-<meta property="og:description" content="Django'da veritabanı, admin paneli, gzip ve önbellek gibi konularda, işinizi kolaylaştıracak 5 ipucuyu bu yazıda bulabilirsiniz.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2011-08-13T14:00:00+03:00">
 </head>
 <body>
 
@@ -55,93 +49,289 @@ içinde açacağınız "fixtures" dizininin içerisinde, initial_data.[xml,
 json veya yaml] isimli belgede, syncdb komutuyla birlikte veritabanına
 yazılacak verileri belirleyebilirsiniz. initial_data.json örneği
 aşağıda.</p>
-<pre class="code literal-block"><span></span><span class="p">[</span>
-  <span class="p">{</span>
-    <span class="nt">"model"</span><span class="p">:</span> <span class="s2">"blog.Setting"</span><span class="p">,</span>
-    <span class="nt">"pk"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="nt">"fields"</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nt">"anahtar"</span><span class="p">:</span> <span class="s2">"blog_baslik"</span><span class="p">,</span>
-      <span class="nt">"deger"</span><span class="p">:</span> <span class="s2">"Blog Title Goes Here!"</span>
-    <span class="p">}</span>
-  <span class="p">},</span>
-  <span class="p">{</span>
-    <span class="nt">"model"</span><span class="p">:</span> <span class="s2">"blog.Setting"</span><span class="p">,</span>
-    <span class="nt">"pk"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="nt">"fields"</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nt">"anahtar"</span><span class="p">:</span> <span class="s2">"blog_slogan"</span><span class="p">,</span>
-      <span class="nt">"deger"</span><span class="p">:</span> <span class="s2">"Slogan Goes Here!"</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">]</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="p">[</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>  <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="nt">"model"</span><span class="p">:</span> <span class="s2">"blog.Setting"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="nt">"pk"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="nt">"fields"</span><span class="p">:</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>      <span class="nt">"anahtar"</span><span class="p">:</span> <span class="s2">"blog_baslik"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>      <span class="nt">"deger"</span><span class="p">:</span> <span class="s2">"Blog Title Goes Here!"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>  <span class="p">},</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>  <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="nt">"model"</span><span class="p">:</span> <span class="s2">"blog.Setting"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="nt">"pk"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="nt">"fields"</span><span class="p">:</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>      <span class="nt">"anahtar"</span><span class="p">:</span> <span class="s2">"blog_slogan"</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>      <span class="nt">"deger"</span><span class="p">:</span> <span class="s2">"Slogan Goes Here!"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>  <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="p">]</span>
+</code></td>
+</tr>
+</table></div>
 
 <h3>Admin panelinde, sadece okunabilen alanlar</h3>
 <p>Eğer modelinizdeki bazı alanların admin panelinde görünmesini istiyor,
 ancak, o alanların düzenlenebilir olmasını istemiyorsanız, bunu
 readonly_fields ile belirtebilirsiniz.</p>
-<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">PostAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
-    <span class="n">readonly_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"slug"</span><span class="p">,</span><span class="s2">"last_mod"</span><span class="p">,</span><span class="s2">"pub_date"</span><span class="p">)</span>
-<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Post</span><span class="p">,</span><span class="n">PostAdmin</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">PostAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="n">readonly_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"slug"</span><span class="p">,</span><span class="s2">"last_mod"</span><span class="p">,</span><span class="s2">"pub_date"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Post</span><span class="p">,</span><span class="n">PostAdmin</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <h3>Admin panelinde göstermeden alan doldurmak</h3>
 <p>Modelinize ait bazı alanları, admin panelinde göstermeden, programatik
 olarak doldurabilirsiniz. Admin paneli, modelleri kaydetmek için,
 ModelAdmin sınıfının, save_model sınıfını kullanıyor. Bu metodun üstüne
 yazabilirsiniz.</p>
-<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">PostAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
-    <span class="c1"># excludes içindeki alanlar admin panelinde görünmezler.</span>
-    <span class="n">excludes</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"author"</span><span class="p">,)</span>
-
-    <span class="k">def</span> <span class="nf">save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">request</span><span class="p">,</span><span class="n">obj</span><span class="p">,</span><span class="n">form</span><span class="p">,</span><span class="n">change</span><span class="p">):</span>
-        <span class="c1"># change False ise, ilk kez oluşturuluyordur.</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">change</span><span class="p">:</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">author</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">PostAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="c1"># excludes içindeki alanlar admin panelinde görünmezler.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="n">excludes</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"author"</span><span class="p">,)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">request</span><span class="p">,</span><span class="n">obj</span><span class="p">,</span><span class="n">form</span><span class="p">,</span><span class="n">change</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>        <span class="c1"># change False ise, ilk kez oluşturuluyordur.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="ow">not</span> <span class="n">change</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code>            <span class="n">obj</span><span class="o">.</span><span class="n">author</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-9"><code data-line-number="9"></code></a></td>
+<td class="code"><code>        <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</code></td>
+</tr>
+</table></div>
 
 <h3>Gzip sıkıştırması</h3>
 <p>Görünümlerinize ekleyeceğiniz bir dekoratör ile görünümün tarayıcıya
 gönderilmeden önce gzip formatında sıkıştırılmasını sağlayabilirsiniz.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">django.views.decorators.gzip</span> <span class="kn">import</span> <span class="n">gzip_page</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render_to_response</span>
-<span class="nd">@gzip_page</span>
-<span class="k">def</span> <span class="nf">homepage</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s2">"blog/index.html"</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.views.decorators.gzip</span> <span class="kn">import</span> <span class="n">gzip_page</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render_to_response</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="nd">@gzip_page</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">homepage</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s2">"blog/index.html"</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <h3>Sayfalarınızı Önbelleğe Alın</h3>
 <p>Django, birçok farklı önbellek yöntemini desktekliyor, bunlardan
 kullanması en kolay olanı muhtemelen bilgisayarın belleğinde önbellek
 oluşturmak. Aşağıdaki ayarı settings modülüne ekleyerek, django'nun
 bilgisayar belleğinde bir önbellek oluşturmasını sağlayabilirsiniz.</p>
-<pre class="code literal-block"><span></span><span class="n">CACHES</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">'default'</span> <span class="p">:</span> <span class="p">{</span>
-        <span class="s1">'BACKEND'</span> <span class="p">:</span> <span class="s1">'django.core.cache.backends.locmem.LocMemCache'</span><span class="p">,</span>
-    <span class="p">}</span>
-
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">CACHES</span> <span class="o">=</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="s1">'default'</span> <span class="p">:</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>        <span class="s1">'BACKEND'</span> <span class="p">:</span> <span class="s1">'django.core.cache.backends.locmem.LocMemCache'</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Önbellek backend'ini (tr'de tam bir karşılığı yok galiba, sunucu
 uygulama diye çevirmişler) ve belirtip ayarlarını yaptıktan sonra, tüm
 sitede önbelleklemeyi aktifleştirmek için gerekli middleware (ara
 yazılım?) sınıflarını ve birkaç diğer ayarı da ayarlamanız gerekiyor.</p>
-<pre class="code literal-block"><span></span><span class="n">CACHE_MIDDLEWARE_ALIAS</span> <span class="o">=</span> <span class="s2">"falan"</span> <span class="c1"># Önbellek takma adı</span>
-<span class="n">CACHE_MIDDLEWARE_SECONDS</span> <span class="o">=</span> <span class="s2">"900"</span> <span class="c1"># önbellek ne kadar süre aktif, saniye cinsinden</span>
-<span class="n">CACHE_MIDDLEWARE_KEY_PREFIX</span> <span class="o">=</span> <span class="s2">""</span> <span class="c1"># bu sitede kullanılmak üzere bir önek, eğer tek bir site varsa boş kalabilir.</span>
-<span class="n">MIDDLEWARE_CLASSES</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s1">'django.middleware.cache.UpdateCacheMiddleware'</span><span class="p">,</span>
-    <span class="s1">'django.middleware.common.CommonMiddleware'</span><span class="p">,</span>
-    <span class="s1">'django.middleware.cache.FetchFromCacheMiddleware'</span><span class="p">,</span>
-<span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">CACHE_MIDDLEWARE_ALIAS</span> <span class="o">=</span> <span class="s2">"falan"</span> <span class="c1"># Önbellek takma adı</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">CACHE_MIDDLEWARE_SECONDS</span> <span class="o">=</span> <span class="s2">"900"</span> <span class="c1"># önbellek ne kadar süre aktif, saniye cinsinden</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="n">CACHE_MIDDLEWARE_KEY_PREFIX</span> <span class="o">=</span> <span class="s2">""</span> <span class="c1"># bu sitede kullanılmak üzere bir önek, eğer tek bir site varsa boş kalabilir.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="n">MIDDLEWARE_CLASSES</span> <span class="o">=</span> <span class="p">(</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="s1">'django.middleware.cache.UpdateCacheMiddleware'</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>    <span class="s1">'django.middleware.common.CommonMiddleware'</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>    <span class="s1">'django.middleware.cache.FetchFromCacheMiddleware'</span><span class="p">,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p><code>UpdateCacheMiddleware</code> sınıfı her zaman ilk, <code>FetchFromCacheMiddleware</code> her
 zaman son sırada olmalı, bunun nedeni biraz gereksiz detay olur,
@@ -150,13 +340,33 @@ zaman son sırada olmalı, bunun nedeni biraz gereksiz detay olur,
 <a href="https://docs.djangoproject.com/en/dev/topics/cache/?from=olddocs#the-per-view-cache" title="django per view cache decorator">cache decorator</a> kullanarak önbellekleme işlemini yapabilir. Dekoratöre
 verilen argüman, bu önbelleğin ne kadar süre boyunca aktif kalacağını
 ayarlıyor.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">django.views.decorators.cache</span> <span class="kn">import</span> <span class="n">cache_page</span>
-
-<span class="nd">@cache_page</span><span class="p">(</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">15</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="o">...</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">django.views.decorators.cache</span> <span class="kn">import</span> <span class="n">cache_page</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="nd">@cache_page</span><span class="p">(</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">15</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="5-django-ipucu.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="o">...</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Son olarak şunu belirtmek istiyorum ki, buradaki ipuçlarının Django'ya
 yeni başlayanlara yönelik olmasını hedefledim. Bu nedenle, örnekleri en

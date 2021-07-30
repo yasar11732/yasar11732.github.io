@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Python ile soket programcılığı yapmak konusundaki bu yazıda, bir portu dinleme ve bu port ile veri alışverişi yapma konusu anlatılıyor.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/soket-socket-2.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/soket-socket-2.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="soket-socket.html" title="Python ile soketlere giriş" type="text/html">
 <link rel="next" href="eklenti-windows-derleme.html" title="Windows'da Python eklentisi nasıl derlenir?" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Python ile soketler - 2">
-<meta property="og:url" content="http://ysar.net/python/soket-socket-2.html">
-<meta property="og:description" content="Python ile soket programcılığı yapmak konusundaki bu yazıda, bir portu dinleme ve bu port ile veri alışverişi yapma konusu anlatılıyor.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2012-08-18T13:03:00+03:00">
 </head>
 <body>
 
@@ -54,13 +48,33 @@ programlarda kullanıldığını görebileceğimiz <a href="http://docs.python.o
 <a href="http://docs.python.org/library/threading.html" title="Python threading modülü">threading</a> gibi modüllerine değinmeyeceğim. Bunun yerine, bunların
 kendilerine ait kısa yazılar ile anlatılması bana daha verimli geliyor. <!-- TEASER_END --></p>
 <p>Yine bir örnekle başlayalım;</p>
-<pre class="code literal-block"><span></span><span class="n">serversocket</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span>
-    <span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
-
-<span class="n">serversocket</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">(),</span> <span class="mi">80</span><span class="p">))</span>
-<span class="n">serversocket</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="n">serversocket</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="n">serversocket</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">(),</span> <span class="mi">80</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="n">serversocket</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>İlk satırda yeni bir şey yok. Bir önceki yazıda anlatıldığı gibi bir
 soket objesi oluşturuluyor. </p>
@@ -89,11 +103,23 @@ konusunda denemelerinizi yaparken, port numarası olarak 4 haneli rasgele
 (max: 65536) rakamlar kullanmanızı tavsiye ederim. Ya da, port numarası
 olarak 0 vererek, işletimi sisteminin sizin için uygun bir port
 seçmesini isteyebilirsiniz.</p>
-<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">serversocket</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">(),</span><span class="mi">0</span><span class="p">))</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">serversocket</span><span class="o">.</span><span class="n">getsockname</span><span class="p">()</span>
-<span class="p">(</span><span class="s1">'192.168.1.100'</span><span class="p">,</span> <span class="mi">56956</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">serversocket</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">(),</span><span class="mi">0</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">serversocket</span><span class="o">.</span><span class="n">getsockname</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="p">(</span><span class="s1">'192.168.1.100'</span><span class="p">,</span> <span class="mi">56956</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Örneğimizde, işletim sisteminin bize 56965 numaralı portu tayin ettiğini
 görüyoruz.</p>
@@ -106,9 +132,11 @@ eğer altıncı bir kişi bu sokete bağlanmak isterse, o kişi için bağlantı
 reddedilecek.</p>
 <p>Artık, bağlantı istekleri işletim sistemi tarafından kabul edilip sıraya
 konmaya başlandı. Sırada bekleyen ilk isteğimizi kabul edelim;</p>
-<pre class="code literal-block"><span></span><span class="p">(</span><span class="n">clientsocket</span><span class="p">,</span> <span class="n">address</span><span class="p">)</span> <span class="o">=</span> <span class="n">serversocket</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="p">(</span><span class="n">clientsocket</span><span class="p">,</span> <span class="n">address</span><span class="p">)</span> <span class="o">=</span> <span class="n">serversocket</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+</code></td>
+</tr></table></div>
 
 <p><code>accept()</code> metodu bize bir <em>tuple</em> döndürür. İlk elemanı, bir client
 sokettir. Kabul ettiğimiz bağlantıyla iletişim kurmak için, bunun <code>send</code>
@@ -119,29 +147,113 @@ soketin adreslendirme türüne göre (<code>AF_INET</code>), bu değer de farkl�
 gösterebilir.</p>
 <p>Yaptığımız şeyi bir bütün olarak görmek için, aşağıdaki kodu
 kullanabiliriz;</p>
-<pre class="code literal-block"><span></span><span class="kn">import</span> <span class="nn">socket</span>
-
-<span class="n">server</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
-
-<span class="n">server</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">(),</span> <span class="mi">0</span><span class="p">))</span>
-
-<span class="n">server</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-
-<span class="k">print</span> <span class="s2">"{}:{} dinleniyor..."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">server</span><span class="o">.</span><span class="n">getsockname</span><span class="p">())</span>
-
-<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">client</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
-        <span class="k">print</span> <span class="s2">"{}:{} bağlandı"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">address</span><span class="p">)</span>
-        <span class="k">print</span> <span class="n">client</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4096</span><span class="p">)</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">"Merhaba dünya!"</span><span class="p">)</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
-        <span class="k">break</span>
-
-<span class="n">server</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">socket</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="n">server</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="n">server</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">(),</span> <span class="mi">0</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="n">server</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="nb">print</span> <span class="s2">"</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2"> dinleniyor..."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">server</span><span class="o">.</span><span class="n">getsockname</span><span class="p">())</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>        <span class="n">client</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>        <span class="nb">print</span> <span class="s2">"</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2"> bağlandı"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">address</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="nb">print</span> <span class="n">client</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4096</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>        <span class="n">client</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">"Merhaba dünya!"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>        <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>        <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-2.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="n">server</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu programı çalıştırdığınızda, hangi adresi dinlediğini size bildirecek.
 O adresi internet tarayıcınızla ziyaret ederseniz (doğru portu

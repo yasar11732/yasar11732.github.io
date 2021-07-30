@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="3 haneli iki sayının çarpımı olan en büyük palindromu bulacağız">
@@ -11,18 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/euler/euler-4.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/euler/euler-4.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="euler-3.html" title="(Euler 3) Asal Çarpanlara Ayırma" type="text/html">
 <link rel="next" href="euler-5.html" title="(Euler 5) EBOB EKOK" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="(Euler 4) Palindrom">
-<meta property="og:url" content="http://ysar.net/euler/euler-4.html">
-<meta property="og:description" content="3 haneli iki sayının çarpımı olan en büyük palindromu bulacağız">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2018-07-24T23:10:00+03:00">
-<meta property="article:tag" content="mathjax">
 </head>
 <body>
 
@@ -51,57 +44,201 @@
 bir çok Türkçe palindrom örneği bulabilirsiniz.</p>
 <p><img alt="Tersten konuşan adam" src="../images/20180723_212927.png"></p>
 <p>Problem şu haliyle oldukça sade, bu nedenle doğrudan çözümüme geçeceğim;</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations_with_replacement</span>
-
-<span class="k">def</span> <span class="nf">is_palindrom</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
-    <span class="n">num_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">num_str</span> <span class="o">==</span> <span class="n">num_str</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
-<span class="k">print</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span>
-    <span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">b</span> <span class="k">for</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="ow">in</span> <span class="n">combinations_with_replacement</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">1000</span><span class="p">),</span><span class="mi">2</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">is_palindrom</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations_with_replacement</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">is_palindrom</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="n">num_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">num_str</span> <span class="o">==</span> <span class="n">num_str</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code><span class="nb">print</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code>    <span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">b</span> <span class="k">for</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="ow">in</span> <span class="n">combinations_with_replacement</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">1000</span><span class="p">),</span><span class="mi">2</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-9"><code data-line-number="9"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="n">is_palindrom</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Kodları çalıştırdığımızda doğru cevabı \(906609\) olarak buluyoruz. Ziyadesiyle kolay oldu. Daha iyisini de yapabilir miyiz? Aynı
 kodlar üzerinde ufak bir değişiklikle, 4 haneli iki sayının çarpımı olacak şekilde en büyük palindromu da bulabiliriz. <code>range(100,1000)</code>
 kısmını <code>range(1000,10000)</code> olarak değiştirirsek, sonucu \(99000099\) olarak buluruz. Yalnız bu sefer sonucu almak biraz uzun sürecek.
 Küçük bir optimizasyonla kodumuzu daha hızlı hale getirebiliriz. Öncelikle, ince ayar yapabilmek için, <code>combinations_with_replacement</code>
 yerine, iki döngü kullanacağız.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">palindrom_test1</span><span class="p">(</span><span class="n">basla</span><span class="p">,</span> <span class="n">bitir</span><span class="p">):</span>
-<span class="n">max_palindrom</span> <span class="o">=</span> <span class="mi">0</span>
-
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">basla</span><span class="p">,</span> <span class="n">bitir</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">bitir</span><span class="p">):</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">k</span>
-        <span class="k">if</span> <span class="n">is_palindrom</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="n">max_palindrom</span><span class="p">:</span>
-                <span class="n">max_palindrom</span> <span class="o">=</span> <span class="n">p</span>
-
-<span class="k">return</span> <span class="n">max_palindrom</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">palindrom_test1</span><span class="p">(</span><span class="n">basla</span><span class="p">,</span> <span class="n">bitir</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="n">max_palindrom</span> <span class="o">=</span> <span class="mi">0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">basla</span><span class="p">,</span> <span class="n">bitir</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">bitir</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>        <span class="n">p</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">k</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">is_palindrom</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="n">max_palindrom</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>                <span class="n">max_palindrom</span> <span class="o">=</span> <span class="n">p</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="k">return</span> <span class="n">max_palindrom</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bunun ilk çözümden bir farkı yok. <code>combinations_with_replacement</code> yerine, kendimiz döngü yazdık. Optimizasyon olarak, çarpma
 ve test etme işlemini büyük sayılardan küçük sayılara doğru yaparsak, içiçe <code>for</code> döngülerinden erken çıkabiliriz.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">palindrom_test1</span><span class="p">(</span><span class="n">basla</span><span class="p">,</span> <span class="n">bitir</span><span class="p">):</span>
-    <span class="n">max_palindrom</span> <span class="o">=</span> <span class="mi">0</span>
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bitir</span><span class="p">,</span> <span class="n">basla</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">basla</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">p</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">k</span>
-
-            <span class="s2">"optimizasyonu saglayan sey burada"</span>
-            <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="n">max_palindrom</span><span class="p">:</span>
-                <span class="k">break</span>
-
-            <span class="k">if</span> <span class="n">is_palindrom</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="n">max_palindrom</span><span class="p">:</span>
-                    <span class="n">max_palindrom</span> <span class="o">=</span> <span class="n">p</span>
-
-    <span class="k">return</span> <span class="n">max_palindrom</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">palindrom_test1</span><span class="p">(</span><span class="n">basla</span><span class="p">,</span> <span class="n">bitir</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="n">max_palindrom</span> <span class="o">=</span> <span class="mi">0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bitir</span><span class="p">,</span> <span class="n">basla</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">basla</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>            <span class="n">p</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">k</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>            <span class="s2">"optimizasyonu saglayan sey burada"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="n">max_palindrom</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>                <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">is_palindrom</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>                <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="n">max_palindrom</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>                    <span class="n">max_palindrom</span> <span class="o">=</span> <span class="n">p</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-4.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">max_palindrom</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Kodları test ettiğim makinede (Python 2.7 4. nesil i7 laptop) orjinal fonksiyon ortamala 18 saniyede tamamlanırken, son hali
 yalnızca yarım saniyede tamamlanıyor.</p>
@@ -116,7 +253,7 @@ en küçük sayı kaçtır.</p>
         </div>
 
     </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
-	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script></article></main><script>
   if(document.location.hostname == "ysar.net")

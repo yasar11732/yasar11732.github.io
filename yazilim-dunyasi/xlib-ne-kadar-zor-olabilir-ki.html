@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Xlib kütüphaneleri'ni mi kullanmak istiyorsun? Manyak mısın? Ben ettim, siz etmeyin, Xlib kütüphanelerine bulaşmayın.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/yazilim-dunyasi/xlib-ne-kadar-zor-olabilir-ki.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/yazilim-dunyasi/xlib-ne-kadar-zor-olabilir-ki.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="tumblr-bloguna-gist-gommek.html" title="Tumblr bloguna gist gömmek" type="text/html">
 <link rel="next" href="google-fusion-tables-twitter-follower-haritasi.html" title="İki adımda takipçi haritanızı oluşturun" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Xlib, ne kadar zor olabilir ki?">
-<meta property="og:url" content="http://ysar.net/yazilim-dunyasi/xlib-ne-kadar-zor-olabilir-ki.html">
-<meta property="og:description" content="Xlib kütüphaneleri'ni mi kullanmak istiyorsun? Manyak mısın? Ben ettim, siz etmeyin, Xlib kütüphanelerine bulaşmayın.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2013-01-30T00:01:27+02:00">
 </head>
 <body>
 
@@ -81,45 +75,193 @@ ButtonRelease (butonu salıverme) olayını aynı pencerede birden fazla
 client dinleyebildiğini öğrendim. Benim amacım için, tıklanma olayı ile
 salınma olayı arasında fazla bir fark yoktu, o yüzden işim çok kolay
 oldu. (<a href="http://www.eksisozluk.com/show.asp?t=dermi%C5%9Fim">Dermişim</a>) Bunu denediğim kodlar şu şekilde;</p>
-<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;stddef.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;X11/Xlib.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;assert.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;signal.h&gt;</span><span class="cp"></span>
-
-
-<span class="kt">int</span> <span class="n">working</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-
-<span class="kt">void</span> <span class="nf">signal_callback_handler</span><span class="p">(</span><span class="kt">int</span> <span class="n">signum</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">working</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="n">signal</span><span class="p">(</span><span class="n">SIGINT</span><span class="p">,</span> <span class="n">signal_callback_handler</span><span class="p">);</span>
-    <span class="n">signal</span><span class="p">(</span><span class="n">SIGTSTP</span><span class="p">,</span> <span class="n">signal_callback_handler</span><span class="p">);</span>
-    <span class="n">signal</span><span class="p">(</span><span class="n">SIGTERM</span><span class="p">,</span> <span class="n">signal_callback_handler</span><span class="p">);</span>
-
-    <span class="n">Display</span> <span class="o">*</span><span class="n">d</span> <span class="o">=</span> <span class="n">XOpenDisplay</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
-    <span class="n">assert</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
-
-    <span class="n">XSelectInput</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="n">DefaultRootWindow</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">ButtonReleaseMask</span><span class="p">);</span>
-
-    <span class="k">while</span><span class="p">(</span><span class="n">working</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">XEvent</span> <span class="n">e</span><span class="p">;</span>
-        <span class="n">XNextEvent</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">e</span><span class="p">);</span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">"Something Occured"</span><span class="p">);</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ButtonRelease</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">printf</span><span class="p">(</span><span class="s">"%dx%d"</span><span class="p">,</span><span class="n">e</span><span class="p">.</span><span class="n">xbutton</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="n">e</span><span class="p">.</span><span class="n">xbutton</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
-    <span class="n">fflush</span><span class="p">(</span><span class="n">stdout</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stddef.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;X11/Xlib.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;assert.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;signal.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="n">working</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">signal_callback_handler</span><span class="p">(</span><span class="kt">int</span> <span class="n">signum</span><span class="p">)</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="n">working</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="n">signal</span><span class="p">(</span><span class="n">SIGINT</span><span class="p">,</span> <span class="n">signal_callback_handler</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>    <span class="n">signal</span><span class="p">(</span><span class="n">SIGTSTP</span><span class="p">,</span> <span class="n">signal_callback_handler</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>    <span class="n">signal</span><span class="p">(</span><span class="n">SIGTERM</span><span class="p">,</span> <span class="n">signal_callback_handler</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>    <span class="n">Display</span> <span class="o">*</span><span class="n">d</span> <span class="o">=</span> <span class="n">XOpenDisplay</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>    <span class="n">assert</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>    <span class="n">XSelectInput</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="n">DefaultRootWindow</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">ButtonReleaseMask</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>    <span class="k">while</span><span class="p">(</span><span class="n">working</span><span class="p">)</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>        <span class="n">XEvent</span> <span class="n">e</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>        <span class="n">XNextEvent</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">e</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>    <span class="n">printf</span><span class="p">(</span><span class="s">"Something Occured"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ButtonRelease</span><span class="p">)</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>            <span class="n">printf</span><span class="p">(</span><span class="s">"%dx%d"</span><span class="p">,</span><span class="n">e</span><span class="p">.</span><span class="n">xbutton</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="n">e</span><span class="p">.</span><span class="n">xbutton</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>    <span class="n">fflush</span><span class="p">(</span><span class="n">stdout</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Evet, yukarıdaki kodda herşey güzel gibi görünüyor. Hata falan da
 almıyorum. Ama aksi gibi, bir çıktı da almıyorum. Peki neden mi? Hiçbir
@@ -135,77 +277,353 @@ ihtimalim var, bu kütüphaneyi biraz karmaşık ihtiyaçları olan, oyunlar,
 gibi programlar kullanıyor. Neyse, biraz ileri saralım, ben bu konuda
 biraz aşama kaydettim, ve root pencereden işlenmemiş tıklanma olaylarını
 dinleyebilmeyi başardım. En son olarak kullandığım kodlar şu şekilde;</p>
-<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;X11/Xlib.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;X11/extensions/XInput2.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;signal.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp"></span>
-
-<span class="kt">FILE</span> <span class="o">*</span><span class="n">f</span><span class="p">;</span>
-
-<span class="kt">int</span> <span class="n">working</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-
-<span class="cm">/* This functions recieves XI_RawButtonPress event */</span>
-<span class="kt">void</span> <span class="nf">handle_raw_event</span><span class="p">(</span><span class="n">XIRawEvent</span> <span class="o">*</span><span class="n">ev</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">if</span><span class="p">(</span><span class="n">ev</span><span class="o">-&gt;</span><span class="n">detail</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span><span class="cm">/* I am only interested in left button clicks */</span>
-        <span class="n">fprintf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="s">"%u</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">));</span>
-        <span class="n">fflush</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">Display</span> <span class="o">*</span><span class="n">dpy</span> <span class="o">=</span> <span class="n">XOpenDisplay</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
-
-    <span class="cm">/* XInput Extension available? */</span>
-    <span class="kt">int</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">error</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">XQueryExtension</span><span class="p">(</span><span class="n">dpy</span><span class="p">,</span> <span class="s">"XInputExtension"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">opcode</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">event</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">))</span> <span class="p">{</span>
-        <span class="n">printf</span><span class="p">(</span><span class="s">"X Input extension not available.</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
-        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="cm">/* Which version of XI2? We support 2.0 */</span>
-    <span class="kt">int</span> <span class="n">major</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">minor</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">XIQueryVersion</span><span class="p">(</span><span class="n">dpy</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">major</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">minor</span><span class="p">)</span> <span class="o">==</span> <span class="n">BadRequest</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">printf</span><span class="p">(</span><span class="s">"XI2 not available. Server supports %d.%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">major</span><span class="p">,</span> <span class="n">minor</span><span class="p">);</span>
-        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="n">f</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"/home/yasar/.mouselogs/log"</span><span class="p">,</span><span class="s">"a"</span><span class="p">);</span>
-    <span class="n">XIEventMask</span> <span class="n">eventmask</span><span class="p">;</span>
-
-    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">mask</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span> <span class="cm">/* the actual mask */</span>
-
-    <span class="n">eventmask</span><span class="p">.</span><span class="n">deviceid</span> <span class="o">=</span> <span class="n">XIAllMasterDevices</span><span class="p">;</span>
-    <span class="n">eventmask</span><span class="p">.</span><span class="n">mask_len</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">mask</span><span class="p">);</span> <span class="cm">/* always in bytes */</span>
-    <span class="n">eventmask</span><span class="p">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="p">;</span>
-
-    <span class="cm">/* now set the mask */</span>
-    <span class="n">XISetMask</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">XI_RawButtonPress</span><span class="p">);</span>
-
-    <span class="cm">/* select on the window */</span>
-    <span class="n">XISelectEvents</span><span class="p">(</span><span class="n">dpy</span><span class="p">,</span> <span class="n">DefaultRootWindow</span><span class="p">(</span><span class="n">dpy</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">eventmask</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-    <span class="k">while</span><span class="p">(</span><span class="n">working</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">XEvent</span> <span class="n">ev</span><span class="p">;</span>
-        <span class="n">usleep</span><span class="p">(</span><span class="mi">10000</span><span class="p">);</span>
-        <span class="k">while</span><span class="p">(</span><span class="n">XPending</span><span class="p">(</span><span class="n">dpy</span><span class="p">))</span> <span class="p">{</span>
-            <span class="n">XNextEvent</span><span class="p">(</span><span class="n">dpy</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ev</span><span class="p">);</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">XGetEventData</span><span class="p">(</span><span class="n">dpy</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ev</span><span class="p">.</span><span class="n">xcookie</span><span class="p">))</span>
-            <span class="p">{</span>
-                <span class="k">switch</span><span class="p">(</span><span class="n">ev</span><span class="p">.</span><span class="n">xcookie</span><span class="p">.</span><span class="n">evtype</span><span class="p">)</span>
-                <span class="p">{</span>
-                    <span class="k">case</span> <span class="nl">XI_RawButtonPress</span><span class="p">:</span>
-                        <span class="n">handle_raw_event</span><span class="p">(</span><span class="n">ev</span><span class="p">.</span><span class="n">xcookie</span><span class="p">.</span><span class="n">data</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="n">XFreeEventData</span><span class="p">(</span><span class="n">dpy</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ev</span><span class="p">.</span><span class="n">xcookie</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="n">fflush</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
-    <span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;X11/Xlib.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;X11/extensions/XInput2.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;signal.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="kt">FILE</span> <span class="o">*</span><span class="n">f</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="n">working</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="cm">/* This functions recieves XI_RawButtonPress event */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="kt">void</span> <span class="nf">handle_raw_event</span><span class="p">(</span><span class="n">XIRawEvent</span> <span class="o">*</span><span class="n">ev</span><span class="p">)</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>  <span class="k">if</span><span class="p">(</span><span class="n">ev</span><span class="o">-&gt;</span><span class="n">detail</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span><span class="cm">/* I am only interested in left button clicks */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>        <span class="n">fprintf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="s">"%u</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="n">fflush</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>    <span class="n">Display</span> <span class="o">*</span><span class="n">dpy</span> <span class="o">=</span> <span class="n">XOpenDisplay</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>    <span class="cm">/* XInput Extension available? */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">error</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">XQueryExtension</span><span class="p">(</span><span class="n">dpy</span><span class="p">,</span> <span class="s">"XInputExtension"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">opcode</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">event</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">))</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>        <span class="n">printf</span><span class="p">(</span><span class="s">"X Input extension not available.</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>    <span class="cm">/* Which version of XI2? We support 2.0 */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>    <span class="kt">int</span> <span class="n">major</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">minor</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="p">(</span><span class="n">XIQueryVersion</span><span class="p">(</span><span class="n">dpy</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">major</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">minor</span><span class="p">)</span> <span class="o">==</span> <span class="n">BadRequest</span><span class="p">)</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>        <span class="n">printf</span><span class="p">(</span><span class="s">"XI2 not available. Server supports %d.%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">major</span><span class="p">,</span> <span class="n">minor</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code>    <span class="n">f</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"/home/yasar/.mouselogs/log"</span><span class="p">,</span><span class="s">"a"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code>    <span class="n">XIEventMask</span> <span class="n">eventmask</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-38"><code data-line-number="38"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-39"><code data-line-number="39"></code></a></td>
+<td class="code"><code>    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">mask</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span> <span class="cm">/* the actual mask */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-40"><code data-line-number="40"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-41"><code data-line-number="41"></code></a></td>
+<td class="code"><code>    <span class="n">eventmask</span><span class="p">.</span><span class="n">deviceid</span> <span class="o">=</span> <span class="n">XIAllMasterDevices</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-42"><code data-line-number="42"></code></a></td>
+<td class="code"><code>    <span class="n">eventmask</span><span class="p">.</span><span class="n">mask_len</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">mask</span><span class="p">);</span> <span class="cm">/* always in bytes */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-43"><code data-line-number="43"></code></a></td>
+<td class="code"><code>    <span class="n">eventmask</span><span class="p">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-44"><code data-line-number="44"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-45"><code data-line-number="45"></code></a></td>
+<td class="code"><code>    <span class="cm">/* now set the mask */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-46"><code data-line-number="46"></code></a></td>
+<td class="code"><code>    <span class="n">XISetMask</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">XI_RawButtonPress</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-47"><code data-line-number="47"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-48"><code data-line-number="48"></code></a></td>
+<td class="code"><code>    <span class="cm">/* select on the window */</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-49"><code data-line-number="49"></code></a></td>
+<td class="code"><code>    <span class="n">XISelectEvents</span><span class="p">(</span><span class="n">dpy</span><span class="p">,</span> <span class="n">DefaultRootWindow</span><span class="p">(</span><span class="n">dpy</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">eventmask</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-50"><code data-line-number="50"></code></a></td>
+<td class="code"><code>    <span class="k">while</span><span class="p">(</span><span class="n">working</span><span class="p">)</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-51"><code data-line-number="51"></code></a></td>
+<td class="code"><code>        <span class="n">XEvent</span> <span class="n">ev</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-52"><code data-line-number="52"></code></a></td>
+<td class="code"><code>        <span class="n">usleep</span><span class="p">(</span><span class="mi">10000</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-53"><code data-line-number="53"></code></a></td>
+<td class="code"><code>        <span class="k">while</span><span class="p">(</span><span class="n">XPending</span><span class="p">(</span><span class="n">dpy</span><span class="p">))</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-54"><code data-line-number="54"></code></a></td>
+<td class="code"><code>            <span class="n">XNextEvent</span><span class="p">(</span><span class="n">dpy</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ev</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-55"><code data-line-number="55"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="p">(</span><span class="n">XGetEventData</span><span class="p">(</span><span class="n">dpy</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ev</span><span class="p">.</span><span class="n">xcookie</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-56"><code data-line-number="56"></code></a></td>
+<td class="code"><code>            <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-57"><code data-line-number="57"></code></a></td>
+<td class="code"><code>                <span class="k">switch</span><span class="p">(</span><span class="n">ev</span><span class="p">.</span><span class="n">xcookie</span><span class="p">.</span><span class="n">evtype</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-58"><code data-line-number="58"></code></a></td>
+<td class="code"><code>                <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-59"><code data-line-number="59"></code></a></td>
+<td class="code"><code>                    <span class="k">case</span> <span class="nl">XI_RawButtonPress</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-60"><code data-line-number="60"></code></a></td>
+<td class="code"><code>                        <span class="n">handle_raw_event</span><span class="p">(</span><span class="n">ev</span><span class="p">.</span><span class="n">xcookie</span><span class="p">.</span><span class="n">data</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-61"><code data-line-number="61"></code></a></td>
+<td class="code"><code>                        <span class="k">break</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-62"><code data-line-number="62"></code></a></td>
+<td class="code"><code>                <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-63"><code data-line-number="63"></code></a></td>
+<td class="code"><code>            <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-64"><code data-line-number="64"></code></a></td>
+<td class="code"><code>            <span class="n">XFreeEventData</span><span class="p">(</span><span class="n">dpy</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ev</span><span class="p">.</span><span class="n">xcookie</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-65"><code data-line-number="65"></code></a></td>
+<td class="code"><code>        <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-66"><code data-line-number="66"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-67"><code data-line-number="67"></code></a></td>
+<td class="code"><code>    <span class="n">fflush</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-68"><code data-line-number="68"></code></a></td>
+<td class="code"><code>    <span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="xlib-ne-kadar-zor-olabilir-ki.html#-69"><code data-line-number="69"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>(Yukarıdaki kodlar çok gelişigüzel bir şekilde yazılıp, göstermek
 amaçlı konulmuştur.)</p>

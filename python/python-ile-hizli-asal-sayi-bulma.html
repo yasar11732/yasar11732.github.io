@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Eratosten Kalburu yöntemine Tekerlek Optimizasyonu uygulayıp, hızlı asal sayı tespiti yapan bir fonksiyon yazacağız.">
@@ -11,18 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/python-ile-hizli-asal-sayi-bulma.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/python-ile-hizli-asal-sayi-bulma.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="../euler/euler-11.html" title="(Euler 11) 11. Euler Problemi Çözümü" type="text/html">
 <link rel="next" href="../euler/euler-12.html" title="(Euler 12) Üçgen Sayılar ve Bölenlerinin Sayısı" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Python ile Hızlı Asal Sayı Tespiti">
-<meta property="og:url" content="http://ysar.net/python/python-ile-hizli-asal-sayi-bulma.html">
-<meta property="og:description" content="Eratosten Kalburu yöntemine Tekerlek Optimizasyonu uygulayıp, hızlı asal sayı tespiti yapan bir fonksiyon yazacağız.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2018-08-21T23:15:00+03:00">
-<meta property="article:tag" content="mathjax">
 </head>
 <body>
 
@@ -47,48 +40,208 @@
     <div>
 <p>Normalde bugün Euler Problemleri serisinde 12. yazıyı yazacaktım, ama kendimi asal sayı tespit programlarına biraz fazla kaptırdım. Euler
 problemine geçmeden önce, son yazdığım asal sayı bulma fonksiyonunu paylaşayım istedim. <!-- TEASER_END --></p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">gen_candidates3</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
-
-    <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">31</span><span class="p">]</span>
-    <span class="n">w2</span> <span class="o">=</span> <span class="n">w</span><span class="p">[:]</span>
-
-    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">limit</span> <span class="o">/</span> <span class="mi">30</span><span class="p">):</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">+</span><span class="mi">30</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">w</span><span class="p">]</span>
-        <span class="n">w2</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
-
-    <span class="k">while</span> <span class="n">w2</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">limit</span><span class="p">:</span>
-        <span class="n">w2</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-
-    <span class="k">return</span> <span class="n">w2</span>
-
-<span class="k">def</span> <span class="nf">basit_sieve4</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
-    <span class="n">rotations</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="mi">1</span><span class="p">:</span>  <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
-        <span class="mi">7</span><span class="p">:</span>  <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-        <span class="mi">11</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
-        <span class="mi">13</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
-        <span class="mi">17</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-        <span class="mi">19</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
-        <span class="mi">23</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-        <span class="mi">29</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-
-    <span class="p">}</span>
-
-    <span class="n">candidates</span> <span class="o">=</span> <span class="n">gen_candidates3</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
-    <span class="n">limit</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">limit</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="mi">15</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-
-        <span class="n">c</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">c</span><span class="p">:</span>
-            <span class="n">n</span> <span class="o">=</span> <span class="n">c</span>
-            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">rotations</span><span class="p">[</span><span class="n">c</span> <span class="o">%</span> <span class="mi">30</span><span class="p">]:</span>
-                <span class="n">n</span><span class="o">+=</span><span class="n">k</span>
-                <span class="n">candidates</span><span class="p">[</span><span class="mi">4</span><span class="o">*</span><span class="n">c</span><span class="o">*</span><span class="n">n</span><span class="o">/</span><span class="mi">15</span> <span class="o">-</span> <span class="mi">1</span><span class="p">::</span><span class="mi">8</span><span class="o">*</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">((</span><span class="n">limit</span> <span class="o">-</span> <span class="n">c</span><span class="o">*</span><span class="n">n</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">30</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="nb">filter</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">candidates</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">gen_candidates3</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">31</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">w2</span> <span class="o">=</span> <span class="n">w</span><span class="p">[:]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">limit</span> <span class="o">/</span> <span class="mi">30</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>        <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">+</span><span class="mi">30</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">w</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="n">w2</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="n">w2</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">limit</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="n">w2</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">w2</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">basit_sieve4</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="n">rotations</span> <span class="o">=</span> <span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>        <span class="mi">1</span><span class="p">:</span>  <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>        <span class="mi">7</span><span class="p">:</span>  <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>        <span class="mi">11</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>        <span class="mi">13</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>        <span class="mi">17</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>        <span class="mi">19</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>        <span class="mi">23</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>        <span class="mi">29</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>    <span class="p">}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>    <span class="n">candidates</span> <span class="o">=</span> <span class="n">gen_candidates3</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>    <span class="n">limit</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">limit</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="mi">15</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>        <span class="n">c</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">c</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>            <span class="n">n</span> <span class="o">=</span> <span class="n">c</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code>            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">rotations</span><span class="p">[</span><span class="n">c</span> <span class="o">%</span> <span class="mi">30</span><span class="p">]:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code>                <span class="n">n</span><span class="o">+=</span><span class="n">k</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-38"><code data-line-number="38"></code></a></td>
+<td class="code"><code>                <span class="n">candidates</span><span class="p">[</span><span class="mi">4</span><span class="o">*</span><span class="n">c</span><span class="o">*</span><span class="n">n</span><span class="o">/</span><span class="mi">15</span> <span class="o">-</span> <span class="mi">1</span><span class="p">::</span><span class="mi">8</span><span class="o">*</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">((</span><span class="n">limit</span> <span class="o">-</span> <span class="n">c</span><span class="o">*</span><span class="n">n</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">30</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-39"><code data-line-number="39"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-40"><code data-line-number="40"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">candidates</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu yazıya algoritmanın tamamını açıklayacak kadar vakit harcamak istemiyorum. Merak edenler <a href="https://www.google.com/search?q=wheel+factorization">Google'da Wheel Factorization aramasına</a>
 bakabilirler. Tekerlek olarak (2,3,5) tekeri kullandım. Performans karşılaştırmasına gelirsek;</p>
@@ -105,31 +258,128 @@ number=10)
 <p>Yirmimilyon'a kadar asal sayıları bulma konusunda yüzde 35-40 arası bir hızlanma sağladık. Bu performans artışında <code>get_candidates3</code> fonksiyonunun da
 önemli bir payı var. Asal sayı adayları listesini oluşturmak için kullandığım diğer yöntemlerde bu denli bir performans artışı sağlayamamıştım. Kayda
 geçmesi açısından onları da buraya bırakıyorum.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">gen_candidates</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
-    <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">31</span><span class="p">]</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="mi">8</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="mi">30</span>
-
-    <span class="k">while</span> <span class="n">w</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">limit</span><span class="p">:</span>
-        <span class="n">w</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">c</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">w</span><span class="p">[(</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">n</span><span class="p">):])</span>
-
-        <span class="n">n</span> <span class="o">*=</span> <span class="mi">2</span>
-        <span class="n">c</span> <span class="o">*=</span> <span class="mi">2</span>
-
-    <span class="k">return</span> <span class="n">w</span><span class="p">[:(</span><span class="mi">4</span><span class="o">*</span><span class="n">limit</span><span class="o">/</span><span class="mi">15</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
-<span class="k">def</span> <span class="nf">gen_candidates2</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
-    <span class="n">w</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
-    <span class="n">w</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
-    <span class="n">w</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
-    <span class="n">w</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
-    <span class="n">w</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">19</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
-    <span class="n">w</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">23</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
-    <span class="n">w</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">29</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
-    <span class="n">w</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">31</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
-    <span class="n">w</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">w</span>
-</pre>
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">gen_candidates</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">31</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">n</span> <span class="o">=</span> <span class="mi">8</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">c</span> <span class="o">=</span> <span class="mi">30</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="n">w</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">limit</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>        <span class="n">w</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">c</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">w</span><span class="p">[(</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">n</span><span class="p">):])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="n">n</span> <span class="o">*=</span> <span class="mi">2</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="n">c</span> <span class="o">*=</span> <span class="mi">2</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">w</span><span class="p">[:(</span><span class="mi">4</span><span class="o">*</span><span class="n">limit</span><span class="o">/</span><span class="mi">15</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">gen_candidates2</span><span class="p">(</span><span class="n">limit</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>    <span class="n">w</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="n">w</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>    <span class="n">w</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>    <span class="n">w</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>    <span class="n">w</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">19</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>    <span class="n">w</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">23</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>    <span class="n">w</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">29</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>    <span class="n">w</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">31</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>    <span class="n">w</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-ile-hizli-asal-sayi-bulma.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">w</span>
+</code></td>
+</tr>
+</table></div>
 </div>
     </div>
     <aside class="postpromonav"><nav><div class="pager">
@@ -138,7 +388,7 @@ geçmesi açısından onları da buraya bırakıyorum.</p>
         </div>
 
     </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
-	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script></article></main><script>
   if(document.location.hostname == "ysar.net")

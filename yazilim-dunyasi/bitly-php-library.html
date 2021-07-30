@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="This library can be used to access bitly api using PHP. It tries to mimic offical Python library for bitly api.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/yazilim-dunyasi/bitly-php-library.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/yazilim-dunyasi/bitly-php-library.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="awk-kelime-sayma.html" title="awk'da kelime sayma programı" type="text/html">
 <link rel="next" href="bitly-php-kutuphane.html" title="Bitly ve php ile url kısaltmak" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Announcing php library for bitly api">
-<meta property="og:url" content="http://ysar.net/yazilim-dunyasi/bitly-php-library.html">
-<meta property="og:description" content="This library can be used to access bitly api using PHP. It tries to mimic offical Python library for bitly api.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2013-01-20T20:52:43+02:00">
 </head>
 <body>
 
@@ -47,13 +41,33 @@
 <p>I am not sure if anyone else has done it before, but I wrote a php
 library to bitly api. <a href="https://github.com/yasar11732/bitly-api-php" title="Bitly Api Php">Bitly Api Php github repo</a> is the place where you can get it. <!-- TEASER_END --></p>
 <p><strong>Basic usage:</strong></p>
-<pre class="code literal-block"><span></span><span class="x">require("bitly_api.php");</span>
-<span class="x">$bitly = new Bitly(array("login" =&gt; "yourlogin", "api_key" =&gt; "yourapikey"));</span>
-<span class="x"># or to use oauth2 endpoints</span>
-<span class="x">$bitly = new Bitly(array("access_token" =&gt; "youraccesstoken");</span>
-<span class="x">$data = $bitly-&gt;shorten('http://www.google.com/');</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-library.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="x">require("bitly_api.php");</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-library.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="x">$bitly = new Bitly(array("login" =&gt; "yourlogin", "api_key" =&gt; "yourapikey"));</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-library.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="x"># or to use oauth2 endpoints</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-library.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="x">$bitly = new Bitly(array("access_token" =&gt; "youraccesstoken");</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="bitly-php-library.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="x">$data = $bitly-&gt;shorten('http://www.google.com/');</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Currently, it only supports curl to make http queries. I might add <a href="http://php.net/manual/en/book.http.php">php
 http</a> later on.</p>

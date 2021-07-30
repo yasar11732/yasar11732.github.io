@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Dotcloud, cloud computing sunucularında, django uygulamamı barındırdım. Bu yazıda deneyimlerimden bahsedeceğim.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/dotcloud.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/dotcloud.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="django-blog-uygulamasi/sitemap-rss.html" title="Django ile Blog Geliştirme - Rss ve Site Haritası" type="text/html">
 <link rel="next" href="5-django-ipucu.html" title="5 Django İpucu" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Django sunucusu olarak dotcloud">
-<meta property="og:url" content="http://ysar.net/python/dotcloud.html">
-<meta property="og:description" content="Dotcloud, cloud computing sunucularında, django uygulamamı barındırdım. Bu yazıda deneyimlerimden bahsedeceğim.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2011-08-13T00:59:00+03:00">
 </head>
 <body>
 
@@ -74,15 +68,19 @@ yapmak. Üye kaydınızı yaptıktan ve siteye giriş yaptıktan sonra,
 dotcloud cli'yi ilk çalıştırdığınızda ihtiyacınız olacak.</p>
 <p>Dotcloud cli'yi kurmak için, Python'un pip paketine ihtiyacınız var,
 çoğu gnu/linux sistemlerde bunu şu komutla kurabilirsiniz:</p>
-<pre class="code literal-block"><span></span>sudo easy_install pip
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">sudo easy_install pip</span>
+</code></td>
+</tr></table></div>
 
 <p>"pip" paketi hazır olduktan sonra ise, şu komutla dotcloud cli'yi
 yükleyebilirsiniz:</p>
-<pre class="code literal-block"><span></span>sudo pip install dotcloud
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">sudo pip install dotcloud</span>
+</code></td>
+</tr></table></div>
 
 <p>Daha sonra, terminalden <code>dotcloud</code> komutu vererek, dotcloud'u
 çalıştırabilirsiniz. İlk çalıştırdığınızda sizden api anahtarınızı
@@ -90,9 +88,11 @@ isteyecek. Api anahtarınızı da girdikten sonra, dotcloud programı
 kullanıma hazır hale gelecek.</p>
 <p>Bu aşamada, dotcloud'da yeni bir uygulama oluşturmanız gerekiyor. Bunu
 şu şekilde yapıyoruz:</p>
-<pre class="code literal-block"><span></span>dotcloud create benim_blog
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">dotcloud create benim_blog</span>
+</code></td>
+</tr></table></div>
 
 <p>Uygulamayı oluşturduktan sonra, bir yml dosyasıyla, bu uygulamanın hangi
 servisleri kullanacağı gibi birkaç özelliğini ayarlamak gerekiyor. Bu
@@ -101,12 +101,28 @@ bulunmalı. Eğer bu yazıyı adım adım takip ediyorsanız, dotcloud
 dosyalarınızı içinde bulunduracak bir klasör açıp, bunun içerisinde boş
 bir <code>dotcloud.yml</code> dosyası oluşturun. Daha sonra içeriğini aşağıdaki
 örneğe benzeterek doldurun.</p>
-<pre class="code literal-block"><span></span><span class="l l-Scalar l-Scalar-Plain">www</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">type</span> <span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">python</span>
-<span class="l l-Scalar l-Scalar-Plain">db</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">type</span> <span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">postgresql</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="nt">www</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>  <span class="nt">type </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">python</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="nt">db</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>  <span class="nt">type </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">postgresql</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>​1. ve 4. satırlarda, yeni bir servis ile ilgili kısıma başlıyoruz.
 Buralardaki "www" ve "db" sözleri, sizin bu servislere taktığınız
@@ -118,28 +134,76 @@ kullanılacaklar.</p>
 bir dosya içerisinde, bu uygulamanın ihtiyaç duyduğu Python paketlerini
 listelemek gerekiyor. Bu dosyayı yine kök dizininde bulundurmalısınız,
 ve içeriği de şu şekilde olabilir.</p>
-<pre class="code literal-block"><span></span>django
-docutils
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">django</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="err">docutils</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Dotcloud <em>python</em> servisi aslında python-wsgi işlevi sağladığından
 dotcloud kök dizininde wsgi.py isimli bir dosya oluşturup, içinde wsgi
 işlevini sağlayacak <em>application</em> isminde bir fonksiyon
 oluşturmalısınız. Dotcloud belgelerinde bu dosyanın içeriğinin şu
 şekilde olması tavsiye ediliyor:</p>
-<pre class="code literal-block"><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'DJANGO_SETTINGS_MODULE'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'portal.settings'</span>
-<span class="kn">import</span> <span class="nn">django.core.handlers.wsgi</span>
-
-<span class="n">djangoapplication</span> <span class="o">=</span> <span class="n">django</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">wsgi</span><span class="o">.</span><span class="n">WSGIHandler</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">environ</span><span class="p">,</span> <span class="n">start_response</span><span class="p">):</span>
-    <span class="k">if</span> <span class="s1">'SCRIPT_NAME'</span> <span class="ow">in</span> <span class="n">environ</span><span class="p">:</span>
-        <span class="k">del</span> <span class="n">environ</span><span class="p">[</span><span class="s1">'SCRIPT_NAME'</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">djangoapplication</span><span class="p">(</span><span class="n">environ</span><span class="p">,</span> <span class="n">start_response</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">os</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">sys</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'DJANGO_SETTINGS_MODULE'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'portal.settings'</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">django.core.handlers.wsgi</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="n">djangoapplication</span> <span class="o">=</span> <span class="n">django</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">wsgi</span><span class="o">.</span><span class="n">WSGIHandler</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">environ</span><span class="p">,</span> <span class="n">start_response</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="s1">'SCRIPT_NAME'</span> <span class="ow">in</span> <span class="n">environ</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="k">del</span> <span class="n">environ</span><span class="p">[</span><span class="s1">'SCRIPT_NAME'</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">djangoapplication</span><span class="p">(</span><span class="n">environ</span><span class="p">,</span> <span class="n">start_response</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada 3. satırı kendinize göre değiştirmeyi unutmayın. Benim uygulamam
 dotcloud için açtığım dizin içerisindeki portal isminde bir dizinde
@@ -153,25 +217,93 @@ bağla yerleştirebilirsiniz. Ayrıca, dotcloud'da tüm statik
 dosyalarınızın, dotcloud için açtığınız dizinin içindeki "static"
 dizininin içerisinde olması gerekiyor. "postinstall" dosyası içeriği de
 örneğin şu şekilde olabilir.</p>
-<pre class="code literal-block"><span></span><span class="ch">#!/usr/bin/env python</span>
-
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'DJANGO_SETTINGS_MODULE'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'portal.settings'</span>
-<span class="kn">import</span> <span class="nn">django.contrib.admin</span>
-<span class="n">admindir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">django</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
-<span class="n">mediadir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">admindir</span><span class="p">,</span><span class="s1">'media'</span><span class="p">)</span>
-<span class="n">staticlink</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'static'</span><span class="p">,</span><span class="s1">'admin_media'</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">islink</span><span class="p">(</span><span class="n">staticlink</span><span class="p">):</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">staticlink</span><span class="p">)</span>
-<span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">mediadir</span><span class="p">,</span> <span class="n">staticlink</span><span class="p">)</span>
-
-<span class="n">migrations_link</span> <span class="o">=</span> <span class="s2">"/home/dotcloud/current/portal/blog/migrations"</span>
-<span class="n">migrations_source</span> <span class="o">=</span> <span class="s2">"/home/dotcloud/blog/migrations"</span>
-<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">islink</span><span class="p">(</span><span class="n">migrations_link</span><span class="p">):</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">migrations_link</span><span class="p">)</span>
-<span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">migrations_source</span><span class="p">,</span><span class="n">migrations_link</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="ch">#!/usr/bin/env python</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">os</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'DJANGO_SETTINGS_MODULE'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'portal.settings'</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">django.contrib.admin</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="n">admindir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">django</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="n">mediadir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">admindir</span><span class="p">,</span><span class="s1">'media'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="n">staticlink</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'static'</span><span class="p">,</span><span class="s1">'admin_media'</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">islink</span><span class="p">(</span><span class="n">staticlink</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">staticlink</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">mediadir</span><span class="p">,</span> <span class="n">staticlink</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="n">migrations_link</span> <span class="o">=</span> <span class="s2">"/home/dotcloud/current/portal/blog/migrations"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="n">migrations_source</span> <span class="o">=</span> <span class="s2">"/home/dotcloud/blog/migrations"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">islink</span><span class="p">(</span><span class="n">migrations_link</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">migrations_link</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">migrations_source</span><span class="p">,</span><span class="n">migrations_link</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada 4. ve 8. satırları yine kendinize göre düzenlemeniz gerekiyor.
 11. satırdan sonrası ile konumuz ile alakasız, ancak, orada yapılanları
@@ -184,9 +316,11 @@ ana kadar aslında dotcloud servislerini başlatmadığımız için, veritabanı
 ayarlarını yapamıyoruz. Onun için, öncelikle dotcloud içinh
 hazırladığımız dosyaları sisteme göndermemiz gerekiyor. Bunun için,
 dotcloud kök dizinindeyken, şu komutu kullanıyoruz:</p>
-<pre class="code literal-block"><span></span>dotcloud push benim_blog
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">dotcloud push benim_blog</span>
+</code></td>
+</tr></table></div>
 
 <p>Buradaki "benim_blog" kodları hangi dotcloud uygulamasına
 göndereceğinizi belirtiyor. İlk kez kodlarınızı gönderdiğinizde, sizin
@@ -197,9 +331,11 @@ python-uwsgi işlevi kullanıma hazır hale gelecek.</p>
 <p>Artık aşağıdaki komutları vererek, postgresql ile yeni bir veritabanı
 oluşturabilirsiniz. Burada yazıyı fazla uzatmamak için, veritabanında
 yeni bir kullanıcı oluşturmadık.</p>
-<pre class="code literal-block"><span></span>dotcloud run benim_blog.db -- createdb -O root portal
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">dotcloud run benim_blog.db -- createdb -O root portal</span>
+</code></td>
+</tr></table></div>
 
 <p>Burada, size ayrılan dotcloud makinesinde komut çalıştırmak için
 "dotcloud run" komutunu kullandık. "benim_blog.db" benim blog
@@ -209,18 +345,22 @@ kullanıcılar, ve veritabanına ancak benim_blog.db ulaşabiliyor.</p>
 <p>Veritabanı da kullanıma hazır olduktan sonra, settings modülü içerisinde
 gerekli değişiklikleri yapmanız gerekiyor. Veritabanının HOST, PASSWORD
 ve PORT bilgilerini, şu komutla öğrenebilirsiniz.</p>
-<pre class="code literal-block"><span></span>dotcloud info benim_blog.db
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">dotcloud info benim_blog.db</span>
+</code></td>
+</tr></table></div>
 
 <p>Tüm ayarları doğru bir şekilde tamamladıktan sonra, değişikliklerin
 uygulanması için, kodlarınızı bir kez daha yukarıda yaptığımız gibi
 dotcloud'a göndermelisiniz.</p>
 <p>Son olarak, django'nun veritabanında gerekli tabloları oluşturması için
 şu komutu verebilirsiniz:</p>
-<pre class="code literal-block"><span></span>dotcloud run benim_blog.www -- python current/portal/manage.py syncdb
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="dotcloud.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">dotcloud run benim_blog.www -- python current/portal/manage.py syncdb</span>
+</code></td>
+</tr></table></div>
 
 <p>Dotcloud makinesinde, en son gönderdiğiniz kodlar,
 /home/dotcloud/current içerisinde tutuluyor. Bu durumda, manage

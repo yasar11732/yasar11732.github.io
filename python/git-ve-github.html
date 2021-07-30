@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Git ve Github kullanmak için ilk adımlar ve temel bilgiler">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/git-ve-github.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/git-ve-github.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="python-calisma-rehberi.html" title="Python Çalışma Rehberi" type="text/html">
 <link rel="next" href="programlama-dilleri.html" title="Hangi Dilleri Öğrenmeliyim" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Git ve Github'a başlangıç">
-<meta property="og:url" content="http://ysar.net/python/git-ve-github.html">
-<meta property="og:description" content="Git ve Github kullanmak için ilk adımlar ve temel bilgiler">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2014-07-22T03:40:00+03:00">
 </head>
 <body>
 
@@ -87,9 +81,11 @@ gerekiyor.</p>
 göremezseniz, adres çubuğunda gördüğünüz adrese <em>.git</em> eklemeniz yeterli olacaktır. ssh adresi yerine https adresini kullanmayı tercih ettim.
 ssh'nin kendine göre avantajları olsa da, kurulumu biraz da uğraştırıcı olacağı için, o kısmı atlıyorum. Herneyse, aşağıdaki komutu
 kullanarak, github üzerindeki git deponuzu bilgisayarınıza kopyalayın.</p>
-<pre class="code literal-block"><span></span>$ git clone https://github.com/yasar11732/gereksiz.git
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="git-ve-github.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code>$ git clone https://github.com/yasar11732/gereksiz.git
+</code></td>
+</tr></table></div>
 
 <p>Yukarıdaki adresi, kendi deponuzun adresiyle değiştirmeyi unutmayın. İsterseniz benim depomu da kopyalayabilirsiniz, ancak, yazının devamını
 adım adım takip etmenize engel olacak birtakım sıkıntıları da beraberinde getirecektir, şimdiden uyarayım. </p>
@@ -103,10 +99,18 @@ Checking connectivity... done.
 </pre>
 
 <p>Şimdi, bu yeni oluşan klasöre gidip, dosyalarımıza bir bakalım;</p>
-<pre class="code literal-block"><span></span>$ <span class="nb">cd</span> gereksiz
-$ ls
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="git-ve-github.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code>$ <span class="nb">cd</span> gereksiz
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="git-ve-github.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>$ ls
+</code></td>
+</tr>
+</table></div>
 
 <pre>
 LICENSE  README.md
@@ -115,9 +119,11 @@ LICENSE  README.md
 <p>Linux komutlarına aşina olmayanlar için, <code>cd</code> komutu klasör değiştirmeye, <code>ls</code> komutu ise, klasör içeriklerini listelemeye yarıyor. Windows'da
 da git bash linux ortamını taklit ettiği için, aynı komutlar orada da geçerli.</p>
 <p>Şimdi, taze git depomuzu biraz daha inceleyelim, <code>git log</code> komutu, deponun geçmişini göremenizi sağlıyor.</p>
-<pre class="code literal-block"><span></span>$ git log
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="git-ve-github.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code>$ git log
+</code></td>
+</tr></table></div>
 
 <pre>
 commit 1861843fb3a561fccb1a3162022831cbed021a3b
@@ -131,9 +137,11 @@ Date:   Tue Jul 22 04:20:04 2014 +0300
 mesajı. Git deposuna ne zaman bir şey kaydederseniz, ne yaptığınıza dair bir açıklama yazmak zorundasınız. Böylece, siz veya başkası, deponun
 geçmişine baktığında, depo geçmişi anlamlı görünecektir.</p>
 <p>Şimdi de <code>git remote</code> komutunu inceleyelim.</p>
-<pre class="code literal-block"><span></span>$ git remote -v
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="git-ve-github.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code>$ git remote -v
+</code></td>
+</tr></table></div>
 
 <pre>
 origin  https://github.com/yasar11732/gereksiz.git (fetch)
@@ -147,15 +155,19 @@ remote ekleyebilirsiniz, ancak şu anda buna bir lüzum olmadığında, o adım�
 <p>Artık sırada, bir takım değişiklikler yapıp, bunları git deposuna eklemek var. Buna geçmeden önce, 3 farklı dosya konumundan bahsedeceğim. Birincisi,
 çalışma kopyası, ikincisi <em>stage</em>, üçüncüsü ise <em>commit</em>. Çalışma kopyası, o anda klasörü açtığınızda göreceğiniz versiyon. Örneğin, şu anda git deposuna
 yeni bir dosya eklersek, bu sadece çalışma kopyasında bulunuyor olacak, git henüz bu dosyayı geçmişinize eklemedi.</p>
-<pre class="code literal-block"><span></span>echo "deneme" &gt; gereksiz.txt
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="git-ve-github.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="err">echo "deneme" &gt; gereksiz.txt</span>
+</code></td>
+</tr></table></div>
 
 <p>Linux komutlarını bilmeyenler için, yukarıdaki komut <em>gereksiz.txt</em> isimli bir dosyaya, <em>deneme</em> yazıyor. Şimdi <code>git status</code> yazarak, deponun durumuna
 bir göz atalım.</p>
-<pre class="code literal-block"><span></span>$ git status
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="git-ve-github.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code>$ git status
+</code></td>
+</tr></table></div>
 
 <pre>
 On branch master
@@ -173,10 +185,18 @@ nothing added to commit but untracked files present (use "git add" to track)
 ama, <em>master</em> branch, ana branch'e verilen geleneksel bir isim. origin/master ile aramızda bir fark olmadığını da görüyoruz. Bu birazdan değişecek.
 Untracked files kısmında ise, çalışma kopyasında olup, git tarafında henüz takip edilmeyen dosyaları görüyoruz. Bu dosyanın git tarafından takip
 edilmesi için, bunları <em>stage</em> kısmına aktarmamız gerekiyor. <em>stage</em> kısmı, çalışma kopyasındaki değişiklikleri, kaydedilmeye hazırlandığı yer.</p>
-<pre class="code literal-block"><span></span>$ git add gereksiz.txt
-$ git status
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="git-ve-github.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code>$ git add gereksiz.txt
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="git-ve-github.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>$ git status
+</code></td>
+</tr>
+</table></div>
 
 <pre>
 On branch master
@@ -191,9 +211,11 @@ Changes to be committed:
 <p>Windows üzerinde çalışanlar, CRLF ile ilgili bir uyarı alacaklar, bunu göz ardı edebilirsiniz. <code>git add &lt;dosya&gt;</code> komutu, dosyayı stage'e ekliyor.
 Tekrar <code>git status</code> ile duruma baktığımızda, gereksiz.txt'nin kaydedilecek değişikler arasında dahil olduğunu (<em>stage</em>'de olduğunu) görüyoruz. Eğer
 bunu kaydetmekten vazgeçersek, <em>stage</em>'den geri alabiliriz, ancak şuan bu yeni dosyayı, git geçmişine kaydetmeyi tercih edeceğiz.</p>
-<pre class="code literal-block"><span></span>$ git commit -m <span class="s2">"gereksiz.txt ekledim."</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="git-ve-github.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code>$ git commit -m <span class="s2">"gereksiz.txt ekledim."</span>
+</code></td>
+</tr></table></div>
 
 <pre>
 [master 1cfb62d] gereksiz.txt ekledim.
@@ -203,9 +225,11 @@ bunu kaydetmekten vazgeçersek, <em>stage</em>'den geri alabiliriz, ancak şuan 
 
 <p><code>git commit</code> komutu, <em>stage</em>'deki dosyaları, git geçmişine kaydediyor. <code>-m "gereksiz.txt ekledim"</code> kısmı ise, commit mesajını belirtiyor.
 Bunu teyit etmek için, <code>git log</code> komutuyla, geçmişimize bir göz atalım.</p>
-<pre class="code literal-block"><span></span>$ git log
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="git-ve-github.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code>$ git log
+</code></td>
+</tr></table></div>
 
 <pre>
 commit 1cfb62ddbebe707678ee547f844fb4d1f4ae15e8
@@ -223,10 +247,18 @@ Date:   Tue Jul 22 04:20:04 2014 +0300
 
 <p>Artık geçmişimizde iki farklı commit var. <em>origin/master</em> branch'ine göre, 1 commit ilerdeyiz artık. Bunu <code>git status</code> komutuyla teyit edebilirsiniz.
 Değişiklikleri github'a geri yollamadan önce, son bir değişiklik daha yapalım.</p>
-<pre class="code literal-block"><span></span>$ <span class="nb">echo</span> <span class="s2">" ikinci değişiklik"</span> &gt;&gt; gereksiz.txt
-$ git status
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="git-ve-github.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code>$ <span class="nb">echo</span> <span class="s2">" ikinci değişiklik"</span> &gt;&gt; gereksiz.txt
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="git-ve-github.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>$ git status
+</code></td>
+</tr>
+</table></div>
 
 <pre>
 On branch master
@@ -245,9 +277,11 @@ no changes added to commit (use "git add" and/or "git commit -a")
 <p>İlk komuttaki <code>&gt;&gt;</code> dosyanın sonuna ekleme yapmamıza yarıyor. Şu an gereksiz.txt'nin değiştirildiğini ancak henüz stage'de olmadığını görüyoruz. Şu anda
 <code>git diff</code> komutuyla, <em>stage</em> ile çalışma kopyası arasındaki değişiklikleri görebiliriz. <code>git diff</code> komutu, herhangi iki commit veya dosya arasındaki
 farklılıkarı görmenize yarıyor. Eğer hiçbir parametre belirtmezseniz, <em>stage</em> ile çalışma kopyası arasındaki farklılıkları görüyorsunuz.</p>
-<pre class="code literal-block"><span></span>$ git diff
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="git-ve-github.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code>$ git diff
+</code></td>
+</tr></table></div>
 
 <p></p>
 <pre>
@@ -262,9 +296,11 @@ index 8836a06..6a4e197 100644
 <p>Evet, dosyada ikinci satıra ikinci değişiklik yazıldığını görüyoruz. Bunu da daha önceki gibi, <code>git add gereksiz.txt</code> ile <em>stage</em>'e ekleyip, <code>git commit -m "ikinci değişiklik"</code>
 ile kaydedebiliriz.</p>
 <p>Artık yeterince değişiklik yaptığımıza göre, yerel değişiklikleri, github deposuna gönderebiliriz. Bunun için, <code>git push &lt;remote&gt; &lt;branch&gt;</code> komutunu kullanacağız.</p>
-<pre class="code literal-block"><span></span>$ git push origin master
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="git-ve-github.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code>$ git push origin master
+</code></td>
+</tr></table></div>
 
 <pre>
 Username for 'https://github.com': yasar11732

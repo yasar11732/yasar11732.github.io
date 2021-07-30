@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Some descriptive statistics about packages on PyPI.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/python-package-statistics.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/python-package-statistics.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="parser-statement.html" title="Parser - Statement" type="text/html">
 <link rel="next" href="python-paket-istatistikleri.html" title="Python Paket İstatistikleri" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Python Package Statistics">
-<meta property="og:url" content="http://ysar.net/python/python-package-statistics.html">
-<meta property="og:description" content="Some descriptive statistics about packages on PyPI.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2013-10-18T15:30:00+03:00">
 </head>
 <body>
 
@@ -117,12 +111,28 @@ we can use <code>5336.4 * 35813 = 191 112 493</code> lines of code with 95% conf
 <h3>Data</h3>
 <p><a href="https://docs.google.com/file/d/0B_hwkDj0Is2Wdkl0S21kN29YUVk/edit?usp=sharing">Packages meta data</a> (5 MB rar file) can be
 accessed through google drive. You will get a pickled Python dictionary (around 23 MB) when you extract rar file. To load data:</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">pickle</span> <span class="kn">import</span> <span class="n">load</span>
-
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"all_in_one"</span><span class="p">)</span> <span class="k">as</span> <span class="n">d</span><span class="p">:</span>
-    <span class="n">package_metas</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="python-package-statistics.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">pickle</span> <span class="kn">import</span> <span class="n">load</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-package-statistics.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-package-statistics.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"all_in_one"</span><span class="p">)</span> <span class="k">as</span> <span class="n">d</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="python-package-statistics.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>    <span class="n">package_metas</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Veys of the <code>package_metas</code> will be lowercase package names. Values are dictionaries of package meta data. Most packages will at least
 provide <code>packagename</code>, <code>daily</code>, <code>weekly</code>, <code>monthly</code>, <code>Author</code>, <code>Home Page</code> fields, however, some might not provide this info. It is

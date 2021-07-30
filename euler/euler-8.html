@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Bir dizi sayı içerisinde, çarpımı en yüksek alt diziyi bulacağız">
@@ -11,18 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/euler/euler-8.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/euler/euler-8.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="euler-7.html" title="(Euler 7) 10001. Asal Sayı" type="text/html">
 <link rel="next" href="euler-9.html" title="(Euler 9) Pisagor Üçlüsü" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="(Euler 8) Çarpımı en büyük alt dizi">
-<meta property="og:url" content="http://ysar.net/euler/euler-8.html">
-<meta property="og:description" content="Bir dizi sayı içerisinde, çarpımı en yüksek alt diziyi bulacağız">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2018-08-09T00:40:00+03:00">
-<meta property="article:tag" content="mathjax">
 </head>
 <body>
 
@@ -71,55 +64,219 @@
 
 <p>Çarpımları en büyük olan 13 ardışık rakamı bulunuz. Bu çarpım kaçtır? <!-- TEASER_END --></p>
 <p>İlk işimiz bu sayıyı Python'a aktarmak olacak.</p>
-<pre class="code literal-block"><span></span><span class="n">sayi_dizisi</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">"""73167176531330624919225119674426574742355349194934</span>
-<span class="s2">96983520312774506326239578318016984801869478851843</span>
-<span class="s2">85861560789112949495459501737958331952853208805511</span>
-<span class="s2">12540698747158523863050715693290963295227443043557</span>
-<span class="s2">66896648950445244523161731856403098711121722383113</span>
-<span class="s2">62229893423380308135336276614282806444486645238749</span>
-<span class="s2">30358907296290491560440772390713810515859307960866</span>
-<span class="s2">70172427121883998797908792274921901699720888093776</span>
-<span class="s2">65727333001053367881220235421809751254540594752243</span>
-<span class="s2">52584907711670556013604839586446706324415722155397</span>
-<span class="s2">53697817977846174064955149290862569321978468622482</span>
-<span class="s2">83972241375657056057490261407972968652414535100474</span>
-<span class="s2">82166370484403199890008895243450658541227588666881</span>
-<span class="s2">16427171479924442928230863465674813919123162824586</span>
-<span class="s2">17866458359124566529476545682848912883142607690042</span>
-<span class="s2">24219022671055626321111109370544217506941658960408</span>
-<span class="s2">07198403850962455444362981230987879927244284909188</span>
-<span class="s2">84580156166097919133875499200524063689912560717606</span>
-<span class="s2">05886116467109405077541002256983155200055935729725</span>
-<span class="s2">71636269561882670428252483600823257530420752963450"""</span><span class="o">.</span><span class="n">splitlines</span><span class="p">())</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="n">sayi_dizisi</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">"""73167176531330624919225119674426574742355349194934</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="s2">96983520312774506326239578318016984801869478851843</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="s2">85861560789112949495459501737958331952853208805511</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="s2">12540698747158523863050715693290963295227443043557</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="s2">66896648950445244523161731856403098711121722383113</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="s2">62229893423380308135336276614282806444486645238749</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="s2">30358907296290491560440772390713810515859307960866</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="s2">70172427121883998797908792274921901699720888093776</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="s2">65727333001053367881220235421809751254540594752243</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="s2">52584907711670556013604839586446706324415722155397</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="s2">53697817977846174064955149290862569321978468622482</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="s2">83972241375657056057490261407972968652414535100474</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="s2">82166370484403199890008895243450658541227588666881</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="s2">16427171479924442928230863465674813919123162824586</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="s2">17866458359124566529476545682848912883142607690042</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="s2">24219022671055626321111109370544217506941658960408</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><span class="s2">07198403850962455444362981230987879927244284909188</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><span class="s2">84580156166097919133875499200524063689912560717606</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code><span class="s2">05886116467109405077541002256983155200055935729725</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><span class="s2">71636269561882670428252483600823257530420752963450"""</span><span class="o">.</span><span class="n">splitlines</span><span class="p">())</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Sayı dizisini satırlara bölünmüş olarak yapıştırdığımdan, düz bir sayı dizisi elde etmek için, satırları bölüp tekrar birleştirdim.</p>
 <p>Kod yazmaya başlamadan önce, problem hakkında biraz akıl yürütelim. 100 karakterli bir sayı dizisinin 88 adet 13 haneli alt dizisi olacak.
 Tüm 88 altdizi için, elemanları kendi içinde çarpıp, aralarından en büyük olanı bulabiliriz.</p>
-<pre class="code literal-block"><span></span><span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">mul</span>
-
-<span class="k">def</span> <span class="nf">elemanlari_carp</span><span class="p">(</span><span class="n">sayi_listesi</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="n">sayi_listesi</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">euler8</span><span class="p">(</span><span class="n">sayi_dizisi</span><span class="p">,</span> <span class="n">alt_dizi_uzunluk</span><span class="p">):</span>
-
-    <span class="n">sayi_dizisi</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">sayi_dizisi</span><span class="p">)</span> <span class="c1"># string olan sayıyı, sayı listesine çevir</span>
-
-    <span class="n">sayi_dizisi_uzunluk</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sayi_dizisi</span><span class="p">)</span>
-
-    <span class="n">alt_diziler</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">sayi_dizisi</span><span class="p">[</span><span class="n">i</span><span class="p">:(</span><span class="n">i</span><span class="o">+</span><span class="n">alt_dizi_uzunluk</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sayi_dizisi_uzunluk</span> <span class="o">-</span> <span class="n">alt_dizi_uzunluk</span><span class="p">)</span>
-    <span class="p">]</span>
-
-    <span class="n">alt_dizi_carpimlar</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">elemanlari_carp</span><span class="p">,</span> <span class="n">alt_diziler</span><span class="p">)</span>
-
-    <span class="n">en_buyuk_carpim</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">alt_dizi_carpimlar</span><span class="p">)</span>
-    <span class="n">en_buyuk_carpimli_dizi</span> <span class="o">=</span> <span class="n">alt_diziler</span><span class="p">[</span><span class="n">alt_dizi_carpimlar</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">en_buyuk_carpim</span><span class="p">)]</span>
-
-    <span class="k">return</span> <span class="p">(</span><span class="n">en_buyuk_carpim</span><span class="p">,</span> <span class="n">en_buyuk_carpimli_dizi</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">mul</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">elemanlari_carp</span><span class="p">(</span><span class="n">sayi_listesi</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">reduce</span><span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="n">sayi_listesi</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">euler8</span><span class="p">(</span><span class="n">sayi_dizisi</span><span class="p">,</span> <span class="n">alt_dizi_uzunluk</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">sayi_dizisi</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">sayi_dizisi</span><span class="p">)</span> <span class="c1"># string olan sayıyı, sayı listesine çevir</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="n">sayi_dizisi_uzunluk</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sayi_dizisi</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="n">alt_diziler</span> <span class="o">=</span> <span class="p">[</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>        <span class="n">sayi_dizisi</span><span class="p">[</span><span class="n">i</span><span class="p">:(</span><span class="n">i</span><span class="o">+</span><span class="n">alt_dizi_uzunluk</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sayi_dizisi_uzunluk</span> <span class="o">-</span> <span class="n">alt_dizi_uzunluk</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="n">alt_dizi_carpimlar</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">elemanlari_carp</span><span class="p">,</span> <span class="n">alt_diziler</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>    <span class="n">en_buyuk_carpim</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">alt_dizi_carpimlar</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>    <span class="n">en_buyuk_carpimli_dizi</span> <span class="o">=</span> <span class="n">alt_diziler</span><span class="p">[</span><span class="n">alt_dizi_carpimlar</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">en_buyuk_carpim</span><span class="p">)]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="p">(</span><span class="n">en_buyuk_carpim</span><span class="p">,</span> <span class="n">en_buyuk_carpimli_dizi</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Evet, hepsi bu. Doğru sonuca ulaştık bile. Python gibi bir dille Euler Problemi çözmenin böyle bir dezavantajı var, C veya C++ gibi
 daha alt seviye dillerde karşılaşmanız muhtemel bir takım zorlukları Python sizin için hallettiğinden, problemler birtakım eğitici
@@ -138,49 +295,213 @@ işleminden kar etmiş olduk. Şu an tek problem, \(n_i\) teriminin sıfır olma
 bölgeleri atlayabiliriz. Zaten içinde 0 olan bir bölgenin en büyük çarpımlı bölge olma ihtimali neredeyse yok. (Eğer tamamen yok demiş olsaydık,
 içinde 0 olmayan bölgelerin varlığından emin olduğumuz anlamına gelecekti. Ancak, böyle bir varsayım yanlış olabilir.) Eğer listeyi tek geçişte
 istediğimiz herşeyi hesaplarsak, en çabuk şekilde sonuca ulaşmış olacağız.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">euler8_v2</span><span class="p">(</span><span class="n">sayi_dizisi</span><span class="p">,</span> <span class="n">alt_dizi_uzunluk</span><span class="p">):</span>
-
-    <span class="n">sayi_dizisi_uzunluk</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sayi_dizisi</span><span class="p">)</span>
-
-    <span class="n">gecerli_altdize_baslangic</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">gecerli_altdize_bitis</span> <span class="o">=</span> <span class="mi">0</span>
-
-    <span class="n">ara_carpim</span> <span class="o">=</span> <span class="mi">1</span>
-
-    <span class="n">max_carpim</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">max_carpim_baslangic</span> <span class="o">=</span> <span class="mi">0</span>
-
-    <span class="k">while</span> <span class="n">gecerli_altdize_bitis</span> <span class="o">&lt;</span> <span class="n">sayi_dizisi_uzunluk</span><span class="p">:</span>
-
-        <span class="n">eleman</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sayi_dizisi</span><span class="p">[</span><span class="n">gecerli_altdize_bitis</span><span class="p">])</span>
-
-        <span class="k">if</span> <span class="n">eleman</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="s2">"icinde 0 olan bolgeyi atla"</span>
-            <span class="n">ara_carpim</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="n">gecerli_altdize_bitis</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">gecerli_altdize_baslangic</span> <span class="o">=</span> <span class="n">gecerli_altdize_bitis</span>
-            <span class="k">continue</span>
-
-        <span class="n">ara_carpim</span> <span class="o">*=</span> <span class="n">eleman</span>
-
-        <span class="k">if</span> <span class="n">gecerli_altdize_bitis</span> <span class="o">-</span> <span class="n">gecerli_altdize_baslangic</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">alt_dizi_uzunluk</span><span class="p">:</span>
-            <span class="s2">"Istedigimiz uzunlukta bir altdizeyi taradik"</span>
-
-            <span class="k">if</span> <span class="n">ara_carpim</span> <span class="o">&gt;</span> <span class="n">max_carpim</span><span class="p">:</span>
-                <span class="s2">"Bu bolgedeki ara carpim, simdiye kadar gordugumuzun en fazlasi"</span>
-                <span class="n">max_carpim</span> <span class="o">=</span> <span class="n">ara_carpim</span>
-                <span class="n">max_carpim_baslangic</span> <span class="o">=</span> <span class="n">gecerli_altdize_baslangic</span>
-
-            <span class="s2">"Su anki bolgenin baslangicini bir eleman ileri aliyoruz"</span>
-            <span class="n">ilk_elem</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sayi_dizisi</span><span class="p">[</span><span class="n">gecerli_altdize_baslangic</span><span class="p">])</span>
-            <span class="n">ara_carpim</span> <span class="o">/=</span> <span class="n">ilk_elem</span>
-            <span class="n">gecerli_altdize_baslangic</span> <span class="o">+=</span> <span class="mi">1</span>
-
-        <span class="n">gecerli_altdize_bitis</span> <span class="o">+=</span> <span class="mi">1</span>
-
-    <span class="k">return</span> <span class="p">(</span><span class="n">max_carpim</span><span class="p">,</span> <span class="n">sayi_dizisi</span><span class="p">[</span><span class="n">max_carpim_baslangic</span><span class="p">:(</span><span class="n">max_carpim_baslangic</span><span class="o">+</span><span class="n">alt_dizi_uzunluk</span><span class="p">)])</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">euler8_v2</span><span class="p">(</span><span class="n">sayi_dizisi</span><span class="p">,</span> <span class="n">alt_dizi_uzunluk</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">sayi_dizisi_uzunluk</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sayi_dizisi</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="n">gecerli_altdize_baslangic</span> <span class="o">=</span> <span class="mi">0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="n">gecerli_altdize_bitis</span> <span class="o">=</span> <span class="mi">0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">ara_carpim</span> <span class="o">=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="n">max_carpim</span> <span class="o">=</span> <span class="mi">0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="n">max_carpim_baslangic</span> <span class="o">=</span> <span class="mi">0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="n">gecerli_altdize_bitis</span> <span class="o">&lt;</span> <span class="n">sayi_dizisi_uzunluk</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="n">eleman</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sayi_dizisi</span><span class="p">[</span><span class="n">gecerli_altdize_bitis</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">eleman</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>            <span class="s2">"icinde 0 olan bolgeyi atla"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>            <span class="n">ara_carpim</span> <span class="o">=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>            <span class="n">gecerli_altdize_bitis</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>            <span class="n">gecerli_altdize_baslangic</span> <span class="o">=</span> <span class="n">gecerli_altdize_bitis</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>            <span class="k">continue</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>        <span class="n">ara_carpim</span> <span class="o">*=</span> <span class="n">eleman</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">gecerli_altdize_bitis</span> <span class="o">-</span> <span class="n">gecerli_altdize_baslangic</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">alt_dizi_uzunluk</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>            <span class="s2">"Istedigimiz uzunlukta bir altdizeyi taradik"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">ara_carpim</span> <span class="o">&gt;</span> <span class="n">max_carpim</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>                <span class="s2">"Bu bolgedeki ara carpim, simdiye kadar gordugumuzun en fazlasi"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>                <span class="n">max_carpim</span> <span class="o">=</span> <span class="n">ara_carpim</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>                <span class="n">max_carpim_baslangic</span> <span class="o">=</span> <span class="n">gecerli_altdize_baslangic</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>            <span class="s2">"Su anki bolgenin baslangicini bir eleman ileri aliyoruz"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>            <span class="n">ilk_elem</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sayi_dizisi</span><span class="p">[</span><span class="n">gecerli_altdize_baslangic</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code>            <span class="n">ara_carpim</span> <span class="o">/=</span> <span class="n">ilk_elem</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code>            <span class="n">gecerli_altdize_baslangic</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-38"><code data-line-number="38"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-39"><code data-line-number="39"></code></a></td>
+<td class="code"><code>        <span class="n">gecerli_altdize_bitis</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-40"><code data-line-number="40"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-41"><code data-line-number="41"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="p">(</span><span class="n">max_carpim</span><span class="p">,</span> <span class="n">sayi_dizisi</span><span class="p">[</span><span class="n">max_carpim_baslangic</span><span class="p">:(</span><span class="n">max_carpim_baslangic</span><span class="o">+</span><span class="n">alt_dizi_uzunluk</span><span class="p">)])</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Her zaman olduğu gibi, optimizasyon yapabilmek için ince detayları kendimiz kontrol etmek zorunda kaldık ve böylece kodlarımızın
 ne yaptığını bir bakışta görmek zorlaştı. Değişkenlerin isimlerini kasten uzun tuttum. Aşağıdaki resimler, bu algoritmanın <code>"2106554958"</code> sayısı
@@ -190,13 +511,33 @@ değerlerinin nasıl değiştiğini takip edebilirsiniz.</p>
 <iframe src="../slideshow.html" style="width: 100%; height:220px; border:1px solid #ccc; border-radius: 1px;padding:0; margin-left:2em; margin-right:2em;"></iframe>
 
 <p>Her zamanki gibi, kodlarımızın performansını karşılaştıralım.</p>
-<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">timeit</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s2">"euler8(sayi_dizisi,  13)"</span><span class="p">,</span><span class="s2">"from euler8 import euler8, sayi_dizisi"</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
-<span class="mf">12.45510180960197</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s2">"euler8_v2(sayi_dizisi,  13)"</span><span class="p">,</span><span class="s2">"from euler8 import euler8_v2, sayi_dizisi"</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
-<span class="mf">7.013994897381153</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">timeit</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s2">"euler8(sayi_dizisi,  13)"</span><span class="p">,</span><span class="s2">"from euler8 import euler8, sayi_dizisi"</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><span class="mf">12.45510180960197</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="s2">"euler8_v2(sayi_dizisi,  13)"</span><span class="p">,</span><span class="s2">"from euler8 import euler8_v2, sayi_dizisi"</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="euler-8.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="mf">7.013994897381153</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Öyle görünüyor ki, emeğimizin karşılığını almışız. Bu problemle ilgili söylenebilecek daha fazla birşey yok sanırım.</p>
 <h3>Gelecek Problem</h3>
@@ -210,7 +551,7 @@ değerlerinin nasıl değiştiğini takip edebilirsiniz.</p>
         </div>
 
     </nav></aside><script src="https://utteranc.es/client.js" repo="yasar11732/yasar11732.github.io" issue-term="title" theme="github-light" crossorigin="anonymous" async>
-	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+	</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script></article></main><script>
   if(document.location.hostname == "ysar.net")

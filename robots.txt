@@ -1,4 +1,4 @@
-Sitemap: http://ysar.net/sitemapindex.xml
+Sitemap: https://yasar11732.github.io/sitemapindex.xml
 
 User-Agent: *
-Host: ysar.net
+Host: yasar11732.github.io

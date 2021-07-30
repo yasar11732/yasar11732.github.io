@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Evrimsel algoritmları kullanarak, 5x5lik bir gridi, tüm satır ve sütunları aynı olacak şekilde doldurma problemini çözmeye çalıştım.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/algoritma/evrimsel-algoritmalar.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/algoritma/evrimsel-algoritmalar.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="exact-cover-dancing-links-ve-sudoku-cozme.html" title="Exact Cover, Dancing Links ve Sudoku Çözme" type="text/html">
 <link rel="next" href="../diger/devlet-siteleri.html" title="Devlet Siteleri" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Evrimsel Algoritmalar">
-<meta property="og:url" content="http://ysar.net/algoritma/evrimsel-algoritmalar.html">
-<meta property="og:description" content="Evrimsel algoritmları kullanarak, 5x5lik bir gridi, tüm satır ve sütunları aynı olacak şekilde doldurma problemini çözmeye çalıştım.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2013-11-04T01:59:00+02:00">
 </head>
 <body>
 
@@ -60,135 +54,575 @@ nazaran, doğru sonuca bir hayli hızlı yaklaşıyor, ancak, bazı sıkıntıla
 <p>Küçükken, diyanet takvimlerinin arkasında, çözmekten zevk aldığım bir bulmaca vardı. 5x5'lik bir alanı, 1'den 25'e kadar
 sayılarla öyle bir şekilde doldurmalısın ki, bütün satır ve sütun toplamları aynı olsun.</p>
 <p>Problem, NP-hard gibi görünüyor. Evrimsel algoritmam için iyi bir aday olabilir diye düşündüm. İlk iş, bir sınıf oluşturdum.</p>
-<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">EqualSumGrid</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    Construct n x n matrix such that;</span>
-
-<span class="sd">     * each cell will be filled with numbers from 1 to n ^ 2</span>
-<span class="sd">     * sum of each row and column will be equal to sum(range(n**2)) / n</span>
-
-<span class="sd">    Genetic Algorithm will be utilized to find the solution.</span>
-<span class="sd">    """</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rowlabels</span><span class="p">,</span> <span class="n">collabels</span><span class="p">):</span>
-        <span class="sd">"""</span>
-<span class="sd">        len(rowlabels) and len(collabels) should be equal</span>
-
-<span class="sd">        rowlabels[i] + collabels[i] should be valid and hashable</span>
-<span class="sd">        """</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">rowlabels</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">collabels</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rowlabels</span> <span class="o">=</span> <span class="n">rowlabels</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">collabels</span> <span class="o">=</span> <span class="n">collabels</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rowlabels</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">squares</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="o">+</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">rowlabels</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">collabels</span><span class="p">]</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">sumtarget</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>        
-        <span class="c1"># each row and column is said to be a unit</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rows</span> <span class="o">=</span> <span class="p">[[</span><span class="n">r</span><span class="o">+</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">collabels</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rowlabels</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[[</span><span class="n">r</span><span class="o">+</span><span class="n">c</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rowlabels</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">collabels</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="bp">None</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">EqualSumGrid</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="sd">    Construct n x n matrix such that;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="sd">     * each cell will be filled with numbers from 1 to n ^ 2</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="sd">     * sum of each row and column will be equal to sum(range(n**2)) / n</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="sd">    Genetic Algorithm will be utilized to find the solution.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="sd">    """</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rowlabels</span><span class="p">,</span> <span class="n">collabels</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="sd">        len(rowlabels) and len(collabels) should be equal</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="sd">        rowlabels[i] + collabels[i] should be valid and hashable</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><span class="sd">        """</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">rowlabels</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">collabels</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">rowlabels</span> <span class="o">=</span> <span class="n">rowlabels</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">collabels</span> <span class="o">=</span> <span class="n">collabels</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rowlabels</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">squares</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="o">+</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">rowlabels</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">collabels</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">sumtarget</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>        
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>        <span class="c1"># each row and column is said to be a unit</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">rows</span> <span class="o">=</span> <span class="p">[[</span><span class="n">r</span><span class="o">+</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">collabels</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rowlabels</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[[</span><span class="n">r</span><span class="o">+</span><span class="n">c</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rowlabels</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">collabels</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="kc">None</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada sadece daha sonra kullanacağım değişkenleri başlattım. Pek değişik birşey yok. Evrimsel algoritmayı
 kullanmak için, önce rastgele bir popülasyon oluşturmamız gerekiyor.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">randompopulation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">populationsize</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    Initialize a random populations with size populationsize. random.shuffle will be used to shuffle range(1, m*n+1)</span>
-<span class="sd">    """</span>
-
-    <span class="n">population</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">genomes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">populationsize</span><span class="p">):</span>
-        <span class="n">shuffle</span><span class="p">(</span><span class="n">genomes</span><span class="p">)</span>
-        <span class="n">population</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">izip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">squares</span><span class="p">,</span> <span class="n">genomes</span><span class="p">)))</span>
-
-    <span class="k">return</span> <span class="n">population</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">randompopulation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">populationsize</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="sd">    Initialize a random populations with size populationsize. random.shuffle will be used to shuffle range(1, m*n+1)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="sd">    """</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="n">population</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="n">genomes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">populationsize</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="n">shuffle</span><span class="p">(</span><span class="n">genomes</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="n">population</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">izip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">squares</span><span class="p">,</span> <span class="n">genomes</span><span class="p">)))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">population</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Bu fonksiyon, 1'den n karaye kadar olan sayıları rastgele dizerek, verilen büyüklükte bir popülasyon oluşturuyor. Daha sonra yapmamız
 gereken şey, bireylerin aradığımız sonuca ne kadar yakın olduğunu bulmak. Bunun için, cost function (maliyet fonksiyonu) denen fonksiyonlar
 kullanılıyor. Ben her bir satır ve sütun için, hata terimini <code>(olmasını istediğimiz toplam - satır veya sütun toplamı)**2</code> olarak tanımladım.
 Her bireyin maliyeti, hata terimlerinin toplamının karekökü olacak.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">costs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">population</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    Return a list of costs. costs[i] is cost of population[i]</span>
-<span class="sd">    Each row and column is said to be a unit.</span>
-<span class="sd">    (sum(unit) - sum(1..n^2) / n) ^ 2 is a squared residual</span>
-<span class="sd">    costs[i]["SSR"] = sum(squaredresiduals)</span>
-<span class="sd">    """</span>
-
-    <span class="n">costs</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">for</span> <span class="n">individual</span> <span class="ow">in</span> <span class="n">population</span><span class="p">:</span>
-        <span class="n">errorterms</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">:</span>
-            <span class="n">errorterms</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">unit</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sumtarget</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">individual</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">unit</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span>
-        <span class="n">errorterms</span><span class="p">[</span><span class="s2">"SSR"</span><span class="p">]</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">errorterms</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span> <span class="c1"># take square root to normalize</span>
-        <span class="n">costs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">errorterms</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">costs</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">costs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">population</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="sd">    Return a list of costs. costs[i] is cost of population[i]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="sd">    Each row and column is said to be a unit.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="sd">    (sum(unit) - sum(1..n^2) / n) ^ 2 is a squared residual</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="sd">    costs[i]["SSR"] = sum(squaredresiduals)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="sd">    """</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="n">costs</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">individual</span> <span class="ow">in</span> <span class="n">population</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="n">errorterms</span> <span class="o">=</span> <span class="p">{}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>            <span class="n">errorterms</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">unit</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sumtarget</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">individual</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">unit</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="n">errorterms</span><span class="p">[</span><span class="s2">"SSR"</span><span class="p">]</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">errorterms</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span> <span class="c1"># take square root to normalize</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>        <span class="n">costs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">errorterms</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">costs</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Asıl maliyet, <code>errorterms</code> sözlüğünün içindeki 'SSR' anahtarında. Her satır ve sütunun için ayrı ayrı hata terimlerini gerek duyabilirim diye
 döndürüyorum. Artık, yeni bir nesil oluşturabilmek için gerekli fonksiyonlar tanımlandı. Evrimsel algoritmanın en merkezi noktası burası:</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">nextgeneration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">population</span><span class="p">,</span> <span class="n">costs</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    Picks best 1/4 of population, they survive to next generation</span>
-<span class="sd">    Randomly mutates them 3 time, and add this to new generation too.</span>
-
-<span class="sd">    Best one will get extra mutations</span>
-<span class="sd">    """</span>
-    <span class="n">popfitness</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">izip</span><span class="p">(</span><span class="n">population</span><span class="p">,</span> <span class="n">costs</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">"SSR"</span><span class="p">])</span>
-
-    <span class="n">elites</span> <span class="o">=</span> <span class="n">popfitness</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">population</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span><span class="p">]</span>
-    <span class="n">nextgen</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">nextgen</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">elites</span><span class="p">)</span>
-
-    <span class="c1"># Random swap 2 squares</span>
-    <span class="k">for</span> <span class="n">individual</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">elites</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
-            <span class="n">new_individual</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">individual</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()}</span>
-            <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">new_individual</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">unit</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">square</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">izip</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span> <span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
-                <span class="n">new_individual</span><span class="p">[</span><span class="n">square</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-            <span class="n">new_individual</span><span class="p">[</span><span class="n">unit</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">nextgen</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_individual</span><span class="p">)</span>
-
-    <span class="c1"># Shift a row or column</span>
-    <span class="k">for</span> <span class="n">individual</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">elites</span><span class="p">:</span>
-        <span class="n">new_individual</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">individual</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()}</span>
-        <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">squares</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="n">new_individual</span><span class="p">[</span><span class="n">s1</span><span class="p">],</span> <span class="n">new_individual</span><span class="p">[</span><span class="n">s2</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_individual</span><span class="p">[</span><span class="n">s2</span><span class="p">],</span> <span class="n">new_individual</span><span class="p">[</span><span class="n">s1</span><span class="p">]</span>
-        <span class="n">nextgen</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_individual</span><span class="p">)</span>
-
-    <span class="n">king</span><span class="p">,</span> <span class="n">cost</span> <span class="o">=</span> <span class="n">popfitness</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-    <span class="c1"># Find 2 rows that has biggest error</span>
-    <span class="n">r1</span><span class="p">,</span> <span class="n">r2</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(((</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">cost</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">)])</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)[:</span><span class="mi">2</span><span class="p">])</span>
-
-    <span class="c1"># Find 2 columns that has biggest error</span>
-    <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(((</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">cost</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)[:</span><span class="mi">2</span><span class="p">])</span>
-
-    <span class="c1"># Swap and add</span>
-
-    <span class="n">new_individual</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">king</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()}</span>
-    <span class="n">new_individual</span><span class="p">[</span><span class="n">r1</span><span class="o">+</span><span class="n">c1</span><span class="p">],</span> <span class="n">new_individual</span><span class="p">[</span><span class="n">r2</span><span class="o">+</span><span class="n">c2</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_individual</span><span class="p">[</span><span class="n">r2</span><span class="o">+</span><span class="n">c2</span><span class="p">],</span> <span class="n">new_individual</span><span class="p">[</span><span class="n">r1</span><span class="o">+</span><span class="n">c1</span><span class="p">]</span>
-    <span class="n">nextgen</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_individual</span><span class="p">)</span>
-
-    <span class="n">new_individual</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">individual</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()}</span>
-    <span class="n">new_individual</span><span class="p">[</span><span class="n">r1</span><span class="o">+</span><span class="n">c2</span><span class="p">],</span> <span class="n">new_individual</span><span class="p">[</span><span class="n">r2</span><span class="o">+</span><span class="n">c1</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_individual</span><span class="p">[</span><span class="n">r2</span><span class="o">+</span><span class="n">c1</span><span class="p">],</span> <span class="n">new_individual</span><span class="p">[</span><span class="n">r1</span><span class="o">+</span><span class="n">c2</span><span class="p">]</span>
-    <span class="n">nextgen</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_individual</span><span class="p">)</span>
-
-
-    <span class="k">return</span> <span class="n">nextgen</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">nextgeneration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">population</span><span class="p">,</span> <span class="n">costs</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="sd">    Picks best 1/4 of population, they survive to next generation</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="sd">    Randomly mutates them 3 time, and add this to new generation too.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="sd">    Best one will get extra mutations</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="sd">    """</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">popfitness</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">izip</span><span class="p">(</span><span class="n">population</span><span class="p">,</span> <span class="n">costs</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">"SSR"</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="n">elites</span> <span class="o">=</span> <span class="n">popfitness</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">population</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="n">nextgen</span> <span class="o">=</span> <span class="p">[]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>    <span class="n">nextgen</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">elites</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>    <span class="c1"># Random swap 2 squares</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">individual</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">elites</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>        <span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>            <span class="n">new_individual</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">individual</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>            <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">new_individual</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">unit</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>            <span class="k">for</span> <span class="n">square</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">izip</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span> <span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>                <span class="n">new_individual</span><span class="p">[</span><span class="n">square</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>            <span class="n">new_individual</span><span class="p">[</span><span class="n">unit</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>            <span class="n">nextgen</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_individual</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>    <span class="c1"># Shift a row or column</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">individual</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">elites</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>        <span class="n">new_individual</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">individual</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>        <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">squares</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>        <span class="n">new_individual</span><span class="p">[</span><span class="n">s1</span><span class="p">],</span> <span class="n">new_individual</span><span class="p">[</span><span class="n">s2</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_individual</span><span class="p">[</span><span class="n">s2</span><span class="p">],</span> <span class="n">new_individual</span><span class="p">[</span><span class="n">s1</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>        <span class="n">nextgen</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_individual</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>    <span class="n">king</span><span class="p">,</span> <span class="n">cost</span> <span class="o">=</span> <span class="n">popfitness</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>    <span class="c1"># Find 2 rows that has biggest error</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>    <span class="n">r1</span><span class="p">,</span> <span class="n">r2</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(((</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">cost</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">)])</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="mi">2</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code>    <span class="c1"># Find 2 columns that has biggest error</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code>    <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(((</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">cost</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="mi">2</span><span class="p">])</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-38"><code data-line-number="38"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-39"><code data-line-number="39"></code></a></td>
+<td class="code"><code>    <span class="c1"># Swap and add</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-40"><code data-line-number="40"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-41"><code data-line-number="41"></code></a></td>
+<td class="code"><code>    <span class="n">new_individual</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">king</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-42"><code data-line-number="42"></code></a></td>
+<td class="code"><code>    <span class="n">new_individual</span><span class="p">[</span><span class="n">r1</span><span class="o">+</span><span class="n">c1</span><span class="p">],</span> <span class="n">new_individual</span><span class="p">[</span><span class="n">r2</span><span class="o">+</span><span class="n">c2</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_individual</span><span class="p">[</span><span class="n">r2</span><span class="o">+</span><span class="n">c2</span><span class="p">],</span> <span class="n">new_individual</span><span class="p">[</span><span class="n">r1</span><span class="o">+</span><span class="n">c1</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-43"><code data-line-number="43"></code></a></td>
+<td class="code"><code>    <span class="n">nextgen</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_individual</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-44"><code data-line-number="44"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-45"><code data-line-number="45"></code></a></td>
+<td class="code"><code>    <span class="n">new_individual</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">individual</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-46"><code data-line-number="46"></code></a></td>
+<td class="code"><code>    <span class="n">new_individual</span><span class="p">[</span><span class="n">r1</span><span class="o">+</span><span class="n">c2</span><span class="p">],</span> <span class="n">new_individual</span><span class="p">[</span><span class="n">r2</span><span class="o">+</span><span class="n">c1</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_individual</span><span class="p">[</span><span class="n">r2</span><span class="o">+</span><span class="n">c1</span><span class="p">],</span> <span class="n">new_individual</span><span class="p">[</span><span class="n">r1</span><span class="o">+</span><span class="n">c2</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-47"><code data-line-number="47"></code></a></td>
+<td class="code"><code>    <span class="n">nextgen</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_individual</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-48"><code data-line-number="48"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-49"><code data-line-number="49"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-50"><code data-line-number="50"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">nextgen</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Ben burada bir sonraki nesili elde etmek için, farklı mutasyonlar kullandım. Eşleşme yapmayı da denemiştim,
 ama güzel sonuç vermedi. Burada, eski nesilden en uygun çeyreğini, olduğu gibi yeni nesile kopyaladım. Ayrıca,
@@ -198,30 +632,118 @@ bireyler için, her birinden bir satır veya bir sütun seçip, bunu sağa veya 
 en uygun bireye, ekstra mutasyon uyguladım. Bu nesilden nesile geçişi nasıl kodladığınız, algoritmanızın sonuç üretebilme
 gücünü bir hayli değiştiriyor.</p>
 <p>Son olarak, ihtiyacım olan şey, ana döngüyü kurmak.</p>
-<pre class="code literal-block"><span></span>def geneticsearch(self, maxgenerations = 100, populationsize = 40, limit=0):
-
-    population = self.randompopulation(populationsize)
-    costs = self.costs(population)
-    found = False
-    bestcost = -1
-    solution = None
-
-    for i in range(maxgenerations):
-        SSRS = [c["SSR"] for c in costs]
-        bestcost = min(SSRS)
-        solution = population[SSRS.index(bestcost)]
-
-
-        if bestcost &lt;= limit:
-            found = True
-            break
-
-        population = self.nextgeneration(population, costs)
-        costs = self.costs(population)
-
-    return solution, found, i
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="n">def</span> <span class="n">geneticsearch</span><span class="p">(</span><span class="k">self</span><span class="p">,</span> <span class="n">maxgenerations</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">populationsize</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span> <span class="k">limit</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">population</span> <span class="o">=</span> <span class="k">self</span><span class="p">.</span><span class="n">randompopulation</span><span class="p">(</span><span class="n">populationsize</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="n">costs</span> <span class="o">=</span> <span class="k">self</span><span class="p">.</span><span class="n">costs</span><span class="p">(</span><span class="n">population</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="k">found</span> <span class="o">=</span> <span class="k">False</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="n">bestcost</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="n">solution</span> <span class="o">=</span> <span class="k">None</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">range</span><span class="p">(</span><span class="n">maxgenerations</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="n">SSRS</span> <span class="o">=</span> <span class="p">[</span><span class="k">c</span><span class="p">[</span><span class="ss">"SSR"</span><span class="p">]</span> <span class="k">for</span> <span class="k">c</span> <span class="k">in</span> <span class="n">costs</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="n">bestcost</span> <span class="o">=</span> <span class="k">min</span><span class="p">(</span><span class="n">SSRS</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="n">solution</span> <span class="o">=</span> <span class="n">population</span><span class="p">[</span><span class="n">SSRS</span><span class="p">.</span><span class="k">index</span><span class="p">(</span><span class="n">bestcost</span><span class="p">)]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">bestcost</span> <span class="o">&lt;=</span> <span class="k">limit</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>            <span class="k">found</span> <span class="o">=</span> <span class="k">True</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>            <span class="n">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>        <span class="n">population</span> <span class="o">=</span> <span class="k">self</span><span class="p">.</span><span class="n">nextgeneration</span><span class="p">(</span><span class="n">population</span><span class="p">,</span> <span class="n">costs</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>        <span class="n">costs</span> <span class="o">=</span> <span class="k">self</span><span class="p">.</span><span class="n">costs</span><span class="p">(</span><span class="n">population</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="evrimsel-algoritmalar.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>    <span class="k">return</span> <span class="n">solution</span><span class="p">,</span> <span class="k">found</span><span class="p">,</span> <span class="n">i</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Evet, ana döngüde ekstra birşey yok. Belli şartlar yerine getirilinceye kadar, popülasyonu yeniliyor.</p>
 <h3>Çalışma Süresi</h3>

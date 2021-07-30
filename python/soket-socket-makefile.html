@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Soket objelerinin makefile metodu sayesinde, soketler üzerinde buffer'lı okuma ve yazma işlemleri yapabilir, bunlarda dosyalardaki gibi readlines() ve benzeri metotlar kullanabiliriz.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/soket-socket-makefile.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/soket-socket-makefile.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="descriptor.html" title="Python 'descriptor' - giriş" type="text/html">
 <link rel="next" href="string-translate.html" title="Python string translate() metodu" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="socket objelerinden dosya yapmak">
-<meta property="og:url" content="http://ysar.net/python/soket-socket-makefile.html">
-<meta property="og:description" content="Soket objelerinin makefile metodu sayesinde, soketler üzerinde buffer'lı okuma ve yazma işlemleri yapabilir, bunlarda dosyalardaki gibi readlines() ve benzeri metotlar kullanabiliriz.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2012-08-30T22:47:00+03:00">
 </head>
 <body>
 
@@ -46,35 +40,143 @@
     <div>
 <p>Bu kısacık yazıda, Python'daki socket objelerinden dosya objesi elde
 etmeye çalışan socket.makefile fonksiyonundan bahsedeceğim; <!-- TEASER_END --></p>
-<pre class="code literal-block"><span></span><span class="c1">#coding:utf-8</span>
-<span class="kn">import</span> <span class="nn">socket</span>
-
-<span class="n">conn</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">create_connection</span><span class="p">((</span><span class="s2">"www.google.com"</span><span class="p">,</span><span class="mi">80</span><span class="p">))</span>
-
-<span class="n">http_request</span> <span class="o">=</span> <span class="s2">"""GET / HTTP/1.1</span>
-<span class="s2">Host: {}</span>
-<span class="s2">Connection: Close</span>
-
-<span class="s2">"""</span>
-<span class="n">conn</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span><span class="n">http_request</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">"www.google.com"</span><span class="p">))</span>
-<span class="n">headerlar</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">dosya</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">makefile</span><span class="p">(</span><span class="s2">"r"</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">satir</span> <span class="ow">in</span> <span class="n">dosya</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">satir</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-        <span class="k">break</span>
-    <span class="k">if</span> <span class="s2">":"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">satir</span><span class="p">:</span>
-        <span class="k">continue</span>
-    <span class="n">header</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">deger</span> <span class="o">=</span> <span class="n">satir</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">":"</span><span class="p">)</span>
-    <span class="n">headerlar</span><span class="p">[</span><span class="n">header</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span> <span class="o">=</span> <span class="n">deger</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-
-<span class="n">dosya</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-<span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-<span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">headerlar</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="k">print</span> <span class="n">k</span><span class="p">,</span> <span class="s2">"=&gt;"</span><span class="p">,</span> <span class="n">v</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="c1">#coding:utf-8</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">socket</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="n">conn</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">create_connection</span><span class="p">((</span><span class="s2">"www.google.com"</span><span class="p">,</span><span class="mi">80</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="n">http_request</span> <span class="o">=</span> <span class="s2">"""GET / HTTP/1.1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="s2">Host: </span><span class="si">{}</span><span class="s2"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="s2">Connection: Close</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="s2">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><span class="n">conn</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span><span class="n">http_request</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">"www.google.com"</span><span class="p">))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><span class="n">headerlar</span> <span class="o">=</span> <span class="p">{}</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><span class="n">dosya</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">makefile</span><span class="p">(</span><span class="s2">"r"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">satir</span> <span class="ow">in</span> <span class="n">dosya</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="ow">not</span> <span class="n">satir</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>        <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>    <span class="k">if</span> <span class="s2">":"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">satir</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>        <span class="k">continue</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>    <span class="n">header</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">deger</span> <span class="o">=</span> <span class="n">satir</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">":"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>    <span class="n">headerlar</span><span class="p">[</span><span class="n">header</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span> <span class="o">=</span> <span class="n">deger</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code><span class="n">dosya</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code><span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code><span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">headerlar</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="soket-socket-makefile.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>    <span class="nb">print</span> <span class="n">k</span><span class="p">,</span> <span class="s2">"=&gt;"</span><span class="p">,</span> <span class="n">v</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Daha önceki socket yazılarını okuduysanız, burada size yeni olan tek şey
 <code>dosya = conn.makefile("r")</code> satırı olmalı. Bu satır sayesinde, socket

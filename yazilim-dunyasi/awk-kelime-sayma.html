@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Bu birkaç satırlık awk programı ile bir dökümandaki kelimeleri sayabilirsiniz.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/yazilim-dunyasi/awk-kelime-sayma.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/yazilim-dunyasi/awk-kelime-sayma.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="ideal-python-klavyesi.html" title="İdeal Python klavyesi" type="text/html">
 <link rel="next" href="bitly-php-library.html" title="Announcing php library for bitly api" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="awk'da kelime sayma programı">
-<meta property="og:url" content="http://ysar.net/yazilim-dunyasi/awk-kelime-sayma.html">
-<meta property="og:description" content="Bu birkaç satırlık awk programı ile bir dökümandaki kelimeleri sayabilirsiniz.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2013-01-20T02:21:00+02:00">
 </head>
 <body>
 
@@ -44,31 +38,59 @@
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
-<table class="codehilitetable"><tr>
-<td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10</pre></div></td>
-<td class="code">
-<pre class="code literal-block"><span></span>#!/usr/bin/awk -f
-BEGIN {
-    FS="[^A-Za-z]"
-}
-{
-    for (i=1; i&lt;NF; i++) {
-        words[i]++;
-    }
-}
-END {for (word in words) print word,words[word]}
-</pre>
-</td>
-</tr></table>
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="awk-kelime-sayma.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="err">#!</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">awk</span><span class="w"> </span><span class="o">-</span><span class="n">f</span><span class="w"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="awk-kelime-sayma.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="k">BEGIN</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="awk-kelime-sayma.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><span class="w">    </span><span class="n">FS</span><span class="o">=</span><span class="ss">"[^A-Za-z]"</span><span class="w"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="awk-kelime-sayma.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="err">}</span><span class="w"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="awk-kelime-sayma.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="err">{</span><span class="w"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="awk-kelime-sayma.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">NF</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="awk-kelime-sayma.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="w">        </span><span class="n">words</span><span class="o">[</span><span class="n">i</span><span class="o">]++</span><span class="p">;</span><span class="w"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="awk-kelime-sayma.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="w">    </span><span class="err">}</span><span class="w"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="awk-kelime-sayma.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><span class="err">}</span><span class="w"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="awk-kelime-sayma.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><span class="k">END</span><span class="w"> </span><span class="err">{</span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">word</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">words</span><span class="p">)</span><span class="w"> </span><span class="k">print</span><span class="w"> </span><span class="n">word</span><span class="p">,</span><span class="n">words</span><span class="o">[</span><span class="n">word</span><span class="o">]</span><span class="err">}</span><span class="w"></span>
+</code></td>
+</tr>
+</table></div>
+
 <p>Bir diğer gece yarısı çiziktiriği...</p>
 </div>
     </div>

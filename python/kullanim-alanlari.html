@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Python'a yeni başlayanlar için en merak edilen konulardan biri olan Python'un kullanım alanlarını, Python'un ne işe yaradığını anlattım.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/kullanim-alanlari.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/kullanim-alanlari.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="../yazilim-dunyasi/python-nikola-static-site-generator.html" title="Neden nikola'yı tercih ettim?" type="text/html">
 <link rel="next" href="../yazilim-dunyasi/iyi-programci-yazilimci-nasil-olunur.html" title="İyi Programcı Nasıl Olunur" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Python Kullanım Alanları">
-<meta property="og:url" content="http://ysar.net/python/kullanim-alanlari.html">
-<meta property="og:description" content="Python'a yeni başlayanlar için en merak edilen konulardan biri olan Python'un kullanım alanlarını, Python'un ne işe yaradığını anlattım.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2013-10-08T14:44:59+03:00">
 </head>
 <body>
 
@@ -67,21 +61,55 @@ ancak sizin için doğru bir dil olduğun emin değilseniz, bu yazı sizin için
 üniversitelerde programlamaya giriş dersinde kullanıldığını duymuştum. Ancak şu anda bunu teyit edemiyorum.</p>
 <p>Python öğrenmenin kolaylığını göstermek için, Python ve C++'da birer <em>Hello World</em> örneğine bakalım. Önce
 C++:</p>
-<pre class="code literal-block"><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
-<span class="n">using</span> <span class="n">namespace</span> <span class="n">std</span><span class="p">;</span>
-
-<span class="kr">int</span> <span class="nf">main</span><span class="p">()</span>
-<span class="p">{</span>
-      <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Merhaba Dünya"</span><span class="p">;</span>
-      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="kullanim-alanlari.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="kullanim-alanlari.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><span class="n">using</span> <span class="n">namespace</span> <span class="n">std</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="kullanim-alanlari.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="kullanim-alanlari.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><span class="kr">int</span> <span class="nf">main</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="kullanim-alanlari.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><span class="p">{</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="kullanim-alanlari.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>      <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Merhaba Dünya"</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="kullanim-alanlari.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="kullanim-alanlari.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code><span class="p">}</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>5 satır kod kullanarak ekrana <em>Merhaba Dünya</em> yazdık. Şimdi Python örneğine bakalım:</p>
-<pre class="code literal-block"><span></span><span class="k">print</span><span class="p">(</span><span class="s2">"Merhaba Dünya"</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable"><tr>
+<td class="linenos linenodiv"><a href="kullanim-alanlari.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="nb">print</span><span class="p">(</span><span class="s2">"Merhaba Dünya"</span><span class="p">)</span>
+</code></td>
+</tr></table></div>
 
 <p>Çok daha basit değil mi? Artık Python öğrenmeye niyetlendiyseniz, Python ne işe yarar sorusunun cevaplarını aramaya
 başlayabiliriz.</p>

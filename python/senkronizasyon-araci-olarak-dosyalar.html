@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
@@ -10,19 +10,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/senkronizasyon-araci-olarak-dosyalar.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/senkronizasyon-araci-olarak-dosyalar.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="../yazilim-dunyasi/content-disposition-satirinda-us-ascii-harici-karakterler.html" title="Content-Disposition Satırında US-ASCII Harici Karakterler Nasıl Kodlanmalı" type="text/html">
 <link rel="next" href="../algoritma/utf8-kodlama.html" title="UTF-8 Kodlama Algoritması" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Senkronizasyon Aracı Olarak Dosyalar">
-<meta property="og:url" content="http://ysar.net/python/senkronizasyon-araci-olarak-dosyalar.html">
-<meta property="og:description" content="Zaman zaman, yazdığımız programlarda yapılacak işi, multi-threading veya
-multi-processing kullanarak paralel olarak gerçekleştirme ihtiyacı hissederiz.
-Bu gibi durumlarda, aynı anda çalışmakta olan iş">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2019-06-04T21:03:00+03:00">
 </head>
 <body>
 
@@ -62,55 +54,243 @@ göstereceğim yöntem için gerekli olan argümanlar <code>os.O_CREAT</code> ve
 argüman birlikte kullanıldığında, oluşturmaya çalıştığımız dosya zaten varsa, dosya açma
 işlemi başarısız oluyor. Bunu nasıl kullanabileceğimizi görmek için, aşağıdaki örnek
 kodları inceleyebiliriz.</p>
-<pre class="code literal-block"><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">requests</span>
-
-<span class="n">s</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">session</span><span class="p">()</span>
-<span class="n">flags</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">O_CREAT</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">O_EXCL</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">O_WRONLY</span>
-<span class="n">endpoint</span> <span class="o">=</span> <span class="s2">"http://www.example.com/api"</span>
-
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"id-listesi.txt"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-
-    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="bp">False</span>
-        <span class="n">_id</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-        <span class="n">hedef</span> <span class="o">=</span> <span class="s2">"indirmeler/</span><span class="si">%s</span><span class="s2">.json"</span> <span class="o">%</span> <span class="n">_id</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">file_handle</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">hedef</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">errno</span> <span class="o">==</span> <span class="n">errno</span><span class="o">.</span><span class="n">EEXIST</span><span class="p">:</span>
-                <span class="sd">"""</span>
-<span class="sd">                Dosya zaten var hatası aldık, bu beklediğimiz bir durum</span>
-<span class="sd">                bu nedenle, hiçbirşey yapmayacağız</span>
-<span class="sd">                """</span>
-                <span class="k">pass</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="sd">"""</span>
-<span class="sd">                Dosya var hatası dışında bir hata alırsak,</span>
-<span class="sd">                bu hatayı görmek istiyoruz.</span>
-<span class="sd">                """</span>
-                <span class="k">raise</span>
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Herhangi bir hata almadık, indirme işlemine geç</span>
-            <span class="sd">"""</span>
-<span class="sd">            os modülü bize file-descriptor veriyor. Bu descriptor'u</span>
-<span class="sd">            kullanarak, standard bir python dosya objesi oluşturmak</span>
-<span class="sd">            için, os.fdopen fonksiyonunu kullanıyoruz</span>
-<span class="sd">            """</span>
-            <span class="k">with</span> <span class="n">os</span><span class="o">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">file_handle</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_obj</span><span class="p">:</span>
-                <span class="k">print</span> <span class="s2">"</span><span class="si">%s</span><span class="s2"> indiriliyor"</span> <span class="o">%</span> <span class="n">_id</span>
-
-                <span class="n">r</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="n">_id</span><span class="p">})</span>
-
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">(),</span> <span class="n">file_obj</span><span class="p">)</span>
-                <span class="k">except</span><span class="p">:</span>
-                    <span class="n">error</span> <span class="o">=</span> <span class="bp">True</span>
-
-        <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">hedef</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">os</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><span class="kn">import</span> <span class="nn">requests</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="n">s</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">session</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="n">flags</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">O_CREAT</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">O_EXCL</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">O_WRONLY</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="n">endpoint</span> <span class="o">=</span> <span class="s2">"http://www.example.com/api"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"id-listesi.txt"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="n">error</span> <span class="o">=</span> <span class="kc">False</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="n">_id</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>        <span class="n">hedef</span> <span class="o">=</span> <span class="s2">"indirmeler/</span><span class="si">%s</span><span class="s2">.json"</span> <span class="o">%</span> <span class="n">_id</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>            <span class="n">file_handle</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">hedef</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">errno</span> <span class="o">==</span> <span class="n">errno</span><span class="o">.</span><span class="n">EEXIST</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>                <span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><span class="sd">                Dosya zaten var hatası aldık, bu beklediğimiz bir durum</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><span class="sd">                bu nedenle, hiçbirşey yapmayacağız</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code><span class="sd">                """</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>                <span class="k">pass</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>            <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>                <span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code><span class="sd">                Dosya var hatası dışında bir hata alırsak,</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code><span class="sd">                bu hatayı görmek istiyoruz.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code><span class="sd">                """</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>                <span class="k">raise</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Herhangi bir hata almadık, indirme işlemine geç</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>            <span class="sd">"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code><span class="sd">            os modülü bize file-descriptor veriyor. Bu descriptor'u</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code><span class="sd">            kullanarak, standard bir python dosya objesi oluşturmak</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code><span class="sd">            için, os.fdopen fonksiyonunu kullanıyoruz</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code><span class="sd">            """</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code>            <span class="k">with</span> <span class="n">os</span><span class="o">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">file_handle</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_obj</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code>                <span class="nb">print</span> <span class="s2">"</span><span class="si">%s</span><span class="s2"> indiriliyor"</span> <span class="o">%</span> <span class="n">_id</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-38"><code data-line-number="38"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-39"><code data-line-number="39"></code></a></td>
+<td class="code"><code>                <span class="n">r</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="n">_id</span><span class="p">})</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-40"><code data-line-number="40"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-41"><code data-line-number="41"></code></a></td>
+<td class="code"><code>                <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-42"><code data-line-number="42"></code></a></td>
+<td class="code"><code>                    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">(),</span> <span class="n">file_obj</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-43"><code data-line-number="43"></code></a></td>
+<td class="code"><code>                <span class="k">except</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-44"><code data-line-number="44"></code></a></td>
+<td class="code"><code>                    <span class="n">error</span> <span class="o">=</span> <span class="kc">True</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-45"><code data-line-number="45"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-46"><code data-line-number="46"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-47"><code data-line-number="47"></code></a></td>
+<td class="code"><code>            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">hedef</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Yukarıdaki kodları incelerseniz, <code>multiprocessing</code> ve <code>threading</code> modüllerinden
 hiç bahsedilmediğini göreceksiniz. İşin güzelliği de burada. Yukarıdaki programı
@@ -121,11 +301,23 @@ başlamadığını anlamak için, dosyayı (os.O_CREAT | os.O_EXCL) seçenekleri
 açmaya çalışıyor. Eğer o dosya daha önce oluşturulmuşsa, bir sonraki linkten
 denemeye devam ediyor.</p>
 <p>Peki, aşağıdaki şekilde yapmış olsak, işimizi görmez miydi?</p>
-<pre class="code literal-block"><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">hedef</span><span class="p">):</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">hedef</span><span class="p">,</span><span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="c1"># burada indirme işlemini yap</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">hedef</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">hedef</span><span class="p">,</span><span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="senkronizasyon-araci-olarak-dosyalar.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>        <span class="c1"># burada indirme işlemini yap</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Dürüst olmak gerekirse, eğer çok kritik bir iş yapmıyorsanız, bu yöntem
 de işinizi görebilir. Ancak, prensip olarak yanlış, çünkü, race-condition

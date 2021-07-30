@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="            og: http://ogp.me/ns# article: http://ogp.me/ns/article#     " vocab="http://ogp.me/ns" lang="tr">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Daha önceki iki yazıda yazmış olduğumuz Lexer'a ufak dokunuşlar yapacağız.">
@@ -11,17 +11,11 @@
 <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
 <script defer src="../assets/js/misc.js"></script><meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://ysar.net/python/lexical-analiz-3.html">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="tr" href="../rss.xml">
+<link rel="canonical" href="https://yasar11732.github.io/python/lexical-analiz-3.html">
 <!--[if lt IE 9]><script src="../assets/js/html5shiv-printshiv.min.js"></script><![endif]--><meta name="author" content="Yaşar Arabacı">
 <link rel="prev" href="lexical-analiz-2.html" title="Lexical Analiz 2" type="text/html">
 <link rel="next" href="parsing-parser-topdown-operator-precedence.html" title="Parsing Kavramı ve Yöntemleri" type="text/html">
-<meta property="og:site_name" content="YSAR.NET">
-<meta property="og:title" content="Lexical Analiz 3">
-<meta property="og:url" content="http://ysar.net/python/lexical-analiz-3.html">
-<meta property="og:description" content="Daha önceki iki yazıda yazmış olduğumuz Lexer'a ufak dokunuşlar yapacağız.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2013-10-14T23:20:00+03:00">
 </head>
 <body>
 
@@ -49,112 +43,460 @@ yapılabileceğinden bahsettiğim birkaç eklemeyi de göstereyim dedim.</p>
 <h3>Satır Sayma</h3>
 <p>Satır sayma konusu çok kolay, <code>_lexInitial</code> ve <code>_lexString</code> yeni satırla karşılaştıklarında, bir değişkeni artıracak.
 Ayrıca, gönderdiğimiz tokenlere satır bilgisi de ekleyeceğiz. <!-- TEASER_END --></p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inp</span><span class="p">,</span> <span class="n">que</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"unnamed lexer"</span><span class="p">):</span>
-    <span class="c1"># Yukarıla aynı</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">line</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="k">def</span> <span class="nf">_lexInitial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-    <span class="c1"># Yukarılar aynı</span>
-    <span class="k">elif</span> <span class="n">current</span> <span class="ow">in</span> <span class="s2">" </span><span class="se">\t\n</span><span class="s2">"</span><span class="p">:</span> <span class="c1"># ignore whitespace</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span>
-        <span class="k">if</span> <span class="n">current</span> <span class="o">==</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="o">+=</span><span class="mi">1</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lexIndentation</span>
-    <span class="c1"># Aşağılar aynı</span>
-<span class="k">def</span> <span class="nf">_lexString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="n">escape</span> <span class="o">=</span> <span class="bp">False</span>
-    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-        <span class="c1"># Yukarılar aynı</span>
-        <span class="k">elif</span> <span class="n">current</span> <span class="o">==</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">line</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="c1"># bunu sona ekledim, aşağıda birşey yok</span>
-
-<span class="k">def</span> <span class="nf">_emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_type</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_que</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">token_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inp</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_start</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">_pos</span><span class="p">]))</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inp</span><span class="p">,</span> <span class="n">que</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"unnamed lexer"</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="c1"># Yukarıla aynı</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="bp">self</span><span class="o">.</span><span class="n">line</span> <span class="o">=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">_lexInitial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="c1"># Yukarılar aynı</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>    <span class="k">elif</span> <span class="n">current</span> <span class="ow">in</span> <span class="s2">" </span><span class="se">\t\n</span><span class="s2">"</span><span class="p">:</span> <span class="c1"># ignore whitespace</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">current</span> <span class="o">==</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>            <span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="o">+=</span><span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lexIndentation</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>    <span class="c1"># Aşağılar aynı</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">_lexString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>    <span class="n">escape</span> <span class="o">=</span> <span class="kc">False</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>        <span class="c1"># Yukarılar aynı</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>        <span class="k">elif</span> <span class="n">current</span> <span class="o">==</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>            <span class="bp">self</span><span class="o">.</span><span class="n">line</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>        <span class="c1"># bunu sona ekledim, aşağıda birşey yok</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">_emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_type</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>    <span class="bp">self</span><span class="o">.</span><span class="n">_que</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">token_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inp</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_start</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">_pos</span><span class="p">]))</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>    <span class="bp">self</span><span class="o">.</span><span class="n">_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span>
+</code></td>
+</tr>
+</table></div>
 
 <p><code>_lexIndentation</code> biraz spoiler oldu, ama onun dışında açıklayacak birşey yok.</p>
 <h3>İşleçler</h3>
 <p>İşleçlerle karşılaşacak tek state, <code>_lexInitial</code>. Bunda yapacağımız bir değişiklik işimizi görecek.</p>
-<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">Lexer</span><span class="p">(</span><span class="n">Thread</span><span class="p">):</span>
-    <span class="n">operators</span> <span class="o">=</span> <span class="s2">"+-*/^=~:"</span>
-    <span class="k">def</span> <span class="nf">_lexInitial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">"Starting State"</span>
-        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-            <span class="c1"># Yukarılar aynı</span>
-            <span class="k">elif</span> <span class="n">current</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">operators</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_emit</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Lexer</span><span class="p">(</span><span class="n">Thread</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code>    <span class="n">operators</span> <span class="o">=</span> <span class="s2">"+-*/^=~:"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">_lexInitial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code>        <span class="s2">"Starting State"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code>        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code>            <span class="c1"># Yukarılar aynı</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-7"><code data-line-number="7"></code></a></td>
+<td class="code"><code>            <span class="k">elif</span> <span class="n">current</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">operators</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-8"><code data-line-number="8"></code></a></td>
+<td class="code"><code>                <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-9"><code data-line-number="9"></code></a></td>
+<td class="code"><code>                <span class="bp">self</span><span class="o">.</span><span class="n">_emit</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <h3>Keywordler</h3>
 <p>Keyword dediğimiz şey, aslında önceden bizim belirlediğimiz bir <em>name</em>. <code>_lexName</code> düzenlenerek keyword'lerimizi
 token olarak belirtebiliriz.</p>
-<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">Lexer</span><span class="p">(</span><span class="n">Thread</span><span class="p">):</span>
-    <span class="n">keywords</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"if"</span><span class="p">,</span><span class="s2">"else"</span><span class="p">,</span><span class="s2">"or"</span><span class="p">,</span><span class="s2">"and"</span><span class="p">,</span><span class="s2">"while"</span><span class="p">,</span><span class="s2">"for"</span><span class="p">,</span><span class="s2">"switch"</span><span class="p">,</span><span class="s2">"case"</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_lexName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">def</span> <span class="nf">keywordOrName</span><span class="p">():</span>
-            <span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inp</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_start</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">_pos</span><span class="p">]</span>
-            <span class="k">return</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span> <span class="ow">and</span> <span class="n">token</span> <span class="ow">or</span> <span class="s2">"NAME"</span>
-
-        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_currentChar</span><span class="p">()</span>
-            <span class="k">except</span> <span class="n">Consumed</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_emit</span><span class="p">(</span><span class="n">keywordOrName</span><span class="p">())</span>
-                <span class="k">raise</span>
-            <span class="k">if</span> <span class="n">current</span> <span class="ow">in</span> <span class="n">ascii_letters</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_emit</span><span class="p">(</span><span class="n">keywordOrName</span><span class="p">())</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lexInitial</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Lexer</span><span class="p">(</span><span class="n">Thread</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="n">keywords</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"if"</span><span class="p">,</span><span class="s2">"else"</span><span class="p">,</span><span class="s2">"or"</span><span class="p">,</span><span class="s2">"and"</span><span class="p">,</span><span class="s2">"while"</span><span class="p">,</span><span class="s2">"for"</span><span class="p">,</span><span class="s2">"switch"</span><span class="p">,</span><span class="s2">"case"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">_lexName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>        <span class="k">def</span> <span class="nf">keywordOrName</span><span class="p">():</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>            <span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inp</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_start</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">_pos</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>            <span class="k">return</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span> <span class="ow">and</span> <span class="n">token</span> <span class="ow">or</span> <span class="s2">"NAME"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>            <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>                <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_currentChar</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>            <span class="k">except</span> <span class="n">Consumed</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>                <span class="bp">self</span><span class="o">.</span><span class="n">_emit</span><span class="p">(</span><span class="n">keywordOrName</span><span class="p">())</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>                <span class="k">raise</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">current</span> <span class="ow">in</span> <span class="n">ascii_letters</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>                <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>            <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>                <span class="bp">self</span><span class="o">.</span><span class="n">_emit</span><span class="p">(</span><span class="n">keywordOrName</span><span class="p">())</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lexInitial</span>
+</code></td>
+</tr>
+</table></div>
 
 <h3>Indentation</h3>
 <p>Geldik zurnanın zırt dediği yere! Önce kodları görelim:</p>
-<pre class="code literal-block"><span></span><span class="k">class</span> <span class="nc">Lexer</span><span class="p">(</span><span class="n">Thread</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inp</span><span class="p">,</span> <span class="n">que</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"unnamed lexer"</span><span class="p">):</span>
-        <span class="c1"># Aynısı</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">indentlevels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-    <span class="k">def</span> <span class="nf">_lexIndentation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">current_indent</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-            <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_currentChar</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">current</span> <span class="o">==</span> <span class="s2">" "</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="n">current_indent</span><span class="o">+=</span><span class="mi">1</span>
-            <span class="k">elif</span> <span class="n">current</span> <span class="o">==</span> <span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="n">current_indent</span><span class="o">+=</span><span class="mi">4</span>
-            <span class="k">elif</span> <span class="n">current</span> <span class="o">==</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="n">current_indent</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">current_indent</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentlevels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-                    <span class="k">if</span> <span class="n">current_indent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentlevels</span><span class="p">:</span>
-                        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-                            <span class="k">if</span> <span class="n">current_indent</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentlevels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">_emit</span><span class="p">(</span><span class="s2">"DEDENT"</span><span class="p">)</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">indentlevels</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-                            <span class="k">else</span><span class="p">:</span>
-                                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lexInitial</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="n">LexException</span><span class="p">(</span><span class="s2">"Congratz! Your indentation is all messed up!"</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">current_indent</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentlevels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_emit</span><span class="p">(</span><span class="s2">"INDENT"</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">indentlevels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_indent</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lexInitial</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lexInitial</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">class</span> <span class="nc">Lexer</span><span class="p">(</span><span class="n">Thread</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inp</span><span class="p">,</span> <span class="n">que</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"unnamed lexer"</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>        <span class="c1"># Aynısı</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">indentlevels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="k">def</span> <span class="nf">_lexIndentation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>        <span class="n">current_indent</span> <span class="o">=</span> <span class="mi">0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>            <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_currentChar</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>            <span class="k">if</span> <span class="n">current</span> <span class="o">==</span> <span class="s2">" "</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>                <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>                <span class="n">current_indent</span><span class="o">+=</span><span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>            <span class="k">elif</span> <span class="n">current</span> <span class="o">==</span> <span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>                <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>                <span class="n">current_indent</span><span class="o">+=</span><span class="mi">4</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>            <span class="k">elif</span> <span class="n">current</span> <span class="o">==</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>                <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>                <span class="n">current_indent</span> <span class="o">=</span> <span class="mi">0</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>            <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code>                <span class="k">if</span> <span class="n">current_indent</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentlevels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code>                    <span class="k">if</span> <span class="n">current_indent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentlevels</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code>                        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code>                            <span class="k">if</span> <span class="n">current_indent</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentlevels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code>                                <span class="bp">self</span><span class="o">.</span><span class="n">_emit</span><span class="p">(</span><span class="s2">"DEDENT"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code>                                <span class="bp">self</span><span class="o">.</span><span class="n">indentlevels</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code>                            <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code>                                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lexInitial</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code>                    <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code>                        <span class="k">raise</span> <span class="n">LexException</span><span class="p">(</span><span class="s2">"Congratz! Your indentation is all messed up!"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code>                <span class="k">elif</span> <span class="n">current_indent</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentlevels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code>                    <span class="bp">self</span><span class="o">.</span><span class="n">_emit</span><span class="p">(</span><span class="s2">"INDENT"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code>                    <span class="bp">self</span><span class="o">.</span><span class="n">indentlevels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_indent</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code>                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lexInitial</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code>                <span class="k">else</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code>                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lexInitial</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>İlk bakışta göze korkunç geliyor ama çok birşeyi yok aslında. Öncelikle, <code>__init__</code> içerisinde <code>indentlevels</code> adında bir liste
 tanımladık. Bunu yapmamızın nedeni, önceki girintileme seviyelerini akılda tutmak. Bunu yapmazsak, doğru sayıya çıkıntılama (girintilemenin tersi :) )
@@ -180,46 +522,182 @@ karşılaştırıyor. Eğer daha önceki seviyelerden biriyle eşleşiyorsa, o s
 yoksa, Exception veriyor. Tıpkı Python dilinin yaptığı gibi.</p>
 <p>Eğer o anki girintileme, önceki ile aynıysa, kontrolü <code>_lexInitial</code> devralıyor, ve işlem devam ediyor.</p>
 <p>Düzeltilmesi gereken bir şey daha var aslında. Okunacak girdi bittiği zaman, girintilemeyi sıfırlamak gerek.</p>
-<pre class="code literal-block"><span></span><span class="k">def</span> <span class="nf">_cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="n">current_indentation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentlevels</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-    <span class="k">while</span> <span class="n">current_indentation</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_emit</span><span class="p">(</span><span class="s2">"DEDENT"</span><span class="p">)</span>
-        <span class="n">current_indentation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentlevels</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_emit</span><span class="p">(</span><span class="s2">"END"</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lexInitial</span>
-    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">state</span> <span class="o">=</span> <span class="n">state</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">Consumed</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_cleanup</span><span class="p">()</span>
-            <span class="k">break</span>
-        <span class="k">except</span> <span class="n">LexException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">print</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_emit</span><span class="p">(</span><span class="s2">"END"</span><span class="p">)</span>
-            <span class="k">break</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">_cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="n">current_indentation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentlevels</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="n">current_indentation</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code>        <span class="bp">self</span><span class="o">.</span><span class="n">_emit</span><span class="p">(</span><span class="s2">"DEDENT"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code>        <span class="n">current_indentation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentlevels</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code>    <span class="bp">self</span><span class="o">.</span><span class="n">_emit</span><span class="p">(</span><span class="s2">"END"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lexInitial</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>        <span class="k">try</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>            <span class="n">state</span> <span class="o">=</span> <span class="n">state</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>        <span class="k">except</span> <span class="n">Consumed</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>            <span class="bp">self</span><span class="o">.</span><span class="n">_cleanup</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>            <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code>        <span class="k">except</span> <span class="n">LexException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code>            <span class="nb">print</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code>            <span class="bp">self</span><span class="o">.</span><span class="n">_emit</span><span class="p">(</span><span class="s2">"END"</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code>            <span class="k">break</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Burada olup biten de oldukça açık. Son olarak, lexer'ımızın son halini bir test edelim.</p>
-<pre class="code literal-block"><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
-    <span class="n">tokenq</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
-    <span class="n">myinput</span> <span class="o">=</span> <span class="s2">"""if myname == "yasar":</span>
-<span class="s2">    12 + 12 = 28</span>
-<span class="s2">        "Another indent babe!"</span>
-<span class="s2">"Lets dedent by two!"</span>
-<span class="s2">    What happens when we finish in indented block"""</span>
-    <span class="n">mylexer</span> <span class="o">=</span> <span class="n">Lexer</span><span class="p">(</span><span class="n">myinput</span><span class="p">,</span> <span class="n">tokenq</span><span class="p">)</span>
-    <span class="n">mylexer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-
-    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-        <span class="n">ttype</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">tvalue</span> <span class="o">=</span> <span class="n">tokenq</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">ttype</span> <span class="o">==</span> <span class="s2">"END"</span><span class="p">:</span>
-            <span class="k">break</span>
-        <span class="k">print</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">(line </span><span class="si">%i</span><span class="s2">) </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">ttype</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">tvalue</span><span class="p">)</span>
-</pre>
-
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code>    <span class="n">tokenq</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code>    <span class="n">myinput</span> <span class="o">=</span> <span class="s2">"""if myname == "yasar":</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><span class="s2">    12 + 12 = 28</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><span class="s2">        "Another indent babe!"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><span class="s2">"Lets dedent by two!"</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><span class="s2">    What happens when we finish in indented block"""</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code>    <span class="n">mylexer</span> <span class="o">=</span> <span class="n">Lexer</span><span class="p">(</span><span class="n">myinput</span><span class="p">,</span> <span class="n">tokenq</span><span class="p">)</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code>    <span class="n">mylexer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code>        <span class="n">ttype</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">tvalue</span> <span class="o">=</span> <span class="n">tokenq</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code>        <span class="k">if</span> <span class="n">ttype</span> <span class="o">==</span> <span class="s2">"END"</span><span class="p">:</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code>            <span class="k">break</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="lexical-analiz-3.html#-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code>        <span class="nb">print</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">(line </span><span class="si">%i</span><span class="s2">) </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">ttype</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">tvalue</span><span class="p">)</span>
+</code></td>
+</tr>
+</table></div>
 
 <p>Çıktısı:</p>
 <pre>
