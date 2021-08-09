@@ -683,7 +683,7 @@ EXTRA_HEAD_DATA = ""
 # (translatable)
 BODY_END = """
 <script>
-  if(document.location.hostname == "ysar.net")
+  if(document.location.hostname == "yasar11732.github.io")
   {
       (function() {
         var cx = '013136674562336859018:ouohwab0yku';
