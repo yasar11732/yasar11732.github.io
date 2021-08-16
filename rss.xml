@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>YSAR.NET</title><link>https://yasar11732.github.io/</link><description>Yaşar Arabacı İnternet Günlüğü</description><atom:link href="https://yasar11732.github.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>tr</language><lastBuildDate>Fri, 30 Jul 2021 23:07:17 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Büyük Sayı Algoritmaları - Tamsayılarda Dört İşlem</title><link>https://yasar11732.github.io/algoritma/buyuk-sayi-islemleri-tamsayi-dort-islem.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Daha önceki yazılarda, doğal sayılarda dört işlem algoritmalarına değinmiştik.
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>YSAR.NET</title><link>https://yasar11732.github.io/</link><description>Yaşar Arabacı İnternet Günlüğü</description><atom:link href="https://yasar11732.github.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>tr</language><lastBuildDate>Mon, 16 Aug 2021 16:51:44 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Büyük Sayı Algoritmaları - Tamsayılarda Dört İşlem</title><link>https://yasar11732.github.io/algoritma/buyuk-sayi-islemleri-tamsayi-dort-islem.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Daha önceki yazılarda, doğal sayılarda dört işlem algoritmalarına değinmiştik.
 Bu yazıda, önceden yazdığımız alt seviye fonksiyonları kullanarak, tam sayılar üzerinde
 dört işlem gerçekleştiren fonksiyonları kodlayacağız.  &lt;/p&gt;&lt;p&gt;&lt;a href="https://yasar11732.github.io/algoritma/buyuk-sayi-islemleri-tamsayi-dort-islem.html"&gt;Devamını oku…&lt;/a&gt; (6 dakikalık okuma)&lt;/p&gt;&lt;/div&gt;</description><guid>https://yasar11732.github.io/algoritma/buyuk-sayi-islemleri-tamsayi-dort-islem.html</guid><pubDate>Mon, 16 Mar 2020 21:14:00 GMT</pubDate></item><item><title>Büyük Sayı Algoritmaları - Metin Dönüşümleri</title><link>https://yasar11732.github.io/algoritma/buyuk-sayi-islemleri-metin.html</link><dc:creator>Yaşar Arabacı</dc:creator><description>&lt;div&gt;&lt;p&gt;Büyük sayı algoritmaları yazı dizisine, sayıdan metne,
 metinden sayıya dönüşüm fonksiyonları ile devam ediyoruz.
@@ -715,8 +715,12 @@ desteklemeyen platformlar için, 128 bit aritmetiği kendimiz taklit edebiliriz.
 &lt;p&gt;Bir sonraki yazıda, negatif olmayan tamsayılar üzerinde toplama ve çıkarma fonksiyonlarını tanımlayacağız.&lt;/p&gt;
 &lt;h3&gt;Ek Kaynaklar&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;Eli Bendersky's website
-: &lt;a href="https://eli.thegreenplace.net/2010/10/21/64-bit-types-and-arithmetic-on-32-bit-cpus"&gt;64-bit types and arithmetic on 32-bit CPUs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;dl&gt;
+&lt;dt&gt;Eli Bendersky's website&lt;/dt&gt;
+&lt;dd&gt;&lt;a href="https://eli.thegreenplace.net/2010/10/21/64-bit-types-and-arithmetic-on-32-bit-cpus"&gt;64-bit types and arithmetic on 32-bit CPUs&lt;/a&gt;&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/li&gt;
 &lt;li&gt;GCC Documentation: &lt;a href="https://gcc.gnu.org/onlinedocs/gcc/Long-Long.html#Long-Long"&gt;Double-Word Integers&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;GNU MP Manual: &lt;a href="https://gmplib.org/manual/Introduction-to-GMP.html#Introduction-to-GMP"&gt;Introduction to GNU MP&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;Wikipedia: &lt;a href="https://en.wikipedia.org/wiki/128-bit_computing"&gt;128-bit computing&lt;/a&gt;&lt;/li&gt;

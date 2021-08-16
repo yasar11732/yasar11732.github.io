@@ -142,22 +142,6 @@ a:hover {
     text-decoration: none;
 }
 
-.code {
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
-    border-radius: 0.2rem;
-    padding: 0.4rem;
-    overflow: auto;
-    background: rgba(0, 0, 0, 0.04);
-}
-
-code {
-    display: inline-block;
-    padding: 0.1rem;
-    font-weight: 700;
-    background: rgba(0, 0, 0, 0.04);
-}
-
 .index-date {
     display: inline-block;
     min-width: 6rem;

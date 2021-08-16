@@ -71,28 +71,98 @@ tanımlar. Bu metotların içerisinde, TestCase sınıfının belirli
 metotlarıyla, birimin beklenen davranışı sergileyip sergilemediği test
 edilir.<a href="http://docs.python.org/library/unittest.html">Python Belgelerinin unittest ile ilgili bölümü</a>'nde belirtilen
 bu metotlar şunlardır: <!-- TEASER_END --></p>
-<p>| Metot                     | Neyi Test Eder   | Gerekli Versiyon  |
-|---------------------------|------------------|-------------------|
-| assertEqual(a, b)         | a == b           |                   |
-| assertNotEqual(a, b)      | a != b           |                   |
-| assertTrue(x)             | bool(x) is True  |                   |
-| assertFalse(x)            | bool(x) is False |                   |
-| assertIs(a, b)            | a is b           | 2.7               |
-| assertIsNot(a, b)         | a is not b       | 2.7               |
-| assertIsNone(x)           | x is None        | 2.7               |
-| assertIsNotNone(x)        | x is not None    | 2.7               |
-| assertIn(a, b)            | a in b           | 2.7               |
-| assertNotIn(a, b)         | a not in b       | 2.7               |
-| assertIsInstance(a, b)    | isinstance(a, b) | 2.7 
-| assertNotIsInstance(a, b) | not isinstance(a, b) | 2.7</p>
+<table>
+<thead><tr>
+<th>Metot</th>
+<th>Neyi Test Eder</th>
+<th>Gerekli Versiyon</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>assertEqual(a, b)</td>
+<td>a == b</td>
+<td></td>
+</tr>
+<tr>
+<td>assertNotEqual(a, b)</td>
+<td>a != b</td>
+<td></td>
+</tr>
+<tr>
+<td>assertTrue(x)</td>
+<td>bool(x) is True</td>
+<td></td>
+</tr>
+<tr>
+<td>assertFalse(x)</td>
+<td>bool(x) is False</td>
+<td></td>
+</tr>
+<tr>
+<td>assertIs(a, b)</td>
+<td>a is b</td>
+<td>2.7</td>
+</tr>
+<tr>
+<td>assertIsNot(a, b)</td>
+<td>a is not b</td>
+<td>2.7</td>
+</tr>
+<tr>
+<td>assertIsNone(x)</td>
+<td>x is None</td>
+<td>2.7</td>
+</tr>
+<tr>
+<td>assertIsNotNone(x)</td>
+<td>x is not None</td>
+<td>2.7</td>
+</tr>
+<tr>
+<td>assertIn(a, b)</td>
+<td>a in b</td>
+<td>2.7</td>
+</tr>
+<tr>
+<td>assertNotIn(a, b)</td>
+<td>a not in b</td>
+<td>2.7</td>
+</tr>
+<tr>
+<td>assertIsInstance(a, b)</td>
+<td>isinstance(a, b)</td>
+<td>2.7</td>
+</tr>
+<tr>
+<td>assertNotIsInstance(a, b)</td>
+<td>not isinstance(a, b)</td>
+<td>2.7</td>
+</tr>
+</tbody>
+</table>
 <p>2.7'de eklenen özellikler, Python 2.3'den sonrası için unittest2
 modülüyle sağlanıyor. Bu modülü ayrıca indirip kurarak bu özellikleri de
 kullanabilirsiniz. Yukarıda bahsedilen metotlara ek olarak, şu iki metot
 da mevcuttur.</p>
-<p>| Metot                                                 | Kontrol eder                                                                            | Gerekli Versiyon |
-|-------------------------------------------------------|-----------------------------------------------------------------------------------------|------------------|
-| assertRaises(exc, asdf, *args, **kwargs)           | asdf(*args, **kwargs) exc hatası verir.                                              |                  |
-| assertRaisesRegexp(exc, re, asdf, *args, **kwargs) | asdf(*args, **kwargs) exc hatası verir, ve hata mesajı re düzenli ifadesiyle eşleşir | 2.7              |</p>
+<table>
+<thead><tr>
+<th>Metot</th>
+<th>Kontrol eder</th>
+<th>Gerekli Versiyon</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>assertRaises(exc, asdf, *args, **kwargs)</td>
+<td>asdf(*args, **kwargs) exc hatası verir.</td>
+<td></td>
+</tr>
+<tr>
+<td>assertRaisesRegexp(exc, re, asdf, *args, **kwargs)</td>
+<td>asdf(*args, **kwargs) exc hatası verir, ve hata mesajı re düzenli ifadesiyle eşleşir</td>
+<td>2.7</td>
+</tr>
+</tbody>
+</table>
 <p><em>assertRaisesRegexp</em> metodunu 2.7 öncesi versiyonlarda yine unittest2
 ile kullanabilirsinz.</p>
 <p>Şimdi örnek birkaç test göstermek istiyorum. Öncelikle, neyi test
